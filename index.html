@@ -15,7 +15,7 @@
   <meta property="og:locale" content="en_GB" />
   <meta property="og:url" content="https://toucanlearn.co.uk/" />
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
-  <link rel="stylesheet" href="style.css?v=20260908-toucan-flock-5" />
+  <link rel="stylesheet" href="style.css?v=20260908-toucan-flock-6" />
   <link rel="stylesheet" href="campaigns.css?v=20260905-form-disable-4" />
 </head>
 <body>
@@ -59,6 +59,50 @@
         </div>
 
         <div class="hero-toucans" aria-hidden="true">
+          <!-- Select the original teal fill only; keep beaks, chests, eyes, pencil and pink linework. -->
+          <svg class="toucan-colour-filters" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
+            <defs>
+              <filter id="toucan-body-plum" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
+                <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 1 0 -0.16" result="body-key" />
+                <feComponentTransfer in="body-key" result="body-mask">
+                  <feFuncA type="linear" slope="40" intercept="0" />
+                </feComponentTransfer>
+                <feFlood flood-color="#785080" result="body-colour" />
+                <feComposite in="body-colour" in2="body-mask" operator="in" result="paint" />
+                <feComposite in="paint" in2="SourceAlpha" operator="in" result="clipped-paint" />
+                <feMerge>
+                  <feMergeNode in="SourceGraphic" />
+                  <feMergeNode in="clipped-paint" />
+                </feMerge>
+              </filter>
+              <filter id="toucan-body-forest" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
+                <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 1 0 -0.16" result="body-key" />
+                <feComponentTransfer in="body-key" result="body-mask">
+                  <feFuncA type="linear" slope="40" intercept="0" />
+                </feComponentTransfer>
+                <feFlood flood-color="#3c795e" result="body-colour" />
+                <feComposite in="body-colour" in2="body-mask" operator="in" result="paint" />
+                <feComposite in="paint" in2="SourceAlpha" operator="in" result="clipped-paint" />
+                <feMerge>
+                  <feMergeNode in="SourceGraphic" />
+                  <feMergeNode in="clipped-paint" />
+                </feMerge>
+              </filter>
+              <filter id="toucan-body-cobalt" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
+                <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 1 0 -0.16" result="body-key" />
+                <feComponentTransfer in="body-key" result="body-mask">
+                  <feFuncA type="linear" slope="40" intercept="0" />
+                </feComponentTransfer>
+                <feFlood flood-color="#3d619c" result="body-colour" />
+                <feComposite in="body-colour" in2="body-mask" operator="in" result="paint" />
+                <feComposite in="paint" in2="SourceAlpha" operator="in" result="clipped-paint" />
+                <feMerge>
+                  <feMergeNode in="SourceGraphic" />
+                  <feMergeNode in="clipped-paint" />
+                </feMerge>
+              </filter>
+            </defs>
+          </svg>
           <img class="hero-toucan hero-toucan--1" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
           <img class="hero-toucan hero-toucan--2" src="assets/toucan-logo-flat.png" srcset="assets/toucan-logo-flat.png 1200w" sizes="(max-width: 620px) 18vw, 101px" alt="" width="1200" height="1200" fetchpriority="high" />
           <img class="hero-toucan hero-toucan--3" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />

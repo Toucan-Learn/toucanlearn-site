@@ -260,7 +260,7 @@
       overflow: hidden;
     }
 
-    /* The supplied artwork stays intact; only its placement varies. */
+    /* Display-only colour and pose variations keep the supplied artwork intact. */
     .hero-toucans {
       position: relative;
       width: 100%;
@@ -279,18 +279,19 @@
       height: auto;
       left: var(--toucan-x);
       top: var(--toucan-y);
-      transform: translate(-50%, -50%) rotate(var(--toucan-tilt));
+      transform: translate(-50%, -50%) rotate(var(--toucan-tilt)) scaleX(var(--toucan-flip, 1));
+      filter: var(--toucan-colour, none);
     }
 
-    .hero-toucan--1 { --toucan-x: 14%; --toucan-y: 16%; --toucan-size: 21%; --toucan-tilt: -14deg; }
-    .hero-toucan--2 { --toucan-x: 47%; --toucan-y: 14%; --toucan-size: 23%; --toucan-tilt: 10deg; }
-    .hero-toucan--3 { --toucan-x: 81%; --toucan-y: 19%; --toucan-size: 19%; --toucan-tilt: -8deg; }
-    .hero-toucan--4 { --toucan-x: 17%; --toucan-y: 47%; --toucan-size: 22%; --toucan-tilt: 12deg; }
-    .hero-toucan--5 { --toucan-x: 48%; --toucan-y: 48%; --toucan-size: 26%; --toucan-tilt: -6deg; }
-    .hero-toucan--6 { --toucan-x: 83%; --toucan-y: 51%; --toucan-size: 22%; --toucan-tilt: 15deg; }
-    .hero-toucan--7 { --toucan-x: 19%; --toucan-y: 79%; --toucan-size: 20%; --toucan-tilt: -12deg; }
-    .hero-toucan--8 { --toucan-x: 52%; --toucan-y: 82%; --toucan-size: 24%; --toucan-tilt: 9deg; }
-    .hero-toucan--9 { --toucan-x: 85%; --toucan-y: 83%; --toucan-size: 17%; --toucan-tilt: -15deg; }
+    .hero-toucan--1 { --toucan-x: 16%; --toucan-y: 19%; --toucan-size: 21%; --toucan-tilt: -32deg; }
+    .hero-toucan--2 { --toucan-x: 49%; --toucan-y: 17%; --toucan-size: 23%; --toucan-tilt: 168deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-32deg) saturate(1.12); }
+    .hero-toucan--3 { --toucan-x: 81%; --toucan-y: 19%; --toucan-size: 19%; --toucan-tilt: 42deg; --toucan-colour: hue-rotate(52deg); }
+    .hero-toucan--4 { --toucan-x: 17%; --toucan-y: 50%; --toucan-size: 22%; --toucan-tilt: -115deg; --toucan-flip: -1; --toucan-colour: hue-rotate(155deg) saturate(0.9); }
+    .hero-toucan--5 { --toucan-x: 48%; --toucan-y: 48%; --toucan-size: 26%; --toucan-tilt: 12deg; }
+    .hero-toucan--6 { --toucan-x: 83%; --toucan-y: 53%; --toucan-size: 22%; --toucan-tilt: 205deg; }
+    .hero-toucan--7 { --toucan-x: 18%; --toucan-y: 80%; --toucan-size: 20%; --toucan-tilt: 58deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(0.92); }
+    .hero-toucan--8 { --toucan-x: 53%; --toucan-y: 81%; --toucan-size: 24%; --toucan-tilt: -170deg; --toucan-colour: hue-rotate(90deg); }
+    .hero-toucan--9 { --toucan-x: 83%; --toucan-y: 84%; --toucan-size: 17%; --toucan-tilt: -64deg; --toucan-flip: -1; }
 
     @media (max-width: 940px) {
       .hero-toucans {

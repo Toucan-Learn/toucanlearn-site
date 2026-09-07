@@ -284,76 +284,76 @@
     }
 
     .hero-toucan--1 { --toucan-x: 16%; --toucan-y: 19%; --toucan-size: 15%; --toucan-tilt: -32deg; }
-    .hero-toucan--2 { --toucan-x: 49%; --toucan-y: 17%; --toucan-size: 18%; --toucan-tilt: 168deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
+    .hero-toucan--2 { --toucan-x: 49%; --toucan-y: 17%; --toucan-size: 18%; --toucan-tilt: 168deg; --toucan-flip: -1; }
     .hero-toucan--3 { --toucan-x: 81%; --toucan-y: 19%; --toucan-size: 13%; --toucan-tilt: 42deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--4 { --toucan-x: 17%; --toucan-y: 50%; --toucan-size: 15%; --toucan-tilt: -115deg; --toucan-flip: -1; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
+    .hero-toucan--4 { --toucan-x: 17%; --toucan-y: 50%; --toucan-size: 15%; --toucan-tilt: -115deg; --toucan-flip: -1; }
     .hero-toucan--5 { --toucan-x: 48%; --toucan-y: 48%; --toucan-size: 20%; --toucan-tilt: 12deg; }
     .hero-toucan--6 { --toucan-x: 83%; --toucan-y: 53%; --toucan-size: 16%; --toucan-tilt: 205deg; }
     .hero-toucan--7 { --toucan-x: 18%; --toucan-y: 80%; --toucan-size: 13%; --toucan-tilt: 58deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
-    .hero-toucan--8 { --toucan-x: 53%; --toucan-y: 81%; --toucan-size: 18%; --toucan-tilt: -170deg; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
+    .hero-toucan--8 { --toucan-x: 53%; --toucan-y: 81%; --toucan-size: 18%; --toucan-tilt: -170deg; }
     .hero-toucan--9 { --toucan-x: 83%; --toucan-y: 84%; --toucan-size: 11%; --toucan-tilt: -64deg; --toucan-flip: -1; }
     .hero-toucan--10 { --toucan-x: 33.7%; --toucan-y: 68.7%; --toucan-size: 8.8%; --toucan-tilt: 33deg; }
-    .hero-toucan--11 { --toucan-x: 69.8%; --toucan-y: 68.9%; --toucan-size: 8.1%; --toucan-tilt: 137deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--12 { --toucan-x: 31.9%; --toucan-y: 30.7%; --toucan-size: 6.7%; --toucan-tilt: -25deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--13 { --toucan-x: 33.8%; --toucan-y: 91.9%; --toucan-size: 4.1%; --toucan-tilt: -3deg; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--14 { --toucan-x: 68.8%; --toucan-y: 31.3%; --toucan-size: 5.5%; --toucan-tilt: -75deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
-    .hero-toucan--15 { --toucan-x: 93.5%; --toucan-y: 31.3%; --toucan-size: 8.5%; --toucan-tilt: 1deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--16 { --toucan-x: 30.8%; --toucan-y: 6.6%; --toucan-size: 5.2%; --toucan-tilt: 73deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
+    .hero-toucan--11 { --toucan-x: 69.8%; --toucan-y: 68.9%; --toucan-size: 8.1%; --toucan-tilt: 137deg; --toucan-flip: -1; }
+    .hero-toucan--12 { --toucan-x: 31.9%; --toucan-y: 30.7%; --toucan-size: 6.7%; --toucan-tilt: -25deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
+    .hero-toucan--13 { --toucan-x: 33.8%; --toucan-y: 91.9%; --toucan-size: 4.1%; --toucan-tilt: -3deg; }
+    .hero-toucan--14 { --toucan-x: 68.8%; --toucan-y: 31.3%; --toucan-size: 5.5%; --toucan-tilt: -75deg; --toucan-flip: -1; }
+    .hero-toucan--15 { --toucan-x: 93.5%; --toucan-y: 31.3%; --toucan-size: 8.5%; --toucan-tilt: 1deg; --toucan-flip: -1; }
+    .hero-toucan--16 { --toucan-x: 30.8%; --toucan-y: 6.6%; --toucan-size: 5.2%; --toucan-tilt: 73deg; --toucan-flip: -1; }
     .hero-toucan--17 { --toucan-x: 95.1%; --toucan-y: 5.8%; --toucan-size: 3.9%; --toucan-tilt: -150deg; }
-    .hero-toucan--18 { --toucan-x: 67.9%; --toucan-y: 8.8%; --toucan-size: 7.8%; --toucan-tilt: 48deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--19 { --toucan-x: 91.1%; --toucan-y: 69.6%; --toucan-size: 6.4%; --toucan-tilt: -113deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
+    .hero-toucan--18 { --toucan-x: 67.9%; --toucan-y: 8.8%; --toucan-size: 7.8%; --toucan-tilt: 48deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
+    .hero-toucan--19 { --toucan-x: 91.1%; --toucan-y: 69.6%; --toucan-size: 6.4%; --toucan-tilt: -113deg; --toucan-flip: -1; }
     .hero-toucan--20 { --toucan-x: 67.2%; --toucan-y: 46.1%; --toucan-size: 7.4%; --toucan-tilt: -177deg; --toucan-flip: -1; }
-    .hero-toucan--21 { --toucan-x: 95%; --toucan-y: 94.3%; --toucan-size: 3.8%; --toucan-tilt: -15deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
+    .hero-toucan--21 { --toucan-x: 95%; --toucan-y: 94.3%; --toucan-size: 3.8%; --toucan-tilt: -15deg; }
     .hero-toucan--22 { --toucan-x: 6.2%; --toucan-y: 33.5%; --toucan-size: 6%; --toucan-tilt: -141deg; }
-    .hero-toucan--23 { --toucan-x: 71.1%; --toucan-y: 93.7%; --toucan-size: 4%; --toucan-tilt: -119deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--24 { --toucan-x: 6.2%; --toucan-y: 67.2%; --toucan-size: 6.1%; --toucan-tilt: 31deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--25 { --toucan-x: 7.5%; --toucan-y: 93.2%; --toucan-size: 5.1%; --toucan-tilt: -175deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--26 { --toucan-x: 81.5%; --toucan-y: 35.3%; --toucan-size: 3.8%; --toucan-tilt: 4deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
-    .hero-toucan--27 { --toucan-x: 6.1%; --toucan-y: 7.1%; --toucan-size: 6%; --toucan-tilt: -179deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--28 { --toucan-x: 94.7%; --toucan-y: 17%; --toucan-size: 3.8%; --toucan-tilt: -150deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
-    .hero-toucan--29 { --toucan-x: 32%; --toucan-y: 54.4%; --toucan-size: 5.4%; --toucan-tilt: 10deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--30 { --toucan-x: 31.2%; --toucan-y: 18.7%; --toucan-size: 6.8%; --toucan-tilt: 40deg; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
-    .hero-toucan--31 { --toucan-x: 22.4%; --toucan-y: 65%; --toucan-size: 6.4%; --toucan-tilt: -22deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--32 { --toucan-x: 61.9%; --toucan-y: 58.2%; --toucan-size: 7.5%; --toucan-tilt: -84deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
-    .hero-toucan--33 { --toucan-x: 21.2%; --toucan-y: 34.5%; --toucan-size: 5.6%; --toucan-tilt: -60deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--34 { --toucan-x: 37.3%; --toucan-y: 81.6%; --toucan-size: 6.8%; --toucan-tilt: -98deg; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--35 { --toucan-x: 69.7%; --toucan-y: 82.8%; --toucan-size: 8.3%; --toucan-tilt: 67deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--36 { --toucan-x: 5.4%; --toucan-y: 82.2%; --toucan-size: 4.5%; --toucan-tilt: -159deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
+    .hero-toucan--23 { --toucan-x: 71.1%; --toucan-y: 93.7%; --toucan-size: 4%; --toucan-tilt: -119deg; }
+    .hero-toucan--24 { --toucan-x: 6.2%; --toucan-y: 67.2%; --toucan-size: 6.1%; --toucan-tilt: 31deg; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
+    .hero-toucan--25 { --toucan-x: 7.5%; --toucan-y: 93.2%; --toucan-size: 5.1%; --toucan-tilt: -175deg; --toucan-flip: -1; }
+    .hero-toucan--26 { --toucan-x: 81.5%; --toucan-y: 35.3%; --toucan-size: 3.8%; --toucan-tilt: 4deg; --toucan-flip: -1; }
+    .hero-toucan--27 { --toucan-x: 6.1%; --toucan-y: 7.1%; --toucan-size: 6%; --toucan-tilt: -179deg; }
+    .hero-toucan--28 { --toucan-x: 94.7%; --toucan-y: 17%; --toucan-size: 3.8%; --toucan-tilt: -150deg; --toucan-flip: -1; }
+    .hero-toucan--29 { --toucan-x: 32%; --toucan-y: 54.4%; --toucan-size: 5.4%; --toucan-tilt: 10deg; --toucan-flip: -1; }
+    .hero-toucan--30 { --toucan-x: 31.2%; --toucan-y: 18.7%; --toucan-size: 6.8%; --toucan-tilt: 40deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
+    .hero-toucan--31 { --toucan-x: 22.4%; --toucan-y: 65%; --toucan-size: 6.4%; --toucan-tilt: -22deg; --toucan-flip: -1; }
+    .hero-toucan--32 { --toucan-x: 61.9%; --toucan-y: 58.2%; --toucan-size: 7.5%; --toucan-tilt: -84deg; --toucan-flip: -1; }
+    .hero-toucan--33 { --toucan-x: 21.2%; --toucan-y: 34.5%; --toucan-size: 5.6%; --toucan-tilt: -60deg; --toucan-flip: -1; }
+    .hero-toucan--34 { --toucan-x: 37.3%; --toucan-y: 81.6%; --toucan-size: 6.8%; --toucan-tilt: -98deg; }
+    .hero-toucan--35 { --toucan-x: 69.7%; --toucan-y: 82.8%; --toucan-size: 8.3%; --toucan-tilt: 67deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
+    .hero-toucan--36 { --toucan-x: 5.4%; --toucan-y: 82.2%; --toucan-size: 4.5%; --toucan-tilt: -159deg; --toucan-flip: -1; }
     .hero-toucan--37 { --toucan-x: 94.9%; --toucan-y: 80.3%; --toucan-size: 5.6%; --toucan-tilt: -86deg; }
     .hero-toucan--38 { --toucan-x: 32.2%; --toucan-y: 42.8%; --toucan-size: 3.6%; --toucan-tilt: 120deg; --toucan-flip: -1; }
-    .hero-toucan--39 { --toucan-x: 59.9%; --toucan-y: 35.4%; --toucan-size: 6.9%; --toucan-tilt: -70deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--40 { --toucan-x: 24.5%; --toucan-y: 92.7%; --toucan-size: 5%; --toucan-tilt: 112deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--41 { --toucan-x: 79.7%; --toucan-y: 69.5%; --toucan-size: 6.6%; --toucan-tilt: -56deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
-    .hero-toucan--42 { --toucan-x: 44.6%; --toucan-y: 66.2%; --toucan-size: 7.5%; --toucan-tilt: 67deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
-    .hero-toucan--43 { --toucan-x: 77.2%; --toucan-y: 6.3%; --toucan-size: 5.1%; --toucan-tilt: 54deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--44 { --toucan-x: 64.1%; --toucan-y: 19.5%; --toucan-size: 7.8%; --toucan-tilt: 0deg; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
+    .hero-toucan--39 { --toucan-x: 59.9%; --toucan-y: 35.4%; --toucan-size: 6.9%; --toucan-tilt: -70deg; }
+    .hero-toucan--40 { --toucan-x: 24.5%; --toucan-y: 92.7%; --toucan-size: 5%; --toucan-tilt: 112deg; }
+    .hero-toucan--41 { --toucan-x: 79.7%; --toucan-y: 69.5%; --toucan-size: 6.6%; --toucan-tilt: -56deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
+    .hero-toucan--42 { --toucan-x: 44.6%; --toucan-y: 66.2%; --toucan-size: 7.5%; --toucan-tilt: 67deg; --toucan-flip: -1; }
+    .hero-toucan--43 { --toucan-x: 77.2%; --toucan-y: 6.3%; --toucan-size: 5.1%; --toucan-tilt: 54deg; --toucan-flip: -1; }
+    .hero-toucan--44 { --toucan-x: 64.1%; --toucan-y: 19.5%; --toucan-size: 7.8%; --toucan-tilt: 0deg; }
     .hero-toucan--45 { --toucan-x: 44%; --toucan-y: 93.7%; --toucan-size: 4.1%; --toucan-tilt: 43deg; }
-    .hero-toucan--46 { --toucan-x: 62.6%; --toucan-y: 92%; --toucan-size: 6.6%; --toucan-tilt: 57deg; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
-    .hero-toucan--47 { --toucan-x: 91.7%; --toucan-y: 42.2%; --toucan-size: 6.7%; --toucan-tilt: -78deg; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
-    .hero-toucan--48 { --toucan-x: 40.1%; --toucan-y: 27.9%; --toucan-size: 7.2%; --toucan-tilt: -94deg; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
-    .hero-toucan--49 { --toucan-x: 75.4%; --toucan-y: 41%; --toucan-size: 4.1%; --toucan-tilt: 131deg; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
-    .hero-toucan--50 { --toucan-x: 55%; --toucan-y: 66.2%; --toucan-size: 7%; --toucan-tilt: -43deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
+    .hero-toucan--46 { --toucan-x: 62.6%; --toucan-y: 92%; --toucan-size: 6.6%; --toucan-tilt: 57deg; }
+    .hero-toucan--47 { --toucan-x: 91.7%; --toucan-y: 42.2%; --toucan-size: 6.7%; --toucan-tilt: -78deg; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
+    .hero-toucan--48 { --toucan-x: 40.1%; --toucan-y: 27.9%; --toucan-size: 7.2%; --toucan-tilt: -94deg; }
+    .hero-toucan--49 { --toucan-x: 75.4%; --toucan-y: 41%; --toucan-size: 4.1%; --toucan-tilt: 131deg; }
+    .hero-toucan--50 { --toucan-x: 55%; --toucan-y: 66.2%; --toucan-size: 7%; --toucan-tilt: -43deg; --toucan-flip: -1; }
     .hero-toucan--51 { --toucan-x: 23.2%; --toucan-y: 5.9%; --toucan-size: 5.2%; --toucan-tilt: -98deg; }
-    .hero-toucan--52 { --toucan-x: 71%; --toucan-y: 57.8%; --toucan-size: 6.4%; --toucan-tilt: 35deg; --toucan-flip: -1; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
-    .hero-toucan--53 { --toucan-x: 88.7%; --toucan-y: 9.1%; --toucan-size: 8.3%; --toucan-tilt: -150deg; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
-    .hero-toucan--54 { --toucan-x: 52%; --toucan-y: 32.6%; --toucan-size: 5.3%; --toucan-tilt: 48deg; --toucan-flip: -1; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
+    .hero-toucan--52 { --toucan-x: 71%; --toucan-y: 57.8%; --toucan-size: 6.4%; --toucan-tilt: 35deg; --toucan-flip: -1; }
+    .hero-toucan--53 { --toucan-x: 88.7%; --toucan-y: 9.1%; --toucan-size: 8.3%; --toucan-tilt: -150deg; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
+    .hero-toucan--54 { --toucan-x: 52%; --toucan-y: 32.6%; --toucan-size: 5.3%; --toucan-tilt: 48deg; --toucan-flip: -1; }
     .hero-toucan--55 { --toucan-x: 14.2%; --toucan-y: 65.3%; --toucan-size: 8.5%; --toucan-tilt: -108deg; --toucan-flip: -1; }
-    .hero-toucan--56 { --toucan-x: 5.7%; --toucan-y: 45.4%; --toucan-size: 5.1%; --toucan-tilt: 145deg; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
+    .hero-toucan--56 { --toucan-x: 5.7%; --toucan-y: 45.4%; --toucan-size: 5.1%; --toucan-tilt: 145deg; }
     .hero-toucan--57 { --toucan-x: 25.1%; --toucan-y: 26.4%; --toucan-size: 7.8%; --toucan-tilt: -44deg; --toucan-flip: -1; }
-    .hero-toucan--58 { --toucan-x: 37.6%; --toucan-y: 10.4%; --toucan-size: 6.7%; --toucan-tilt: -9deg; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
-    .hero-toucan--59 { --toucan-x: 29.4%; --toucan-y: 77.6%; --toucan-size: 7.3%; --toucan-tilt: -136deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--60 { --toucan-x: 58.1%; --toucan-y: 6.7%; --toucan-size: 7.7%; --toucan-tilt: -179deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--61 { --toucan-x: 76.7%; --toucan-y: 30.1%; --toucan-size: 7.7%; --toucan-tilt: -61deg; --toucan-flip: -1; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--62 { --toucan-x: 14.8%; --toucan-y: 37.6%; --toucan-size: 8.6%; --toucan-tilt: -129deg; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
-    .hero-toucan--63 { --toucan-x: 95.5%; --toucan-y: 59%; --toucan-size: 4.4%; --toucan-tilt: 90deg; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
+    .hero-toucan--58 { --toucan-x: 37.6%; --toucan-y: 10.4%; --toucan-size: 6.7%; --toucan-tilt: -9deg; }
+    .hero-toucan--59 { --toucan-x: 29.4%; --toucan-y: 77.6%; --toucan-size: 7.3%; --toucan-tilt: -136deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
+    .hero-toucan--60 { --toucan-x: 58.1%; --toucan-y: 6.7%; --toucan-size: 7.7%; --toucan-tilt: -179deg; --toucan-flip: -1; }
+    .hero-toucan--61 { --toucan-x: 76.7%; --toucan-y: 30.1%; --toucan-size: 7.7%; --toucan-tilt: -61deg; --toucan-flip: -1; }
+    .hero-toucan--62 { --toucan-x: 14.8%; --toucan-y: 37.6%; --toucan-size: 8.6%; --toucan-tilt: -129deg; }
+    .hero-toucan--63 { --toucan-x: 95.5%; --toucan-y: 59%; --toucan-size: 4.4%; --toucan-tilt: 90deg; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
     .hero-toucan--64 { --toucan-x: 8.4%; --toucan-y: 58.4%; --toucan-size: 7.5%; --toucan-tilt: -39deg; --toucan-flip: -1; }
     .hero-toucan--65 { --toucan-x: 39%; --toucan-y: 37.2%; --toucan-size: 7.3%; --toucan-tilt: -72deg; }
     .hero-toucan--66 { --toucan-x: 41.2%; --toucan-y: 74.2%; --toucan-size: 6.4%; --toucan-tilt: -4deg; --toucan-flip: -1; }
-    .hero-toucan--67 { --toucan-x: 77.5%; --toucan-y: 93%; --toucan-size: 5.5%; --toucan-tilt: -107deg; --toucan-flip: -1; --toucan-colour: hue-rotate(155deg) saturate(1.06); }
+    .hero-toucan--67 { --toucan-x: 77.5%; --toucan-y: 93%; --toucan-size: 5.5%; --toucan-tilt: -107deg; --toucan-flip: -1; }
     .hero-toucan--68 { --toucan-x: 38.4%; --toucan-y: 59.3%; --toucan-size: 8.6%; --toucan-tilt: 144deg; --toucan-colour: hue-rotate(90deg) saturate(1.06); }
-    .hero-toucan--69 { --toucan-x: 8.4%; --toucan-y: 75.6%; --toucan-size: 7%; --toucan-tilt: -10deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-60deg) saturate(1.06); }
+    .hero-toucan--69 { --toucan-x: 8.4%; --toucan-y: 75.6%; --toucan-size: 7%; --toucan-tilt: -10deg; --toucan-flip: -1; }
     .hero-toucan--70 { --toucan-x: 94.4%; --toucan-y: 51.7%; --toucan-size: 5.7%; --toucan-tilt: 99deg; --toucan-flip: -1; }
-    .hero-toucan--71 { --toucan-x: 64.2%; --toucan-y: 77.1%; --toucan-size: 7%; --toucan-tilt: 56deg; --toucan-flip: -1; --toucan-colour: hue-rotate(52deg) saturate(1.06); }
+    .hero-toucan--71 { --toucan-x: 64.2%; --toucan-y: 77.1%; --toucan-size: 7%; --toucan-tilt: 56deg; --toucan-flip: -1; --toucan-colour: hue-rotate(-32deg) saturate(1.06); }
     .hero-toucan--72 { --toucan-x: 25.7%; --toucan-y: 40.4%; --toucan-size: 7.2%; --toucan-tilt: 15deg; }
 
     @media (max-width: 940px) {

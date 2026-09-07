@@ -1,0 +1,578 @@
+/* Campaign additions deliberately extend the existing Toucan Learn system. */
+.logo--wordmark {
+  min-width: 150px;
+}
+
+.support-routes-section {
+  padding-top: 82px;
+  background: rgba(255, 250, 243, 0.34);
+  border-block: 1px solid rgba(11, 63, 81, 0.08);
+}
+
+.support-route-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.campaign-card {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+}
+
+.campaign-card .icon {
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+}
+
+.campaign-card .text-button {
+  width: fit-content;
+  margin-top: auto;
+  padding-top: 22px;
+}
+
+.campaign-card h3 small {
+  display: block;
+  margin-top: 7px;
+  color: rgba(16, 36, 45, 0.66);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  line-height: 1.35;
+}
+
+.campaign-page .hero {
+  padding-bottom: 72px;
+}
+
+.campaign-page .hero-grid {
+  align-items: stretch;
+}
+
+.campaign-page .hero-grid > div:first-child {
+  align-self: center;
+}
+
+.campaign-page h1 small {
+  display: block;
+  max-width: 620px;
+  margin-top: 12px;
+  color: rgba(16, 36, 45, 0.72);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 0.24em;
+  font-weight: 750;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.campaign-page .route-panel {
+  display: grid;
+  align-content: center;
+  min-height: 360px;
+}
+
+.campaign-page .route-panel h2 {
+  margin-bottom: 20px;
+  font-size: clamp(2rem, 3.4vw, 3rem);
+}
+
+.campaign-page .route-panel p {
+  margin: 0;
+  color: rgba(16, 36, 45, 0.76);
+}
+
+.campaign-page .route-panel ul {
+  margin: 22px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.campaign-page .route-panel li {
+  padding: 11px 0;
+  border-top: 1px solid var(--line);
+  color: var(--blue);
+  font-weight: 750;
+}
+
+.campaign-page .route-details {
+  padding-top: 80px;
+}
+
+.campaign-page .route-details .card {
+  min-height: 230px;
+}
+
+.campaign-page .route-boundary {
+  margin-top: 24px;
+  padding: 18px 20px;
+  border-left: 4px solid var(--orange);
+  color: rgba(16, 36, 45, 0.76);
+  background: rgba(255, 250, 243, 0.7);
+}
+
+.campaign-page .route-boundary strong {
+  color: var(--blue);
+}
+
+.policy-hero {
+  padding: 58px 0 24px;
+}
+
+.policy-width {
+  width: min(calc(100% - 32px), 900px);
+  margin-inline: auto;
+}
+
+.policy-hero h1 {
+  max-width: 780px;
+}
+
+.policy-hero .lead {
+  max-width: 700px;
+  margin-bottom: 0;
+}
+
+.pre-release-note,
+.urgent-panel {
+  margin-top: 24px;
+  padding: 16px 18px;
+  border-left: 4px solid var(--orange);
+  border-radius: 0 14px 14px 0;
+  background: rgba(255, 250, 243, 0.84);
+}
+
+.pre-release-note {
+  color: rgba(16, 36, 45, 0.8);
+}
+
+.policy-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+  padding: 24px 0 90px;
+}
+
+.policy-content section {
+  min-width: 0;
+  padding: clamp(22px, 4vw, 34px);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 250, 243, 0.68);
+}
+
+.policy-content h2,
+.policy-content h3 {
+  color: var(--blue);
+}
+
+.policy-content h2 {
+  margin-bottom: 12px;
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+}
+
+.policy-content h3 {
+  margin-bottom: 8px;
+  font-size: 1.08rem;
+}
+
+.policy-content p:last-child,
+.policy-content ul:last-child,
+.policy-content ol:last-child {
+  margin-bottom: 0;
+}
+
+.policy-content a {
+  color: var(--blue);
+  font-weight: 750;
+  overflow-wrap: anywhere;
+  text-underline-offset: 3px;
+}
+
+.policy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.policy-grid > div {
+  min-width: 0;
+  padding: 18px;
+  border-radius: var(--radius-md);
+  background: rgba(205, 223, 215, 0.45);
+}
+
+.policy-source-note {
+  margin-top: 16px;
+  font-size: 0.9rem;
+  color: rgba(16, 36, 45, 0.72);
+}
+
+.policy-table-wrap {
+  overflow-x: auto;
+  margin: 14px 0 18px;
+}
+
+.policy-table-wrap:focus-visible {
+  outline: 3px solid var(--orange-text);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.policy-content table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.policy-content th,
+.policy-content td {
+  padding: 12px;
+  border: 1px solid rgba(11, 63, 81, 0.16);
+  text-align: left;
+  vertical-align: top;
+}
+
+.policy-content th {
+  color: var(--blue);
+  background: rgba(205, 223, 215, 0.5);
+}
+
+.policy-steps {
+  padding-left: 1.3rem;
+}
+
+.policy-steps li + li {
+  margin-top: 9px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 18px;
+}
+
+.contact-hero {
+  padding: 58px 0 20px;
+}
+
+.contact-width {
+  width: min(calc(100% - 32px), 840px);
+  margin-inline: auto;
+}
+
+.contact-hero h1 {
+  max-width: 760px;
+}
+
+.contact-hero .lead {
+  max-width: 650px;
+  margin-bottom: 0;
+}
+
+.contact-form-section {
+  padding: 28px 0 100px;
+}
+
+.form-privacy-note {
+  margin: 0 0 18px;
+  padding: 15px 17px;
+  border-left: 4px solid var(--orange, #e47a2e);
+  border-radius: 0 12px 12px 0;
+  color: rgba(16, 36, 45, 0.82);
+  background: rgba(255, 250, 243, 0.78);
+  line-height: 1.55;
+}
+
+.form-privacy-note strong {
+  color: var(--blue, #0b3f51);
+}
+
+.enquiry-form {
+  display: grid;
+  gap: 24px;
+  padding: clamp(24px, 5vw, 44px);
+  border: 1px solid var(--line, rgba(11, 63, 81, 0.18));
+  border-radius: var(--radius-xl, 28px);
+  background: linear-gradient(135deg, rgba(255, 250, 243, 0.86), rgba(205, 223, 215, 0.42));
+  box-shadow: var(--shadow, 0 18px 50px rgba(11, 63, 81, 0.10));
+}
+
+.enquiry-fields {
+  display: grid;
+  gap: 24px;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.enquiry-fields:disabled .field input,
+.enquiry-fields:disabled .field textarea,
+.enquiry-fields:disabled .field select {
+  color: rgba(16, 36, 45, 0.7);
+  background: #f1ece4;
+  cursor: not-allowed;
+}
+
+.enquiry-fields:disabled .consent {
+  background: rgba(205, 223, 215, 0.32);
+  cursor: not-allowed;
+}
+
+.fields-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.field {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.field label {
+  color: var(--blue, #0b3f51);
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.field input,
+.field textarea,
+.field select {
+  width: 100%;
+  border: 1px solid rgba(11, 63, 81, 0.22);
+  border-radius: 12px;
+  color: var(--ink, #10242d);
+  background: rgba(255, 250, 243, 0.92);
+  font: inherit;
+  outline: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+
+.field input {
+  min-height: 52px;
+  padding: 0 14px;
+}
+
+.field textarea {
+  min-height: 175px;
+  padding: 14px;
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: rgba(16, 36, 45, 0.66);
+}
+
+.field input:focus,
+.field textarea:focus,
+.field select:focus {
+  border-color: var(--orange-text, #b94e25);
+  background: var(--paper, #fffaf3);
+  outline: 3px solid var(--orange-text, #b94e25);
+  outline-offset: 2px;
+}
+
+.field select {
+  min-height: 52px;
+  padding: 0 14px;
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 16px;
+  border: 1px solid rgba(31, 122, 117, 0.18);
+  border-radius: var(--radius-md, 16px);
+  background: rgba(205, 223, 215, 0.54);
+  cursor: pointer;
+}
+
+.consent input {
+  flex: 0 0 auto;
+  width: 19px;
+  height: 19px;
+  margin-top: 2px;
+  accent-color: var(--blue, #0b3f51);
+}
+
+.consent input:focus-visible {
+  outline: 3px solid var(--orange-text, #b94e25);
+  outline-offset: 3px;
+}
+
+.consent span {
+  color: rgba(16, 36, 45, 0.8);
+  font-size: 0.92rem;
+}
+
+.consent span strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--blue, #0b3f51);
+}
+
+.form-submit {
+  justify-self: start;
+  width: auto;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+.form-submit:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.form-message {
+  display: none;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 12px;
+  color: #8b3030;
+  background: rgba(255, 232, 228, 0.78);
+  font-weight: 700;
+}
+
+.form-message.is-visible {
+  display: block;
+}
+
+.honeypot {
+  position: absolute !important;
+  left: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+.thanks-main {
+  min-height: calc(100vh - 190px);
+  display: grid;
+  align-items: center;
+  padding: 70px 0;
+}
+
+.thanks-card {
+  width: min(calc(100% - 32px), 780px);
+  margin-inline: auto;
+  padding: clamp(34px, 7vw, 72px);
+  border: 1px solid var(--line, rgba(11, 63, 81, 0.18));
+  border-radius: var(--radius-xl, 28px);
+  background: linear-gradient(135deg, rgba(244, 192, 155, 0.6), rgba(205, 223, 215, 0.72)), var(--paper, #fffaf3);
+  box-shadow: var(--shadow, 0 18px 50px rgba(11, 63, 81, 0.10));
+  text-align: center;
+}
+
+.thanks-card h1,
+.thanks-card p {
+  margin-inline: auto;
+}
+
+.thanks-card p {
+  max-width: 620px;
+}
+
+.thanks-card .lead {
+  margin-bottom: 30px;
+}
+
+.thanks-actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+@media (max-width: 940px) {
+  .support-route-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .campaign-page .route-panel {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .support-routes-section,
+  .campaign-page .route-details {
+    padding-block: 62px;
+  }
+
+  .support-route-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .campaign-card,
+  .campaign-page .route-details .card {
+    min-height: 0;
+  }
+
+  .campaign-page .hero {
+    padding-bottom: 42px;
+  }
+
+  .policy-hero {
+    padding-top: 40px;
+  }
+
+  .policy-content {
+    padding-bottom: 65px;
+  }
+
+  .policy-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-hero {
+    padding: 40px 0 16px;
+  }
+
+  .contact-form-section {
+    padding: 18px 0 70px;
+  }
+
+  .fields-two {
+    grid-template-columns: 1fr;
+  }
+
+  .enquiry-form {
+    padding: 22px;
+    border-radius: var(--radius-lg, 22px);
+  }
+
+  .form-submit {
+    width: 100%;
+  }
+
+  .thanks-main {
+    padding: 45px 0;
+  }
+
+  .thanks-card {
+    padding: 38px 22px;
+    border-radius: var(--radius-lg, 22px);
+  }
+
+  .thanks-actions {
+    display: grid;
+  }
+}

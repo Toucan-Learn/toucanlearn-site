@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'none'; frame-src 'none'; worker-src 'none'" />
+
+  <title>Enquire | Toucan Learn</title>
+  <meta
+    name="description"
+    content="Enquire about personalised tutoring with Toucan Learn."
+  />
+  <link rel="canonical" href="https://toucanlearn.co.uk/contact.html" />
+  <meta property="og:title" content="Start an enquiry | Toucan Learn" />
+  <meta property="og:description" content="Tell Toucan Learn who the support is for, the goal and what currently feels difficult." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Toucan Learn" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:url" content="https://toucanlearn.co.uk/contact.html" />
+
+  <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
+  <link rel="stylesheet" href="style.css?v=20260905-contrast-1" />
+  <link rel="stylesheet" href="campaigns.css?v=20260905-form-disable-4" />
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+  <header>
+    <div class="container nav">
+      <a class="logo logo--wordmark" href="index.html" aria-label="Toucan Learn home">
+        <span class="brand-lockup">
+          <strong>Toucan</strong>
+          <span>Learn</span>
+        </span>
+      </a>
+
+      <nav class="nav-links" aria-label="Primary">
+        <a href="index.html#approach">Approach</a>
+        <a href="index.html#support-routes">Support</a>
+        <a href="index.html#how-it-works">How it works</a>
+        <a href="index.html#reviews">Proof</a>
+        <a class="button" href="#enquiry-form">Start an enquiry</a>
+      </nav>
+
+      <div class="mobile-note">
+        <span>Tutoring for children and adults</span>
+        <a class="text-button" href="#enquiry-form">Start an enquiry</a>
+      </div>
+    </div>
+  </header>
+
+  <main id="main" tabindex="-1">
+    <section class="contact-hero">
+      <div class="contact-width">
+        <div class="eyebrow">Enquire about tutoring</div>
+
+        <h1>Tell us what you need<span>.</span></h1>
+
+        <p class="lead">
+          For a child, young person or adult: share the real goal, current starting point and what is getting in the way.
+        </p>
+      </div>
+    </section>
+
+    <section
+      class="contact-form-section"
+      aria-label="Toucan Learn enquiry form"
+    >
+      <div class="contact-width">
+        <p class="form-privacy-note" id="initial-contact-guidance">
+          <strong>Keep this first message brief.</strong>
+          A parent or carer should enquire for a child. Please do not include diagnostic reports, medical records, full school records or urgent safeguarding information. If access needs matter, simply say that you would like to discuss them privately.
+        </p>
+
+        <form
+          class="enquiry-form"
+          id="enquiry-form"
+          data-form-endpoint=""
+          method="POST"
+          aria-describedby="initial-contact-guidance form-message"
+        >
+          <p class="form-message is-visible" id="form-message" role="status" aria-live="polite">
+            Online enquiries are not open yet. This form is disabled, and no information entered here can be sent.
+          </p>
+
+          <fieldset class="enquiry-fields" id="enquiry-fields" disabled>
+          <legend class="visually-hidden">Tutoring enquiry details</legend>
+          <input
+            type="hidden"
+            name="Campaign source"
+            id="campaign-source"
+            value="Direct or unknown"
+          />
+
+          <input type="hidden" name="Traffic source" id="traffic-source" value="" />
+          <input type="hidden" name="Traffic medium" id="traffic-medium" value="" />
+          <input type="hidden" name="Campaign name" id="campaign-name" value="" />
+
+          <div class="honeypot" aria-hidden="true">
+            <label for="company-website">Leave this field empty</label>
+
+            <input
+              id="company-website"
+              name="website"
+              type="text"
+              tabindex="-1"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="fields-two">
+            <div class="field">
+              <label for="contact-name">Your name <small>(parent, carer or adult learner)</small></label>
+
+              <input
+                id="contact-name"
+                name="Contact name"
+                type="text"
+                autocomplete="name"
+                maxlength="120"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="email">Email address</label>
+
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autocomplete="email"
+                maxlength="254"
+                required
+              />
+            </div>
+
+            <div class="field">
+              <label for="age-band">Who is the support for?</label>
+
+              <select id="age-band" name="Age band" required>
+                <option value="">Choose one</option>
+                <option>Child or young person</option>
+                <option>Adult</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="age-year">Approximate age or school year <small>(optional)</small></label>
+
+              <input
+                id="age-year"
+                name="Approximate age or school year"
+                type="text"
+                maxlength="40"
+                placeholder="For example: Year 9"
+              />
+            </div>
+
+            <div class="field">
+              <label for="service">Support route</label>
+
+              <select id="service" name="Support route" required>
+                <option value="">Choose one</option>
+                <option value="children">Children &amp; SEND-informed tutoring</option>
+                <option value="english-work">Practical English for UK work</option>
+                <option value="languages">Spanish ↔ English</option>
+                <option value="maths">Maths &amp; numeracy</option>
+                <option value="in-person">In-person tutoring (only available in certain regions)</option>
+                <option value="not-sure">Not sure yet</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="current-level">Current level or starting point</label>
+
+              <input
+                id="current-level"
+                name="Current level or starting point"
+                type="text"
+                maxlength="160"
+                placeholder="Your best honest description"
+              />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="support-needed">
+              What support are you looking for?
+            </label>
+
+            <textarea
+              id="support-needed"
+              name="Support requested"
+              required
+              maxlength="1500"
+              aria-describedby="initial-contact-guidance"
+              placeholder="Tell us the goal, what currently feels difficult and what needs to become possible."
+            ></textarea>
+          </div>
+
+          <div class="fields-two">
+            <div class="field">
+              <label for="qualification-job">Qualification, exam board or target job <small>(if relevant)</small></label>
+              <input id="qualification-job" name="Qualification, exam board or target job" type="text" maxlength="160" />
+            </div>
+
+            <div class="field">
+              <label for="format">Preferred format</label>
+              <select id="format" name="Preferred format" required>
+                <option value="">Choose one</option>
+                <option>Online</option>
+                <option>In person (selected regions)</option>
+                <option>Open to either</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="location">Town or outward postcode <small>(for in-person support)</small></label>
+              <input id="location" name="Town or outward postcode" type="text" autocomplete="address-level2" maxlength="80" placeholder="For example: Henley-on-Thames or BS6" />
+            </div>
+
+            <div class="field">
+              <label for="availability">Availability</label>
+              <input id="availability" name="Availability" type="text" maxlength="250" placeholder="Days, times and preferred start" required />
+            </div>
+          </div>
+
+          <label class="consent consent--optional" for="matching-context">
+            <input
+              id="matching-context"
+              name="Private matching conversation requested"
+              type="checkbox"
+              value="Yes"
+            />
+
+            <span>
+              <strong>Request a private matching conversation <small>(optional)</small></strong>
+              Tick this if you would like to discuss access, SEND, language, confidence or safe matching privately. Do not add diagnoses, medical details, records or safeguarding information to this first enquiry.
+            </span>
+          </label>
+
+          <label class="consent" for="privacy-acknowledgement">
+            <input
+              id="privacy-acknowledgement"
+              name="Privacy acknowledgement"
+              type="checkbox"
+              value="Acknowledged"
+              required
+            />
+
+            <span>
+              I have read the <a href="privacy.html">privacy notice</a> and understand that Toucan Learn will use these details to assess and reply to my enquiry. Submitting the form does not guarantee a tutor, place, price or outcome.
+            </span>
+          </label>
+
+          <button class="button form-submit" id="submit-button" type="submit">
+            Send enquiry <span aria-hidden="true">→</span>
+          </button>
+          </fieldset>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        © <span id="year">2026</span> Joshua Gordon Jones trading as Toucan Learn.
+      </div>
+
+      <nav class="footer-links" aria-label="Policies and navigation">
+        <a href="privacy.html">Privacy</a>
+        <a href="safeguarding.html">Safeguarding</a>
+        <a href="complaints.html">Complaints</a>
+        <a href="index.html">Home</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="site.js"></script>
+  <script src="campaigns.js"></script>
+  <script src="contact.js"></script>
+</body>
+</html>

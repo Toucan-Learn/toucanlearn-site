@@ -94,8 +94,8 @@
     }
 
     .logo img {
-      width: 58px;
-      height: 48px;
+      width: 64px;
+      height: 64px;
       object-fit: contain;
       display: block;
     }
@@ -258,6 +258,45 @@
       box-shadow: var(--shadow);
       border: 1px solid rgba(11, 63, 81, 0.08);
       overflow: hidden;
+    }
+
+    /* The supplied artwork stays intact; only its placement varies. */
+    .hero-toucans {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      min-width: 0;
+      height: clamp(370px, 34vw, 465px);
+      margin: 0 auto;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .hero-toucan {
+      position: absolute;
+      display: block;
+      width: var(--toucan-size);
+      height: auto;
+      left: var(--toucan-x);
+      top: var(--toucan-y);
+      transform: translate(-50%, -50%) rotate(var(--toucan-tilt));
+    }
+
+    .hero-toucan--1 { --toucan-x: 14%; --toucan-y: 16%; --toucan-size: 21%; --toucan-tilt: -14deg; }
+    .hero-toucan--2 { --toucan-x: 47%; --toucan-y: 14%; --toucan-size: 23%; --toucan-tilt: 10deg; }
+    .hero-toucan--3 { --toucan-x: 81%; --toucan-y: 19%; --toucan-size: 19%; --toucan-tilt: -8deg; }
+    .hero-toucan--4 { --toucan-x: 17%; --toucan-y: 47%; --toucan-size: 22%; --toucan-tilt: 12deg; }
+    .hero-toucan--5 { --toucan-x: 48%; --toucan-y: 48%; --toucan-size: 26%; --toucan-tilt: -6deg; }
+    .hero-toucan--6 { --toucan-x: 83%; --toucan-y: 51%; --toucan-size: 22%; --toucan-tilt: 15deg; }
+    .hero-toucan--7 { --toucan-x: 19%; --toucan-y: 79%; --toucan-size: 20%; --toucan-tilt: -12deg; }
+    .hero-toucan--8 { --toucan-x: 52%; --toucan-y: 82%; --toucan-size: 24%; --toucan-tilt: 9deg; }
+    .hero-toucan--9 { --toucan-x: 85%; --toucan-y: 83%; --toucan-size: 17%; --toucan-tilt: -15deg; }
+
+    @media (max-width: 940px) {
+      .hero-toucans {
+        height: auto;
+        aspect-ratio: 1.15;
+      }
     }
 
     .trust-strip {
@@ -593,7 +632,7 @@
         grid-template-columns: 1fr;
       }
 
-      .logo img { width: 52px; height: 43px; }
+      .logo img { width: 56px; height: 56px; }
       .brand-lockup strong { font-size: 1.4rem; }
       .nav-links { display: none; }
       .mobile-note {
@@ -1824,8 +1863,8 @@ h1 {
   }
 
   .logo img {
-    width: 66px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
   }
 
   .brand-lockup strong {

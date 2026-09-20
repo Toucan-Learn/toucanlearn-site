@@ -17,11 +17,15 @@
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <link rel="stylesheet" href="style.css?v=20260908-toucan-flock-7" />
   <link rel="stylesheet" href="campaigns.css?v=20260905-form-disable-4" />
+  <link rel="stylesheet" href="hero.css?v=20260920-opening-1" />
+  <link rel="preload" as="image" href="assets/galaxy-noise.png" />
+  <link rel="preload" as="image" href="assets/toucan-logo-flat.png" />
+  <script src="hero-sky.js?v=20260920-opening-1" type="module"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to main content</a>
 
-  <header>
+  <header class="toucan-opening-header">
     <div class="container nav">
       <a class="logo logo--wordmark" href="#top" aria-label="Toucan Learn home">
         <img class="brand-toucan" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
@@ -45,144 +49,32 @@
   </header>
 
   <main id="main" tabindex="-1">
-    <section class="hero" id="top">
-      <div class="container hero-grid">
-        <div>
-          <div class="eyebrow">Bespoke tutoring for children and adults · online and selected regions</div>
-          <h1>Bespoke tutoring, built around the learner<span>.</span></h1>
-          <p class="lead">Toucan Learn provides interest-led, engaging one-to-one tutoring for people who benefit from support that feels personal, structured and genuinely understood.</p>
+    <section class="living-hero" id="top" aria-labelledby="hero-title">
+      <div class="hero-haze" aria-hidden="true"></div>
+      <div class="container hero-layout">
+        <div class="hero-copy">
+          <p class="eyebrow light">A DIFFERENT WAY INTO LEARNING</p>
+          <h1 id="hero-title">Built around<br /><em>you.</em></h1>
+          <p class="hero-description">Your interests. Your pace. Your possibilities.<br />Personal tutoring that starts with the person.</p>
           <div class="hero-actions">
-            <a class="button" href="contact.html">Start an enquiry <span aria-hidden="true">→</span></a>
-            <a class="button secondary" href="#approach">Explore our approach</a>
+            <a class="button peach" href="contact.html">Start an enquiry <span aria-hidden="true">↗</span></a>
+            <a class="quiet-link" href="#approach">Explore our approach <span aria-hidden="true">↓</span></a>
           </div>
-          <p class="microcopy">Start the intake process and tell us what kind of support is needed. We confirm fit, tutor and price before anything is booked.</p>
+          <p class="hero-audience">Children, young people &amp; adults.<br />Online, and in person in selected areas.</p>
         </div>
-
-        <div class="hero-toucans" aria-hidden="true">
-          <!-- Select the original teal fill only; keep beaks, chests, eyes, pencil and pink linework. -->
-          <svg class="toucan-colour-filters" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
-            <defs>
-              <filter id="toucan-body-plum" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
-                <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 1 0 -0.16" result="body-key" />
-                <feComponentTransfer in="body-key" result="body-mask">
-                  <feFuncA type="linear" slope="40" intercept="0" />
-                </feComponentTransfer>
-                <feFlood flood-color="#785080" result="body-colour" />
-                <feComposite in="body-colour" in2="body-mask" operator="in" result="paint" />
-                <feComposite in="paint" in2="SourceAlpha" operator="in" result="clipped-paint" />
-                <feMerge>
-                  <feMergeNode in="SourceGraphic" />
-                  <feMergeNode in="clipped-paint" />
-                </feMerge>
-              </filter>
-              <filter id="toucan-body-forest" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
-                <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 1 0 -0.16" result="body-key" />
-                <feComponentTransfer in="body-key" result="body-mask">
-                  <feFuncA type="linear" slope="40" intercept="0" />
-                </feComponentTransfer>
-                <feFlood flood-color="#3c795e" result="body-colour" />
-                <feComposite in="body-colour" in2="body-mask" operator="in" result="paint" />
-                <feComposite in="paint" in2="SourceAlpha" operator="in" result="clipped-paint" />
-                <feMerge>
-                  <feMergeNode in="SourceGraphic" />
-                  <feMergeNode in="clipped-paint" />
-                </feMerge>
-              </filter>
-              <filter id="toucan-body-cobalt" color-interpolation-filters="sRGB" x="0%" y="0%" width="100%" height="100%">
-                <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  -1 0 1 0 -0.16" result="body-key" />
-                <feComponentTransfer in="body-key" result="body-mask">
-                  <feFuncA type="linear" slope="40" intercept="0" />
-                </feComponentTransfer>
-                <feFlood flood-color="#3d619c" result="body-colour" />
-                <feComposite in="body-colour" in2="body-mask" operator="in" result="paint" />
-                <feComposite in="paint" in2="SourceAlpha" operator="in" result="clipped-paint" />
-                <feMerge>
-                  <feMergeNode in="SourceGraphic" />
-                  <feMergeNode in="clipped-paint" />
-                </feMerge>
-              </filter>
-            </defs>
-          </svg>
-          <img class="hero-toucan hero-toucan--1" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--2" src="assets/toucan-logo-flat.png" srcset="assets/toucan-logo-flat.png 1200w" sizes="(max-width: 620px) 18vw, 101px" alt="" width="1200" height="1200" fetchpriority="high" />
-          <img class="hero-toucan hero-toucan--3" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--4" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--5" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--6" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--7" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--8" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--9" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--10" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--11" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--12" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--13" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--14" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--15" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--16" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--17" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--18" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--19" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--20" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--21" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--22" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--23" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--24" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--25" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--26" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--27" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--28" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--29" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--30" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--31" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--32" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--33" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--34" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--35" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--36" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--37" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--38" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--39" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--40" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--41" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--42" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--43" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--44" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--45" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--46" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--47" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--48" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--49" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--50" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--51" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--52" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--53" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--54" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--55" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--56" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--57" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--58" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--59" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--60" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--61" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--62" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--63" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--64" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--65" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--66" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--67" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--68" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--69" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--70" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--71" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
-          <img class="hero-toucan hero-toucan--72" src="assets/toucan-logo-flat.png" alt="" width="1200" height="1200" />
+        <div class="hero-world">
+          <div class="sky-studio">
+            <button class="world-art" id="ripple-button" type="button" aria-label="Toucan pixel sky: click or press Enter to make ripples">
+              <canvas id="sky-canvas" aria-hidden="true"></canvas>
+              <canvas id="flock-canvas" aria-hidden="true"></canvas>
+              <img class="hero-mascot" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
+              <canvas id="ripple-canvas" aria-hidden="true"></canvas>
+            </button>
+            <div class="scene-controls" role="group" aria-label="Scene controls">
+              <button class="calm-button" id="calm-button" type="button" aria-pressed="false">Pause motion</button>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div class="container trust-strip" role="list" aria-label="Trust signals">
-        <div class="trust-card" role="listitem"><div class="icon" aria-hidden="true">✓</div><div><strong>Carefully matched tutors</strong><span>Fit reviewed before booking.</span></div></div>
-        <div class="trust-card" role="listitem"><div class="icon" aria-hidden="true">↗</div><div><strong>Tailored sessions</strong><span>No mass-produced curriculum.</span></div></div>
-        <div class="trust-card" role="listitem"><div class="icon" aria-hidden="true">◎</div><div><strong>Learner-led approach</strong><span>Built around interests &amp; needs.</span></div></div>
-        <div class="trust-card" role="listitem"><div class="icon" aria-hidden="true">£</div><div><strong>Price confirmed first</strong><span>No booking before you know.</span></div></div>
       </div>
     </section>
 

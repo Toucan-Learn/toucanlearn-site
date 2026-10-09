@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'none'; frame-src 'none'; worker-src 'none'" />
+  <title>Kit's demo learner world | Toucan Learn</title>
+  <meta name="description" content="Explore a fictional Toucan learner world: space, football, published writing, a maths arcade and an ideas wall. Kit is made up." />
+  <link rel="canonical" href="https://toucanlearn.co.uk/world/index.html" />
+  <meta property="og:title" content="Kit's demo learner world | Toucan Learn" />
+  <meta property="og:description" content="A made-up learner. A world of possibilities. Try a little of the interest-led learning Toucan can build with you." />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Toucan Learn" />
+  <meta property="og:locale" content="en_GB" />
+  <meta property="og:url" content="https://toucanlearn.co.uk/world/index.html" />
+  <link rel="icon" href="../assets/toucan-favicon.png" type="image/png" />
+  <link rel="stylesheet" href="world.css?v=20261009-1" />
+  <script src="world.js?v=20261009-1" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <aside class="demo-notice" aria-label="Demo notice"><div class="shell"><strong>A demo learner world</strong> — Kit is made up, to show the kind of space a Toucan learner can have.</div></aside>
+  <header class="world-header">
+    <div class="shell header-row">
+      <a class="logo" href="../index.html" aria-label="Toucan Learn home">
+        <img class="brand-toucan" src="../assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
+        <span class="brand-lockup"><strong>Tou<span class="brand-can">can</span></strong><span>Learn</span></span>
+      </a>
+      <nav class="header-links" aria-label="Primary">
+        <a href="../index.html">Home</a>
+        <a href="../index.html#support-routes">Who we help</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main" tabindex="-1" class="shell">
+    <section class="world-intro" aria-labelledby="world-title">
+      <div class="intro-copy">
+        <p class="pixel-label">Space. Football. Big ideas.</p>
+        <h1 id="world-title">Kit's<br /><span>orbit.</span></h1>
+        <p class="intro-lead">A place to make things.<br />And see how far they can go.</p>
+        <p>Welcome to a fictional learner's corner of the universe. Read a match report, fuel a rocket with maths, or leave an idea for the next adventure.</p>
+        <a class="world-button" href="#writing">Pick a place to start <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="sky-panel">
+        <div class="panel-top"><h2 id="sky-title">Kit's sky</h2><span class="pixel-label">01 / Mission control</span></div>
+        <button id="kit-sky" class="sky-art" type="button" aria-label="Make a colour ripple in Kit's pixel sky" aria-describedby="sky-hint" disabled>
+          <canvas id="kit-sky-canvas" aria-hidden="true"></canvas>
+          <span class="pixel-planet" aria-hidden="true"><span></span></span>
+          <span class="sky-stamp" aria-hidden="true">KIT / EXPLORER</span>
+        </button>
+        <div class="sky-controls" role="group" aria-label="Sky controls">
+          <button id="kit-calm" class="small-button" type="button" aria-pressed="false" disabled>Calm</button>
+          <button id="kit-colour" class="small-button" type="button" disabled>Sky colour: mint</button>
+        </div>
+        <p id="sky-hint" class="hint">Move, tap, or press Enter in the sky to make ripples. Calm pauses motion.</p>
+      </div>
+    </section>
+
+    <nav class="world-menu" aria-label="Explore Kit's world">
+      <a href="#writing"><span aria-hidden="true">02</span> Published writing <span aria-hidden="true">↗</span></a>
+      <a href="#arcade"><span aria-hidden="true">03</span> Maths arcade <span aria-hidden="true">↗</span></a>
+      <a href="#ideas"><span aria-hidden="true">04</span> Ideas wall <span aria-hidden="true">↗</span></a>
+      <a href="#reports"><span aria-hidden="true">05</span> What families get <span aria-hidden="true">↗</span></a>
+    </nav>
+
+    <div class="work-grid">
+      <section class="world-panel writing-panel" id="writing" aria-labelledby="writing-title">
+        <p class="pixel-label">02 / Published writing</p>
+        <h2 id="writing-title">The Orbit Cup</h2>
+        <p class="byline">By Kit · fictional match report</p>
+        <div class="match-score" role="group" aria-label="Comets 3, Moon Rovers 2"><span>COMETS</span><strong>3 : 2</strong><span>MOON ROVERS</span></div>
+        <article class="published-piece" aria-label="Improved version of Kit's fictional report">
+          <p>The Comets were one goal down with two minutes left. I thought the Orbit Cup was gone. Then our captain spotted a gap and passed instead of shooting. That mattered because three defenders were blocking the goal. We scored, and suddenly everybody was shouting.</p>
+          <p>The winner came from a corner. The ball bounced off the post and rolled to me. I hit it with my left foot, which is usually my terrible foot. This time it worked! We won 3–2. My favourite part was the pass before the equaliser. Being brave doesn't always mean taking the shot yourself.</p>
+        </article>
+        <details class="draft-toggle">
+          <summary>How it grew <span aria-hidden="true">+</span></summary>
+          <div class="draft-comparison">
+            <div><h3>First draft</h3><p>We played the Moon Rovers. We were losing but then we scored two goals. I scored the last one. It was good and we won the cup.</p></div>
+            <div><h3>Improved version</h3><p>“The Comets were one goal down with two minutes left. I thought the Orbit Cup was gone.”</p><p>The full report above now explains why the pass mattered and ends with Kit's own reflection.</p></div>
+          </div>
+          <p class="tutor-note"><strong>Sample tutor note:</strong> Kit kept their own voice, added a stronger opening and explained a reason, so the reader can picture the match.</p>
+        </details>
+      </section>
+
+      <section class="world-panel arcade-panel" id="arcade" aria-labelledby="arcade-title">
+        <p class="pixel-label">03 / Maths arcade</p>
+        <h2 id="arcade-title">Fuel the rocket</h2>
+        <p>Five correct answers. One trip to the stars. Take your time — you can try each question again.</p>
+        <div class="launch-pad" id="launch-pad" aria-hidden="true"><div class="moon-mark"></div><div class="pixel-rocket"><i></i></div><div class="pad-line"></div></div>
+        <p class="fuel-label">Fuel: <strong id="fuel-count">0 / 5</strong></p>
+        <div class="fuel-cells" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
+        <form id="rocket-form">
+          <fieldset id="rocket-fields" disabled>
+            <legend>Times tables, from 2 to 12</legend>
+            <p class="maths-question" id="maths-question">3 × 4 = ?</p>
+            <label for="rocket-answer">Your answer</label>
+            <div class="answer-row"><input id="rocket-answer" name="answer" type="number" inputmode="numeric" min="0" max="144" step="1" required autocomplete="off" aria-describedby="game-feedback" /><button class="world-button" type="submit">Add fuel <span aria-hidden="true">↑</span></button></div>
+          </fieldset>
+        </form>
+        <p id="game-feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true">Enter an answer, then press Add fuel or Enter.</p>
+        <button id="rocket-reset" class="small-button" type="button" disabled>Start again</button>
+      </section>
+    </div>
+
+    <section class="world-panel ideas-panel" id="ideas" aria-labelledby="ideas-title">
+      <div class="section-row"><div><p class="pixel-label">04 / Ideas wall</p><h2 id="ideas-title">What shall we make next?</h2></div><span class="wall-badge">Room for a new thought</span></div>
+      <p>Add a note, then drag its handle onto another note to rearrange the wall. You can also focus the handle and use the arrow keys, or tap its Move button. These ideas stay in your browser; nothing is sent to Toucan.</p>
+      <form id="idea-form">
+        <fieldset id="idea-fields" disabled>
+          <legend class="visually-hidden">Add an idea to the wall</legend>
+          <label for="idea-text">Your idea (keep personal details out)</label>
+          <div class="idea-input-row"><input id="idea-text" name="idea" type="text" maxlength="140" required placeholder="A stadium on Saturn?" autocomplete="off" /><button class="world-button" type="submit">Stick it up <span aria-hidden="true">+</span></button></div>
+        </fieldset>
+      </form>
+      <div id="ideas-board" class="ideas-board" role="group" aria-label="Your ideas wall">
+        <div class="static-note">Design a football kit for zero gravity.</div><div class="static-note static-note--mint">How long would a match on Mars last?</div>
+      </div>
+      <div class="wall-footer"><p id="idea-feedback" class="feedback" role="status" aria-live="polite" aria-atomic="true">Try adding an idea. Up to 12 notes fit on this wall.</p><button id="ideas-reset" class="small-button" type="button" disabled>Reset this wall</button></div>
+      <p id="storage-hint" class="hint">Notes save only in this browser when storage is available. You can reset the wall to remove your notes.</p>
+    </section>
+
+    <section class="report-section" id="reports" aria-labelledby="reports-title">
+      <div class="report-intro"><p class="pixel-label">05 / What families get</p><h2 id="reports-title">The adventure.<br />And the progress.</h2><p>A sample lesson report — entirely fictional. A personal world gives the work a home; clear reporting helps families see what is growing.</p></div>
+      <div class="report-card"><p class="sample-stamp">SAMPLE REPORT / KIT</p><dl>
+        <div><dt>This session we covered</dt><dd>Turning a match into a report, explaining a key pass and practising the 3, 4 and 6 times tables.</dd></div>
+        <div><dt>I was impressed by</dt><dd>Kit's opening built suspense. They explained why passing was the better choice and checked a tricky calculation.</dd></div>
+        <div><dt>We'll keep working at</dt><dd>Breaking writing into paragraphs and using known multiplication facts to work out unfamiliar ones.</dd></div>
+        <div><dt>Next time we'll cover</dt><dd>A stadium on a new planet: sketch the pitch, calculate its perimeter and write a visitor's guide.</dd></div>
+      </dl></div>
+    </section>
+
+    <section class="world-cta" aria-labelledby="cta-title">
+      <p class="pixel-label">A small demo. Your own starting point.</p>
+      <h2 id="cta-title">What would your world be about?</h2>
+      <p>Your first session is free. Then £40 per hour, with collaborative planning and ongoing review led by Joshua.</p>
+      <a class="world-button" href="../contact.html">Start with a free first session <span aria-hidden="true">→</span></a>
+      <a class="home-link" href="../index.html">Back to Toucan Learn</a>
+    </section>
+    <noscript><p class="no-script">The writing and sample report are ready to explore. Turn on JavaScript to play with the sky, rocket and ideas wall.</p></noscript>
+  </main>
+  <footer class="site-footer"><div class="shell footer-row"><p>© 2026 Joshua Gordon Jones trading as Toucan Learn · 10 Foxglove Close, Stoke Gifford, Bristol BS34 8LH</p><nav aria-label="Policies and contact"><a href="../privacy.html">Privacy</a><a href="../safeguarding.html">Safeguarding</a><a href="../complaints.html">Complaints</a><a href="../contact.html">Enquire</a></nav></div></footer>
+</body>
+</html>

@@ -1217,7 +1217,6 @@ h1 {
 
 /* Near-final section refinement: 2026-08-01 */
 
-#approach,
 #who,
 #how-it-works,
 #reviews {
@@ -1567,7 +1566,6 @@ h1 {
 }
 
 @media (max-width: 620px) {
-  #approach,
   #who,
   #how-it-works,
   #reviews {
@@ -1691,7 +1689,7 @@ h1 {
   scroll-margin-top: -20px;
 }
 
-/* Desktop Hero scale. Approach itself uses its original pre-values geometry. */
+/* Desktop Hero scale. */
 @media (min-width: 941px) {
   /* Let the opening composition use more of the available desktop frame
      without changing its section boundary or allowing Approach to bleed in. */
@@ -1719,18 +1717,6 @@ h1 {
     padding: 12px 14px;
   }
 
-  /* Keep the last part of the trust strip visible below the fixed header while
-     preserving a smaller glimpse of Who we help at the bottom of the viewport. */
-  #approach {
-    scroll-margin-top: clamp(16px, calc(57svh - 422px), 220px);
-  }
-
-}
-
-/* Exact pre-values Approach heading scale; the base section, cards and natural
-   anchor already retain the original 96px spacing and 0px scroll margin. */
-#approach .section-head h2 {
-  font-size: clamp(2.2rem, 4vw, 3.7rem);
 }
 
 @media (max-width: 620px) {
@@ -1740,15 +1726,6 @@ h1 {
 }
 
 /* Proof space use: keep the equal card footprint while prioritising the evidence. */
-
-/* Balanced Approach overlap and resilient Proof reveals: 2026-08-02 */
-@media (min-width: 941px) {
-  #approach {
-    /* Preserve the centred Approach landing after tightening its lower edge.
-       The sticky header remains accounted for by html's scroll padding. */
-    scroll-margin-top: clamp(0px, calc(50svh - 334px), 260px);
-  }
-}
 
 @media (min-width: 1100px) {
 
@@ -1820,7 +1797,6 @@ h1 {
 @media (min-width: 941px) {
   .hero-grid,
   .trust-strip,
-  #approach > .container,
   .who-shell,
   .how-shell,
   #reviews {
@@ -1848,12 +1824,6 @@ h1 {
 
   .hero-placeholder {
     height: clamp(390px, 31vw, 430px);
-  }
-
-  #approach {
-    /* Keep the Hero-side spacing intact and remove the remaining excess below
-       the cards so both neighbouring sections frame Approach evenly. */
-    padding: 24px 0 46px;
   }
 
   .who-section {

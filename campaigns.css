@@ -691,20 +691,34 @@
   }
 }
 
-/* One layout system for the homepage below the approved green opening. */
-#main > .homepage-section {
-  --section-space: clamp(64px, 8vw, 104px);
-  --section-gap: clamp(24px, 3vw, 36px);
-  --section-gutters: 32px;
-  --section-heading-size: clamp(2.1rem, 3.6vw, 3.2rem);
-  --section-card-space: clamp(24px, 3vw, 38px);
-  padding: var(--section-space) 0;
-  min-height: 0;
-  display: block;
+/* Homepage sizing: one container, one visible section gap, intrinsic cards.
+   The opening's art, type, motion and vertical frame stay in hero.css. */
+body.homepage {
+  --max: 1280px;
+  --page-gutter: 20px;
+  --section-space: 64px;
+  --section-gap: 24px;
+  --section-heading-size: clamp(2rem, 3.2vw, 3rem);
+  --card-heading-size: clamp(1.25rem, 1.7vw, 1.5rem);
+  --section-card-space: clamp(24px, 2.3vw, 32px);
 }
 
-#main > .homepage-section > .container {
-  width: min(calc(100% - var(--section-gutters)), var(--max));
+/* Specificity also overrides hero.css's separate desktop/tablet widths. */
+body.homepage .container,
+body.homepage #main .container {
+  width: min(calc(100% - 2 * var(--page-gutter)), var(--max));
+}
+
+/* Put the gap on the following section only, never on both neighbours. */
+#main > .homepage-section {
+  padding: var(--section-space) 0 0;
+  margin: 0;
+  min-height: 0;
+  display: flow-root;
+}
+
+body.homepage .site-footer {
+  margin-top: var(--section-space);
 }
 
 .homepage-section .section-head {
@@ -764,50 +778,126 @@
 .homepage-section .audience-route-card,
 .homepage-section .how-overview,
 .homepage-section .how-steps li,
-.homepage-section .how-cta,
-.homepage-section .cta-box {
+.homepage-section .how-cta {
   min-width: 0;
+  min-height: 0;
   padding: var(--section-card-space);
   border-radius: var(--radius-xl);
 }
 
+.homepage-section .audience-route-card h3,
+.homepage-section .how-steps h3 {
+  max-width: none;
+  margin: 0 0 12px;
+  font-size: var(--card-heading-size);
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
+}
+
+.homepage-section .audience-route-card ul {
+  margin: 20px 0 24px;
+}
+
+.homepage-section .audience-route-card .audience-button {
+  margin-top: auto;
+  max-width: 100%;
+}
+
 .homepage-section .how-shell {
   gap: var(--section-gap);
+  align-items: stretch;
+}
+
+/* When the card stretches to match the steps, keep the method ribbon and
+   note at the bottom instead of leaving an empty lower half. */
+.homepage-section .how-overview {
+  display: flex;
+  flex-direction: column;
 }
 
 .homepage-section .how-overview .method-ribbon {
-  margin-top: 0;
+  margin-top: auto;
 }
 
+.homepage-section .how-steps li {
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+/* Each step is a title and visible paragraph, with no nested panel. */
 .homepage-section .how-steps li > div {
-  grid-template-columns: minmax(0, 0.72fr) minmax(0, 1.28fr);
+  display: block;
 }
 
-/* Let revealed text wrap without clipping; equal grid rows keep the step
-   cards aligned when a detail is open. */
-.homepage-section .how-step__details {
-  height: auto;
-  min-height: 79px;
+.homepage-section .how-steps p {
+  margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.55;
 }
 
-.homepage-section .how-step__details > p {
-  position: relative;
-  inset: auto;
-  min-height: 79px;
+/* A band is its own content: remove the heading block's trailing gap. */
+.homepage-section .how-cta .section-head {
+  margin-bottom: 16px;
 }
 
-.homepage-section .cta-box p {
+.homepage-section .how-cta > div > span {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* The active slide stays intrinsic; existing JS measures it for transitions.
+   The quote ornament gets a separate grid cell, including on phones. */
+.homepage-section .review-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 40px;
+  column-gap: 16px;
+  row-gap: 16px;
+  min-height: 0;
+  padding: var(--section-card-space);
+  border-radius: var(--radius-xl);
+}
+
+.homepage-section .review-card::before {
+  position: static;
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.homepage-section .review-card p {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.homepage-section .review-card footer {
+  grid-column: 1 / -1;
+  grid-row: 2;
   margin: 0;
   color: var(--ink);
 }
 
+.homepage-section .reviews-carousel .carousel-toolbar {
+  margin: 0 0 14px;
+}
+
+@media (max-width: 940px) {
+  .homepage-section .how-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 620px) {
-  #main > .homepage-section {
-    --section-gutters: 24px;
+  .homepage-section .how-steps {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
   }
 
-  .homepage-section .how-steps li,
-  .homepage-section .how-steps li > div {
+  .homepage-section .how-steps li {
     grid-template-columns: minmax(0, 1fr);
   }
 }

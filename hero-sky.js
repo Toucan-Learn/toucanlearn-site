@@ -192,8 +192,10 @@ function sync() {
 }
 function applyCalm() {
   document.body.classList.toggle('is-calm', calm);
-  calmButton.setAttribute('aria-pressed', String(calm));
-  calmButton.textContent = calm ? 'Resume motion' : 'Pause motion';
+  if (calmButton) {
+    calmButton.setAttribute('aria-pressed', String(calm));
+    calmButton.textContent = calm ? 'Resume motion' : 'Pause motion';
+  }
   art.disabled = calm || !ctx;
   // Freeze the current picture and rings; never clear them on pause.
   draw();
@@ -212,7 +214,7 @@ art.addEventListener('pointermove', event => {
   pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
 }, { passive: true });
 art.addEventListener('pointerleave', () => { pointer = null; });
-calmButton.addEventListener('click', () => { calm = !calm; applyCalm(); });
+calmButton?.addEventListener('click', () => { calm = !calm; applyCalm(); });
 preference.addEventListener('change', event => { calm = event.matches; applyCalm(); });
 sky.addEventListener('webglcontextlost', event => { event.preventDefault(); sky.hidden = true; renderer = null; });
 sky.addEventListener('webglcontextrestored', () => { renderer = createSky(); draw(); });

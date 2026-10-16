@@ -16,13 +16,13 @@
   <meta property="og:url" content="https://toucanlearn.co.uk/" />
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <link rel="stylesheet" href="style.css?v=20261010-consistency-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261010-consistency-1" />
-  <link rel="stylesheet" href="hero.css?v=20260920-opening-1" />
+  <link rel="stylesheet" href="campaigns.css?v=20261011-sizing-1" />
+  <link rel="stylesheet" href="hero.css?v=20261016-no-pause-1" />
   <link rel="preload" as="image" href="assets/galaxy-noise.png" />
   <link rel="preload" as="image" href="assets/toucan-logo-flat.png" />
-  <script src="hero-sky.js?v=20260920-opening-1" type="module"></script>
+  <script src="hero-sky.js?v=20261016-no-pause-1" type="module"></script>
 </head>
-<body>
+<body class="homepage">
   <a class="skip-link" href="#main">Skip to main content</a>
 
   <header class="toucan-opening-header">
@@ -70,9 +70,6 @@
               <img class="hero-mascot" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
               <canvas id="ripple-canvas" aria-hidden="true"></canvas>
             </button>
-            <div class="scene-controls" role="group" aria-label="Scene controls">
-              <button class="calm-button" id="calm-button" type="button" aria-pressed="false">Pause motion</button>
-            </div>
           </div>
         </div>
       </div>
@@ -132,34 +129,21 @@
         <ol class="how-steps">
           <li>
             <span class="how-number" aria-hidden="true">01</span>
-            <div><h3>Tell us the goal</h3><details class="how-step__details" name="how-process"><summary><span class="how-step__prompt">Reveal the detail</span><span class="how-step__toggle" aria-hidden="true">+</span></summary><p>Email us who the support is for, the subject or goal and your rough availability. We will check the tutor fit and arrange your free first session.</p></details></div>
+            <div><h3>Tell us the goal</h3><p>Email us who the support is for, the subject or goal and your rough availability. We will check the tutor fit and arrange your free first session.</p></div>
           </li>
           <li>
             <span class="how-number" aria-hidden="true">02</span>
-            <div><h3>Try your free first session</h3><details class="how-step__details" name="how-process"><summary><span class="how-step__prompt">Reveal the detail</span><span class="how-step__toggle" aria-hidden="true">+</span></summary><p>Your first session is free. Meet Joshua or another Toucan tutor, explore your starting point and agree a useful way forward.</p></details></div>
+            <div><h3>Try your free first session</h3><p>Your first session is free. Meet Joshua or another Toucan tutor, explore your starting point and agree a useful way forward.</p></div>
           </li>
           <li>
             <span class="how-number" aria-hidden="true">03</span>
-            <div><h3>Tailored weekly sessions</h3><details class="how-step__details" name="how-process"><summary><span class="how-step__prompt">Reveal the detail</span><span class="how-step__toggle" aria-hidden="true">+</span></summary><p>If you continue, sessions are £40 per hour. Each has clear learning aims, with the structure, pace and interests that work for you.</p></details></div>
+            <div><h3>Tailored weekly sessions</h3><p>If you continue, sessions are £40 per hour. Each has clear learning aims, with the structure, pace and interests that work for you.</p></div>
           </li>
           <li>
             <span class="how-number" aria-hidden="true">04</span>
-            <div><h3>Review and next step</h3><details class="how-step__details" name="how-process"><summary><span class="how-step__prompt">Reveal the detail</span><span class="how-step__toggle" aria-hidden="true">+</span></summary><p>Your tutor records what was covered, what helped and what needs more work. Joshua reviews progress with the tutor and helps plan the next useful step.</p></details></div>
+            <div><h3>Review and next step</h3><p>Your tutor records what was covered, what helped and what needs more work. Joshua reviews progress with the tutor and helps plan the next useful step.</p></div>
           </li>
         </ol>
-      </div>
-    </section>
-
-    <section class="homepage-section offer-section">
-      <div class="container how-cta">
-        <div>
-          <div class="section-head">
-            <div class="eyebrow">Start an enquiry</div>
-            <h2>Your first session is free.</h2>
-          </div>
-          <span>After that, £40 per hour, with planning and review included. The same offer with Joshua or another Toucan tutor. We agree the tutor, approach and arrangements before booking.</span>
-        </div>
-        <a class="button" href="contact.html">Start an enquiry <span aria-hidden="true">→</span></a>
       </div>
     </section>
 
@@ -212,18 +196,19 @@
       </div>
     </section>
 
-    <section class="homepage-section cta" id="contact">
-      <div class="container cta-box">
+    <section class="homepage-section offer-section" id="contact">
+      <div class="container how-cta">
         <div>
           <div class="section-head">
             <div class="eyebrow">Start an enquiry</div>
-            <h2>Ready to take the first step?</h2>
+            <h2>Your first session is free.</h2>
           </div>
-          <p>Email us and tell us who the support is for and what you'd like help with. No pressure, no commitment. Just a conversation.</p>
+          <span>After that, £40 per hour, with planning and review included. The same offer with Joshua or another Toucan tutor. We agree the tutor, approach and arrangements before booking.</span>
         </div>
         <a class="button" href="contact.html">Start an enquiry <span aria-hidden="true">→</span></a>
       </div>
     </section>
+
   </main>
 
   <footer class="site-footer">

@@ -693,6 +693,10 @@
 
 /* Homepage sizing: one container, one visible section gap, intrinsic cards.
    The opening's art, type, motion and vertical frame stay in hero.css. */
+html.homepage-root {
+  scroll-padding-top: 0;
+}
+
 body.homepage {
   --max: 1280px;
   --page-gutter: 20px;
@@ -701,6 +705,18 @@ body.homepage {
   --section-heading-size: clamp(2rem, 3.2vw, 3rem);
   --card-heading-size: clamp(1.25rem, 1.7vw, 1.5rem);
   --section-card-space: clamp(24px, 2.3vw, 32px);
+  --sticky-header-height: 95px;
+  --anchor-breathing-room: 12px;
+}
+
+/* One shared height drives both the sticky header and anchor clearance. */
+body.homepage .toucan-opening-header .nav {
+  height: calc(var(--sticky-header-height) - 1px);
+}
+
+body.homepage #main,
+body.homepage #main > section {
+  scroll-margin-top: calc(var(--sticky-header-height) + var(--anchor-breathing-room));
 }
 
 /* Specificity also overrides hero.css's separate desktop/tablet widths. */
@@ -709,10 +725,11 @@ body.homepage #main .container {
   width: min(calc(100% - 2 * var(--page-gutter)), var(--max));
 }
 
-/* Put the gap on the following section only, never on both neighbours. */
+/* The gap sits outside the anchor box, so its eyebrow lands below the header. */
 #main > .homepage-section {
-  padding: var(--section-space) 0 0;
-  margin: 0;
+  width: auto;
+  padding: 0;
+  margin: var(--section-space) 0 0;
   min-height: 0;
   display: flow-root;
 }
@@ -724,10 +741,11 @@ body.homepage .site-footer {
 .homepage-section .section-head {
   display: block;
   margin: 0 0 var(--section-gap);
+  text-align: left;
 }
 
 #main > .homepage-section h2 {
-  max-width: 780px;
+  max-width: 1000px;
   margin: 0;
   font-size: var(--section-heading-size);
   font-weight: 800;
@@ -736,7 +754,7 @@ body.homepage .site-footer {
 }
 
 .homepage-section .section-head p {
-  max-width: 780px;
+  max-width: none;
   margin: 16px 0 0;
   color: var(--ink);
   font-size: 1.05rem;
@@ -756,15 +774,12 @@ body.homepage .site-footer {
   text-transform: uppercase;
 }
 
-.homepage-section .how-overview .eyebrow,
 .homepage-section .how-cta .eyebrow,
 .homepage-section .audience-route-card--family .eyebrow {
   color: var(--orange-soft);
 }
 
-#main > .homepage-section .how-overview h2,
 #main > .homepage-section .how-cta h2,
-.homepage-section .how-overview .section-head p,
 .homepage-section .how-cta > div > span {
   color: white;
 }
@@ -776,7 +791,6 @@ body.homepage .site-footer {
 }
 
 .homepage-section .audience-route-card,
-.homepage-section .how-overview,
 .homepage-section .how-steps li,
 .homepage-section .how-cta {
   min-width: 0;
@@ -804,26 +818,15 @@ body.homepage .site-footer {
   max-width: 100%;
 }
 
-.homepage-section .how-shell {
-  gap: var(--section-gap);
-  align-items: stretch;
-}
-
-/* When the card stretches to match the steps, keep the method ribbon and
-   note at the bottom instead of leaving an empty lower half. */
-.homepage-section .how-overview {
-  display: flex;
-  flex-direction: column;
-}
-
-.homepage-section .how-overview .method-ribbon {
-  margin-top: auto;
+.homepage-section .how-steps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .homepage-section .how-steps li {
-  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 16px;
   align-items: start;
+  align-content: start;
 }
 
 /* Each step is a title and visible paragraph, with no nested panel. */
@@ -833,6 +836,23 @@ body.homepage .site-footer {
 
 .homepage-section .how-steps p {
   margin: 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+/* Retain a dark visual anchor, with the same frame as the route cards. */
+.homepage-section .how-steps li:first-child {
+  background: radial-gradient(circle at 90% 100%, rgba(55, 147, 137, 0.5), transparent 22rem), var(--blue);
+}
+
+.homepage-section .how-steps li:first-child h3,
+.homepage-section .how-steps li:first-child p {
+  color: white;
+}
+
+.homepage-section .how-note {
+  margin: var(--section-gap) 0 0;
   color: var(--ink);
   font-size: 1rem;
   line-height: 1.55;
@@ -887,11 +907,20 @@ body.homepage .site-footer {
 
 @media (max-width: 940px) {
   .homepage-section .how-steps {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: auto;
+  }
+
+  .homepage-section .how-steps li {
+    grid-template-columns: 44px minmax(0, 1fr);
   }
 }
 
 @media (max-width: 620px) {
+  body.homepage {
+    --sticky-header-height: 160px;
+  }
+
   .homepage-section .how-steps {
     grid-template-columns: minmax(0, 1fr);
     grid-auto-rows: auto;

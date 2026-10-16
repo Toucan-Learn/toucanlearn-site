@@ -8,6 +8,9 @@ uniform vec2 resolution;
 uniform float clock;
 uniform float home_view;
 uniform sampler2D nebula_noise;
+uniform vec3 star_low;
+uniform vec3 star_high;
+uniform vec3 meteor_tint;
 out vec4 outputColour;
 const int BAYER[16]=int[](0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5);
 // Midnight/slate palette; FLAME's original dither and geometry.
@@ -36,7 +39,7 @@ vec3 stars(vec2 pixel,float cell_size,float salt,float t,float speed){
  float cross_shape=float(min(distance_to_star.x,distance_to_star.y)<.5&&max(distance_to_star.x,distance_to_star.y)<1.5);
  float shape=mix(centre,max(centre,cross_shape*.5),step(.965,seed));
  float twinkle=.76+.24*sin(t*(.30+seed*.35)+seed*45.0);
- vec3 colour=mix(vec3(.40,.53,.65),vec3(.85,.87,.81),seed);
+ vec3 colour=mix(star_low,star_high,seed);
  return colour*shape*twinkle*step(.30,seed);
 }
 // One brief meteor every fourteen seconds, away from the central wordmark.
@@ -54,7 +57,7 @@ vec3 shooting_star(vec2 pixel,vec2 grid,float t){
  float trail=step(0.0,behind)*step(behind,tail_length)*(1.0-smoothstep(.3,1.1,across))*pow(max(0.0,1.0-behind/tail_length),1.6);
  float point=1.0-smoothstep(.3,1.4,length(delta));
  float fade=smoothstep(0.0,.16,phase)*(1.0-smoothstep(.72,1.15,phase));
- return vec3(.62,.78,.86)*max(trail*.58,point*.78)*fade;
+ return meteor_tint*max(trail*.58,point*.78)*fade;
 }
 void main(){
  float t=clock;
@@ -87,3 +90,113 @@ void main(){
  }
  outputColour=vec4(colour,1.0);
 }`;
+
+// Pixel image mode: reference cover framing, brush and radial wave refraction.
+export const MAX_PIXEL_RIPPLES = 64;
+export const PIXEL_RIPPLE_SPEED = 0.32;
+export const PIXEL_RIPPLE_TAIL = 0.08;
+export const pixelFragmentSource = originalFragmentSource
+  .replace('uniform float home_view;', `uniform float home_view;
+uniform sampler2D pixel_sky;
+uniform vec2 pixel_size;
+uniform float pixel_view;
+uniform vec4 brush[12];
+uniform vec2 swash[12];
+uniform vec3 ink;
+uniform vec3 ripples[${MAX_PIXEL_RIPPLES}];
+uniform int rippleCount;`)
+  .replace('vec2 drift=vec2(t*.0007,-t*.00028);', `
+ float brushLight=0.0;
+ vec2 warp=vec2(0.0);
+ for(int i=0;i<12;i++){
+  vec2 delta=(uv-brush[i].xy)*vec2(grid.x/grid.y,1.0);
+  float age=brush[i].z;
+  float life=max(0.0,1.0-age/1.5)*brush[i].w;
+  vec2 direction=normalize(swash[i]+vec2(.0001,0.0));
+  float along=dot(delta,direction);
+  float across=dot(delta,vec2(-direction.y,direction.x));
+  float halo=exp(-(along*along*55.0+across*across*340.0))*life;
+  brushLight+=halo*.22;
+  warp-=direction*halo*min(length(swash[i])*2.5,.09);
+ }
+ float ring=0.0;
+ vec2 rippleWarp=vec2(0.0);
+ for(int i=0;i<${MAX_PIXEL_RIPPLES};i++){
+  if(i>=rippleCount){break;}
+  vec2 delta=(uv-ripples[i].xy)*vec2(grid.x/grid.y,1.0);
+  float age=ripples[i].z;
+  vec2 farEdge=max(ripples[i].xy,vec2(1.0)-ripples[i].xy)*vec2(grid.x/grid.y,1.0);
+  float reach=length(farEdge);
+  float radius=age*${PIXEL_RIPPLE_SPEED};
+  float fade=1.0-smoothstep(reach,reach+${PIXEL_RIPPLE_TAIL},radius);
+  float wave=exp(-pow((length(delta)-radius)*60.0,2.0))*fade;
+  ring+=wave;
+  rippleWarp+=normalize(delta+vec2(.0001))*wave*.025;
+ }
+ vec2 displacement=clamp(warp,vec2(-.10),vec2(.10))+clamp(rippleWarp,vec2(-.06),vec2(.06));
+ if(pixel_view>.5){
+  // Match the original image's centred cover framing, then refract its pixels
+  // with exactly the same brush and radial displacement as the Earth sky.
+  vec2 sample_uv=clamp(uv+displacement/vec2(grid.x/grid.y,1.0),0.0,1.0);
+  float cover_scale=max(grid.x/pixel_size.x,grid.y/pixel_size.y);
+  vec2 visible=grid/(pixel_size*cover_scale);
+  sample_uv=(sample_uv-.5)*visible+.5;
+  vec3 original=texture(pixel_sky,sample_uv).rgb;
+  float brightness=max(original.r,max(original.g,original.b));
+  vec3 painted=floor((ink*(.15+brightness*.85)+original*.55)*32.0+.5)/32.0;
+  outputColour=vec4(mix(original,painted,clamp(brushLight+ring*.38,0.0,.8)),1.0);
+  return;
+ }
+ noise_uv+=displacement;
+ vec2 drift=vec2(t*.0007,-t*.00028);`);
+
+// Exactly the approved presets: green, the learner sites' Earth palette and Pixel image,
+// and FLAME's original purple pixel galaxy (flame_terminal_pixel_galaxy_v1.gdshader), the OG.
+export const SKY_PRESETS = [
+  {
+    "id": "green",
+    "palette": [
+      [0.025,0.063,0.078], [0.037,0.098,0.110], [0.051,0.137,0.145],
+      [0.086,0.192,0.184], [0.141,0.259,0.227], [0.216,0.337,0.271],
+      [0.337,0.439,0.329], [0.490,0.561,0.420], [0.690,0.710,0.545]
+    ],
+    "rings": ["#e6d3a29e", "#a8d9bb55"],
+    "stars": [[0.40,0.53,0.65], [0.85,0.87,0.81]],
+    "meteor": [0.62,0.78,0.86]
+  },
+  {
+    "id": "earth",
+    "palette": [
+      [0.025,0.18,0.25], [0.04,0.27,0.38], [0.065,0.40,0.49],
+      [0.105,0.53,0.56], [0.28,0.61,0.52], [0.49,0.69,0.51],
+      [0.69,0.77,0.55], [0.87,0.84,0.64], [0.99,0.94,0.79]
+    ],
+    "rings": ["#fff0c99e", "#a8e3d555"],
+    "stars": [[0.45,0.70,0.71], [0.99,0.94,0.79]],
+    "meteor": [0.80,0.94,0.87]
+  },
+  {
+    "id": "pixel",
+    "image": "assets/loading-pixel-sky.png",
+    "rings": [
+      "#e6d3a29e",
+      "#a6c9e655"
+    ],
+    "ink": [
+      0.23,
+      1,
+      0.78
+    ]
+  },
+  {
+    "id": "og",
+    "palette": [
+      [0.016,0.020,0.047], [0.035,0.031,0.090], [0.071,0.047,0.145],
+      [0.125,0.067,0.208], [0.208,0.094,0.294], [0.318,0.145,0.396],
+      [0.455,0.235,0.510], [0.631,0.369,0.635], [0.796,0.584,0.788]
+    ],
+    "rings": ["#f0d6ee9e", "#b79ad855"],
+    "stars": [[0.45,0.49,0.72], [0.93,0.83,0.92]],
+    "meteor": [0.80,0.72,0.92]
+  }
+];

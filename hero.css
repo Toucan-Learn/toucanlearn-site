@@ -42,6 +42,8 @@
 .living-hero .world-art:focus-visible { outline-offset: -6px; }
 .living-hero .world-art canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }
 .living-hero #sky-canvas { z-index: 0; opacity: .65; }
+/* Present the refracted image directly, as in the reference Pixel sky. */
+.living-hero .world-art[data-sky-preset="pixel"] #sky-canvas { opacity: 1; }
 .living-hero #ripple-canvas { z-index: 1; }
 .living-hero #flock-canvas { z-index: 2; image-rendering: auto; }
 .living-hero .hero-mascot { position: absolute; z-index: 3; width: 51%; height: auto; left: 50%; top: 50%; pointer-events: none; transform: translate(-50%, -50%) rotate(-11deg); filter: drop-shadow(8px 15px 12px #02131788); animation: hero-toucan-float 8s ease-in-out infinite; }

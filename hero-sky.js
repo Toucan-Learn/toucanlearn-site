@@ -1,4 +1,4 @@
-import { vertexSource, originalFragmentSource } from './hero-sky-shaders.js';
+import { vertexSource, originalFragmentSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261016-sky-presets-3';
 import { RippleField, RIPPLE_TRAIL } from './hero-ripples.js';
 
 const art = document.querySelector('.world-art');
@@ -7,6 +7,76 @@ const rings = document.getElementById('ripple-canvas');
 const ctx = rings.getContext('2d');
 const flockCanvas = document.getElementById('flock-canvas');
 const flockCtx = flockCanvas.getContext('2d');
+
+// ?sky=<id> is only a testing/screenshot override. Unknown ids use the same
+// fresh random choice as a normal page load; no storage or controls are needed.
+const requestedPreset = new URLSearchParams(window.location.search).get('sky');
+const preset = SKY_PRESETS.find(candidate => candidate.id === requestedPreset)
+  || SKY_PRESETS[Math.floor(Math.random() * SKY_PRESETS.length)];
+art.dataset.skyPreset = preset.id;
+sky.dataset.skyPreset = preset.id;
+
+// The existing still, recoloured only for palette modes, sits behind WebGL.
+// It stays in the card and survives missing/lost WebGL without inline styles.
+const fallback = document.createElement('canvas');
+fallback.id = 'sky-fallback';
+fallback.setAttribute('aria-hidden', 'true');
+art.insertBefore(fallback, sky);
+const fallbackCtx = fallback.getContext('2d');
+const fallbackImage = new Image();
+fallbackImage.onload = () => { drawFallback(); renderer?.loadPixel?.(); draw(); };
+fallbackImage.src = preset.image || 'assets/loading-pixel-sky.png';
+function drawFallback() {
+  if (!fallbackCtx) return;
+  fallback.width = sky.width;
+  fallback.height = sky.height;
+  fallbackCtx.fillStyle = preset.image ? '#0b131e' : `rgb(${preset.palette[2].map(channel => Math.round(channel * 255)).join(',')})`;
+  fallbackCtx.fillRect(0, 0, fallback.width, fallback.height);
+  if (!fallbackImage.complete || !fallbackImage.naturalWidth) return;
+  const scale = Math.max(fallback.width / fallbackImage.naturalWidth, fallback.height / fallbackImage.naturalHeight);
+  const w = fallbackImage.naturalWidth * scale, h = fallbackImage.naturalHeight * scale;
+  fallbackCtx.imageSmoothingEnabled = !preset.image;
+  fallbackCtx.drawImage(fallbackImage, (fallback.width - w) / 2, (fallback.height - h) / 2, w, h);
+  if (preset.image) return;
+  const pixels = fallbackCtx.getImageData(0, 0, fallback.width, fallback.height);
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    const light = (pixels.data[i] * .2126 + pixels.data[i + 1] * .7152 + pixels.data[i + 2] * .0722) / 255;
+    const colour = preset.palette[Math.min(8, Math.round(light * 8))];
+    for (let channel = 0; channel < 3; channel++) pixels.data[i + channel] = Math.round(colour[channel] * 255);
+  }
+  fallbackCtx.putImageData(pixels, 0, 0);
+}
+
+// Reference image-wave lifetime and input sampling; the existing hero rings
+// retain their own geometry and continue to move the flock as before.
+class PixelRipplePool {
+  active = [];
+  aspect = 1;
+  expire(now) {
+    this.active = this.active.filter(ripple =>
+      (now - ripple.born) * PIXEL_RIPPLE_SPEED < Math.hypot(Math.max(ripple.x, 1 - ripple.x) * this.aspect, Math.max(ripple.y, 1 - ripple.y)) + PIXEL_RIPPLE_TAIL);
+  }
+  add(x, y, now) {
+    this.expire(now);
+    if (this.active.length < MAX_PIXEL_RIPPLES) this.active.push({ x, y, born: now });
+  }
+}
+const pixelRipples = new PixelRipplePool();
+let pixelDots = [];
+let lastPixelInput = 0;
+let previousPixelPoint = null;
+function recordPixelBrush(x, y, down = false) {
+  const now = performance.now();
+  if (!down && now - lastPixelInput < 24) return;
+  lastPixelInput = now;
+  const follows = previousPixelPoint && now - previousPixelPoint.time < 180 && !down;
+  const dx = follows ? (x - previousPixelPoint.x) * width / height : .025;
+  const dy = follows ? y - previousPixelPoint.y : 0;
+  pixelDots.push({ x, y, dx, dy, born: time });
+  previousPixelPoint = { x, y, time: now };
+  pixelDots = pixelDots.slice(-12);
+}
+
 const calmButton = document.getElementById('calm-button');
 const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
 const field = new RippleField();
@@ -71,17 +141,14 @@ function drawFlock(activeRings) {
 }
 
 // Original learner-site pixel art, framed in this section only. The still image
-// behind the canvas remains the fallback when WebGL is unavailable or lost.
+// behind the canvas uses the chosen palette when WebGL is unavailable or lost.
 function createSky() {
+  sky.hidden = true;
   const gl = sky.getContext('webgl2', { alpha: false, antialias: false, depth: false, powerPreference: 'low-power' });
   if (!gl) return null;
-  const fragment = originalFragmentSource.replace(
+  const fragment = preset.image ? pixelFragmentSource : originalFragmentSource.replace(
     /const vec3 PALETTE\[9\]=vec3\[\]\([\s\S]*?\);/,
-    `const vec3 PALETTE[9]=vec3[](
-      vec3(.025,.063,.078),vec3(.037,.098,.110),vec3(.051,.137,.145),
-      vec3(.086,.192,.184),vec3(.141,.259,.227),vec3(.216,.337,.271),
-      vec3(.337,.439,.329),vec3(.490,.561,.420),vec3(.690,.710,.545)
-    );`,
+    `const vec3 PALETTE[9]=vec3[](${preset.palette.map(colour => `vec3(${colour.map(channel => channel.toFixed(3)).join(',')})`).join(',')});`,
   ).replace('colour*=1.0-navigation*.40;', 'colour*=1.0-navigation*.12;');
   function compile(type, source) {
     const shader = gl.createShader(type);
@@ -118,26 +185,76 @@ function createSky() {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
   gl.uniform1i(gl.getUniformLocation(program, 'nebula_noise'), 0);
   gl.uniform1f(gl.getUniformLocation(program, 'home_view'), 1);
+  if (!preset.image) {
+    gl.uniform3fv(gl.getUniformLocation(program, 'star_low'), preset.stars[0]);
+    gl.uniform3fv(gl.getUniformLocation(program, 'star_high'), preset.stars[1]);
+    gl.uniform3fv(gl.getUniformLocation(program, 'meteor_tint'), preset.meteor);
+  }
+  // Pixel mode uses the reference texture filtering and cover-framing uniforms.
+  const pixelTexture = preset.image ? gl.createTexture() : null;
+  let pixelLoaded = false;
+  if (pixelTexture) {
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, pixelTexture);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([11, 19, 30, 255]));
+    gl.uniform1i(gl.getUniformLocation(program, 'pixel_sky'), 1);
+    gl.uniform1f(gl.getUniformLocation(program, 'pixel_view'), 1);
+    gl.uniform3fv(gl.getUniformLocation(program, 'ink'), preset.ink);
+  }
   const resolution = gl.getUniformLocation(program, 'resolution');
   const clock = gl.getUniformLocation(program, 'clock');
   let loaded = false;
+  function loadPixel() {
+    if (!pixelTexture || !fallbackImage.complete || !fallbackImage.naturalWidth || gl.isContextLost()) return;
+    gl.activeTexture(gl.TEXTURE1);
+    gl.bindTexture(gl.TEXTURE_2D, pixelTexture);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, fallbackImage);
+    gl.uniform2f(gl.getUniformLocation(program, 'pixel_size'), fallbackImage.naturalWidth, fallbackImage.naturalHeight);
+    pixelLoaded = true;
+    sky.hidden = !loaded;
+  }
+  loadPixel();
   const noise = new Image();
   noise.onload = () => {
     if (gl.isContextLost()) return;
+    gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, noise);
     loaded = true;
-    sky.hidden = false;
+    sky.hidden = Boolean(preset.image && !pixelLoaded);
     draw();
   };
   noise.src = 'assets/galaxy-noise.png';
   sky.hidden = true;
   return {
+    loadPixel,
     draw(seconds) {
-      if (!loaded || gl.isContextLost()) return;
+      if (!loaded || (preset.image && !pixelLoaded) || gl.isContextLost()) return;
       gl.viewport(0, 0, sky.width, sky.height);
       gl.uniform2f(resolution, sky.width, sky.height);
       gl.uniform1f(clock, seconds);
+      if (preset.image) {
+        const values = new Float32Array(48), swashes = new Float32Array(24);
+        pixelDots = pixelDots.filter(point => seconds - point.born < 1.5);
+        pixelDots.forEach((point, index) => {
+          values.set([point.x, point.y, seconds - point.born, 1], index * 4);
+          swashes.set([point.dx, point.dy], index * 2);
+        });
+        pixelRipples.aspect = sky.width / sky.height;
+        pixelRipples.expire(seconds);
+        const rippleValues = new Float32Array(MAX_PIXEL_RIPPLES * 3);
+        pixelRipples.active.forEach((ripple, index) => {
+          rippleValues.set([ripple.x, ripple.y, seconds - ripple.born], index * 3);
+        });
+        gl.uniform4fv(gl.getUniformLocation(program, 'brush[0]'), values);
+        gl.uniform2fv(gl.getUniformLocation(program, 'swash[0]'), swashes);
+        gl.uniform3fv(gl.getUniformLocation(program, 'ripples[0]'), rippleValues);
+        gl.uniform1i(gl.getUniformLocation(program, 'rippleCount'), pixelRipples.active.length);
+      }
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     },
   };
@@ -154,7 +271,7 @@ function draw() {
   ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
   for (const ring of activeRings) {
     // No opacity countdown: both waves remain visible until physically off-panel.
-    for (const [offset, colour] of [[0, '#e6d3a29e'], [RIPPLE_TRAIL - 3, '#a8d9bb55']]) {
+    for (const [offset, colour] of [[0, preset.rings[0]], [RIPPLE_TRAIL - 3, preset.rings[1]]]) {
       if (ring.radius <= offset) continue;
       ctx.beginPath();
       ctx.arc(ring.x, ring.y, ring.radius - offset, 0, Math.PI * 2);
@@ -206,12 +323,19 @@ art.addEventListener('click', event => {
   const rect = art.getBoundingClientRect();
   const keyboard = event.detail === 0;
   field.add(keyboard ? .5 : (event.clientX - rect.left) / rect.width, keyboard ? .5 : (event.clientY - rect.top) / rect.height, time);
+  if (preset.image) {
+    const x = keyboard ? .5 : (event.clientX - rect.left) / rect.width;
+    const y = keyboard ? .5 : (event.clientY - rect.top) / rect.height;
+    pixelRipples.add(x, y, time);
+    recordPixelBrush(x, y, true);
+  }
   draw();
 });
 art.addEventListener('pointermove', event => {
   if (calm || event.pointerType === 'touch') return;
   const rect = art.getBoundingClientRect();
   pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+  if (preset.image) recordPixelBrush(pointer.x / rect.width, pointer.y / rect.height);
 }, { passive: true });
 art.addEventListener('pointerleave', () => { pointer = null; });
 calmButton?.addEventListener('click', () => { calm = !calm; applyCalm(); });
@@ -230,10 +354,12 @@ new ResizeObserver(entries => {
   const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
   flockCanvas.width = Math.round(width * ratio);
   flockCanvas.height = Math.round(height * ratio);
+  drawFallback();
   draw();
 }).observe(art);
 new IntersectionObserver(entries => { inView = entries[0].isIntersecting; sync(); }, { threshold: .01 }).observe(art);
 document.addEventListener('visibilitychange', sync);
+drawFallback();
 renderer = createSky();
 ['assets/toucan-logo-flat.png', 'assets/toucan-logo-outline.png'].forEach((path, index) => {
   const image = new Image();

@@ -875,6 +875,13 @@ body.homepage .site-footer {
   object-fit: cover;
 }
 
+/* Keep the activity in view when the portrait photos fill a phone panel. */
+.homepage-section .audience-route-media img[data-route-photo="children-1"] { object-position: 55% 43%; }
+.homepage-section .audience-route-media img[data-route-photo="children-2"] { object-position: 50% 30%; }
+.homepage-section .audience-route-media img[data-route-photo="children-3"] { object-position: 50% 46%; }
+.homepage-section .audience-route-media img[data-route-photo="adults-2"] { object-position: 50% 30%; }
+.homepage-section .audience-route-media img[data-route-photo="adults-3"] { object-position: 50% 35%; }
+
 @media (min-width: 900px) {
   .homepage-section .audience-route-card {
     grid-template-columns: minmax(0, 1fr) 36%;

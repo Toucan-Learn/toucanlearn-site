@@ -843,6 +843,64 @@ body.homepage .site-footer {
   max-width: 100%;
 }
 
+/* Route image panels: a wide crop above the copy, then about 40% of the card.
+   44% of its padded content width keeps the image at 38–42% of the full card. */
+.homepage-section .audience-route-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto 1fr;
+  gap: var(--section-gap);
+}
+
+.homepage-section .audience-route-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.homepage-section .audience-route-media {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: calc(var(--radius-xl) - var(--section-card-space));
+}
+
+.homepage-section .audience-route-media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media (min-width: 900px) {
+  .homepage-section .audience-route-card {
+    grid-template-columns: minmax(0, 1fr) 36%;
+    grid-template-rows: 1fr;
+  }
+
+  .homepage-section .audience-route-copy {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .homepage-section .audience-route-media {
+    grid-column: 2;
+    grid-row: 1;
+    aspect-ratio: auto;
+  }
+}
+/* Short laptop screens (e.g. 1440x800, 1280x720): tighter section padding so a
+   landing zone's cards fit on screen when its nav link is clicked. */
+@media (min-width: 900px) and (max-height: 820px) {
+  #main > .homepage-section:not(.offer-section) {
+    padding-block: 32px;
+  }
+}
+/* End route image panels. */
+
 .homepage-section .how-steps {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }

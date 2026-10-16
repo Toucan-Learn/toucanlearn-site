@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000" viewBox="0 0 800 1000">
+  <defs>
+    <linearGradient id="cool" x2="0" y2="1">
+      <stop stop-color="#cddfd7"/>
+      <stop offset="1" stop-color="#6f987b"/>
+    </linearGradient>
+    <pattern id="pixels" width="32" height="32" patternUnits="userSpaceOnUse">
+      <path d="M0 0h4v4H0zm16 16h4v4h-4z" fill="#0b3f51"/>
+    </pattern>
+  </defs>
+  <path fill="url(#cool)" d="M0 0h800v1000H0z"/>
+  <circle cx="110" cy="180" r="260" fill="#6f987b" opacity=".35"/>
+  <circle cx="720" cy="910" r="340" fill="#cddfd7" opacity=".55"/>
+  <path fill="url(#pixels)" opacity=".15" d="M0 0h800v1000H0z"/>
+  <circle cx="400" cy="500" r="250" fill="#cddfd7"/>
+  <path d="M206 686V478a194 194 0 0 1 388 0v208H482V478a82 82 0 0 0-164 0v208z" fill="#1f7a75"/>
+  <path d="M206 686V478a194 194 0 0 1 388 0v208H482V478a82 82 0 0 0-164 0v208z" fill="url(#pixels)" opacity=".22"/>
+  <circle cx="400" cy="540" r="48" fill="#6f987b"/>
+  <path d="M648 394h16v16h-16zm-24 32h8v8h-8zm-458 200h16v16h-16zm-24 32h8v8h-8z" fill="#0b3f51" opacity=".5"/>
+</svg>

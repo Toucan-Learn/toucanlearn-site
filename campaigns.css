@@ -738,6 +738,31 @@ body.homepage .site-footer {
   margin-top: var(--section-space);
 }
 
+/* Joshua, 16 Oct 2026: each main section is its own landing zone on laptops and
+   desktops. A nav link lands the section flush under the sticky header and the
+   section fills the rest of the screen, so the next section's heading stays
+   below the fold. Phones keep normal scrolling. */
+@media (min-width: 900px) {
+  body.homepage #main > section {
+    scroll-margin-top: var(--sticky-header-height);
+  }
+
+  #main > .homepage-section:not(.offer-section) {
+    box-sizing: border-box;
+    min-height: calc(100vh - var(--sticky-header-height));
+    min-height: calc(100svh - var(--sticky-header-height));
+    margin-top: 0;
+    padding-block: var(--section-space);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  #main > .homepage-section.offer-section {
+    margin-top: 0;
+  }
+}
+
 .homepage-section .section-head {
   display: block;
   margin: 0 0 var(--section-gap);

@@ -96,6 +96,12 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
   .living-hero .hero-offer { margin-top: 14px; }
   .living-hero .hero-offer strong { font-size: 22px; }
 }
+/* Joshua, 16 Oct 2026: the green opening fills the first screen exactly on
+   laptops and desktops (95px sticky header + hero = one screen), so no cream
+   section shows above the fold and there is no small leftover scroll. */
+@media (min-width: 900px) {
+  .living-hero .hero-layout { min-height: calc(100vh - 95px); min-height: calc(100svh - 95px); }
+}
 @media (prefers-reduced-motion: reduce) {
   .living-hero *, .living-hero *::before, .living-hero *::after { animation: none !important; transition: none !important; }
 }

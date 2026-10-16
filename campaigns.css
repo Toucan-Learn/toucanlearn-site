@@ -776,7 +776,9 @@ body.homepage .site-footer {
 }
 
 #main > .homepage-section h2 {
-  max-width: 1000px;
+  /* Joshua, 17 Oct 2026: no width cap, so the longer Who we help heading sits
+     on one line on laptops instead of leaving "you." on its own. */
+  max-width: none;
   margin: 0;
   font-size: var(--section-heading-size);
   font-weight: 800;

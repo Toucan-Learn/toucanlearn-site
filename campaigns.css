@@ -747,6 +747,12 @@ body.homepage .site-footer {
     scroll-margin-top: var(--sticky-header-height);
   }
 
+  /* Joshua, 17 Oct 2026: Who we help lands 12px further down so its cards
+     don't touch the bottom of the screen. */
+  body.homepage #main > #support-routes {
+    scroll-margin-top: calc(var(--sticky-header-height) - 12px);
+  }
+
   #main > .homepage-section:not(.offer-section) {
     box-sizing: border-box;
     min-height: calc(100vh - var(--sticky-header-height));

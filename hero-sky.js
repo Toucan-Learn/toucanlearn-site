@@ -1,10 +1,7 @@
-import { vertexSource, originalFragmentSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261016-sky-presets-3';
-import { RippleField, RIPPLE_TRAIL } from './hero-ripples.js';
+import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-wave-1';
 
 const art = document.querySelector('.world-art');
 const sky = document.getElementById('sky-canvas');
-const rings = document.getElementById('ripple-canvas');
-const ctx = rings.getContext('2d');
 const flockCanvas = document.getElementById('flock-canvas');
 const flockCtx = flockCanvas.getContext('2d');
 
@@ -47,8 +44,7 @@ function drawFallback() {
   fallbackCtx.putImageData(pixels, 0, 0);
 }
 
-// Reference image-wave lifetime and input sampling; the existing hero rings
-// retain their own geometry and continue to move the flock as before.
+// All skies and the flock share the reference wave lifetime and input sampling.
 class PixelRipplePool {
   active = [];
   aspect = 1;
@@ -79,7 +75,6 @@ function recordPixelBrush(x, y, down = false) {
 
 const calmButton = document.getElementById('calm-button');
 const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-const field = new RippleField();
 let calm = preference.matches;
 let inView = true;
 let frame = 0;
@@ -103,7 +98,7 @@ const birds = Array.from({ length: 34 }, (_, index) => {
   };
 });
 
-function drawFlock(activeRings) {
+function drawFlock() {
   if (!flockCtx) return;
   const ratio = flockCanvas.width / width;
   flockCtx.setTransform(ratio, 0, 0, ratio, 0, 0);
@@ -119,20 +114,27 @@ function drawFlock(activeRings) {
       const distance = Math.hypot(dx, dy);
       if (distance > 0 && distance < 80) { x += dx / distance * (1 - distance / 80) * 16; y += dy / distance * (1 - distance / 80) * 16; }
     }
-    for (const ripple of activeRings) {
-      const distance = Math.hypot(x - ripple.x, y - ripple.y);
-      const difference = distance - ripple.radius;
-      if (distance > 0 && Math.abs(difference) < 35) {
-        const push = Math.sin(difference / 35 * Math.PI) * 11;
-        x += (x - ripple.x) / distance * push;
-        y += (y - ripple.y) / distance * push;
+    for (const ripple of pixelRipples.active) {
+      // Match the shader's aspect-correct distance, Gaussian front and edge fade.
+      // One shader unit is the panel height in CSS pixels (speed = .32 * height/s).
+      const dx = (x / width - ripple.x) * pixelRipples.aspect;
+      const dy = y / height - ripple.y;
+      const distance = Math.hypot(dx, dy);
+      const radius = (time - ripple.born) * PIXEL_RIPPLE_SPEED;
+      const reach = Math.hypot(Math.max(ripple.x, 1 - ripple.x) * pixelRipples.aspect, Math.max(ripple.y, 1 - ripple.y));
+      const edge = Math.max(0, Math.min(1, (radius - reach) / PIXEL_RIPPLE_TAIL));
+      const fade = 1 - edge * edge * (3 - 2 * edge);
+      if (distance > 0) {
+        const push = Math.exp(-Math.pow((distance - radius) * 60, 2)) * fade * 11;
+        x += dx / distance / pixelRipples.aspect * width / height * push;
+        y += dy / distance * push;
       }
     }
     flockCtx.save();
     flockCtx.translate(x, y);
     flockCtx.rotate(bird.angle + Math.sin(time * .22 + bird.phase) * .12);
     flockCtx.scale(bird.flip, 1);
-    // The flock must occlude the rings underneath, not let them shine through.
+    // The flock stays opaque above the refracted sky.
     flockCtx.globalAlpha = 1;
     const size = bird.size * scale;
     flockCtx.drawImage(sprite, -size / 2, -size / 2, size, size);
@@ -146,7 +148,7 @@ function createSky() {
   sky.hidden = true;
   const gl = sky.getContext('webgl2', { alpha: false, antialias: false, depth: false, powerPreference: 'low-power' });
   if (!gl) return null;
-  const fragment = preset.image ? pixelFragmentSource : originalFragmentSource.replace(
+  const fragment = preset.image ? pixelFragmentSource : pixelFragmentSource.replace(
     /const vec3 PALETTE\[9\]=vec3\[\]\([\s\S]*?\);/,
     `const vec3 PALETTE[9]=vec3[](${preset.palette.map(colour => `vec3(${colour.map(channel => channel.toFixed(3)).join(',')})`).join(',')});`,
   ).replace('colour*=1.0-navigation*.40;', 'colour*=1.0-navigation*.12;');
@@ -185,6 +187,7 @@ function createSky() {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
   gl.uniform1i(gl.getUniformLocation(program, 'nebula_noise'), 0);
   gl.uniform1f(gl.getUniformLocation(program, 'home_view'), 1);
+  gl.uniform1f(gl.getUniformLocation(program, 'pixel_view'), preset.image ? 1 : 0);
   if (!preset.image) {
     gl.uniform3fv(gl.getUniformLocation(program, 'star_low'), preset.stars[0]);
     gl.uniform3fv(gl.getUniformLocation(program, 'star_high'), preset.stars[1]);
@@ -202,7 +205,6 @@ function createSky() {
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([11, 19, 30, 255]));
     gl.uniform1i(gl.getUniformLocation(program, 'pixel_sky'), 1);
-    gl.uniform1f(gl.getUniformLocation(program, 'pixel_view'), 1);
     gl.uniform3fv(gl.getUniformLocation(program, 'ink'), preset.ink);
   }
   const resolution = gl.getUniformLocation(program, 'resolution');
@@ -237,58 +239,30 @@ function createSky() {
       gl.viewport(0, 0, sky.width, sky.height);
       gl.uniform2f(resolution, sky.width, sky.height);
       gl.uniform1f(clock, seconds);
-      if (preset.image) {
-        const values = new Float32Array(48), swashes = new Float32Array(24);
-        pixelDots = pixelDots.filter(point => seconds - point.born < 1.5);
-        pixelDots.forEach((point, index) => {
-          values.set([point.x, point.y, seconds - point.born, 1], index * 4);
-          swashes.set([point.dx, point.dy], index * 2);
-        });
-        pixelRipples.aspect = sky.width / sky.height;
-        pixelRipples.expire(seconds);
-        const rippleValues = new Float32Array(MAX_PIXEL_RIPPLES * 3);
-        pixelRipples.active.forEach((ripple, index) => {
-          rippleValues.set([ripple.x, ripple.y, seconds - ripple.born], index * 3);
-        });
-        gl.uniform4fv(gl.getUniformLocation(program, 'brush[0]'), values);
-        gl.uniform2fv(gl.getUniformLocation(program, 'swash[0]'), swashes);
-        gl.uniform3fv(gl.getUniformLocation(program, 'ripples[0]'), rippleValues);
-        gl.uniform1i(gl.getUniformLocation(program, 'rippleCount'), pixelRipples.active.length);
-      }
+      const values = new Float32Array(48), swashes = new Float32Array(24);
+      pixelDots = pixelDots.filter(point => seconds - point.born < 1.5);
+      pixelDots.forEach((point, index) => {
+        values.set([point.x, point.y, seconds - point.born, 1], index * 4);
+        swashes.set([point.dx, point.dy], index * 2);
+      });
+      const rippleValues = new Float32Array(MAX_PIXEL_RIPPLES * 3);
+      pixelRipples.active.forEach((ripple, index) => {
+        rippleValues.set([ripple.x, ripple.y, seconds - ripple.born], index * 3);
+      });
+      gl.uniform4fv(gl.getUniformLocation(program, 'brush[0]'), values);
+      gl.uniform2fv(gl.getUniformLocation(program, 'swash[0]'), swashes);
+      gl.uniform3fv(gl.getUniformLocation(program, 'ripples[0]'), rippleValues);
+      gl.uniform1i(gl.getUniformLocation(program, 'rippleCount'), pixelRipples.active.length);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
     },
   };
 }
 
 function draw() {
+  pixelRipples.aspect = sky.width / sky.height;
+  pixelRipples.expire(time);
   renderer?.draw(time);
-  const activeRings = field.sample(time, width, height);
-  drawFlock(activeRings);
-  if (!ctx) return;
-  ctx.clearRect(0, 0, rings.width, rings.height);
-  const scaleX = rings.width / width;
-  const scaleY = rings.height / height;
-  ctx.setTransform(scaleX, 0, 0, scaleY, 0, 0);
-  for (const ring of activeRings) {
-    // No opacity countdown: both waves remain visible until physically off-panel.
-    for (const [offset, colour] of [[0, preset.rings[0]], [RIPPLE_TRAIL - 3, preset.rings[1]]]) {
-      if (ring.radius <= offset) continue;
-      ctx.beginPath();
-      ctx.arc(ring.x, ring.y, ring.radius - offset, 0, Math.PI * 2);
-      ctx.strokeStyle = colour;
-      ctx.lineWidth = 1.1 / scaleX;
-      ctx.stroke();
-    }
-  }
-  // Tiny rotated sprites have softened edge pixels. Mask the ripple layer as
-  // well, so bright rings cannot bleed through those partially covered pixels.
-  if (flockCtx) {
-    ctx.save();
-    ctx.globalCompositeOperation = 'destination-out';
-    ctx.drawImage(flockCanvas, 0, 0, width, height);
-    ctx.restore();
-  }
-  ctx.resetTransform();
+  drawFlock();
 }
 
 function animate(now) {
@@ -313,29 +287,26 @@ function applyCalm() {
     calmButton.setAttribute('aria-pressed', String(calm));
     calmButton.textContent = calm ? 'Resume motion' : 'Pause motion';
   }
-  art.disabled = calm || !ctx;
-  // Freeze the current picture and rings; never clear them on pause.
+  art.disabled = calm;
+  // Freeze the current picture; input remains disabled on pause.
   draw();
   sync();
 }
 art.addEventListener('click', event => {
-  if (calm || !ctx) return;
+  if (calm) return;
   const rect = art.getBoundingClientRect();
   const keyboard = event.detail === 0;
-  field.add(keyboard ? .5 : (event.clientX - rect.left) / rect.width, keyboard ? .5 : (event.clientY - rect.top) / rect.height, time);
-  if (preset.image) {
-    const x = keyboard ? .5 : (event.clientX - rect.left) / rect.width;
-    const y = keyboard ? .5 : (event.clientY - rect.top) / rect.height;
-    pixelRipples.add(x, y, time);
-    recordPixelBrush(x, y, true);
-  }
+  const x = keyboard ? .5 : (event.clientX - rect.left) / rect.width;
+  const y = keyboard ? .5 : (event.clientY - rect.top) / rect.height;
+  pixelRipples.add(x, y, time);
+  recordPixelBrush(x, y, true);
   draw();
 });
 art.addEventListener('pointermove', event => {
   if (calm || event.pointerType === 'touch') return;
   const rect = art.getBoundingClientRect();
   pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
-  if (preset.image) recordPixelBrush(pointer.x / rect.width, pointer.y / rect.height);
+  recordPixelBrush(pointer.x / rect.width, pointer.y / rect.height);
 }, { passive: true });
 art.addEventListener('pointerleave', () => { pointer = null; });
 calmButton?.addEventListener('click', () => { calm = !calm; applyCalm(); });
@@ -347,10 +318,8 @@ new ResizeObserver(entries => {
   width = Math.max(1, rect.width);
   height = Math.max(1, rect.height);
   const pixelSize = 2.5;
-  for (const canvas of [sky, rings]) {
-    canvas.width = Math.max(1, Math.round(width / pixelSize));
-    canvas.height = Math.max(1, Math.round(height / pixelSize));
-  }
+  sky.width = Math.max(1, Math.round(width / pixelSize));
+  sky.height = Math.max(1, Math.round(height / pixelSize));
   const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
   flockCanvas.width = Math.round(width * ratio);
   flockCanvas.height = Math.round(height * ratio);

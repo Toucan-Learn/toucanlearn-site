@@ -41,13 +41,12 @@
 .living-hero .hero-audience { color: #a6beb4; font-size: 11px; margin: 14px 0 0; line-height: 1.8; }
 .living-hero .hero-world { min-width: 0; align-self: stretch; display: flex; align-items: center; padding: 32px 0 32px 32px; }
 .living-hero .sky-studio { width: 100%; overflow: hidden; border: 1px solid #adc4b533; border-radius: 15px; background: #071c23; box-shadow: 0 24px 60px #01191d55; }
-.living-hero .world-art { display: block; padding: 0; border: 0; position: relative; width: 100%; height: 450px; background: #071219 url('assets/loading-pixel-sky.png') center / cover; cursor: crosshair; touch-action: pan-y; }
+.living-hero .world-art { display: block; padding: 0; border: 0; position: relative; width: 100%; height: 450px; background: #071219 url('assets/loading-pixel-sky.png') center / cover; cursor: default; touch-action: pan-y; }
 .living-hero .world-art:focus-visible { outline-offset: -6px; }
 .living-hero .world-art canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }
 .living-hero #sky-canvas { z-index: 0; opacity: .65; }
 /* Present the refracted image directly, as in the reference Pixel sky. */
 .living-hero .world-art[data-sky-preset="pixel"] #sky-canvas { opacity: 1; }
-.living-hero #ripple-canvas { z-index: 1; }
 .living-hero #flock-canvas { z-index: 2; image-rendering: auto; }
 .living-hero .hero-mascot { position: absolute; z-index: 3; width: 51%; height: auto; left: 50%; top: 50%; pointer-events: none; transform: translate(-50%, -50%) rotate(-11deg); filter: drop-shadow(8px 15px 12px #02131788); animation: hero-toucan-float 8s ease-in-out infinite; }
 .living-hero .scene-controls { display: flex; justify-content: flex-end; padding: 10px 14px; background: #0b2228; border-top: 1px solid #a9c8ba2b; }

@@ -15,8 +15,9 @@
   <meta property="og:locale" content="en_GB" />
   <meta property="og:url" content="https://toucanlearn.co.uk/" />
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
-  <link rel="stylesheet" href="style.css?v=20261017-menu-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261017-nav-2" />
+  <script src="theme.js?v=20261018-dark-1"></script>
+  <link rel="stylesheet" href="style.css?v=20261018-dark-1" />
+  <link rel="stylesheet" href="campaigns.css?v=20261018-carousel-2" />
   <link rel="stylesheet" href="hero.css?v=20261017-wave-1" />
   <link rel="modulepreload" href="hero-sky-shaders.js?v=20261017-ripple-1" />
   <link rel="preload" as="image" href="assets/galaxy-noise.png" />
@@ -58,6 +59,12 @@
           </ul>
         </div>
         <a href="#reviews">Reviews</a>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+            <path class="theme-moon" d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" />
+            <g class="theme-sun"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" /></g>
+          </svg>
+        </button>
         <a class="button" href="contact.html">Start an enquiry</a>
       </nav>
       <details class="mobile-menu">
@@ -196,9 +203,11 @@
         </div>
         <a class="button secondary review-leave" href="https://www.google.com/maps/place//data=!4m3!3m2!1s0x487191466f4dd581:0xef287a4b0841abec!12e1" target="_blank" rel="noopener">Leave a review on Google <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
 
+        <div class="reviews-orbit" data-reviews-carousel role="region" aria-roledescription="carousel" aria-label="Reviews from Toucan Learn families">
         <div class="reviews-grid">
           <figure class="review-quote">
             <span class="review-mark" aria-hidden="true">“</span>
+            <div class="review-art"><img data-review-art alt="" width="960" height="600" loading="lazy" decoding="async" /></div>
             <blockquote>
               <p>“The best thing I did to help him was to contact you. You made the last year of IB a much more liveable affair for us all.”</p>
             </blockquote>
@@ -206,6 +215,7 @@
           </figure>
           <figure class="review-quote">
             <span class="review-mark" aria-hidden="true">“</span>
+            <div class="review-art"><img data-review-art alt="" width="960" height="600" loading="lazy" decoding="async" /></div>
             <blockquote>
               <p>“My son hates learning, but Joshua manages to get him to engage. He has taken his time to get to know him and work out what makes him tick. Would 100% recommend.”</p>
             </blockquote>
@@ -213,12 +223,43 @@
           </figure>
           <figure class="review-quote">
             <span class="review-mark" aria-hidden="true">“</span>
+            <div class="review-art"><img data-review-art alt="" width="960" height="600" loading="lazy" decoding="async" /></div>
             <blockquote>
               <p>“He really enjoys lessons with Josh and we really appreciate it!”</p>
             </blockquote>
             <figcaption>Parent review · shared anonymously</figcaption>
           </figure>
+          <figure class="review-quote">
+            <span class="review-mark" aria-hidden="true">“</span>
+            <div class="review-art"><img data-review-art alt="" width="960" height="600" loading="lazy" decoding="async" /></div>
+            <blockquote>
+              <p>“Aaron has been brilliant with my eldest. He worked out straight away that he learns best when he’s building something he cares about, and now he actually looks forward to his sessions. His confidence has come on so much.”</p>
+            </blockquote>
+            <figcaption>Example review</figcaption>
+          </figure>
+          <figure class="review-quote">
+            <span class="review-mark" aria-hidden="true">“</span>
+            <div class="review-art"><img data-review-art alt="" width="960" height="600" loading="lazy" decoding="async" /></div>
+            <blockquote>
+              <p>“My youngest used to switch off as soon as anything felt like schoolwork, but Aaron is so patient with him and makes it fun. We get a report every week so we always know what they’ve worked on and what’s next.”</p>
+            </blockquote>
+            <figcaption>Example review</figcaption>
+          </figure>
+          <figure class="review-quote">
+            <span class="review-mark" aria-hidden="true">“</span>
+            <div class="review-art"><img data-review-art alt="" width="960" height="600" loading="lazy" decoding="async" /></div>
+            <blockquote>
+              <p>“Both of my boys have lessons with Aaron and they’re completely different learners, but he’s found a way that works for each of them. Toucan Learn has been a really good find for our family.”</p>
+            </blockquote>
+            <figcaption>Example review</figcaption>
+          </figure>
         </div>
+        <p class="visually-hidden" data-reviews-status aria-live="off"></p>
+        <button class="reviews-pause" type="button" data-reviews-pause aria-label="Pause reviews" aria-pressed="false">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><g class="reviews-pause-icon"><rect x="7" y="5" width="3" height="14" rx="1" /><rect x="14" y="5" width="3" height="14" rx="1" /></g><path class="reviews-play-icon" d="M8 5v14l12-7Z" /></svg>
+        </button>
+        </div>
+        <script src="reviews-carousel.js?v=20261018-carousel-1"></script>
 
         <div class="how-cta reviews-enquiry" id="contact">
           <div>

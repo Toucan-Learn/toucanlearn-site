@@ -14,7 +14,7 @@
   flex-direction: column;
   min-height: 500px;
   padding: clamp(30px, 4vw, 50px);
-  border: 1px solid rgba(11, 63, 81, 0.12);
+  border: 1px solid rgba(var(--line-rgb), 0.12);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow);
   overflow: hidden;
@@ -81,18 +81,18 @@
 .audience-route-card--adult {
   color: var(--ink);
   background:
-    radial-gradient(circle at 100% 0%, rgba(244, 192, 155, 0.7), transparent 22rem),
-    var(--paper);
+    radial-gradient(circle at 100% 0%, rgba(var(--route-warm-rgb), 0.7), transparent 22rem),
+    var(--route-warm-surface);
 }
 
 .audience-route-card--adult li {
-  border-color: rgba(11, 63, 81, 0.14);
+  border-color: rgba(var(--line-rgb), 0.14);
 }
 
 .support-routes-section {
   padding-top: 82px;
   background: rgba(var(--paper-rgb), 0.34);
-  border-block: 1px solid rgba(11, 63, 81, 0.08);
+  border-block: 1px solid rgba(var(--line-rgb), 0.08);
 }
 
 .support-route-grid {
@@ -120,7 +120,7 @@
 .campaign-card h3 small {
   display: block;
   margin-top: 7px;
-  color: rgba(16, 36, 45, 0.66);
+  color: rgba(var(--ink-rgb), 0.66);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 0.72rem;
   font-weight: 750;
@@ -155,7 +155,7 @@
   display: block;
   max-width: 620px;
   margin-top: 12px;
-  color: rgba(16, 36, 45, 0.72);
+  color: rgba(var(--ink-rgb), 0.72);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 0.24em;
   font-weight: 750;
@@ -176,7 +176,7 @@
 
 .campaign-page .route-panel p {
   margin: 0;
-  color: rgba(16, 36, 45, 0.76);
+  color: rgba(var(--ink-rgb), 0.76);
 }
 
 .campaign-page .route-panel ul {
@@ -188,7 +188,7 @@
 .campaign-page .route-panel li {
   padding: 11px 0;
   border-top: 1px solid var(--line);
-  color: var(--blue);
+  color: var(--heading);
   font-weight: 750;
 }
 
@@ -204,12 +204,12 @@
   margin-top: 24px;
   padding: 18px 20px;
   border-left: 4px solid var(--orange);
-  color: rgba(16, 36, 45, 0.76);
+  color: rgba(var(--ink-rgb), 0.76);
   background: rgba(var(--paper-rgb), 0.7);
 }
 
 .campaign-page .route-boundary strong {
-  color: var(--blue);
+  color: var(--heading);
 }
 
 .policy-hero {
@@ -240,7 +240,7 @@
 }
 
 .pre-release-note {
-  color: rgba(16, 36, 45, 0.8);
+  color: rgba(var(--ink-rgb), 0.8);
 }
 
 .policy-content {
@@ -260,7 +260,7 @@
 
 .policy-content h2,
 .policy-content h3 {
-  color: var(--blue);
+  color: var(--heading);
 }
 
 .policy-content h2 {
@@ -280,7 +280,7 @@
 }
 
 .policy-content a {
-  color: var(--blue);
+  color: var(--heading);
   font-weight: 750;
   overflow-wrap: anywhere;
   text-underline-offset: 3px;
@@ -296,13 +296,13 @@
   min-width: 0;
   padding: 18px;
   border-radius: var(--radius-md);
-  background: rgba(205, 223, 215, 0.45);
+  background: rgba(var(--teal-soft-rgb), 0.45);
 }
 
 .policy-source-note {
   margin-top: 16px;
   font-size: 0.9rem;
-  color: rgba(16, 36, 45, 0.72);
+  color: rgba(var(--ink-rgb), 0.72);
 }
 
 .policy-table-wrap {
@@ -324,14 +324,14 @@
 .policy-content th,
 .policy-content td {
   padding: 12px;
-  border: 1px solid rgba(11, 63, 81, 0.16);
+  border: 1px solid rgba(var(--line-rgb), 0.16);
   text-align: left;
   vertical-align: top;
 }
 
 .policy-content th {
-  color: var(--blue);
-  background: rgba(205, 223, 215, 0.5);
+  color: var(--heading);
+  background: rgba(var(--teal-soft-rgb), 0.5);
 }
 
 .policy-steps {
@@ -375,22 +375,22 @@
   padding: 15px 17px;
   border-left: 4px solid var(--orange, #e47a2e);
   border-radius: 0 12px 12px 0;
-  color: rgba(16, 36, 45, 0.82);
+  color: rgba(var(--ink-rgb), 0.82);
   background: rgba(var(--paper-rgb), 0.78);
   line-height: 1.55;
 }
 
 .form-privacy-note strong {
-  color: var(--blue, #0b3f51);
+  color: var(--heading, #0b3f51);
 }
 
 .enquiry-form {
   display: grid;
   gap: 24px;
   padding: clamp(24px, 5vw, 44px);
-  border: 1px solid var(--line, rgba(11, 63, 81, 0.18));
+  border: 1px solid var(--line, rgba(var(--line-rgb), 0.18));
   border-radius: var(--radius-xl, 28px);
-  background: linear-gradient(135deg, rgba(var(--paper-rgb), 0.86), rgba(205, 223, 215, 0.42));
+  background: linear-gradient(135deg, rgba(var(--paper-rgb), 0.86), rgba(var(--teal-soft-rgb), 0.42));
   box-shadow: var(--shadow, 0 18px 50px rgba(11, 63, 81, 0.10));
 }
 
@@ -418,13 +418,13 @@
 .enquiry-fields:disabled .field input,
 .enquiry-fields:disabled .field textarea,
 .enquiry-fields:disabled .field select {
-  color: rgba(16, 36, 45, 0.7);
-  background: #f1ece4;
+  color: rgba(var(--ink-rgb), 0.7);
+  background: var(--disabled-surface);
   cursor: not-allowed;
 }
 
 .enquiry-fields:disabled .consent {
-  background: rgba(205, 223, 215, 0.32);
+  background: rgba(var(--teal-soft-rgb), 0.32);
   cursor: not-allowed;
 }
 
@@ -441,7 +441,7 @@
 }
 
 .field label {
-  color: var(--blue, #0b3f51);
+  color: var(--heading, #0b3f51);
   font-size: 0.92rem;
   font-weight: 800;
 }
@@ -450,7 +450,7 @@
 .field textarea,
 .field select {
   width: 100%;
-  border: 1px solid rgba(11, 63, 81, 0.22);
+  border: 1px solid rgba(var(--line-rgb), 0.22);
   border-radius: 12px;
   color: var(--ink, #10242d);
   background: rgba(var(--paper-rgb), 0.92);
@@ -472,7 +472,7 @@
 
 .field input::placeholder,
 .field textarea::placeholder {
-  color: rgba(16, 36, 45, 0.66);
+  color: rgba(var(--ink-rgb), 0.66);
 }
 
 .field input:focus,
@@ -496,7 +496,7 @@
   padding: 15px 16px;
   border: 1px solid rgba(31, 122, 117, 0.18);
   border-radius: var(--radius-md, 16px);
-  background: rgba(205, 223, 215, 0.54);
+  background: rgba(var(--teal-soft-rgb), 0.54);
   cursor: pointer;
 }
 
@@ -505,7 +505,7 @@
   width: 19px;
   height: 19px;
   margin-top: 2px;
-  accent-color: var(--blue, #0b3f51);
+  accent-color: var(--heading, #0b3f51);
 }
 
 .consent input:focus-visible {
@@ -514,14 +514,14 @@
 }
 
 .consent span {
-  color: rgba(16, 36, 45, 0.8);
+  color: rgba(var(--ink-rgb), 0.8);
   font-size: 0.92rem;
 }
 
 .consent span strong {
   display: block;
   margin-bottom: 3px;
-  color: var(--blue, #0b3f51);
+  color: var(--heading, #0b3f51);
 }
 
 .form-submit {
@@ -542,8 +542,8 @@
   margin: 0;
   padding: 12px 14px;
   border-radius: 12px;
-  color: #8b3030;
-  background: rgba(255, 232, 228, 0.78);
+  color: var(--error-ink);
+  background: rgba(var(--error-rgb), 0.78);
   font-weight: 700;
 }
 
@@ -570,9 +570,9 @@
   width: min(calc(100% - 32px), 780px);
   margin-inline: auto;
   padding: clamp(34px, 7vw, 72px);
-  border: 1px solid var(--line, rgba(11, 63, 81, 0.18));
+  border: 1px solid var(--line, rgba(var(--line-rgb), 0.18));
   border-radius: var(--radius-xl, 28px);
-  background: linear-gradient(135deg, rgba(244, 192, 155, 0.6), rgba(205, 223, 215, 0.72)), var(--paper, #fffaf3);
+  background: linear-gradient(135deg, rgba(var(--warm-rgb), 0.6), rgba(var(--teal-soft-rgb), 0.72)), var(--paper, #fffaf3);
   box-shadow: var(--shadow, 0 18px 50px rgba(11, 63, 81, 0.10));
   text-align: center;
 }
@@ -799,7 +799,7 @@ body.homepage .site-footer {
   align-items: center;
   gap: 9px;
   margin: 0 0 14px;
-  color: var(--blue);
+  color: var(--heading);
   font-size: 0.75rem;
   font-weight: 750;
   line-height: 1.5;
@@ -1290,7 +1290,7 @@ body.homepage .site-footer {
 
 /* The soft teal box needs the dark eyebrow for 4.5:1 contrast. */
 .approach-page .approach-report .eyebrow {
-  color: var(--blue);
+  color: var(--heading);
 }
 
 /* Long homepage headings split into even lines instead of leaving one word. */
@@ -1350,8 +1350,8 @@ body.homepage .site-footer {
    goes blue white white" - the third step is peach, on both pages. */
 .homepage-section .how-steps li:nth-child(3),
 .approach-page .approach-steps > li:nth-child(3) {
-  background: radial-gradient(circle at 100% 0%, rgba(255, 248, 240, 0.55), transparent 22rem), var(--orange-soft);
-  border-color: rgba(196, 95, 33, 0.18);
+  background: radial-gradient(circle at 100% 0%, rgba(var(--warm-glow-rgb), 0.55), transparent 22rem), var(--warm-surface);
+  border-color: var(--warm-line);
 }
 
 /* Joshua, 17 Oct 2026: all three real reviews share the approach card frame;
@@ -1382,8 +1382,8 @@ body.homepage .site-footer {
 }
 
 .homepage-section .review-quote:nth-child(3n) {
-  background: radial-gradient(circle at 100% 0%, rgba(255, 248, 240, 0.55), transparent 22rem), var(--orange-soft);
-  border-color: rgba(196, 95, 33, 0.18);
+  background: radial-gradient(circle at 100% 0%, rgba(var(--warm-glow-rgb), 0.55), transparent 22rem), var(--warm-surface);
+  border-color: var(--warm-line);
 }
 
 .homepage-section .review-mark {
@@ -1797,5 +1797,140 @@ body.homepage .toucan-opening-header .nav-links {
 @media (max-width: 899px) {
   #reviews .review-leave {
     margin: 0 0 var(--section-gap);
+  }
+}
+
+/* Round 32: progressive enhancement keeps the static review row without JS. */
+#reviews .review-art,
+#reviews .reviews-pause,
+#reviews .reviews-enhanced .review-mark { display: none; }
+
+#reviews .reviews-enhanced {
+  --review-width: 480px;
+  position: relative;
+  min-width: 0;
+  padding: 4px 0 40px;
+  perspective: 1600px;
+  touch-action: pan-y;
+}
+
+#reviews .reviews-enhanced .reviews-grid {
+  display: block;
+  position: relative;
+  width: var(--review-width);
+  margin: 0 auto;
+  transform-style: preserve-3d;
+  transition: transform 1100ms cubic-bezier(.22, .7, .24, 1);
+}
+
+#reviews .reviews-enhanced .review-quote {
+  position: absolute;
+  inset: 0 0 auto;
+  width: 100%;
+  padding: 16px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 1100ms cubic-bezier(.22, .7, .24, 1), opacity 1100ms ease;
+  cursor: pointer;
+}
+
+#reviews .reviews-enhanced .review-quote.is-current { cursor: default; }
+
+#reviews .reviews-enhanced .review-art {
+  display: block;
+  width: 208px;
+  max-width: 100%;
+  aspect-ratio: 16 / 10;
+  margin: 0 auto 12px;
+  overflow: hidden;
+  border-radius: 16px;
+  background: #fff8f0;
+}
+
+#reviews .review-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+#reviews .reviews-enhanced blockquote { margin-bottom: 14px; }
+
+#reviews .reviews-enhanced .review-quote:focus-visible,
+#reviews .reviews-pause:focus-visible {
+  outline: 3px solid var(--orange-text);
+  outline-offset: 4px;
+}
+
+#reviews .reviews-enhanced .reviews-pause {
+  display: grid;
+  place-items: center;
+  position: absolute;
+  right: 4px;
+  bottom: 0;
+  width: 36px;
+  height: 36px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+#reviews .reviews-pause:hover { background: var(--teal-soft); }
+#reviews .reviews-pause svg { width: 100%; height: 100%; }
+#reviews .reviews-play-icon,
+#reviews .reviews-paused .reviews-pause-icon { display: none; }
+#reviews .reviews-paused .reviews-play-icon { display: block; }
+
+/* The existing theme roles supply the same cream/peach rhythm at night. */
+#reviews .reviews-enhanced .review-quote:nth-child(3n) {
+  background: radial-gradient(circle at 100% 0%, rgba(var(--warm-glow-rgb), .55), transparent 22rem), var(--warm-surface);
+  border-color: var(--warm-line);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #reviews .reviews-enhanced .review-art { background: var(--paper); }
+}
+:root[data-theme="dark"] #reviews .reviews-enhanced .review-art { background: var(--paper); }
+
+@media (min-width: 900px) {
+  #reviews .reviews-orbit { overflow: clip; }
+  #reviews > .container > .reviews-orbit { align-self: start; }
+}
+
+/* Keep the heading, unchanged enquiry bar and readable quote on short laptops. */
+@media (min-width: 900px) and (max-height: 800px) {
+  #main > .homepage-section.proof-section { padding-block: 16px; }
+  #reviews .reviews-enhanced { padding-bottom: 36px; }
+  #reviews .reviews-enhanced .review-art { width: 160px; }
+}
+
+@media (max-width: 899px) {
+  #reviews .reviews-enhanced {
+    --review-width: min(440px, calc(100% - 64px));
+    overflow: hidden;
+    perspective: none;
+  }
+  #reviews .reviews-enhanced .reviews-grid { transform-style: flat; }
+  #reviews .reviews-enhanced .review-quote { backface-visibility: visible; }
+  #reviews .reviews-enhanced .review-art { width: min(208px, 100%); }
+}
+
+#reviews .reviews-instant .reviews-grid,
+#reviews .reviews-instant .review-quote { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  #reviews .reviews-enhanced .reviews-grid,
+  #reviews .reviews-enhanced .review-quote { transition: none; }
+}
+
+/* Fit fix (18 Oct 2026): the pause button sits in the empty bottom-right corner
+   beside the ring instead of taking its own row, so the enquiry bar fits on a
+   1440x756 laptop after clicking Reviews. */
+@media (min-width: 900px) {
+  #reviews .reviews-enhanced,
+  #reviews .reviews-enhanced[class] {
+    padding-bottom: 0;
   }
 }

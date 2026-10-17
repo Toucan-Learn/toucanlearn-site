@@ -1,4 +1,5 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-wave-1';
+import { playNextNote } from './hero-piano.js?v=20261017-songs-1';
 
 const art = document.querySelector('.world-art');
 const sky = document.getElementById('sky-canvas');
@@ -287,12 +288,12 @@ function applyCalm() {
     calmButton.setAttribute('aria-pressed', String(calm));
     calmButton.textContent = calm ? 'Resume motion' : 'Pause motion';
   }
-  art.disabled = calm;
-  // Freeze the current picture; input remains disabled on pause.
+  // Freeze motion on pause; the native button stays available for piano notes.
   draw();
   sync();
 }
 art.addEventListener('click', event => {
+  playNextNote();
   if (calm) return;
   const rect = art.getBoundingClientRect();
   const keyboard = event.detail === 0;

@@ -1078,3 +1078,270 @@ body.homepage .site-footer {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Joshua, 17 Oct 2026: compact title-only steps, with rotating toucan art and
+   card-wide links. The detailed wording lives on Our approach. */
+.homepage-section .how-steps li {
+  position: relative;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  min-height: 0;
+  padding: 24px;
+  cursor: pointer;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+/* A positioned heading would trap the stretched link inside the title. */
+.homepage-section .how-steps h3 {
+  position: static;
+  z-index: auto;
+  font-size: clamp(1.4rem, 2vw, 1.85rem);
+  margin: 0;
+}
+
+.how-step-media {
+  position: relative;
+  min-width: 0;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: calc(var(--radius-xl) - 24px);
+}
+
+.how-step-media img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.homepage-section .how-step-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.homepage-section .how-step-link::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--radius-xl);
+}
+
+.homepage-section .how-step-link:focus-visible {
+  outline: 3px solid currentColor;
+  outline-offset: 4px;
+}
+
+.homepage-section .how-step-link:focus-visible::after {
+  outline: 3px solid currentColor;
+  outline-offset: -6px;
+}
+
+.homepage-section .how-steps li:hover,
+.homepage-section .how-steps li:focus-within {
+  transform: scale(1.02);
+  box-shadow: 0 28px 60px rgba(11, 63, 81, 0.24);
+}
+
+.homepage-section .how-follow-up {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 20px;
+}
+
+.homepage-section .how-follow-up .how-note {
+  flex: 1;
+  margin: 0;
+}
+
+.homepage-section .how-follow-up .button {
+  flex: 0 0 auto;
+}
+
+@media (min-width: 900px) {
+  #main > .homepage-section.how-section {
+    padding-block: 24px;
+  }
+
+  .homepage-section.how-section .section-head {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 899px) {
+  .homepage-section .how-follow-up {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homepage-section .how-steps li,
+  .homepage-section .how-follow-up .button {
+    transition: none;
+  }
+
+  .homepage-section .how-steps li:hover,
+  .homepage-section .how-steps li:focus-within,
+  .homepage-section .how-follow-up .button:hover {
+    transform: none;
+  }
+}
+
+/* Our approach follows the same eyebrow, heading and rounded-card frames. */
+.approach-page {
+  --max: 1280px;
+}
+
+.approach-page .hero .container {
+  max-width: 980px;
+  margin-inline: auto;
+}
+
+.approach-page .hero h1 {
+  max-width: 900px;
+}
+
+.approach-page .hero .lead {
+  max-width: 760px;
+}
+
+.approach-page .approach-section {
+  padding-block: 32px;
+}
+
+.approach-page .section-head {
+  display: block;
+  margin: 0 0 24px;
+}
+
+.approach-page .section-head h2 {
+  margin: 0;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+}
+
+.approach-page .section-head p {
+  max-width: 780px;
+  margin: 16px 0 0;
+}
+
+.approach-page .approach-steps,
+.approach-page .approach-methods {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.approach-page .approach-card {
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--paper);
+  box-shadow: 0 12px 32px rgba(11, 63, 81, 0.05);
+  scroll-margin-top: 130px;
+}
+
+.approach-page .approach-card .how-number {
+  margin-top: 20px;
+}
+
+.approach-page .approach-card h3 {
+  margin: 16px 0 12px;
+  font-size: 1.4rem;
+  line-height: 1.2;
+}
+
+.approach-page .approach-methods h3 {
+  margin-top: 0;
+}
+
+.approach-page .approach-card p {
+  margin: 0;
+}
+
+.approach-page .approach-steps > li:first-child {
+  color: white;
+  background: radial-gradient(circle at 90% 100%, rgba(55, 147, 137, 0.5), transparent 22rem), var(--blue);
+}
+
+.approach-page .approach-steps > li:first-child h3 {
+  color: white;
+}
+
+.approach-page .approach-report {
+  padding: 32px;
+  border-radius: var(--radius-xl);
+  background: var(--teal-soft);
+}
+
+.approach-page .approach-report .section-head {
+  margin-bottom: 0;
+}
+
+/* The soft teal box needs the dark eyebrow for 4.5:1 contrast. */
+.approach-page .approach-report .eyebrow {
+  color: var(--blue);
+}
+
+/* Long homepage headings split into even lines instead of leaving one word. */
+#main > .homepage-section h2 {
+  text-wrap: balance;
+}
+
+/* Shorter homepage art panels so How it works fits a 1440x756 laptop screen.
+   The art's flat cream background matches the panel, so contain shows the
+   whole drawing. */
+#how-it-works .how-step-media {
+  aspect-ratio: 2 / 1;
+  background: #ede5da;
+}
+
+#how-it-works .how-step-media img {
+  object-fit: contain;
+}
+
+/* Our approach opening: like the languages page, no full-screen minimum
+   height, and the same left edge as the sections below. */
+.campaign-page.approach-page .hero {
+  min-height: 0;
+  display: block;
+  padding-bottom: 24px;
+}
+
+.approach-page .hero .container {
+  max-width: none;
+}
+
+.approach-page .how-cta {
+  padding: 32px;
+  border-radius: var(--radius-xl);
+}
+
+.approach-page .how-cta h2 {
+  margin: 0;
+  color: white;
+  font-size: clamp(2rem, 3.2vw, 3rem);
+  line-height: 1.08;
+}
+
+.approach-page .how-cta p {
+  margin: 16px 0 0;
+  color: white;
+}
+
+@media (max-width: 940px) {
+  .approach-page .approach-steps,
+  .approach-page .approach-methods {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

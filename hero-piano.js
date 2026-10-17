@@ -1,4 +1,4 @@
-import { songs } from './hero-songs.js?v=20261017-songs-1';
+import { songs } from './hero-songs.js?v=20261017-songs-2';
 
 // One fresh choice per page load, independent of the sky. The query parameter
 // is a listening/test override; unknown ids use the same random selection.
@@ -9,8 +9,8 @@ const MELODY = song.notes;
 
 const MAX_VOICES = 8;
 const FLOOR = 0.0001;
-const PEAK = 0.24;
-const ATTACK = 0.005;
+const PEAK = 0.22;
+const ATTACK = 0.012;
 const RELEASE = 0.25;
 const SEMITONES = { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 };
 let audio = null;
@@ -44,24 +44,28 @@ function soundNote(frequency) {
   const oscillators = [carrier, modulator, tine, shimmer];
   const nodes = [...oscillators, modulation, bark, filter, envelope, tremolo, tremoloDepth, panner, panDepth];
 
-  // Sine-on-sine FM: a bell-like attack settles into a mellow fundamental.
+  // Sine-on-sine FM: a soft bell-like attack settles into a warm fundamental.
+  // Joshua, 17 Oct 2026 ("too shrill"): gentler modulation, and less of it
+  // the higher the note, so upper notes stay round instead of piercing.
+  const warmth = Math.min(1, (330 / frequency) ** 0.6);
   oscillators.forEach(oscillator => { oscillator.type = 'sine'; });
   carrier.frequency.setValueAtTime(frequency, now);
   modulator.frequency.setValueAtTime(frequency, now);
-  modulation.gain.setValueAtTime(frequency * 2.5, now);
-  modulation.gain.exponentialRampToValueAtTime(frequency * 0.3, now + 0.4);
+  modulation.gain.setValueAtTime(frequency * 1.3 * warmth, now);
+  modulation.gain.exponentialRampToValueAtTime(frequency * 0.12 * warmth, now + 0.35);
   modulator.connect(modulation);
   modulation.connect(carrier.frequency);
 
-  // A quiet 14x tine modulator adds a short bark, gone within 60 ms.
-  tine.frequency.setValueAtTime(frequency * 14, now);
-  bark.gain.setValueAtTime(frequency * 0.18, now);
-  bark.gain.exponentialRampToValueAtTime(frequency * 0.0001, now + 0.06);
+  // A very quiet 7x tine modulator adds a hint of key strike, gone within 40 ms.
+  tine.frequency.setValueAtTime(frequency * 7, now);
+  bark.gain.setValueAtTime(frequency * 0.04 * warmth, now);
+  bark.gain.exponentialRampToValueAtTime(frequency * 0.0001, now + 0.04);
   tine.connect(bark);
   bark.connect(carrier.frequency);
   filter.type = 'lowpass';
-  filter.frequency.setValueAtTime(3200, now);
-  filter.Q.setValueAtTime(0.5, now);
+  // A darker low-pass that follows the note, capped well below the shrill range.
+  filter.frequency.setValueAtTime(Math.min(2000, Math.max(1100, frequency * 3)), now);
+  filter.Q.setValueAtTime(0.4, now);
   envelope.gain.setValueAtTime(FLOOR, now);
   envelope.gain.linearRampToValueAtTime(PEAK, now + ATTACK);
   envelope.gain.exponentialRampToValueAtTime(FLOOR, end);

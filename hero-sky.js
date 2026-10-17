@@ -1,5 +1,5 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-wave-1';
-import { playNextNote } from './hero-piano.js?v=20261017-songs-1';
+import { playNextNote } from './hero-piano.js?v=20261017-songs-2';
 
 const art = document.querySelector('.world-art');
 const sky = document.getElementById('sky-canvas');

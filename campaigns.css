@@ -1345,3 +1345,11 @@ body.homepage .site-footer {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Joshua, 17 Oct 2026: "the third toucan cell needs to be a diff colour, it
+   goes blue white white" - the third step is peach, on both pages. */
+.homepage-section .how-steps li:nth-child(3),
+.approach-page .approach-steps > li:nth-child(3) {
+  background: radial-gradient(circle at 100% 0%, rgba(255, 248, 240, 0.55), transparent 22rem), var(--orange-soft);
+  border-color: rgba(196, 95, 33, 0.18);
+}

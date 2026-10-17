@@ -2,12 +2,11 @@
   'use strict';
 
   // Approved decorative art only. Choose before the lazy images are laid out.
+  // Joshua, 18 Oct 2026: the cuddling/family-contact scenes (a, c, e) are
+  // withdrawn; only scenes without that contact are used.
   const REVIEW_ART = {
-    "a": "assets/art/review-a.png",
     "b": "assets/art/review-b.png",
-    "c": "assets/art/review-c.png",
     "d": "assets/art/review-d.png",
-    "e": "assets/art/review-e.png",
     "f": "assets/art/review-f.png"
   };
   const carousel = document.querySelector('[data-reviews-carousel]');
@@ -22,7 +21,7 @@
     new Set(requested).size === requested.length && requested.every(key => keys.includes(key));
   let art = keys.slice();
   if (count !== 6) {
-    // Fisher-Yates: a distinct subset for 3–5; all six before reuse for 7–8.
+    // Fisher-Yates: distinct art before any reuse.
     for (let i = art.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [art[i], art[j]] = [art[j], art[i]];

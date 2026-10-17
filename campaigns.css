@@ -914,6 +914,56 @@ body.homepage .site-footer {
     padding-block: 32px;
   }
 }
+/* Joshua, 17 Oct 2026: route cards are just the title, photo and button; the
+   whole card is the link (the button's ::after covers it) and lifts on hover. */
+.homepage-section .audience-route-card {
+  position: relative;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.homepage-section .audience-route-card .audience-button::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: var(--radius-xl);
+}
+
+.homepage-section .audience-route-card:hover,
+.homepage-section .audience-route-card:focus-within {
+  transform: scale(1.02);
+  box-shadow: 0 28px 60px rgba(11, 63, 81, 0.24);
+}
+
+/* Never transform the button: that would shrink its card-wide ::after back to
+   the button and the click area would collapse under the pointer. */
+.homepage-section .audience-route-card .audience-button:hover,
+.homepage-section .audience-route-card:hover .audience-button {
+  transform: none;
+  box-shadow: 0 18px 34px rgba(11, 63, 81, 0.22);
+}
+
+/* Keep the face in frame for the café photo (adults-1). */
+.homepage-section .audience-route-media img[data-route-photo="adults-1"] { object-position: 58% 40%; }
+
+@media (min-width: 900px) {
+  .homepage-section .audience-route-card {
+    grid-template-columns: minmax(0, 1fr) 46%;
+    min-height: 340px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homepage-section .audience-route-card,
+  .homepage-section .audience-route-card .audience-button {
+    transition: none;
+  }
+
+  .homepage-section .audience-route-card:hover,
+  .homepage-section .audience-route-card:focus-within {
+    transform: none;
+  }
+}
 /* End route image panels. */
 
 .homepage-section .how-steps {

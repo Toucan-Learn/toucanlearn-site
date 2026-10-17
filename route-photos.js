@@ -9,7 +9,7 @@
       { "file": "assets/photos/route-children-3.jpg", "width": 800, "height": 1199, "alt": "A young boy drawing at a white table" }
     ],
     "adults": [
-      { "file": "assets/photos/route-adults-1.jpg", "width": 800, "height": 1199, "alt": "Someone working on a laptop at a wooden desk" },
+      { "file": "assets/photos/route-adults-1.jpg", "width": 800, "height": 1200, "alt": "A man with a coffee working on his laptop in a café" },
       { "file": "assets/photos/route-adults-2.jpg", "width": 800, "height": 1200, "alt": "Two people working through notes together at a table" },
       { "file": "assets/photos/route-adults-3.jpg", "width": 800, "height": 1199, "alt": "A woman writing in a notebook at a desk by a window" }
     ]

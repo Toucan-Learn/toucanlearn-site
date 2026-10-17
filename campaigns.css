@@ -1066,7 +1066,7 @@ body.homepage .site-footer {
 
 @media (max-width: 620px) {
   body.homepage {
-    --sticky-header-height: 160px;
+    --sticky-header-height: 64px;
   }
 
   .homepage-section .how-steps {
@@ -1471,5 +1471,331 @@ body.homepage .site-footer {
     align-items: stretch;
     flex-direction: column;
     gap: 16px;
+  }
+}
+
+/* Joshua, 17 Oct 2026: the homepage step cards use the Our approach page's
+   card style (title size, then the description under it). On laptops the card
+   grows downwards on hover or keyboard focus to show the description, with the
+   drawing untouched; a matching negative margin keeps the rest of the page
+   still, so the grown card sits over the line below. Phones always show it. */
+#how-it-works .how-steps h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.045em;
+}
+
+#how-it-works .how-step-detail {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+@media (min-width: 941px) and (hover: hover) {
+  #how-it-works .how-step-detail {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 240ms ease, opacity 200ms ease;
+  }
+
+  #how-it-works .how-steps li {
+    transition: transform 220ms ease, box-shadow 220ms ease, margin-bottom 240ms ease;
+  }
+
+  #how-it-works .how-steps li:hover,
+  #how-it-works .how-steps li:focus-within {
+    z-index: 2;
+    align-self: start;
+    margin-bottom: -7.75em;
+  }
+
+  #how-it-works .how-steps li:hover .how-step-detail,
+  #how-it-works .how-steps li:focus-within .how-step-detail {
+    max-height: 7.75em;
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #how-it-works .how-steps li,
+  #how-it-works .how-step-detail {
+    transition: none;
+  }
+}
+
+/* Round 18: preserve the dark opening header and its 64px phone bar. */
+@media (max-width: 620px) {
+  body.homepage .toucan-opening-header {
+    --mobile-menu-surface: #0a272c;
+    --mobile-menu-ink: #f0ebe0;
+  }
+
+  body.homepage .toucan-opening-header .nav {
+    min-height: 0;
+    padding-block: 0;
+  }
+
+  /* Phone scroll-padding already provides the bar height and breathing room. */
+  .approach-page .approach-card {
+    scroll-margin-top: 0;
+  }
+}
+
+/* Round 21: the longer reports line wraps into even lines, not one word. */
+#how-it-works .how-note {
+  text-wrap: balance;
+}
+
+/* Round 22 (Joshua, 17 Oct 2026: "the we send weekly lesson reports needs its
+   own cell"): the reports line sits in its own soft teal cell, like the Our
+   approach page's "Keeping you in the loop" box; the button stays beside it. */
+#how-it-works .how-follow-up {
+  align-items: stretch;
+}
+
+#how-it-works .how-follow-up .how-note {
+  display: flex;
+  align-items: center;
+  padding: 16px 28px;
+  border-radius: var(--radius-xl);
+  background: var(--teal-soft);
+}
+
+#how-it-works .how-follow-up .button {
+  align-self: center;
+}
+
+@media (max-width: 899px) {
+  #how-it-works .how-follow-up .how-note {
+    padding: 18px 20px;
+  }
+}
+
+/* Round 23: CSS-only deeper-page menus; panels touch their parent links so
+   hover and keyboard focus can move straight into them. No motion is added. */
+.nav-links {
+  --nav-panel-surface: #f3ece2;
+  --nav-panel-ink: #10242d;
+  --nav-panel-highlight: #cddfd7;
+}
+
+body.homepage .toucan-opening-header .nav-links {
+  --nav-panel-surface: #0a272c;
+  --nav-panel-ink: #f0ebe0;
+  --nav-panel-highlight: #16414a;
+}
+
+.nav-links .nav-item {
+  position: relative;
+}
+
+.nav-links .nav-item > a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.nav-chevron {
+  font-size: 0.75em;
+  line-height: 1;
+}
+
+.nav-links .nav-dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 1;
+  display: none;
+  width: 18rem;
+  max-width: calc(100vw - 32px);
+  max-height: calc(100vh - 130px);
+  max-height: calc(100dvh - 130px);
+  overflow-y: auto;
+  margin: 0;
+  padding: 8px;
+  list-style: none;
+  border: 1px solid var(--nav-panel-ink);
+  border-radius: 16px;
+  color: var(--nav-panel-ink);
+  background: var(--nav-panel-surface);
+  box-shadow: 0 14px 30px rgba(11, 63, 81, 0.18);
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.nav-links .nav-item:hover > .nav-dropdown,
+.nav-links .nav-item:focus-within > .nav-dropdown {
+  display: block;
+}
+
+.nav-links .nav-dropdown a {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  color: var(--nav-panel-ink);
+  opacity: 1;
+  text-decoration: none;
+}
+
+.nav-links .nav-dropdown a:hover,
+.nav-links .nav-dropdown a:focus-visible {
+  background: var(--nav-panel-highlight);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.nav-links .nav-item > a:focus-visible,
+.nav-links .nav-dropdown a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.approach-page #how-it-works,
+.approach-page #ways-of-working,
+.approach-page #weekly-reports {
+  scroll-margin-top: 112px;
+}
+
+@media (max-width: 620px) {
+  .mobile-menu .mobile-sub-links {
+    margin: 0;
+    padding: 0 0 0 16px;
+    list-style: none;
+  }
+
+  .mobile-menu .mobile-sub-links a {
+    min-height: 44px;
+    padding: 8px 16px;
+    font-size: 0.9rem;
+  }
+
+  /* The existing phone scroll-padding includes the complete 64px bar. */
+  .approach-page #how-it-works,
+  .approach-page #ways-of-working,
+  .approach-page #weekly-reports {
+    scroll-margin-top: 0;
+  }
+}
+
+/* Round 24 (Joshua, 17 Oct 2026: "the blue dropdown menu looks better … could
+   do better with that"): one deep teal dropdown on every page, with a pointer,
+   a peach hover accent and a divider between learners and subjects. */
+.nav-links,
+body.homepage .toucan-opening-header .nav-links {
+  --nav-panel-surface: #0b2c33;
+  --nav-panel-ink: #f3ede2;
+  --nav-panel-highlight: rgba(244, 192, 155, 0.14);
+}
+
+.nav-links .nav-dropdown {
+  top: calc(100% + 10px);
+  padding: 10px;
+  border: 1px solid rgba(205, 223, 215, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(165deg, #0f3a44 0%, var(--nav-panel-surface) 60%);
+  box-shadow: 0 22px 48px rgba(4, 24, 30, 0.38);
+  overflow: visible;
+}
+
+/* An invisible bridge over the gap keeps the menu open on the way down. */
+.nav-links .nav-dropdown::before {
+  content: "";
+  position: absolute;
+  top: -12px;
+  right: 0;
+  left: 0;
+  height: 12px;
+}
+
+/* The pointer up to the menu item. */
+.nav-links .nav-dropdown::after {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 28px;
+  width: 12px;
+  height: 12px;
+  border-top: 1px solid rgba(205, 223, 215, 0.18);
+  border-left: 1px solid rgba(205, 223, 215, 0.18);
+  background: #0f3a44;
+  transform: rotate(45deg);
+}
+
+.nav-links .nav-dropdown a {
+  position: relative;
+  padding: 10px 14px 10px 16px;
+  font-weight: 650;
+  letter-spacing: 0.005em;
+}
+
+.nav-links .nav-dropdown a::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 6px;
+  width: 3px;
+  border-radius: 3px;
+  background: var(--orange-soft);
+  opacity: 0;
+}
+
+.nav-links .nav-dropdown a:hover,
+.nav-links .nav-dropdown a:focus-visible {
+  color: #fff8f0;
+  text-decoration: none;
+}
+
+.nav-links .nav-dropdown a:hover::before,
+.nav-links .nav-dropdown a:focus-visible::before {
+  opacity: 1;
+}
+
+/* Who we help: Children and Adults first, then the subject pages. */
+.nav-links .nav-dropdown li:nth-child(3):nth-last-child(4) {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(205, 223, 215, 0.16);
+}
+
+.nav-links .nav-item > a:focus-visible,
+.nav-links .nav-dropdown a:focus-visible {
+  outline-color: var(--orange-soft);
+}
+
+/* Round 24 (Joshua, 17 Oct 2026: "reviews need a leave a review option"): a
+   Leave a review on Google button, in the heading row on laptops so the
+   Reviews landing zone keeps its height; under the heading on phones. */
+@media (min-width: 900px) {
+  #reviews > .container {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: var(--section-gap);
+    align-items: end;
+  }
+
+  #reviews > .container > * {
+    grid-column: 1 / -1;
+  }
+
+  #reviews > .container > .section-head {
+    grid-column: 1;
+  }
+
+  #reviews > .container > .review-leave {
+    grid-column: 2;
+    grid-row: 1;
+    margin-bottom: var(--section-gap);
+  }
+}
+
+@media (max-width: 899px) {
+  #reviews .review-leave {
+    margin: 0 0 var(--section-gap);
   }
 }

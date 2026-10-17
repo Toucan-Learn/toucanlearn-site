@@ -20,8 +20,9 @@
   <meta property="og:url" content="https://toucanlearn.co.uk/contact.html" />
 
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
-  <link rel="stylesheet" href="style.css?v=20260908-reviews-carousel-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261017-reviews-1" />
+  <link rel="stylesheet" href="style.css?v=20261017-menu-1" />
+  <link rel="stylesheet" href="campaigns.css?v=20261017-nav-2" />
+  <script src="menu.js?v=20261017-menu-1" defer></script>
 </head>
 
 <body>
@@ -35,19 +36,59 @@
           <strong>Tou<span class="brand-can">can</span></strong>
           <span>Learn</span>
         </span>
+        <span class="mobile-home">Home</span>
       </a>
 
       <nav class="nav-links" aria-label="Primary">
-        <a href="index.html#support-routes">Who we help</a>
-        <a href="approach.html">Our approach</a>
+        <div class="nav-item">
+          <a href="index.html#support-routes">Who we help <span class="nav-chevron" aria-hidden="true">▾</span></a>
+          <ul class="nav-dropdown">
+            <li><a href="children.html">Children and young people</a></li>
+            <li><a href="adults.html">Adults</a></li>
+            <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
+            <li><a href="languages.html">Languages</a></li>
+            <li><a href="english-for-uk-work.html">English for UK work</a></li>
+            <li><a href="in-person.html">In person</a></li>
+          </ul>
+        </div>
+        <div class="nav-item">
+          <a href="approach.html">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
+          <ul class="nav-dropdown">
+            <li><a href="approach.html#how-it-works">How it works</a></li>
+            <li><a href="approach.html#ways-of-working">Different ways of working</a></li>
+            <li><a href="approach.html#weekly-reports">Weekly reports</a></li>
+          </ul>
+        </div>
         <a href="index.html#reviews">Reviews</a>
         <a class="button" href="#email-enquiry">Start an enquiry</a>
       </nav>
 
-      <div class="mobile-note">
-        <span>Tutoring for children and adults</span>
-        <a class="text-button" href="#email-enquiry">Start an enquiry</a>
-      </div>
+      <details class="mobile-menu">
+        <summary><span class="menu-icon" aria-hidden="true">☰</span> Menu</summary>
+        <nav aria-label="Menu">
+          <div class="mobile-nav-item">
+            <a href="index.html#support-routes">Who we help</a>
+            <ul class="mobile-sub-links">
+              <li><a href="children.html">Children and young people</a></li>
+              <li><a href="adults.html">Adults</a></li>
+              <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
+              <li><a href="languages.html">Languages</a></li>
+              <li><a href="english-for-uk-work.html">English for UK work</a></li>
+              <li><a href="in-person.html">In person</a></li>
+            </ul>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="approach.html">Our approach</a>
+            <ul class="mobile-sub-links">
+              <li><a href="approach.html#how-it-works">How it works</a></li>
+              <li><a href="approach.html#ways-of-working">Different ways of working</a></li>
+              <li><a href="approach.html#weekly-reports">Weekly reports</a></li>
+            </ul>
+          </div>
+          <a href="index.html#reviews">Reviews</a>
+          <a class="button" href="#email-enquiry">Start an enquiry</a>
+        </nav>
+      </details>
     </div>
   </header>
 

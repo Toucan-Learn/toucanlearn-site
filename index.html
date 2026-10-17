@@ -15,13 +15,14 @@
   <meta property="og:locale" content="en_GB" />
   <meta property="og:url" content="https://toucanlearn.co.uk/" />
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
-  <link rel="stylesheet" href="style.css?v=20261010-consistency-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261017-reviews-1" />
+  <link rel="stylesheet" href="style.css?v=20261017-menu-1" />
+  <link rel="stylesheet" href="campaigns.css?v=20261017-nav-2" />
   <link rel="stylesheet" href="hero.css?v=20261017-wave-1" />
   <link rel="modulepreload" href="hero-sky-shaders.js?v=20261017-wave-1" />
   <link rel="preload" as="image" href="assets/galaxy-noise.png" />
   <link rel="preload" as="image" href="assets/toucan-logo-flat.png" />
   <script src="hero-sky.js?v=20261017-wave-1" type="module"></script>
+  <script src="menu.js?v=20261017-menu-1" defer></script>
 </head>
 <body class="homepage">
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -34,17 +35,57 @@
           <strong>Tou<span class="brand-can">can</span></strong>
           <span>Learn</span>
         </span>
+        <span class="mobile-home">Home</span>
       </a>
       <nav class="nav-links" aria-label="Primary">
-        <a href="#support-routes">Who we help</a>
-        <a href="#how-it-works">Our approach</a>
+        <div class="nav-item">
+          <a href="#support-routes">Who we help <span class="nav-chevron" aria-hidden="true">▾</span></a>
+          <ul class="nav-dropdown">
+            <li><a href="children.html">Children and young people</a></li>
+            <li><a href="adults.html">Adults</a></li>
+            <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
+            <li><a href="languages.html">Languages</a></li>
+            <li><a href="english-for-uk-work.html">English for UK work</a></li>
+            <li><a href="in-person.html">In person</a></li>
+          </ul>
+        </div>
+        <div class="nav-item">
+          <a href="#how-it-works">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
+          <ul class="nav-dropdown">
+            <li><a href="approach.html#how-it-works">How it works</a></li>
+            <li><a href="approach.html#ways-of-working">Different ways of working</a></li>
+            <li><a href="approach.html#weekly-reports">Weekly reports</a></li>
+          </ul>
+        </div>
         <a href="#reviews">Reviews</a>
         <a class="button" href="contact.html">Start an enquiry</a>
       </nav>
-      <div class="mobile-note">
-        <span>Tutoring for children and adults</span>
-        <a class="text-button" href="#support-routes">Choose support</a>
-      </div>
+      <details class="mobile-menu">
+        <summary><span class="menu-icon" aria-hidden="true">☰</span> Menu</summary>
+        <nav aria-label="Menu">
+          <div class="mobile-nav-item">
+            <a href="#support-routes">Who we help</a>
+            <ul class="mobile-sub-links">
+              <li><a href="children.html">Children and young people</a></li>
+              <li><a href="adults.html">Adults</a></li>
+              <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
+              <li><a href="languages.html">Languages</a></li>
+              <li><a href="english-for-uk-work.html">English for UK work</a></li>
+              <li><a href="in-person.html">In person</a></li>
+            </ul>
+          </div>
+          <div class="mobile-nav-item">
+            <a href="#how-it-works">Our approach</a>
+            <ul class="mobile-sub-links">
+              <li><a href="approach.html#how-it-works">How it works</a></li>
+              <li><a href="approach.html#ways-of-working">Different ways of working</a></li>
+              <li><a href="approach.html#weekly-reports">Weekly reports</a></li>
+            </ul>
+          </div>
+          <a href="#reviews">Reviews</a>
+          <a class="button" href="contact.html">Start an enquiry</a>
+        </nav>
+      </details>
     </div>
   </header>
 
@@ -120,25 +161,28 @@
             </div>
             <span class="how-number" aria-hidden="true">01</span>
             <div><h3><a class="how-step-link" href="approach.html#learn-about-you">Learn about you</a></h3></div>
+            <p class="how-step-detail">We use the first free-trial as a live-diagnostic session to get to know you and the best ways we can support you.</p>
           </li>
           <li>
             <div class="how-step-media">
               <img src="assets/art/how-step2-a.png" alt="" width="960" height="600" loading="lazy" decoding="async" data-step-art="step2" />
             </div>
             <span class="how-number" aria-hidden="true">02</span>
-            <div><h3><a class="how-step-link" href="approach.html#skill-building">Immediate skill-building</a></h3></div>
+            <div><h3><a class="how-step-link" href="approach.html#skill-building">Develop skills</a></h3></div>
+            <p class="how-step-detail">Our way is to start planning effective and tailored skill-building tasks at a calibrated selected pace to your needs.</p>
           </li>
           <li>
             <div class="how-step-media">
               <img src="assets/art/how-step3-a.png" alt="" width="960" height="600" loading="lazy" decoding="async" data-step-art="step3" />
             </div>
             <span class="how-number" aria-hidden="true">03</span>
-            <div><h3><a class="how-step-link" href="approach.html#projects-and-goals">Long-term projects and goals</a></h3></div>
+            <div><h3><a class="how-step-link" href="approach.html#projects-and-goals">Long-term goals and projects</a></h3></div>
+            <p class="how-step-detail">At Toucan Learn we like to use short-term skill building exercises, and also focus on long-term objectives, like exam preparation or meaningful long term projects.</p>
           </li>
         </ol>
         <script src="step-art.js?v=20261017-how-2"></script>
         <div class="how-follow-up">
-          <p class="how-note">You'll get a short report after every lesson, and Joshua oversees every learner's plan.</p>
+          <p class="how-note">We send weekly lesson reports so you're always up to date, and our team works together to bring out the best in every session.</p>
           <a class="button" href="approach.html">Find out more about our approach <span aria-hidden="true">→</span></a>
         </div>
       </div>
@@ -150,6 +194,7 @@
           <div class="eyebrow">Reviews</div>
           <h2>What families say.</h2>
         </div>
+        <a class="button secondary review-leave" href="https://www.google.com/maps/place//data=!4m3!3m2!1s0x487191466f4dd581:0xef287a4b0841abec!12e1" target="_blank" rel="noopener">Leave a review on Google <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens in a new tab)</span></a>
 
         <div class="reviews-grid">
           <figure class="review-quote">

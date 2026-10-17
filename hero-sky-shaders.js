@@ -142,9 +142,9 @@ uniform int rippleCount;`)
   vec2 visible=grid/(pixel_size*cover_scale);
   sample_uv=(sample_uv-.5)*visible+.5;
   vec3 original=texture(pixel_sky,sample_uv).rgb;
-  float brightness=max(original.r,max(original.g,original.b));
-  vec3 painted=floor((ink*(.15+brightness*.85)+original*.55)*32.0+.5)/32.0;
-  outputColour=vec4(mix(original,painted,clamp(brushLight+ring*.38,0.0,.8)),1.0);
+  // Joshua, 17 Oct 2026: match the other skies (refraction only), with no
+  // tinted ring or brush paint on top of the image.
+  outputColour=vec4(original,1.0);
   return;
  }
  noise_uv+=displacement;

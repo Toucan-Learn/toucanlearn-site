@@ -10,7 +10,6 @@
     ],
     "adults": [
       { "file": "assets/photos/route-adults-1.jpg", "width": 800, "height": 1200, "alt": "A man with a coffee working on his laptop in a café" },
-      { "file": "assets/photos/route-adults-2.jpg", "width": 800, "height": 1200, "alt": "Two people working through notes together at a table" },
       { "file": "assets/photos/route-adults-3.jpg", "width": 800, "height": 1199, "alt": "A woman writing in a notebook at a desk by a window" }
     ]
   };
@@ -27,12 +26,14 @@
     if (!image) continue;
     const photos = ROUTE_PHOTOS[audience];
     const requested = params.get(query);
-    const index = /^[123]$/.test(requested) ? Number(requested) - 1 : Math.floor(Math.random() * photos.length);
+    const forced = /^[1-9]$/.test(requested) && Number(requested) <= photos.length;
+    const index = forced ? Number(requested) - 1 : Math.floor(Math.random() * photos.length);
     const photo = photos[index];
     image.width = photo.width;
     image.height = photo.height;
     image.alt = photo.alt;
-    image.dataset.routePhoto = `${audience}-${index + 1}`;
+    // Name each photo after its file, so its crop rule follows it if the list changes.
+    image.dataset.routePhoto = photo.file.replace(/^.*route-|\.jpg$/g, '');
     if (image.getAttribute('src') !== photo.file) image.src = photo.file;
   }
 })();

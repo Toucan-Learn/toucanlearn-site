@@ -34,6 +34,16 @@ export function initHeroKeyboard(ripple) {
     }
   }
 
+  function revealInViewport() {
+    // This untransformed outer panel already has its full height while sliding.
+    // Nudge only on opening, and only when the keys extend below the viewport.
+    const bottom = panel.getBoundingClientRect().bottom;
+    if (bottom > window.innerHeight) {
+      window.scrollBy({ top: bottom - window.innerHeight + 12, left: 0,
+        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
+    }
+  }
+
   function highlight(note) {
     next = note;
     if (highlighted) {
@@ -66,11 +76,13 @@ export function initHeroKeyboard(ripple) {
     open = !open;
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', `${open ? 'Hide' : 'Show'} piano keyboard`);
+    if (!open && panel.contains(document.activeElement)) toggle.focus({ preventScroll: true });
     panel.setAttribute('aria-hidden', String(!open));
     panel.inert = !open;
     panel.classList.toggle('is-open', open);
     if (!open) { pointers.clear(); held.clear(); }
     keepInView();
+    if (open) revealInViewport();
   });
 
   const keyFrom = element => {

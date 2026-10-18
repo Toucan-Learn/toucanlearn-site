@@ -1,0 +1,21 @@
+/* Round 49: contact-only additions use the existing form tokens and controls. */
+.enquiry-form { gap: 18px; }
+.enquiry-fields { gap: 16px; }
+.enquiry-form .form-choice { min-inline-size: 0; padding: 0; margin: 0; border: 0; }
+.form-choice legend { margin-bottom: 8px; color: var(--heading); font-size: .92rem; font-weight: 800; }
+.radio-options { display: flex; flex-wrap: wrap; gap: 8px 16px; }
+.radio-options label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.radio-options input { width: 20px; height: 20px; margin: 0; accent-color: var(--heading); }
+.radio-options input:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
+/* Reserve each short input's space. Hidden controls are inert and disabled;
+   visibility also removes them from focus and the accessibility tree. */
+.enquiry-form .conditional-field[hidden] { display: grid; visibility: hidden; }
+.reply-contact-slot { display: grid; min-width: 0; }
+.reply-contact-slot > .field { grid-area: 1 / 1; align-content: start; }
+.enquiry-form .field textarea { min-height: 120px; }
+.enquiry-form .field small { color: var(--ink); line-height: 1.45; }
+.field-error { display: block; min-height: 1.4em; color: var(--error-ink); font-size: .875rem; line-height: 1.4; }
+.enquiry-form [aria-invalid="true"] { border-color: var(--error-ink); }
+.form-use-note { margin: 0; font-size: .875rem; }
+.enquiry-form .form-message a { color: inherit; text-decoration: underline; }
+.enquiry-form .form-message:focus { outline: 3px solid var(--orange-text); outline-offset: 3px; }

@@ -348,6 +348,14 @@
   gap: 10px 18px;
 }
 
+/* Keep footer links easy to tap as the contact options wrap on phones. */
+.footer-links > a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
 .contact-hero {
   padding: 58px 0 20px;
 }
@@ -1474,11 +1482,11 @@ body.homepage .site-footer {
   }
 }
 
-/* Joshua, 17 Oct 2026: the homepage step cards use the Our approach page's
-   card style (title size, then the description under it). On laptops the card
-   grows downwards on hover or keyboard focus to show the description, with the
-   drawing untouched; a matching negative margin keeps the rest of the page
-   still, so the grown card sits over the line below. Phones always show it. */
+/* Round 47 (Joshua, 18 Oct 2026): reserve the description under the title.
+   The unchanged drawing leaves only 69-72px beside it at the requested desktop
+   widths, too little for the copy at 13px. Use the agreed fallback on all hover
+   laptops: badge beside title, then a fade in space the card always reserves.
+   Phones and no-hover devices retain the visible description and stacked badge. */
 #how-it-works .how-steps h3 {
   font-size: 1.4rem;
   font-weight: 700;
@@ -1493,27 +1501,45 @@ body.homepage .site-footer {
 }
 
 @media (min-width: 941px) and (hover: hover) {
-  #how-it-works .how-step-detail {
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    transition: max-height 240ms ease, opacity 200ms ease;
+  #how-it-works .how-steps li {
+    grid-template-columns: 44px minmax(0, 1fr);
+    text-align: left;
+    transition: box-shadow 220ms ease;
   }
 
-  #how-it-works .how-steps li {
-    transition: transform 220ms ease, box-shadow 220ms ease, margin-bottom 240ms ease;
+  #how-it-works .how-step-media {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+
+  #how-it-works .how-number {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  #how-it-works .how-steps li > div:not(.how-step-media) {
+    grid-column: 2;
+    grid-row: 2;
+    align-self: center;
+  }
+
+  /* Opacity leaves the complete paragraph in layout and the accessibility tree. */
+  #how-it-works .how-step-detail {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    opacity: 0;
+    transition: opacity 200ms ease;
   }
 
   #how-it-works .how-steps li:hover,
   #how-it-works .how-steps li:focus-within {
-    z-index: 2;
-    align-self: start;
-    margin-bottom: -7.75em;
+    transform: none;
   }
 
   #how-it-works .how-steps li:hover .how-step-detail,
   #how-it-works .how-steps li:focus-within .how-step-detail {
-    max-height: 7.75em;
     opacity: 1;
   }
 }
@@ -2071,5 +2097,220 @@ body.homepage .toucan-opening-header .nav-links {
   .homepage-section .reviews-enquiry--interactive *::after {
     animation: none !important;
     transition: none !important;
+  }
+}
+
+/* Round 48 (Joshua, 18 Oct 2026): the free trial is the one filled header
+   action on every page, including the phone menu. Match the Reviews button. */
+.nav .nav-links > .button,
+.nav .mobile-menu nav > .button {
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, #ffd1b1, #f28a45 72%, #e36f7f);
+  color: #17112e;
+  opacity: 1;
+  box-shadow: 0 6px 18px rgba(239, 172, 142, 0.2);
+  text-decoration: none;
+}
+
+.nav .nav-links > .button:hover,
+.nav .mobile-menu nav > .button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 22px rgba(239, 172, 142, 0.35);
+}
+
+.nav .nav-links > .button:focus-visible,
+.nav .mobile-menu nav > .button:focus-visible {
+  outline: 3px solid var(--heading);
+  outline-offset: 4px;
+}
+
+.toucan-opening-header .nav .button:focus-visible { outline-color: #f0ebe0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav .nav-links > .button,
+  .nav .mobile-menu nav > .button { transition: none; }
+  .nav .nav-links > .button:hover,
+  .nav .mobile-menu nav > .button:hover { transform: none; }
+}
+
+/* Round 50 (Joshua, 18 Oct 2026): close each homepage section with the
+   opening's free-trial gradient, at the ordinary button size. */
+body.homepage .homepage-section .trial-button {
+  background: linear-gradient(135deg, #ffd1b1, #f28a45 72%, #e36f7f);
+  color: #17112e;
+  box-shadow: 0 6px 18px rgba(239, 172, 142, 0.2);
+}
+
+body.homepage .homepage-section .trial-button:hover {
+  box-shadow: 0 9px 22px rgba(239, 172, 142, 0.35);
+}
+
+#support-routes .section-trial {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+#how-it-works .how-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+#how-it-works .how-follow-up .how-note {
+  min-width: 0;
+}
+
+/* Let the longer secondary label wrap before borrowing another line from the
+   reports cell. Its wording and the reports' typography remain unchanged. */
+@media (min-width: 900px) {
+  #how-it-works .how-actions {
+    flex: 0 1 36%;
+  }
+
+  #how-it-works .how-actions .secondary {
+    flex: 1 1 0;
+  }
+}
+
+@media (max-width: 899px) {
+  #how-it-works .how-actions {
+    flex-wrap: wrap;
+  }
+}
+
+/* Phone cards keep their complete drawing beside always-visible copy. The
+   stretched link still covers each whole card; very narrow phones keep the
+   original stack. No laptop card, support card or landing offset changes. */
+@media (min-width: 341px) and (max-width: 620px) {
+  #how-it-works .section-head {
+    margin-bottom: 16px;
+  }
+
+  #how-it-works .how-steps {
+    gap: 12px;
+  }
+
+  #how-it-works .how-steps li {
+    grid-template-columns: 38% 24px minmax(0, 1fr);
+    column-gap: 8px;
+    row-gap: 8px;
+    padding: 12px;
+  }
+
+  #how-it-works .how-step-media {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    align-self: stretch;
+    aspect-ratio: auto;
+  }
+
+  #how-it-works .how-number {
+    grid-column: 2;
+    grid-row: 1;
+    width: 24px;
+    height: 24px;
+    font-size: 15px;
+  }
+
+  #how-it-works .how-steps li > div:not(.how-step-media) {
+    grid-column: 3;
+    grid-row: 1;
+    align-self: center;
+  }
+
+  #how-it-works .how-steps h3 {
+    font-size: 18px;
+  }
+
+  #how-it-works .how-step-detail {
+    grid-column: 2 / -1;
+    grid-row: 2;
+    font-size: 15px;
+    line-height: 1.35;
+    opacity: 1;
+  }
+
+  #how-it-works .how-follow-up {
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  #how-it-works .how-follow-up .how-note {
+    padding: 12px 14px;
+  }
+
+  #how-it-works .how-actions {
+    gap: 12px;
+  }
+}
+
+/* Round 51 (Joshua, 18 Oct 2026): one free-trial treatment everywhere.
+   Inner-page headers are light in light mode too. Keep every surface as it is;
+   only buttons on those surfaces invert. The ink keyline keeps the cream edge
+   distinct even when a bright star or cloud passes behind the Reviews button. */
+:root {
+  --hero-cream: #f0ebe0;
+  --hero-night: #0a272c;
+  --trial-light-fill: var(--blue);
+  --trial-light-ink: var(--hero-cream);
+  --trial-light-hover: #0e4c60;
+  --trial-light-glow: 11, 63, 81;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --trial-light-fill: var(--hero-cream);
+    --trial-light-ink: var(--hero-night);
+    --trial-light-hover: #fbf8f2;
+    --trial-light-glow: 240, 235, 224;
+  }
+}
+
+:root[data-theme="dark"] {
+  --trial-light-fill: var(--hero-cream);
+  --trial-light-ink: var(--hero-night);
+  --trial-light-hover: #fbf8f2;
+  --trial-light-glow: 240, 235, 224;
+}
+
+/* The context plus class outranks the older placement rules, including
+   hero.css loaded after this sheet, without changing any button geometry. */
+body :is(.nav, .living-hero, .homepage-section) .button.trial-button {
+  --trial-fill: var(--hero-cream);
+  --trial-ink: var(--hero-night);
+  --trial-hover: #fbf8f2;
+  --trial-glow: 240, 235, 224;
+  background: var(--trial-fill);
+  color: var(--trial-ink);
+  box-shadow: 0 0 0 1px var(--trial-ink), 0 10px 28px rgba(var(--trial-glow), .28);
+  text-decoration: none;
+  transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+body :is(.nav, .living-hero, .homepage-section) .button.trial-button--light-surface {
+  --trial-fill: var(--trial-light-fill);
+  --trial-ink: var(--trial-light-ink);
+  --trial-hover: var(--trial-light-hover);
+  --trial-glow: var(--trial-light-glow);
+}
+
+body :is(.nav, .living-hero, .homepage-section) .button.trial-button:is(:hover, :focus-visible) {
+  background: var(--trial-hover);
+  box-shadow: 0 0 0 1px var(--trial-ink), 0 14px 34px rgba(var(--trial-glow), .35);
+  transform: translateY(-2px);
+}
+
+body :is(.nav, .living-hero, .homepage-section) .button.trial-button:focus-visible {
+  outline: 3px solid var(--trial-fill);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 8px var(--trial-ink), 0 14px 34px rgba(var(--trial-glow), .35);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body :is(.nav, .living-hero, .homepage-section) .button.trial-button,
+  body :is(.nav, .living-hero, .homepage-section) .button.trial-button:is(:hover, :focus-visible) {
+    transition: none;
+    transform: none;
   }
 }

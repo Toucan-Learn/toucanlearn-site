@@ -4,16 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'none'; frame-src 'none'; worker-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; frame-src 'none'; worker-src 'none'" />
 
-  <title>Enquire | Toucan Learn</title>
+  <title>Enquire about tutoring in Bristol and online | Toucan Learn</title>
   <meta
     name="description"
-    content="Email hello@toucanlearn.co.uk about personal tutoring. Your first session is free; after that, £40 per hour."
+    content="Ask about a free first tutoring session online across the UK or in Bristol and Henley-on-Thames, subject to tutor availability."
   />
   <link rel="canonical" href="https://toucanlearn.co.uk/contact.html" />
-  <meta property="og:title" content="Start an enquiry | Toucan Learn" />
-  <meta property="og:description" content="Tell Toucan Learn who the support is for, the goal and what currently feels difficult." />
+  <meta property="og:title" content="Enquire about tutoring in Bristol and online | Toucan Learn" />
+  <meta property="og:description" content="Ask about a free first tutoring session online across the UK or in Bristol and Henley-on-Thames, subject to tutor availability." />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Toucan Learn" />
   <meta property="og:locale" content="en_GB" />
@@ -22,7 +22,8 @@
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <script src="theme.js?v=20261018-dark-1"></script>
   <link rel="stylesheet" href="style.css?v=20261018-dark-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261018-frame-3" />
+  <link rel="stylesheet" href="campaigns.css?v=20261018-cream-51" />
+  <link rel="stylesheet" href="contact.css?v=20261018-form-49" />
   <script src="menu.js?v=20261017-menu-1" defer></script>
 </head>
 
@@ -67,7 +68,7 @@
             <g class="theme-sun"><circle cx="12" cy="12" r="4" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42" /></g>
           </svg>
         </button>
-        <a class="button" href="#email-enquiry">Start an enquiry</a>
+        <a class="button trial-button trial-button--light-surface" href="#email-enquiry">Book a free trial</a>
       </nav>
 
       <details class="mobile-menu">
@@ -93,7 +94,7 @@
             </ul>
           </div>
           <a href="index.html#reviews">Reviews</a>
-          <a class="button" href="#email-enquiry">Start an enquiry</a>
+          <a class="button trial-button trial-button--light-surface" href="#email-enquiry">Book a free trial</a>
         </nav>
       </details>
     </div>
@@ -115,18 +116,90 @@
 
     <section class="contact-form-section" id="email-enquiry" aria-labelledby="email-heading">
       <div class="contact-width">
-        <h2 id="email-heading">Start with an email.</h2>
-        <p>Email <a href="mailto:hello@toucanlearn.co.uk?subject=Tutoring%20enquiry%20%E2%80%94%20Toucan%20Learn">hello@toucanlearn.co.uk</a> and tell us:</p>
-        <ul>
-          <li>Who the support is for: a child, young person or adult. For a child, an approximate age or school year is helpful.</li>
-          <li>The subject or goal, and a little about the current starting point.</li>
-          <li>Your rough availability: days, times and when you would like to start.</li>
-          <li>Whether you prefer online or in-person support. For in-person support, include your town or postcode area.</li>
-        </ul>
+        <h2 id="email-heading">Send us a short enquiry.</h2>
         <p class="form-privacy-note" id="initial-contact-guidance"><strong>Keep this first message brief.</strong> A parent or carer should enquire for a child. Please do not include diagnostic reports, medical records, full school records or urgent safeguarding information. If access needs matter, simply say that you would like to discuss them privately.</p>
-        <p>Joshua will review your enquiry, check tutor fit and availability, and reply with a useful next step. We agree the arrangements for your free first session before booking.</p>
-        <p>Read our <a href="privacy.html">privacy notice</a> for how we use your information. An enquiry does not guarantee a tutor, place or outcome.</p>
+        <!-- Apps Script web app "Toucan Learn enquiry form" (Joshua's Google account), deployed 18 Oct 2026. The only endpoint configuration is data-form-endpoint. -->
+        <form class="enquiry-form" id="enquiry-form" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST" aria-describedby="initial-contact-guidance">
+          <p class="form-message" id="form-message" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>
+          <fieldset class="enquiry-fields" id="enquiry-fields" disabled>
+          <legend class="visually-hidden">Tutoring enquiry details</legend>
+          <input type="hidden" name="loaded_at" id="loaded-at" value="" />
+          <input type="hidden" name="Campaign source" id="campaign-source" value="Direct or unknown" />
+          <input type="hidden" name="Traffic source" id="traffic-source" value="" />
+          <input type="hidden" name="Traffic medium" id="traffic-medium" value="" />
+          <input type="hidden" name="Campaign name" id="campaign-name" value="" />
+          <div class="honeypot" aria-hidden="true">
+            <label for="company-website">Leave this field empty</label>
+            <input id="company-website" name="website" type="text" maxlength="200" tabindex="-1" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label for="contact-name">Your name</label>
+            <input id="contact-name" name="Contact name" type="text" maxlength="120" autocomplete="name" aria-describedby="contact-name-error" required />
+            <span class="field-error" id="contact-name-error"></span>
+          </div>
+          <fieldset class="form-choice" aria-describedby="learner-child-error">
+            <legend>Who is the tutoring for?</legend>
+            <div class="radio-options">
+              <label for="learner-child"><input id="learner-child" name="Learner" type="radio" value="child" aria-describedby="learner-child-error" required /> A child or young person</label>
+              <label for="learner-adult"><input id="learner-adult" name="Learner" type="radio" value="adult" aria-describedby="learner-child-error" required /> Me (an adult)</label>
+            </div>
+            <span class="field-error" id="learner-child-error"></span>
+          </fieldset>
+          <div class="field conditional-field" id="age-year-field" hidden inert>
+            <label for="age-year">Age or school year</label>
+            <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
+            <span class="field-error" id="age-year-error"></span>
+          </div>
+          <div class="field">
+            <label for="support-needed">What would you like help with?</label>
+            <textarea id="support-needed" name="Support requested" rows="4" maxlength="1000" aria-describedby="support-needed-hint support-needed-error" required></textarea>
+            <small id="support-needed-hint">The subject or goal, and what's tricky at the moment. Please keep it brief and don't include reports or medical details.</small>
+            <span class="field-error" id="support-needed-error"></span>
+          </div>
+          <fieldset class="form-choice" aria-describedby="format-online-error">
+            <legend>Online or in person? <small>(optional)</small></legend>
+            <div class="radio-options">
+              <label for="format-online"><input id="format-online" name="Preferred format" type="radio" value="online" aria-describedby="format-online-error" /> Online</label>
+              <label for="format-in-person"><input id="format-in-person" name="Preferred format" type="radio" value="in-person" aria-describedby="format-online-error" /> In person</label>
+              <label for="format-not-sure"><input id="format-not-sure" name="Preferred format" type="radio" value="not-sure" aria-describedby="format-online-error" /> Not sure</label>
+            </div>
+            <span class="field-error" id="format-online-error"></span>
+          </fieldset>
+          <div class="field conditional-field" id="location-field" hidden inert>
+            <label for="location">Town or postcode area</label>
+            <input id="location" name="Town or postcode area" type="text" maxlength="80" autocomplete="address-level2" aria-describedby="location-error" disabled />
+            <span class="field-error" id="location-error"></span>
+          </div>
+          <fieldset class="form-choice" aria-describedby="reply-email-error">
+            <legend>How would you like us to reply?</legend>
+            <div class="radio-options">
+              <label for="reply-email"><input id="reply-email" name="Reply method" type="radio" value="email" aria-describedby="reply-email-error" required /> Email</label>
+              <label for="reply-call"><input id="reply-call" name="Reply method" type="radio" value="call" aria-describedby="reply-email-error" required /> Phone call</label>
+              <label for="reply-text"><input id="reply-text" name="Reply method" type="radio" value="text" aria-describedby="reply-email-error" required /> Text</label>
+              <label for="reply-whatsapp"><input id="reply-whatsapp" name="Reply method" type="radio" value="whatsapp" aria-describedby="reply-email-error" required /> WhatsApp</label>
+            </div>
+            <span class="field-error" id="reply-email-error"></span>
+          </fieldset>
+          <div class="reply-contact-slot">
+          <div class="field conditional-field" id="email-field" hidden inert>
+            <label for="email">Email address</label>
+            <input id="email" name="email" type="email" maxlength="254" autocomplete="email" aria-describedby="email-error" disabled />
+            <span class="field-error" id="email-error"></span>
+          </div>
+          <div class="field conditional-field" id="phone-field" hidden inert>
+            <label for="phone">Phone number</label>
+            <input id="phone" name="phone" type="tel" maxlength="40" autocomplete="tel" inputmode="tel" aria-describedby="phone-hint phone-error" disabled />
+            <small id="phone-hint">Use a UK number, starting with 0 or +44.</small>
+            <span class="field-error" id="phone-error"></span>
+          </div>
+          </div>
+          <button class="button form-submit" id="submit-button" type="submit">Send my enquiry</button>
+          <p class="form-use-note">We'll only use these details to reply to you. Read our <a href="privacy.html">privacy notice</a>.</p>
+          </fieldset>
+        </form>
+        <noscript><p>Please <a href="mailto:hello@toucanlearn.co.uk">email hello@toucanlearn.co.uk</a> or <a href="tel:+447309639095">call 07309 639095</a> to enquire without JavaScript.</p></noscript>
         <a class="button" href="mailto:hello@toucanlearn.co.uk?subject=Tutoring%20enquiry%20%E2%80%94%20Toucan%20Learn">Email Toucan Learn <span aria-hidden="true">→</span></a>
+        <p>Prefer to talk? Call Joshua on <a href="tel:+447309639095">07309 639095</a>, or WhatsApp on <a href="https://wa.me/447307045816" target="_blank" rel="noopener">07307 045816<span class="visually-hidden"> (opens WhatsApp in a new tab)</span></a>.</p>
         <p>If the link does not open your email app, copy hello@toucanlearn.co.uk into a new email.</p>
       </div>
     </section>
@@ -143,11 +216,14 @@
         <a href="safeguarding.html">Safeguarding</a>
         <a href="complaints.html">Complaints</a>
         <a href="index.html">Home</a>
+        <a href="contact.html">Enquire</a>
+        <a href="tel:+447309639095">07309 639095</a>
       </nav>
     </div>
   </footer>
 
   <script src="site.js"></script>
   <script src="campaigns.js"></script>
+  <script src="contact.js?v=20261018-form-49"></script>
 </body>
 </html>

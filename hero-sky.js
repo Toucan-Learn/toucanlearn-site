@@ -1,6 +1,7 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { playNextNote } from './hero-piano.js?v=20261018-keys-1';
 import { initHeroKeyboard } from './hero-keyboard.js?v=20261018-keys-1';
+import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
 
 const art = document.querySelector('.world-art');
 const sky = document.getElementById('sky-canvas');
@@ -32,7 +33,7 @@ function drawFallback() {
   fallbackCtx.fillStyle = preset.image ? '#0b131e' : `rgb(${preset.palette[2].map(channel => Math.round(channel * 255)).join(',')})`;
   fallbackCtx.fillRect(0, 0, fallback.width, fallback.height);
   if (!fallbackImage.complete || !fallbackImage.naturalWidth) return;
-  const scale = Math.max(fallback.width / fallbackImage.naturalWidth, fallback.height / fallbackImage.naturalHeight);
+  const { coverScale: scale } = getSkyFrame(fallback.width * SKY_CELL_SIZE, fallback.height * SKY_CELL_SIZE, fallbackImage.naturalWidth, fallbackImage.naturalHeight);
   const w = fallbackImage.naturalWidth * scale, h = fallbackImage.naturalHeight * scale;
   fallbackCtx.imageSmoothingEnabled = !preset.image;
   fallbackCtx.drawImage(fallbackImage, (fallback.width - w) / 2, (fallback.height - h) / 2, w, h);
@@ -319,9 +320,9 @@ new ResizeObserver(entries => {
   const rect = entries[0].contentRect;
   width = Math.max(1, rect.width);
   height = Math.max(1, rect.height);
-  const pixelSize = 2.5;
-  sky.width = Math.max(1, Math.round(width / pixelSize));
-  sky.height = Math.max(1, Math.round(height / pixelSize));
+  const framing = getSkyFrame(width, height);
+  sky.width = framing.width;
+  sky.height = framing.height;
   const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
   flockCanvas.width = Math.round(width * ratio);
   flockCanvas.height = Math.round(height * ratio);

@@ -6,17 +6,20 @@ import {
   PIXEL_RIPPLE_SPEED,
   PIXEL_RIPPLE_TAIL,
 } from './hero-sky-shaders.js?v=20261017-ripple-1';
+import { getSkyFrame } from './sky-framing.js?v=20261019-ctasky-1';
 
 const scene = document.querySelector('[data-enquiry-sky]');
 const art = scene?.querySelector('[data-enquiry-sky-button]');
 const fallback = scene?.querySelector('[data-enquiry-sky-fallback]');
 const sky = scene?.querySelector('[data-enquiry-sky-canvas]');
+const heroArt = document.querySelector('.world-art');
 
 if (
   scene
   && art
   && fallback instanceof HTMLCanvasElement
   && sky instanceof HTMLCanvasElement
+  && heroArt
 ) {
   const fallbackCtx = fallback.getContext('2d');
   const heroPreset = document.getElementById('ripple-button')?.dataset.skyPreset;
@@ -29,7 +32,7 @@ if (
 
   const fallbackImage = new Image();
   fallbackImage.onload = () => {
-    drawFallback();
+    resizeSky();
     renderer?.loadPixel?.();
     draw();
   };
@@ -44,20 +47,22 @@ if (
       : `rgb(${preset.palette[2].map(channel => Math.round(channel * 255)).join(',')})`;
     fallbackCtx.fillRect(0, 0, fallback.width, fallback.height);
     if (!fallbackImage.complete || !fallbackImage.naturalWidth) return;
-    const scale = Math.max(
-      fallback.width / fallbackImage.naturalWidth,
-      fallback.height / fallbackImage.naturalHeight,
-    );
+    const scale = framing.coverScale;
     const imageWidth = fallbackImage.naturalWidth * scale;
     const imageHeight = fallbackImage.naturalHeight * scale;
     fallbackCtx.imageSmoothingEnabled = !preset.image;
-    fallbackCtx.drawImage(
-      fallbackImage,
-      (fallback.width - imageWidth) / 2,
-      (fallback.height - imageHeight) / 2,
-      imageWidth,
-      imageHeight,
-    );
+    const left = (fallback.width - imageWidth) / 2;
+    // The centre tile has the opening's crop; adjacent tiles meet at the same
+    // image edge, matching the WebGL texture's mirrored horizontal repeat.
+    for (let tile = Math.floor(-left / imageWidth); left + tile * imageWidth < fallback.width; tile++) {
+      const x = left + tile * imageWidth;
+      const mirrored = Math.abs(tile % 2) === 1;
+      fallbackCtx.save();
+      fallbackCtx.translate(mirrored ? x + imageWidth : x, 0);
+      fallbackCtx.scale(mirrored ? -1 : 1, 1);
+      fallbackCtx.drawImage(fallbackImage, 0, (fallback.height - imageHeight) / 2, imageWidth, imageHeight);
+      fallbackCtx.restore();
+    }
     if (preset.image) return;
     const pixels = fallbackCtx.getImageData(0, 0, fallback.width, fallback.height);
     for (let index = 0; index < pixels.data.length; index += 4) {
@@ -104,6 +109,7 @@ if (
   let previous = 0;
   let time = 0;
   let renderer = null;
+  let framing = getSkyFrame(1, 1);
 
   function recordPixelBrush(x, y, down = false) {
     const now = performance.now();
@@ -128,7 +134,16 @@ if (
     });
     if (!gl) return null;
 
-    const fragment = preset.image ? pixelFragmentSource : pixelFragmentSource.replace(
+    // Only the CTA needs extra horizontal image coverage. Keep the opening's
+    // shader unchanged and supply its cover scale to this image-mode variant.
+    const framedPixelFragmentSource = pixelFragmentSource.replace(
+      'uniform vec2 pixel_size;',
+      'uniform vec2 pixel_size;\nuniform float pixel_cover_scale;',
+    ).replace(
+      'float cover_scale=max(grid.x/pixel_size.x,grid.y/pixel_size.y);',
+      'float cover_scale=pixel_cover_scale;',
+    );
+    const fragment = preset.image ? framedPixelFragmentSource : pixelFragmentSource.replace(
       /const vec3 PALETTE\[9\]=vec3\[\]\([\s\S]*?\);/,
       `const vec3 PALETTE[9]=vec3[](${preset.palette.map(colour => `vec3(${colour.map(channel => channel.toFixed(3)).join(',')})`).join(',')});`,
     ).replace('colour*=1.0-navigation*.40;', 'colour*=1.0-navigation*.12;');
@@ -188,7 +203,7 @@ if (
     if (pixelTexture) {
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, pixelTexture);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.MIRRORED_REPEAT);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
@@ -244,6 +259,7 @@ if (
         if (!noiseLoaded || (preset.image && !pixelLoaded) || gl.isContextLost()) return;
         gl.viewport(0, 0, sky.width, sky.height);
         gl.uniform2f(resolution, sky.width, sky.height);
+        if (preset.image) gl.uniform1f(gl.getUniformLocation(program, 'pixel_cover_scale'), framing.coverScale);
         gl.uniform1f(clock, seconds);
 
         const brushValues = new Float32Array(48);
@@ -334,34 +350,33 @@ if (
     renderer = createSky();
     draw();
   });
-  new ResizeObserver(() => {
-    // This bar gets its height from padding. ResizeObserver.contentRect omits
-    // that padding, which previously crushed the artwork to a 22px-tall
-    // bitmap and then stretched it over the whole CTA.
-    const rect = scene.getBoundingClientRect();
-    const width = Math.max(1, rect.width);
-    const height = Math.max(1, rect.height);
-    const heroRect = document.getElementById('ripple-button')?.getBoundingClientRect();
-    const heroAspect = heroRect?.width && heroRect?.height
-      ? heroRect.width / heroRect.height
-      : 1.2;
-    // Render the same tall scene framing as the hero, then let the compact bar
-    // reveal its centre. Rendering directly at the bar's wide aspect creates a
-    // different, over-enlarged slice of the procedural pixel sky.
-    const framedHeight = Math.max(height, width / heroAspect);
-    const pixelSize = 2.5;
-    sky.width = Math.max(1, Math.round(width / pixelSize));
-    sky.height = Math.max(1, Math.round(framedHeight / pixelSize));
+  function resizeSky() {
+    framing = getSkyFrame(
+      Math.max(1, art.clientWidth),
+      Math.max(1, heroArt.clientHeight),
+      fallbackImage.naturalWidth,
+      fallbackImage.naturalHeight,
+      heroArt.getBoundingClientRect().width,
+    );
+    sky.width = framing.width;
+    sky.height = framing.height;
+    // Direct style properties follow the existing carousel's CSP-safe sizing
+    // pattern. Explicit height avoids aspect-ratio rounding stretching cells.
+    sky.style.height = `${framing.cssHeight}px`;
+    fallback.style.height = `${framing.cssHeight}px`;
     drawFallback();
     draw();
-  }).observe(scene);
+  }
+  const resizeObserver = new ResizeObserver(resizeSky);
+  resizeObserver.observe(scene);
+  resizeObserver.observe(heroArt);
   new IntersectionObserver(entries => {
     inView = entries[0].isIntersecting;
     sync();
   }, { threshold: .01 }).observe(scene);
   document.addEventListener('visibilitychange', sync);
 
-  drawFallback();
+  resizeSky();
   renderer = createSky();
   applyMotionPreference();
 }

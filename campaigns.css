@@ -2051,14 +2051,14 @@ body.homepage .toucan-opening-header .nav-links {
   left: 0;
   width: 100%;
   height: auto;
-  min-height: 100%;
   transform: translateY(-50%);
   pointer-events: none;
   image-rendering: pixelated;
 }
 
 .homepage-section .reviews-enquiry-sky__fallback { z-index: 0; }
-.homepage-section .reviews-enquiry-sky__canvas { z-index: 1; }
+.homepage-section .reviews-enquiry-sky__canvas { z-index: 1; opacity: .65; }
+.homepage-section .reviews-enquiry--interactive[data-sky-preset="pixel"] .reviews-enquiry-sky__canvas { opacity: 1; }
 
 .homepage-section .reviews-enquiry--interactive > .reviews-enquiry-copy,
 .homepage-section .reviews-enquiry--interactive > .button {

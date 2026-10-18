@@ -2,7 +2,7 @@
 var EnquiryRules = (function () {
   var limits = {
     "Contact name": 120, "Learner": 5, "Age or school year": 40,
-    "Support requested": 1000, "Preferred format": 9, "Town or postcode area": 80,
+    "Support requested": 1000, "Desired lesson rate": 60, "Preferred format": 9, "Town or postcode area": 80,
     "Reply method": 8, "email": 254, "phone": 40, "website": 200,
     "loaded_at": 13, "Campaign source": 120, "Traffic source": 120,
     "Traffic medium": 120, "Campaign name": 120
@@ -71,7 +71,7 @@ var EnquiryRules = (function () {
 
   const controls = {
     "Contact name": "contact-name", "Learner": "learner-child", "Age or school year": "age-year",
-    "Support requested": "support-needed", "Preferred format": "format-online",
+    "Support requested": "support-needed", "Desired lesson rate": "desired-lesson-rate", "Preferred format": "format-online",
     "Town or postcode area": "location", "Reply method": "reply-email", "email": "email", "phone": "phone"
   };
   function selected(name) {

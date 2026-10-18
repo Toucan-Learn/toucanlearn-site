@@ -6,14 +6,14 @@
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; frame-src 'none'; worker-src 'none'" />
 
-  <title>Enquire about tutoring in Bristol and online | Toucan Learn</title>
+  <title>Enquire: Bristol, London, Henley &amp; online | Toucan Learn</title>
   <meta
     name="description"
-    content="Ask about a free first tutoring session online across the UK or in Bristol and Henley-on-Thames, subject to tutor availability."
+    content="Ask about a free first tutoring session online UK-wide or in Bristol, London and Henley-on-Thames, subject to tutor availability."
   />
   <link rel="canonical" href="https://toucanlearn.co.uk/contact.html" />
-  <meta property="og:title" content="Enquire about tutoring in Bristol and online | Toucan Learn" />
-  <meta property="og:description" content="Ask about a free first tutoring session online across the UK or in Bristol and Henley-on-Thames, subject to tutor availability." />
+  <meta property="og:title" content="Enquire: Bristol, London, Henley &amp; online | Toucan Learn" />
+  <meta property="og:description" content="Ask about a free first tutoring session online UK-wide or in Bristol, London and Henley-on-Thames, subject to tutor availability." />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Toucan Learn" />
   <meta property="og:locale" content="en_GB" />
@@ -22,7 +22,7 @@
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <script src="theme.js?v=20261018-dark-1"></script>
   <link rel="stylesheet" href="style.css?v=20261018-dark-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261018-cream-51" />
+  <link rel="stylesheet" href="campaigns.css?v=20261018-header-57" />
   <link rel="stylesheet" href="contact.css?v=20261018-form-49" />
   <script src="menu.js?v=20261017-menu-1" defer></script>
 </head>
@@ -156,6 +156,12 @@
             <small id="support-needed-hint">The subject or goal, and what's tricky at the moment. Please keep it brief and don't include reports or medical details.</small>
             <span class="field-error" id="support-needed-error"></span>
           </div>
+          <div class="field">
+            <label for="desired-lesson-rate">What's your desired lesson rate?</label>
+            <input id="desired-lesson-rate" name="Desired lesson rate" type="text" inputmode="text" maxlength="60" aria-describedby="desired-lesson-rate-hint desired-lesson-rate-error" />
+            <small id="desired-lesson-rate-hint">Optional. A rough figure per session is fine.</small>
+            <span class="field-error" id="desired-lesson-rate-error"></span>
+          </div>
           <fieldset class="form-choice" aria-describedby="format-online-error">
             <legend>Online or in person? <small>(optional)</small></legend>
             <div class="radio-options">
@@ -224,6 +230,6 @@
 
   <script src="site.js"></script>
   <script src="campaigns.js"></script>
-  <script src="contact.js?v=20261018-form-49"></script>
+  <script src="contact.js?v=20261018-rate-58"></script>
 </body>
 </html>

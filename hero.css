@@ -108,16 +108,21 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 /* Joshua, 18 Oct 2026: eyebrow above the sky; an attached, optional piano. */
 .living-hero .hero-world { flex-direction: column; justify-content: center; align-items: stretch; }
 .living-hero .hero-world > .eyebrow { margin-bottom: 12px; }
-.living-hero .piano-toggle { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 38px; padding: 6px 14px; border: 0; border-top: 1px solid #adc4b533; color: var(--hero-cream); background: #0b2228; font-size: 12px; }
+.living-hero .sky-studio { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); }
+.living-hero .world-art { grid-area: 1 / 1 / 2 / 2; }
+.living-hero .piano-toggle { grid-area: 2 / 1 / 3 / 2; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 38px; padding: 6px 14px; border: 0; border-top: 1px solid #adc4b533; color: var(--hero-cream); background: #0b2228; font-size: 12px; }
 .living-hero .piano-toggle:hover, .living-hero .piano-toggle[aria-expanded=true] { color: var(--hero-peach); background: #103138; }
 .living-hero .piano-toggle:focus-visible { outline-offset: -4px; }
-/* A grid track animates intrinsic height without inline styles or a guessed
-   max-height. Inert removes closed keys from focus and accessibility navigation. */
-.living-hero .piano-panel { display: grid; grid-template-rows: 0fr; visibility: hidden; transition: grid-template-rows 280ms ease, visibility 280ms; }
-.living-hero .piano-panel.is-open { grid-template-rows: 1fr; visibility: visible; }
-.living-hero .piano-panel-inner { min-height: 0; overflow: hidden; }
+/* Round 52: the absolute panel's containing grid area is the sky's first row;
+   the toggle stays in its own second row. Clip the sliding keys above the bar
+   without changing the sky/canvas size or contributing any opening height.
+   Inert removes closed keys from focus and accessibility navigation. */
+.living-hero .piano-panel { position: absolute; grid-area: 1 / 1 / 2 / 2; inset: auto 0 0; z-index: 4; overflow: hidden; visibility: hidden; transition: visibility 280ms; }
+.living-hero .piano-panel.is-open { visibility: visible; }
+.living-hero .piano-panel-inner { transform: translateY(100%); transition: transform 280ms ease; }
+.living-hero .piano-panel.is-open .piano-panel-inner { transform: translateY(0); }
 .living-hero .piano-scroll { overflow-x: auto; overscroll-behavior-x: contain; padding: 12px; background: #0b2228; scrollbar-color: #adc4b566 #0b2228; }
-.living-hero .piano-keys { position: relative; display: grid; grid-template-columns: repeat(22, minmax(0, 1fr)); height: 142px; isolation: isolate; touch-action: none; user-select: none; -webkit-user-select: none; }
+.living-hero .piano-keys { position: relative; display: grid; grid-template-columns: repeat(22, minmax(0, 1fr)); min-width: 528px; height: 86px; isolation: isolate; touch-action: none; user-select: none; -webkit-user-select: none; }
 .living-hero .piano-key { padding: 0; touch-action: none; border-radius: 0 0 4px 4px; }
 .living-hero .piano-key--white { min-width: 0; height: 100%; border: 1px solid #0a272c80; color: #0a272c; background: linear-gradient(#dcd6c9, var(--hero-cream) 12%, #fff9ed 92%, #c5bdad); box-shadow: inset 0 -4px 0 #b7ae9b; }
 .living-hero .piano-key--black { position: absolute; top: 0; z-index: 2; width: 2.9%; height: 62%; transform: translateX(-50%); border: 1px solid #020d10; background: linear-gradient(90deg, #071519, #203136 50%, #061317); box-shadow: 0 4px 3px #00101380, inset 0 -5px 0 #010b0e; }
@@ -143,11 +148,11 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
   .living-hero .hero-world { padding-block: 24px; }
 }
 @media (max-width: 760px) {
-  .living-hero .piano-keys { min-width: 770px; }
+  .living-hero .piano-keys { min-width: 600px; height: 76px; }
   .living-hero .hero-world > .eyebrow { margin-bottom: 12px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .living-hero .piano-panel { transition: none; }
+  .living-hero .piano-panel, .living-hero .piano-panel-inner { transition: none; }
 }
 
 /* Phones flash a dark tap highlight over any tapped button; the whole sky and

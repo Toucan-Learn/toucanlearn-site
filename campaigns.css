@@ -1934,3 +1934,68 @@ body.homepage .toucan-opening-header .nav-links {
     padding-bottom: 0;
   }
 }
+
+/* Joshua, 18 Oct 2026: "match the sizes and cell structure / framing of the
+   previous sections". Each review card uses the How it works card frame: the
+   same width as one of its three cards, the same padding and radius, and the
+   drawing filling the top of the card in the same 2:1 panel. */
+@media (min-width: 900px) {
+  #reviews .reviews-enhanced {
+    --review-width: calc((min(100vw - 2 * var(--page-gutter), var(--max)) - 2 * var(--section-gap)) / 3);
+  }
+}
+
+#reviews .reviews-enhanced .review-quote {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: var(--section-card-space);
+  border-radius: var(--radius-xl);
+}
+
+#reviews .reviews-enhanced .review-art {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  margin: 0;
+  border-radius: calc(var(--radius-xl) - 24px);
+  background: #ede5da;
+}
+
+/* The whole drawing shows on its own cream, in light and night mode. */
+#reviews .reviews-enhanced .review-art img {
+  object-fit: contain;
+  background: #ede5da;
+}
+
+#reviews .reviews-enhanced blockquote {
+  margin: 0;
+}
+
+#reviews .reviews-enhanced blockquote p {
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+/* Short laptop screens: a slightly shallower drawing panel and quote so the
+   enquiry bar still fits after clicking Reviews. */
+@media (min-width: 900px) and (max-height: 820px) {
+  #reviews .reviews-enhanced .review-art {
+    aspect-ratio: 3 / 1;
+  }
+
+  #reviews .reviews-enhanced .review-quote {
+    gap: 10px;
+  }
+
+  #reviews .reviews-enhanced blockquote p {
+    font-size: 1rem;
+    line-height: 1.45;
+  }
+}
+
+/* Joshua, 18 Oct 2026: the weekly reports line matches the card titles' type
+   (same weight and tight spacing) instead of thin body text. */
+#how-it-works .how-follow-up .how-note {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}

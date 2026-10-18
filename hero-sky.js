@@ -1,5 +1,6 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-ripple-1';
-import { playNextNote } from './hero-piano.js?v=20261017-songs-2';
+import { playNextNote } from './hero-piano.js?v=20261018-keys-1';
+import { initHeroKeyboard } from './hero-keyboard.js?v=20261018-keys-1';
 
 const art = document.querySelector('.world-art');
 const sky = document.getElementById('sky-canvas');
@@ -343,3 +344,11 @@ renderer = createSky();
   image.src = path;
 });
 applyCalm();
+
+// Keyboard gestures feed the same wave pool and flock as direct sky clicks.
+initHeroKeyboard(x => {
+  if (calm) return;
+  pixelRipples.add(x, .65, time);
+  recordPixelBrush(x, .65, true);
+  draw();
+});

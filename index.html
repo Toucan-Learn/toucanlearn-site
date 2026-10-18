@@ -17,12 +17,12 @@
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <script src="theme.js?v=20261018-dark-1"></script>
   <link rel="stylesheet" href="style.css?v=20261018-dark-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261018-carousel-2" />
-  <link rel="stylesheet" href="hero.css?v=20261017-wave-1" />
+  <link rel="stylesheet" href="campaigns.css?v=20261018-frame-2" />
+  <link rel="stylesheet" href="hero.css?v=20261018-keys-2" />
   <link rel="modulepreload" href="hero-sky-shaders.js?v=20261017-ripple-1" />
   <link rel="preload" as="image" href="assets/galaxy-noise.png" />
   <link rel="preload" as="image" href="assets/toucan-logo-flat.png" />
-  <script src="hero-sky.js?v=20261017-ripple-1" type="module"></script>
+  <script src="hero-sky.js?v=20261018-keys-1" type="module"></script>
   <script src="menu.js?v=20261017-menu-1" defer></script>
 </head>
 <body class="homepage">
@@ -101,7 +101,6 @@
       <div class="hero-haze" aria-hidden="true"></div>
       <div class="container hero-layout">
         <div class="hero-copy">
-          <p class="eyebrow light">A DIFFERENT WAY INTO LEARNING</p>
           <h1 id="hero-title">Built around<br /><em>you.</em></h1>
           <p class="hero-description">We get to know you first, then build your skills with short, focused tasks and a bigger project you actually care about, so the learning has a real purpose.</p>
           <div class="hero-actions">
@@ -111,12 +110,62 @@
           <p class="hero-audience">Children, young people &amp; adults. Online, and in person in selected areas.</p>
         </div>
         <div class="hero-world">
+          <p class="eyebrow light">A DIFFERENT WAY INTO LEARNING</p>
           <div class="sky-studio">
             <button class="world-art" id="ripple-button" type="button" aria-label="Toucan pixel sky: click or press Enter to make ripples and play a note">
               <canvas id="sky-canvas" aria-hidden="true"></canvas>
               <canvas id="flock-canvas" aria-hidden="true"></canvas>
               <img class="hero-mascot" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
             </button>
+            <button class="piano-toggle" id="piano-toggle" type="button" aria-label="Show piano keyboard" aria-expanded="false" aria-controls="hero-keyboard">
+              <svg viewBox="0 0 24 18" width="22" height="18" aria-hidden="true" focusable="false"><path d="M1 1h22v16H1zM6 1v16M12 1v16M18 1v16" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M4 1h4v9H4zM10 1h4v9h-4zM16 1h4v9h-4z" fill="currentColor"/></svg>
+              <span>Piano</span>
+            </button>
+            <div class="piano-panel" id="hero-keyboard" role="group" aria-label="Piano keyboard" aria-hidden="true" inert>
+              <div class="piano-panel-inner">
+                <div class="piano-scroll">
+                  <div class="piano-keys">
+                  <button class="piano-key piano-key--white" type="button" data-note="C3" aria-label="C3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="C#3" aria-label="C sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="D3" aria-label="D3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="D#3" aria-label="D sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="E3" aria-label="E3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="F3" aria-label="F3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="F#3" aria-label="F sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="G3" aria-label="G3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="G#3" aria-label="G sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="A3" aria-label="A3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="A#3" aria-label="A sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="B3" aria-label="B3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="C4" aria-label="C4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="C#4" aria-label="C sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="D4" aria-label="D4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="D#4" aria-label="D sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="E4" aria-label="E4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="F4" aria-label="F4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="F#4" aria-label="F sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="G4" aria-label="G4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="G#4" aria-label="G sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="A4" aria-label="A4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="A#4" aria-label="A sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="B4" aria-label="B4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="C5" aria-label="C5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="C#5" aria-label="C sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="D5" aria-label="D5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="D#5" aria-label="D sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="E5" aria-label="E5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="F5" aria-label="F5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="F#5" aria-label="F sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="G5" aria-label="G5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="G#5" aria-label="G sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="A5" aria-label="A5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="A#5" aria-label="A sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="B5" aria-label="B5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="C6" aria-label="C6"></button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

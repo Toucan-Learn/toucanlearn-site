@@ -18,6 +18,19 @@ let master = null;
 let nextNote = 0;
 const voices = [];
 const tails = new Set();
+const listeners = new Set();
+
+export function peekNextNote() { return MELODY[nextNote]; }
+
+export function onSongAdvance(listener) {
+  listeners.add(listener);
+  return () => listeners.delete(listener);
+}
+
+export function advance() {
+  nextNote = (nextNote + 1) % MELODY.length;
+  listeners.forEach(listener => listener(peekNextNote()));
+}
 
 function frequencyFor(note) {
   const [, letter, sharp, octave] = /^([A-G])(#?)(\d)$/.exec(note);
@@ -124,11 +137,12 @@ function soundNote(frequency) {
   oscillators.forEach(oscillator => { oscillator.start(now); oscillator.stop(end + 0.02); });
 }
 
-// Gesture entry point: called ONLY from the hero button's native click handler
-// (mouse, tap, Enter or Space). Importing this module never creates audio.
-export function playNextNote() {
+// Gesture entry point: called only by sky/keyboard input handlers. Importing,
+// peeking, opening the panel and advancing the song never create audio.
+export function playNote(noteName) {
+  if (!/^[A-G]#?[3-6]$/.test(noteName)) return false;
   const AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext;
-  if (!AudioContext) return;
+  if (!AudioContext) return false;
   try {
     if (!audio) {
       audio = new AudioContext();
@@ -144,10 +158,15 @@ export function playNextNote() {
       compressor.connect(audio.destination);
     }
     if (audio.state === 'suspended') audio.resume().catch(() => {});
-    if (audio.state === 'closed') return;
-    soundNote(frequencyFor(MELODY[nextNote]));
-    nextNote = (nextNote + 1) % MELODY.length;
+    if (audio.state === 'closed') return false;
+    soundNote(frequencyFor(noteName));
+    return true;
   } catch {
     // Audio support/device failures must never interfere with the hero's waves.
+    return false;
   }
+}
+
+export function playNextNote() {
+  if (playNote(peekNextNote())) advance();
 }

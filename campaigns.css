@@ -2001,3 +2001,72 @@ body.homepage .toucan-opening-header .nav-links {
   line-height: 1.2;
   letter-spacing: -0.045em;
 }
+
+/* Round 39 (Joshua, 18 Oct 2026): the compact Reviews enquiry bar uses the
+   same chosen pixel sky and wave interaction as the opening, without audio. */
+.homepage-section .reviews-enquiry--interactive {
+  isolation: isolate;
+  border-color: rgba(255, 255, 255, 0.14);
+  background: #071219;
+}
+
+.homepage-section .reviews-enquiry--interactive::before {
+  display: none;
+}
+
+.homepage-section .reviews-enquiry--interactive::after {
+  z-index: 1;
+  background: linear-gradient(90deg, rgba(4, 13, 20, 0.72), rgba(4, 13, 20, 0.38) 68%, rgba(4, 13, 20, 0.54));
+}
+
+.homepage-section .reviews-enquiry-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: inherit;
+  background: #071219 url('assets/loading-pixel-sky.png') center / cover;
+  cursor: default;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.homepage-section .reviews-enquiry-sky:focus-visible {
+  outline: 3px solid var(--orange-soft);
+  outline-offset: -6px;
+}
+
+.homepage-section .reviews-enquiry-sky:disabled {
+  cursor: default;
+}
+
+.homepage-section .reviews-enquiry-sky canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.homepage-section .reviews-enquiry-sky__fallback { z-index: 0; }
+.homepage-section .reviews-enquiry-sky__canvas { z-index: 1; }
+
+.homepage-section .reviews-enquiry--interactive > .reviews-enquiry-copy,
+.homepage-section .reviews-enquiry--interactive > .button {
+  z-index: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homepage-section .reviews-enquiry--interactive *,
+  .homepage-section .reviews-enquiry--interactive *::before,
+  .homepage-section .reviews-enquiry--interactive *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

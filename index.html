@@ -17,7 +17,7 @@
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <script src="theme.js?v=20261018-dark-1"></script>
   <link rel="stylesheet" href="style.css?v=20261018-dark-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261018-frame-3" />
+  <link rel="stylesheet" href="campaigns.css?v=20261018-cta-1" />
   <link rel="stylesheet" href="hero.css?v=20261018-keys-2" />
   <link rel="modulepreload" href="hero-sky-shaders.js?v=20261017-ripple-1" />
   <link rel="preload" as="image" href="assets/galaxy-noise.png" />
@@ -318,13 +318,18 @@
         </div>
         <script src="reviews-carousel.js?v=20261018-art-4"></script>
 
-        <div class="how-cta reviews-enquiry" id="contact">
-          <div>
+        <div class="how-cta reviews-enquiry reviews-enquiry--interactive" id="contact" data-enquiry-sky>
+          <button class="reviews-enquiry-sky" type="button" data-enquiry-sky-button aria-label="Toucan pixel sky: click or press Enter to make waves">
+            <canvas class="reviews-enquiry-sky__fallback" data-enquiry-sky-fallback aria-hidden="true"></canvas>
+            <canvas class="reviews-enquiry-sky__canvas" data-enquiry-sky-canvas aria-hidden="true"></canvas>
+          </button>
+          <div class="reviews-enquiry-copy">
             <h3>Your first session is free.</h3>
             <p>After that, £40 per hour, with planning and review included.</p>
           </div>
           <a class="button" href="contact.html">Start an enquiry <span aria-hidden="true">→</span></a>
         </div>
+        <script src="reviews-enquiry-sky.js?v=20261018-cta-1" type="module"></script>
       </div>
     </section>
 

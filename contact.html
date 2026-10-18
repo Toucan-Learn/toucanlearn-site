@@ -22,8 +22,8 @@
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <script src="theme.js?v=20261018-dark-1"></script>
   <link rel="stylesheet" href="style.css?v=20261018-dark-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261018-header-57" />
-  <link rel="stylesheet" href="contact.css?v=20261018-form-49" />
+  <link rel="stylesheet" href="campaigns.css?v=20261018-reports-65" />
+  <link rel="stylesheet" href="contact.css?v=20261018-form-66" />
   <script src="menu.js?v=20261017-menu-1" defer></script>
 </head>
 
@@ -45,11 +45,14 @@
         <div class="nav-item">
           <a href="index.html#support-routes">Who we help <span class="nav-chevron" aria-hidden="true">▾</span></a>
           <ul class="nav-dropdown">
+            <li class="nav-group-label">Ages</li>
             <li><a href="children.html">Children and young people</a></li>
             <li><a href="adults.html">Adults</a></li>
+            <li class="nav-group-label">Subjects</li>
             <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
             <li><a href="languages.html">Languages</a></li>
             <li><a href="english-for-uk-work.html">English for UK work</a></li>
+            <li class="nav-group-label">Where we teach</li>
             <li><a href="in-person.html">In person</a></li>
           </ul>
         </div>
@@ -62,6 +65,7 @@
           </ul>
         </div>
         <a href="index.html#reviews">Reviews</a>
+        <a href="team.html">Our team</a>
         <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
             <path class="theme-moon" d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" />
@@ -77,11 +81,14 @@
           <div class="mobile-nav-item">
             <a href="index.html#support-routes">Who we help</a>
             <ul class="mobile-sub-links">
+              <li class="nav-group-label">Ages</li>
               <li><a href="children.html">Children and young people</a></li>
               <li><a href="adults.html">Adults</a></li>
+              <li class="nav-group-label">Subjects</li>
               <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
               <li><a href="languages.html">Languages</a></li>
               <li><a href="english-for-uk-work.html">English for UK work</a></li>
+              <li class="nav-group-label">Where we teach</li>
               <li><a href="in-person.html">In person</a></li>
             </ul>
           </div>
@@ -94,6 +101,7 @@
             </ul>
           </div>
           <a href="index.html#reviews">Reviews</a>
+          <a href="team.html">Our team</a>
           <a class="button trial-button trial-button--light-surface" href="#email-enquiry">Book a free trial</a>
         </nav>
       </details>
@@ -117,9 +125,8 @@
     <section class="contact-form-section" id="email-enquiry" aria-labelledby="email-heading">
       <div class="contact-width">
         <h2 id="email-heading">Send us a short enquiry.</h2>
-        <p class="form-privacy-note" id="initial-contact-guidance"><strong>Keep this first message brief.</strong> A parent or carer should enquire for a child. Please do not include diagnostic reports, medical records, full school records or urgent safeguarding information. If access needs matter, simply say that you would like to discuss them privately.</p>
         <!-- Apps Script web app "Toucan Learn enquiry form" (Joshua's Google account), deployed 18 Oct 2026. The only endpoint configuration is data-form-endpoint. -->
-        <form class="enquiry-form" id="enquiry-form" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST" aria-describedby="initial-contact-guidance">
+        <form class="enquiry-form" id="enquiry-form" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST">
           <p class="form-message" id="form-message" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>
           <fieldset class="enquiry-fields" id="enquiry-fields" disabled>
           <legend class="visually-hidden">Tutoring enquiry details</legend>

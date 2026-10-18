@@ -1706,6 +1706,20 @@ body.homepage .toucan-opening-header .nav-links {
     font-size: 0.9rem;
   }
 
+  /* Round 61: the same Ages / Subjects / Where we teach labels on phones. */
+  .mobile-menu .mobile-sub-links .nav-group-label {
+    padding: 10px 16px 2px;
+    color: var(--orange-text);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  body.homepage .toucan-opening-header .mobile-sub-links .nav-group-label {
+    color: var(--orange-soft);
+  }
+
   /* The existing phone scroll-padding includes the complete 64px bar. */
   .approach-page #how-it-works,
   .approach-page #ways-of-working,
@@ -1788,10 +1802,22 @@ body.homepage .toucan-opening-header .nav-links {
   opacity: 1;
 }
 
-/* Who we help: Children and Adults first, then the subject pages. */
-.nav-links .nav-dropdown li:nth-child(3):nth-last-child(4) {
+/* Round 61 (Joshua, 18 Oct 2026: "we correctly divide it into ages and
+   subjects, lets make that distinction a bit clearer"): Who we help has small
+   group labels (Ages, Subjects, Where we teach), each later group with a divider. */
+.nav-links .nav-dropdown .nav-group-label {
+  padding: 8px 16px 4px;
+  color: var(--orange-soft);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+
+.nav-links .nav-dropdown .nav-group-label:not(:first-child) {
   margin-top: 6px;
-  padding-top: 6px;
+  padding-top: 12px;
   border-top: 1px solid rgba(205, 223, 215, 0.16);
 }
 
@@ -2319,4 +2345,195 @@ body :is(.nav, .living-hero, .homepage-section) .button.trial-button:focus-visib
     transition: none;
     transform: none;
   }
+}
+
+/* Round 62 (Joshua, 18 Oct 2026): "Our team ... should be its own separate
+   ooption in the top menu bar furthest right, not on frontpage" and "the exact
+   design you have now is great, make sure thats retained". The team section
+   moves unchanged to team.html, which borrows the homepage section tokens and
+   gives its page heading the homepage h2 type. */
+body.team-page {
+  --section-space: 64px;
+  --section-gap: 24px;
+  --section-heading-size: clamp(2rem, 3.2vw, 3rem);
+}
+
+/* The landing-zone height uses the 109px laptop header; phones keep 64px. */
+@media (min-width: 900px) {
+  body.team-page {
+    --sticky-header-height: 109px;
+  }
+}
+
+#main > .team-section .section-head h1 {
+  max-width: none;
+  margin: 0;
+  font-size: var(--section-heading-size);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+/* Round 59 (Joshua, 18 Oct 2026): "each of our clients have a team of
+   professionals ... we dont just leave tutors and clients hanging high and dry".
+   The shared eyebrow and h2 sit above two cells: the team promise on soft teal
+   in the step-title type (like the weekly reports cell), then Joshua's founder
+   card on the dark brand blue, like the first approach step. */
+.team-section .team-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: var(--section-gap, 24px); align-items: stretch; }
+.team-section .team-promise,
+.team-section .team-founder { min-width: 0; margin: 0; padding: 36px; border-radius: var(--radius-xl); }
+.team-section .team-promise { display: flex; align-items: center; background: var(--teal-soft); color: var(--ink); font-size: 1.4rem; font-weight: 700; line-height: 1.3; letter-spacing: -0.03em; text-wrap: pretty; }
+.team-section .team-founder { display: flex; flex-direction: column; justify-content: center; background: radial-gradient(circle at 90% 100%, rgba(55, 147, 137, 0.5), transparent 22rem), var(--blue); color: white; }
+#main > .team-section .team-founder h2 { margin: 0; color: white; font-size: clamp(1.4rem, 2vw, 1.85rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.025em; text-wrap: wrap; }
+.team-section .team-founder .team-founder-role { margin: 6px 0 18px; color: #f4c09b; font-weight: 800; line-height: 1.4; }
+.team-section .team-founder p { margin: 0; color: white; font-size: 1rem; line-height: 1.6; text-wrap: pretty; }
+
+@media (max-width: 899px) {
+  .team-section .team-grid { grid-template-columns: minmax(0, 1fr); }
+  .team-section .team-promise,
+  .team-section .team-founder { padding: 24px; }
+  .team-section .team-promise { font-size: 1.2rem; }
+}
+
+/* Round 64 (Joshua, 18 Oct 2026): "every cta should have that pixel art, a new
+   one can come up each time". Inner-page enquiry boxes carry the homepage
+   enquiry bar's pixel sky (a random sky each visit), shaded beneath white copy,
+   with the bar's cream button. Layout, wording and links are unchanged. */
+.cta .cta-sky {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-color: rgba(255, 255, 255, 0.14);
+  background: #071219;
+}
+
+.cta .cta-sky::before {
+  display: none;
+}
+
+.cta .cta-sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(4, 13, 20, 0.78) 0%, rgba(4, 13, 20, 0.6) 45%, rgba(4, 13, 20, 0.5) 72%, rgba(4, 13, 20, 0.15) 100%);
+}
+
+.cta .cta-sky > :not(.reviews-enquiry-sky) {
+  position: relative;
+  z-index: 2;
+}
+
+.cta .cta-sky h2,
+.cta .cta-sky p {
+  color: white;
+}
+
+.cta .cta-sky .reviews-enquiry-sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: inherit;
+  background: #071219;
+  cursor: default;
+  touch-action: pan-y;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.cta .cta-sky .reviews-enquiry-sky:focus-visible {
+  outline: 3px solid var(--orange-soft);
+  outline-offset: -6px;
+}
+
+.cta .cta-sky .reviews-enquiry-sky canvas {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: auto;
+  transform: translateY(-50%);
+  pointer-events: none;
+  image-rendering: pixelated;
+}
+
+.cta .cta-sky .reviews-enquiry-sky__fallback { z-index: 0; }
+.cta .cta-sky .reviews-enquiry-sky__canvas { z-index: 1; opacity: .65; }
+.cta .cta-sky[data-sky-preset="pixel"] .reviews-enquiry-sky__canvas { opacity: 1; }
+
+.cta .cta-sky > .button {
+  background: var(--hero-cream, #f0ebe0);
+  color: #0a272c;
+  box-shadow: 0 0 0 1px #0a272c, 0 10px 28px rgba(240, 235, 224, .28);
+}
+
+.cta .cta-sky > .button:is(:hover, :focus-visible) {
+  background: #fbf8f2;
+  color: #0a272c;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta .cta-sky *,
+  .cta .cta-sky *::before,
+  .cta .cta-sky *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Round 65 (Joshua, 18 Oct 2026: "explain the format i use for my reports
+   within the section and their purpose"): the Weekly reports box describes
+   the four parts of every report in Toucan's words, as four small cells. */
+.approach-page .approach-report .report-intro,
+.approach-page .approach-report .report-purpose {
+  max-width: 52rem;
+  margin: 20px 0 0;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.approach-page .approach-report .report-parts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.approach-page .approach-report .report-parts li {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--orange-soft);
+  border-radius: 16px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.approach-page .approach-report .report-parts strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 1000px) {
+  .approach-page .approach-report .report-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 560px) {
+  .approach-page .approach-report .report-parts { grid-template-columns: minmax(0, 1fr); }
 }

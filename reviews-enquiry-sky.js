@@ -13,17 +13,21 @@ const art = scene?.querySelector('[data-enquiry-sky-button]');
 const fallback = scene?.querySelector('[data-enquiry-sky-fallback]');
 const sky = scene?.querySelector('[data-enquiry-sky-canvas]');
 const heroArt = document.querySelector('.world-art');
+// Round 64 (Joshua, 18 Oct 2026): "every cta should have that pixel art, a new
+// one can come up each time". Inner pages have no opening: they frame the sky
+// at the opening art's laptop/phone size and pick a random sky on every visit.
+const STANDALONE_FRAME = { width: 638, height: 450, phoneHeight: 340 };
 
 if (
   scene
   && art
   && fallback instanceof HTMLCanvasElement
   && sky instanceof HTMLCanvasElement
-  && heroArt
 ) {
   const fallbackCtx = fallback.getContext('2d');
   const heroPreset = document.getElementById('ripple-button')?.dataset.skyPreset;
-  const preset = SKY_PRESETS.find(candidate => candidate.id === heroPreset) || SKY_PRESETS[0];
+  const preset = SKY_PRESETS.find(candidate => candidate.id === heroPreset)
+    || (heroArt ? SKY_PRESETS[0] : SKY_PRESETS[Math.floor(Math.random() * SKY_PRESETS.length)]);
   const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
 
   scene.dataset.skyPreset = preset.id;
@@ -351,12 +355,13 @@ if (
     draw();
   });
   function resizeSky() {
+    const phone = window.matchMedia('(max-width: 760px)').matches;
     framing = getSkyFrame(
       Math.max(1, art.clientWidth),
-      Math.max(1, heroArt.clientHeight),
+      Math.max(1, heroArt ? heroArt.clientHeight : Math.max(scene.clientHeight, phone ? STANDALONE_FRAME.phoneHeight : STANDALONE_FRAME.height)),
       fallbackImage.naturalWidth,
       fallbackImage.naturalHeight,
-      heroArt.getBoundingClientRect().width,
+      heroArt ? heroArt.getBoundingClientRect().width : Math.min(art.clientWidth, STANDALONE_FRAME.width),
     );
     sky.width = framing.width;
     sky.height = framing.height;
@@ -369,7 +374,7 @@ if (
   }
   const resizeObserver = new ResizeObserver(resizeSky);
   resizeObserver.observe(scene);
-  resizeObserver.observe(heroArt);
+  if (heroArt) resizeObserver.observe(heroArt);
   new IntersectionObserver(entries => {
     inView = entries[0].isIntersecting;
     sync();

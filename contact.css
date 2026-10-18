@@ -7,9 +7,10 @@
 .radio-options label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
 .radio-options input { width: 20px; height: 20px; margin: 0; accent-color: var(--heading); }
 .radio-options input:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
-/* Reserve each short input's space. Hidden controls are inert and disabled;
-   visibility also removes them from focus and the accessibility tree. */
-.enquiry-form .conditional-field[hidden] { display: grid; visibility: hidden; }
+/* Round 66 (Joshua, 18 Oct 2026: "the enquiries form is spaced out strangely"):
+   hidden follow-up questions take no space until a choice reveals them. They
+   stay inert and disabled, so they are out of focus and the accessibility tree. */
+.enquiry-form .conditional-field[hidden] { display: none; }
 .reply-contact-slot { display: grid; min-width: 0; }
 .reply-contact-slot > .field { grid-area: 1 / 1; align-content: start; }
 .enquiry-form .field textarea { min-height: 120px; }

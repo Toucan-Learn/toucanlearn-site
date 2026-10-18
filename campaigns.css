@@ -2016,7 +2016,7 @@ body.homepage .toucan-opening-header .nav-links {
 
 .homepage-section .reviews-enquiry--interactive::after {
   z-index: 1;
-  background: linear-gradient(90deg, rgba(4, 13, 20, 0.72), rgba(4, 13, 20, 0.38) 68%, rgba(4, 13, 20, 0.54));
+  background: linear-gradient(90deg, rgba(4, 13, 20, 0.72) 0%, rgba(4, 13, 20, 0.46) 34%, rgba(4, 13, 20, 0.08) 58%, rgba(4, 13, 20, 0.28) 100%);
 }
 
 .homepage-section .reviews-enquiry-sky {

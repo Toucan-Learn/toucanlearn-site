@@ -12,7 +12,12 @@ const art = scene?.querySelector('[data-enquiry-sky-button]');
 const fallback = scene?.querySelector('[data-enquiry-sky-fallback]');
 const sky = scene?.querySelector('[data-enquiry-sky-canvas]');
 
-if (scene && art && fallback instanceof HTMLCanvasElement && sky instanceof HTMLCanvasElement) {
+if (
+  scene
+  && art
+  && fallback instanceof HTMLCanvasElement
+  && sky instanceof HTMLCanvasElement
+) {
   const fallbackCtx = fallback.getContext('2d');
   const heroPreset = document.getElementById('ripple-button')?.dataset.skyPreset;
   const preset = SKY_PRESETS.find(candidate => candidate.id === heroPreset) || SKY_PRESETS[0];
@@ -323,11 +328,16 @@ if (scene && art && fallback instanceof HTMLCanvasElement && sky instanceof HTML
     renderer = createSky();
     draw();
   });
-  new ResizeObserver(entries => {
-    const rect = entries[0].contentRect;
+  new ResizeObserver(() => {
+    // This bar gets its height from padding. ResizeObserver.contentRect omits
+    // that padding, which previously crushed the artwork to a 22px-tall
+    // bitmap and then stretched it over the whole CTA.
+    const rect = scene.getBoundingClientRect();
+    const width = Math.max(1, rect.width);
+    const height = Math.max(1, rect.height);
     const pixelSize = 2.5;
-    sky.width = Math.max(1, Math.round(rect.width / pixelSize));
-    sky.height = Math.max(1, Math.round(rect.height / pixelSize));
+    sky.width = Math.max(1, Math.round(width / pixelSize));
+    sky.height = Math.max(1, Math.round(height / pixelSize));
     drawFallback();
     draw();
   }).observe(scene);

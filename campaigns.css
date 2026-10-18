@@ -1993,9 +1993,11 @@ body.homepage .toucan-opening-header .nav-links {
   }
 }
 
-/* Joshua, 18 Oct 2026: the weekly reports line matches the card titles' type
-   (same weight and tight spacing) instead of thin body text. */
+/* Joshua, 18 Oct 2026: the weekly reports line uses the step titles' type
+   exactly ("Learn about you": size, weight, line height and tight spacing). */
 #how-it-works .how-follow-up .how-note {
+  font-size: 1.4rem;
   font-weight: 700;
-  letter-spacing: -0.02em;
+  line-height: 1.2;
+  letter-spacing: -0.045em;
 }

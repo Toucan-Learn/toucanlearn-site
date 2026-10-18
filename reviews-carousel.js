@@ -3,11 +3,15 @@
 
   // Approved decorative art only. Choose before the lazy images are laid out.
   // Joshua, 18 Oct 2026: the cuddling/family-contact scenes (a, c, e) are
-  // withdrawn; only scenes without that contact are used.
+  // withdrawn; single-character scenes g, h, i and j were added.
   const REVIEW_ART = {
     "b": "assets/art/review-b.png",
     "d": "assets/art/review-d.png",
-    "f": "assets/art/review-f.png"
+    "f": "assets/art/review-f.png",
+    "g": "assets/art/review-g.png",
+    "h": "assets/art/review-h.png",
+    "i": "assets/art/review-i.png",
+    "j": "assets/art/review-j.png"
   };
   const carousel = document.querySelector('[data-reviews-carousel]');
   if (!carousel) return;
@@ -17,10 +21,10 @@
   if (count < 3 || count > 8) return;
   const keys = Object.keys(REVIEW_ART);
   const requested = (new URLSearchParams(window.location.search).get('reviewart') || '').split(',');
-  const validOverride = requested.length === Math.min(count, 6) &&
+  const validOverride = requested.length === Math.min(count, keys.length) &&
     new Set(requested).size === requested.length && requested.every(key => keys.includes(key));
   let art = keys.slice();
-  if (count !== 6) {
+  if (count !== keys.length) {
     // Fisher-Yates: distinct art before any reuse.
     for (let i = art.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -46,6 +50,12 @@
     if (delta > count / 2) delta -= count;
     return delta;
   };
+
+  // Joshua, 18 Oct 2026: "select one for each card". When every card names a
+  // distinct approved scene (data-review-art="g"), that pairing is fixed;
+  // otherwise (or with a valid ?reviewart= override) the shuffled set is used.
+  const chosen = cards.map(card => card.querySelector('[data-review-art]').getAttribute('data-review-art'));
+  if (!validOverride && chosen.every(key => keys.includes(key)) && new Set(chosen).size === count) art = chosen;
 
   cards.forEach((card, index) => {
     const image = card.querySelector('[data-review-art]');

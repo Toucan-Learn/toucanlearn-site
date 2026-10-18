@@ -296,23 +296,29 @@ if (
     sync();
   }
 
+  function pointInSky(event) {
+    const canvas = sky.hidden ? fallback : sky;
+    const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return { x: .5, y: .5 };
+    return {
+      x: Math.min(1, Math.max(0, (event.clientX - rect.left) / rect.width)),
+      y: Math.min(1, Math.max(0, (event.clientY - rect.top) / rect.height)),
+    };
+  }
+
   scene.addEventListener('click', event => {
     if (calm) return;
-    const rect = scene.getBoundingClientRect();
     const keyboard = event.detail === 0;
-    const x = keyboard ? .5 : (event.clientX - rect.left) / rect.width;
-    const y = keyboard ? .5 : (event.clientY - rect.top) / rect.height;
+    const point = keyboard ? { x: .5, y: .5 } : pointInSky(event);
+    const { x, y } = point;
     pixelRipples.add(x, y, time);
     recordPixelBrush(x, y, true);
     draw();
   });
   scene.addEventListener('pointermove', event => {
     if (calm || event.pointerType === 'touch') return;
-    const rect = scene.getBoundingClientRect();
-    recordPixelBrush(
-      (event.clientX - rect.left) / rect.width,
-      (event.clientY - rect.top) / rect.height,
-    );
+    const { x, y } = pointInSky(event);
+    recordPixelBrush(x, y);
   }, { passive: true });
   scene.addEventListener('pointerleave', () => { previousPixelPoint = null; });
   preference.addEventListener('change', event => {
@@ -335,9 +341,17 @@ if (
     const rect = scene.getBoundingClientRect();
     const width = Math.max(1, rect.width);
     const height = Math.max(1, rect.height);
+    const heroRect = document.getElementById('ripple-button')?.getBoundingClientRect();
+    const heroAspect = heroRect?.width && heroRect?.height
+      ? heroRect.width / heroRect.height
+      : 1.2;
+    // Render the same tall scene framing as the hero, then let the compact bar
+    // reveal its centre. Rendering directly at the bar's wide aspect creates a
+    // different, over-enlarged slice of the procedural pixel sky.
+    const framedHeight = Math.max(height, width / heroAspect);
     const pixelSize = 2.5;
     sky.width = Math.max(1, Math.round(width / pixelSize));
-    sky.height = Math.max(1, Math.round(height / pixelSize));
+    sky.height = Math.max(1, Math.round(framedHeight / pixelSize));
     drawFallback();
     draw();
   }).observe(scene);

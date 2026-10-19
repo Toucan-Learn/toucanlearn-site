@@ -1,4 +1,4 @@
-import { playNote, peekNextNote, advance, onSongAdvance } from './hero-piano.js?v=20261019-songs-80';
+import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave } from './hero-piano.js?v=20261019-songs-87';
 
 // Round 76 (Joshua, 19 Oct 2026: "is it possible for us to be able to play the
 // whole piano with keyboard?"): two manuals, so every key from C3 to C6 has its
@@ -14,6 +14,10 @@ const KEY_NOTES = new Map([
 ]);
 const PITCHES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const midi = note => (Number(note.at(-1)) + 1) * 12 + PITCHES.indexOf(note.slice(0, -1));
+// A song may move the whole keyboard up an octave (round 87); notes, labels and the
+// computer keys all follow.
+const OCTAVE = songKeyboardOctave();
+const shifted = note => note.slice(0, -1) + (Number(note.at(-1)) + OCTAVE);
 
 export function initHeroKeyboard(ripple) {
   const toggle = document.getElementById('piano-toggle');
@@ -22,11 +26,18 @@ export function initHeroKeyboard(ripple) {
   const keys = panel.querySelector('.piano-keys');
   const scroll = panel.querySelector('.piano-scroll');
   const buttons = [...keys.querySelectorAll('[data-note]')];
-  const byNote = new Map(buttons.map(button => [button.dataset.note, button]));
+  // data-note stays each key's place on the keyboard (the CSS positions black keys by it);
+  // data-pitch is what it plays, an octave up when the song asks.
+  for (const button of buttons) {
+    button.dataset.pitch = shifted(button.dataset.note);
+    if (OCTAVE) button.setAttribute('aria-label', button.dataset.pitch);
+  }
+  panel.dataset.octave = String(OCTAVE);
+  const byNote = new Map(buttons.map(button => [button.dataset.pitch, button]));
   const names = new Map(buttons.map(button => [button, button.getAttribute('aria-label')]));
   // Each key shows its computer key (CSS shows it only with a mouse and keyboard).
   for (const [key, note] of KEY_NOTES) {
-    const button = byNote.get(note);
+    const button = byNote.get(shifted(note));
     if (button) button.dataset.key = key.toUpperCase();
   }
   const timers = new Map();
@@ -72,7 +83,7 @@ export function initHeroKeyboard(ripple) {
 
   function press(button) {
     if (!open || !button) return;
-    const note = button.dataset.note;
+    const note = button.dataset.pitch;
     const followsSong = note === peekNextNote();
     if (playNote(note) && followsSong) advance();
     button.classList.add('is-pressed');
@@ -81,7 +92,7 @@ export function initHeroKeyboard(ripple) {
       button.classList.remove('is-pressed');
       timers.delete(button);
     }, 150));
-    ripple((midi(note) - midi('C3')) / (midi('C6') - midi('C3')));
+    ripple((midi(note) - midi(shifted('C3'))) / (midi(shifted('C6')) - midi(shifted('C3'))));
   }
 
   toggle.addEventListener('click', () => {
@@ -132,7 +143,7 @@ export function initHeroKeyboard(ripple) {
     const key = event.key.toLowerCase();
     const note = KEY_NOTES.get(key);
     if (!note) return;
-    const button = byNote.get(note);
+    const button = byNote.get(shifted(note));
     if (!button) return;
     event.preventDefault();
     if (event.repeat || held.has(key)) return;

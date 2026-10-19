@@ -1,4 +1,4 @@
-import { songs } from './hero-songs.js?v=20261019-songs-80';
+import { songs } from './hero-songs.js?v=20261019-songs-87';
 
 // One fresh choice per page load, independent of the sky. The query parameter
 // is a listening/test override; unknown ids use the same random selection.
@@ -21,6 +21,10 @@ const tails = new Set();
 const listeners = new Set();
 
 export function peekNextNote() { return MELODY[nextNote]; }
+
+// Round 87 (Joshua: "just change the keyboard if this song comes up"): a song can move
+// the keyboard up an octave so its high notes have keys (Runaway's high E6).
+export function songKeyboardOctave() { return Number.isInteger(song.keyboardOctave) ? song.keyboardOctave : 0; }
 
 export function onSongAdvance(listener) {
   listeners.add(listener);
@@ -140,7 +144,7 @@ function soundNote(frequency) {
 // Gesture entry point: called only by sky/keyboard input handlers. Importing,
 // peeking, opening the panel and advancing the song never create audio.
 export function playNote(noteName) {
-  if (!/^[A-G]#?[3-6]$/.test(noteName)) return false;
+  if (!/^[A-G]#?[3-7]$/.test(noteName)) return false;
   const AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext;
   if (!AudioContext) return false;
   try {

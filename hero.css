@@ -367,3 +367,16 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 @media (hover: none), (pointer: coarse) {
   .living-hero .piano-hint { display: none; }
 }
+
+/* Round 81 (Joshua, 19 Oct 2026: "where was the show off assets plan" / "they
+   said yes"): three real learner projects between Our approach and Reviews,
+   as screenshots with names removed, shared with each family's permission. */
+.projects-section .project-shot { aspect-ratio: 5 / 4; background: #0b1a22; }
+.projects-section .project-shot img { object-fit: cover; object-position: top center; }
+.projects-section .project-label { margin: 4px 4px 0; color: var(--heading); font-size: 0.75rem; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
+.projects-section .value-card h3 { margin-top: 0; }
+.projects-section .project-note { margin: 16px 0 0; color: var(--ink); font-size: 0.9rem; }
+@media (max-width: 600px) {
+  .projects-section .value-card:not(.value-card--feature) { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; padding: 14px; }
+  .projects-section .value-card:not(.value-card--feature) .value-art { grid-row: auto; }
+}

@@ -20,3 +20,29 @@
 .form-use-note { margin: 0; font-size: .875rem; }
 .enquiry-form .form-message a { color: inherit; text-decoration: underline; }
 .enquiry-form .form-message:focus { outline: 3px solid var(--orange-text); outline-offset: 3px; }
+/* Round 82 (Joshua, 18 Oct 2026: "the enquiries form is spaced out strangely. that whole webpage
+   could have a bit of a second look, a revamp" / "yes to all"): a wider page with the form on the
+   left and a "What happens next" card on the right; on phones the card follows the form. */
+.contact-hero .contact-width,
+.contact-form-section .contact-width { width: min(calc(100% - 32px), 1120px); }
+.contact-hero .lead { max-width: 640px; }
+.contact-offer { margin: 14px 0 0; }
+.contact-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: 36px; align-items: start; margin-top: 8px; }
+.contact-next { position: sticky; top: calc(var(--sticky-header-height, 95px) + 24px); display: grid; gap: 14px; padding: 26px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); }
+.contact-next h3 { margin: 0; color: var(--heading); font-size: 1.25rem; }
+.contact-steps { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: contact-step; }
+.contact-steps li { position: relative; padding-left: 42px; color: var(--ink); line-height: 1.45; counter-increment: contact-step; }
+.contact-steps li::before { content: counter(contact-step); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #fff; font-weight: 800; background: #1f7a75; }
+.contact-steps strong { display: block; color: var(--heading); }
+.contact-next-talk { margin: 4px 0 0; color: var(--heading); font-weight: 800; }
+.contact-next-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.contact-email { margin: 22px 0 0; }
+/* The send button uses the homepage trial-button colours: dark teal in light mode, cream in dark. */
+.enquiry-form .button.form-submit.form-submit--trial { --trial-fill: var(--trial-light-fill); --trial-ink: var(--trial-light-ink); --trial-hover: var(--trial-light-hover); --trial-glow: var(--trial-light-glow); border-color: transparent; background: var(--trial-fill); color: var(--trial-ink); box-shadow: 0 0 0 1px var(--trial-ink), 0 10px 28px rgba(var(--trial-glow), .28); transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease; }
+.enquiry-form .button.form-submit.form-submit--trial:is(:hover, :focus-visible) { background: var(--trial-hover); box-shadow: 0 0 0 1px var(--trial-ink), 0 14px 34px rgba(var(--trial-glow), .35); transform: translateY(-2px); }
+.enquiry-form .button.form-submit.form-submit--trial:focus-visible { outline: 3px solid var(--trial-fill); outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) { .enquiry-form .button.form-submit.form-submit--trial { transition: none; } .enquiry-form .button.form-submit.form-submit--trial:is(:hover, :focus-visible) { transform: none; } }
+@media (max-width: 900px) {
+  .contact-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .contact-next { position: static; padding: 20px; }
+}

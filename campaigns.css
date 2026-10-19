@@ -2854,3 +2854,29 @@ header:not(.toucan-opening-header) .nav-links {
 @media (max-width: 600px) {
   .project-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 }
+
+/* Round 83 (prices agreed 18 Oct 2026: "sure yeh go"): the Prices page shows each
+   hourly price large under its heading. Prices also joins the top menu, so between
+   941px and 1180px the menu gaps tighten and labels never break onto two lines. */
+.price-card .price-tag {
+  margin: -2px 4px 2px;
+  color: var(--heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 941px) and (max-width: 1180px) {
+  header:not(.toucan-opening-header) .nav-links { gap: 16px; }
+  .nav-links > a,
+  .nav-links .nav-item > a,
+  .nav .button.trial-button { white-space: nowrap; }
+}
+
+/* Subject and Prices pages have no hero art, so their opening is as tall as its
+   words (it was filling the screen and leaving an empty band). */
+.campaign-page.subject-page .hero {
+  min-height: 0;
+  display: block;
+  padding-bottom: 24px;
+}

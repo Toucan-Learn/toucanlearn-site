@@ -22,8 +22,8 @@
   <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
   <script src="theme.js?v=20261018-dark-1"></script>
   <link rel="stylesheet" href="style.css?v=20261018-dark-1" />
-  <link rel="stylesheet" href="campaigns.css?v=20261019-projects-78" />
-  <link rel="stylesheet" href="contact.css?v=20261018-form-66" />
+  <link rel="stylesheet" href="campaigns.css?v=20261019-prices-83" />
+  <link rel="stylesheet" href="contact.css?v=20261019-enquiry-82" />
   <script src="menu.js?v=20261017-menu-1" defer></script>
 </head>
 
@@ -69,6 +69,7 @@
           </ul>
         </div>
         <a href="index.html#reviews">Reviews</a>
+        <a href="prices.html">Prices</a>
         <a href="team.html">Our team</a>
         <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
@@ -109,6 +110,7 @@
             </ul>
           </div>
           <a href="index.html#reviews">Reviews</a>
+          <a href="prices.html">Prices</a>
           <a href="team.html">Our team</a>
           <a class="button trial-button trial-button--light-surface" href="#email-enquiry">Book a free trial</a>
         </nav>
@@ -123,10 +125,8 @@
 
         <h1>Tell us what you need<span>.</span></h1>
 
-        <p class="lead">
-          For a child, young person or adult: share the real goal, current starting point and what is getting in the way.
-        </p>
-        <p><strong>Your first session is free.</strong> With Joshua or another Toucan tutor.</p><p><strong>After that, £40 per hour.</strong> The same rate with Joshua or another Toucan tutor, including collaborative planning and ongoing review. We agree the tutor, approach and arrangements before booking.</p>
+        <p class="lead">Tell us who it's for and what you'd like help with, and we'll reply the way that suits you.</p>
+        <p class="contact-offer"><strong>Your first session is free.</strong> After that, £40 per hour.</p>
       </div>
     </section>
 
@@ -134,6 +134,7 @@
       <div class="contact-width">
         <h2 id="email-heading">Send us a short enquiry.</h2>
         <!-- Apps Script web app "Toucan Learn enquiry form" (Joshua's Google account), deployed 18 Oct 2026. The only endpoint configuration is data-form-endpoint. -->
+        <div class="contact-layout">
         <form class="enquiry-form" id="enquiry-form" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST">
           <p class="form-message" id="form-message" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>
           <fieldset class="enquiry-fields" id="enquiry-fields" disabled>
@@ -214,14 +215,26 @@
             <span class="field-error" id="phone-error"></span>
           </div>
           </div>
-          <button class="button form-submit" id="submit-button" type="submit">Send my enquiry</button>
+          <button class="button form-submit form-submit--trial" id="submit-button" type="submit">Send my enquiry <span aria-hidden="true">→</span></button>
           <p class="form-use-note">We'll only use these details to reply to you. Read our <a href="privacy.html">privacy notice</a>.</p>
           </fieldset>
         </form>
+        <div class="contact-next">
+          <h3 id="next-heading">What happens next</h3>
+          <ol class="contact-steps">
+            <li><strong>We reply your way.</strong> Email, call, text or WhatsApp.</li>
+            <li><strong>A free first session.</strong> A proper lesson to get to know you.</li>
+            <li><strong>Your plan.</strong> Built around you, and reviewed every week.</li>
+          </ol>
+          <p class="contact-next-talk">Prefer to talk?</p>
+          <div class="contact-next-actions">
+            <a class="button" href="tel:+447309639095">Call 07309 639095</a>
+            <a class="button secondary" href="https://wa.me/447307045816" target="_blank" rel="noopener">WhatsApp us<span class="visually-hidden"> (opens WhatsApp in a new tab)</span></a>
+          </div>
+        </div>
+        </div>
         <noscript><p>Please <a href="mailto:hello@toucanlearn.co.uk">email hello@toucanlearn.co.uk</a> or <a href="tel:+447309639095">call 07309 639095</a> to enquire without JavaScript.</p></noscript>
-        <a class="button" href="mailto:hello@toucanlearn.co.uk?subject=Tutoring%20enquiry%20%E2%80%94%20Toucan%20Learn">Email Toucan Learn <span aria-hidden="true">→</span></a>
-        <p>Prefer to talk? Call Joshua on <a href="tel:+447309639095">07309 639095</a>, or WhatsApp on <a href="https://wa.me/447307045816" target="_blank" rel="noopener">07307 045816<span class="visually-hidden"> (opens WhatsApp in a new tab)</span></a>.</p>
-        <p>If the link does not open your email app, copy hello@toucanlearn.co.uk into a new email.</p>
+        <p class="contact-email">Or email us at <a href="mailto:hello@toucanlearn.co.uk?subject=Tutoring%20enquiry%20%E2%80%94%20Toucan%20Learn">hello@toucanlearn.co.uk</a>.</p>
       </div>
     </section>
   </main>

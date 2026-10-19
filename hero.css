@@ -10,8 +10,8 @@
 .toucan-opening-header { background: #0a272cf5; color: var(--hero-cream); border-bottom: 1px solid #c3d2ba20; }
 .toucan-opening-header .nav { min-height: 90px; padding-block: 15px; }
 .toucan-opening-header .brand-lockup strong { color: var(--hero-cream); font-size: 29px; }
-.toucan-opening-header .brand-lockup .brand-can { color: var(--hero-peach); }
-.toucan-opening-header .brand-lockup > span { color: #c1d2c4; }
+.toucan-opening-header .brand-lockup .brand-can { color: #d9733a; }
+.toucan-opening-header .brand-lockup > span { color: #45a59b; }
 .toucan-opening-header .nav-links { gap: 26px; color: #d5ded3; }
 .toucan-opening-header .button { background: transparent; color: var(--hero-cream); border: 1px solid #bed0bc6b; box-shadow: none; }
 .toucan-opening-header .mobile-note { color: #c1d2c4; }
@@ -367,16 +367,5 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 @media (hover: none), (pointer: coarse) {
   .living-hero .piano-hint { display: none; }
 }
-
-/* Round 81 (Joshua, 19 Oct 2026: "where was the show off assets plan" / "they
-   said yes"): three real learner projects between Our approach and Reviews,
-   as screenshots with names removed, shared with each family's permission. */
-.projects-section .project-shot { aspect-ratio: 5 / 4; background: #0b1a22; }
-.projects-section .project-shot img { object-fit: cover; object-position: top center; }
-.projects-section .project-label { margin: 4px 4px 0; color: var(--heading); font-size: 0.75rem; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
-.projects-section .value-card h3 { margin-top: 0; }
-.projects-section .project-note { margin: 16px 0 0; color: var(--ink); font-size: 0.9rem; }
-@media (max-width: 600px) {
-  .projects-section .value-card:not(.value-card--feature) { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; padding: 14px; }
-  .projects-section .value-card:not(.value-card--feature) .value-art { grid-row: auto; }
-}
+/* Round 85: in dark mode the opening wordmark uses the logo's burnt orange and teal
+   (#d9733a, #45a59b) instead of peach; light mode keeps #c45f21 and #1f7a75. */

@@ -2880,3 +2880,21 @@ header:not(.toucan-opening-header) .nav-links {
   display: block;
   padding-bottom: 24px;
 }
+
+/* Round 84 (Joshua, 19 Oct 2026: "learner projects, that shouldnt be on frontpage, it should be
+   in either kids section, or our methods, and we need to actually explain the purpose of each
+   and its trajectory from beginning to here"): the projects sit on the Children page, each with
+   why it works, where it started and where it is now. */
+.projects-section .project-shot { aspect-ratio: 5 / 4; background: #0b1a22; }
+.projects-section .project-shot img { object-fit: cover; object-position: top center; }
+.projects-section .project-label { margin: 4px 4px 0; color: var(--heading); font-size: 0.75rem; font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; }
+.projects-section .value-card h3 { margin-top: 0; }
+.projects-section .project-path { display: grid; gap: 8px; margin: 2px 4px 4px; }
+.projects-section .project-path div { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 10px; align-items: baseline; }
+.projects-section .project-path dt { color: var(--heading); font-size: 0.75rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+.projects-section .project-path dd { margin: 0; color: var(--ink); line-height: 1.45; }
+.projects-section .project-note { margin: 16px 0 0; color: var(--ink); font-size: 0.9rem; }
+@media (max-width: 600px) {
+  .projects-section .value-card:not(.value-card--feature) { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; padding: 14px; }
+  .projects-section .value-card:not(.value-card--feature) .value-art { grid-row: auto; }
+}

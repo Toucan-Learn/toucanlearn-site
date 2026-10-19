@@ -2517,8 +2517,9 @@ h1 {
     --ink-rgb: 236, 230, 219;
     --heading: #f6f0e6;
     --heading-rgb: 246, 240, 230;
-    --brand-green: #a7d2c7;
-    --orange-display: #f4c09b;
+    /* Round 85 (Joshua, 19 Oct 2026: "you pciekd the wrong colours for toucan learn logo. i wantedd the other one, not this one with the peach"): dark mode uses the logo's burnt orange and teal, a shade brighter for contrast, not peach and pale green. */
+    --brand-green: #45a59b;
+    --orange-display: #d9733a;
     --orange-text: #f4b78f;
     --teal-soft: #1e383b;
     --teal-soft-rgb: 30, 56, 59;
@@ -2549,8 +2550,8 @@ h1 {
   --ink-rgb: 236, 230, 219;
   --heading: #f6f0e6;
   --heading-rgb: 246, 240, 230;
-  --brand-green: #a7d2c7;
-  --orange-display: #f4c09b;
+  --brand-green: #45a59b;
+  --orange-display: #d9733a;
   --orange-text: #f4b78f;
   --teal-soft: #1e383b;
   --teal-soft-rgb: 30, 56, 59;

@@ -2880,3 +2880,30 @@ header:not(.toucan-opening-header) .nav-links {
   .projects-section .value-card:not(.value-card--feature) { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; padding: 14px; }
   .projects-section .value-card:not(.value-card--feature) .value-art { grid-row: auto; }
 }
+
+/* Round 89 (Joshua, 19 Oct 2026: "find out more should probably link to this, where we then have a
+   small cell on bottom right under the right cell, to click to our team, which displays everyone,
+   on a carousel" / "the right cell should be why our company was made and how our team works
+   together"): the homepage card tells why Toucan started, a small card links to the team page, and
+   the team page shows every tutor in a sideways carousel. */
+#main > .team-section .team-story h3 { margin: 0 0 14px; color: white; font-size: clamp(1.4rem, 2vw, 1.85rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.025em; }
+.team-section .team-story p + p { margin-top: 12px; }
+.team-section .team-more { grid-column: 2; justify-self: end; display: inline-flex; align-items: center; gap: 10px; min-height: 48px; padding: 12px 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); color: var(--heading); font-weight: 800; text-decoration: none; transition: transform 180ms ease; }
+.team-section .team-more:is(:hover, :focus-visible) { transform: translateY(-2px); }
+@media (max-width: 899px) { .team-section .team-more { grid-column: auto; justify-self: start; } }
+@media (prefers-reduced-motion: reduce) { .team-section .team-more { transition: none; } .team-section .team-more:is(:hover, :focus-visible) { transform: none; } }
+.team-carousel-section { padding: 24px 0 88px; }
+.team-carousel-section .section-head { display: block; margin-bottom: 20px; text-align: left; }
+.team-track { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 40px) / 3); column-gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 10px; scrollbar-width: thin; }
+.team-track:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 4px; border-radius: 12px; }
+.team-card { scroll-snap-align: start; display: grid; align-content: start; gap: 8px; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); }
+.team-card h3 { margin: 6px 0 0; color: var(--heading); font-size: 1.3rem; }
+.team-card p { margin: 0; color: var(--ink); line-height: 1.5; }
+.team-card .team-card-role { color: var(--heading); font-size: 0.85rem; font-weight: 800; }
+.team-avatar { display: grid; place-items: center; width: 64px; height: 64px; border-radius: 50%; background: #1f7a75; color: #fff; font-size: 1.6rem; font-weight: 800; }
+.team-carousel-controls { display: flex; justify-content: flex-end; gap: 10px; margin-top: 14px; }
+.team-carousel-button { display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); color: var(--heading); font-size: 1.2rem; font-weight: 800; cursor: pointer; }
+.team-carousel-button:disabled { opacity: 0.4; cursor: default; }
+.team-carousel-button:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
+@media (max-width: 1000px) { .team-track { grid-auto-columns: calc((100% - 20px) / 2); } }
+@media (max-width: 700px) { .team-track { grid-auto-columns: 85%; } }

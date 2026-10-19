@@ -1,11 +1,19 @@
-import { playNote, peekNextNote, advance, onSongAdvance } from './hero-piano.js?v=20261018-keys-1';
+import { playNote, peekNextNote, advance, onSongAdvance } from './hero-piano.js?v=20261019-songs-80';
 
-// Chromatic C–E across the classic interleaved white/black computer keys.
-const COMPUTER_KEYS = ['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'y', 'h', 'u', 'j', 'k', 'o', 'l', 'p', ';'];
+// Round 76 (Joshua, 19 Oct 2026: "is it possible for us to be able to play the
+// whole piano with keyboard?"): two manuals, so every key from C3 to C6 has its
+// own computer key and nothing needs an octave shift. The bottom rows play
+// C3–E4 (Z X C V B N M , . / with S D G H J L ; as black keys); the top rows
+// play F4–C6 (Q to ] with 2 3 4 6 7 9 0 - as black keys).
+const KEY_NOTES = new Map([
+  ['z', 'C3'], ['s', 'C#3'], ['x', 'D3'], ['d', 'D#3'], ['c', 'E3'], ['v', 'F3'], ['g', 'F#3'], ['b', 'G3'],
+  ['h', 'G#3'], ['n', 'A3'], ['j', 'A#3'], ['m', 'B3'], [',', 'C4'], ['l', 'C#4'], ['.', 'D4'], [';', 'D#4'], ['/', 'E4'],
+  ['q', 'F4'], ['2', 'F#4'], ['w', 'G4'], ['3', 'G#4'], ['e', 'A4'], ['4', 'A#4'], ['r', 'B4'], ['t', 'C5'],
+  ['6', 'C#5'], ['y', 'D5'], ['7', 'D#5'], ['u', 'E5'], ['i', 'F5'], ['9', 'F#5'], ['o', 'G5'], ['0', 'G#5'],
+  ['p', 'A5'], ['-', 'A#5'], ['[', 'B5'], [']', 'C6'],
+]);
 const PITCHES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
 const midi = note => (Number(note.at(-1)) + 1) * 12 + PITCHES.indexOf(note.slice(0, -1));
-const noteAt = value => PITCHES[value % 12] + (Math.floor(value / 12) - 1);
-const clampOctave = octave => Math.max(3, Math.min(5, octave));
 
 export function initHeroKeyboard(ripple) {
   const toggle = document.getElementById('piano-toggle');
@@ -16,11 +24,15 @@ export function initHeroKeyboard(ripple) {
   const buttons = [...keys.querySelectorAll('[data-note]')];
   const byNote = new Map(buttons.map(button => [button.dataset.note, button]));
   const names = new Map(buttons.map(button => [button, button.getAttribute('aria-label')]));
+  // Each key shows its computer key (CSS shows it only with a mouse and keyboard).
+  for (const [key, note] of KEY_NOTES) {
+    const button = byNote.get(note);
+    if (button) button.dataset.key = key.toUpperCase();
+  }
   const timers = new Map();
   const pointers = new Map();
   const held = new Set();
   let open = false;
-  let octaveShift = 0;
   let next = peekNextNote();
   let highlighted;
 
@@ -118,19 +130,9 @@ export function initHeroKeyboard(ripple) {
     if (!open || event.ctrlKey || event.metaKey || event.altKey || event.isComposing ||
       event.target?.closest?.('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]')) return;
     const key = event.key.toLowerCase();
-    if (key === 'z' || key === 'x') {
-      event.preventDefault();
-      if (!event.repeat && !held.has(key)) {
-        const octave = clampOctave(clampOctave(Number(next.at(-1))) + octaveShift);
-        octaveShift = clampOctave(octave + (key === 'z' ? -1 : 1)) - clampOctave(Number(next.at(-1)));
-        held.add(key);
-      }
-      return;
-    }
-    const index = COMPUTER_KEYS.indexOf(key);
-    if (index < 0) return;
-    const octave = clampOctave(clampOctave(Number(next.at(-1))) + octaveShift);
-    const button = byNote.get(noteAt((octave + 1) * 12 + index));
+    const note = KEY_NOTES.get(key);
+    if (!note) return;
+    const button = byNote.get(note);
     if (!button) return;
     event.preventDefault();
     if (event.repeat || held.has(key)) return;

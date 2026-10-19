@@ -1,4 +1,4 @@
-import { songs } from './hero-songs.js?v=20261017-songs-2';
+import { songs } from './hero-songs.js?v=20261019-songs-80';
 
 // One fresh choice per page load, independent of the sky. The query parameter
 // is a listening/test override; unknown ids use the same random selection.

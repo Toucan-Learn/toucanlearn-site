@@ -2646,3 +2646,211 @@ header:not(.toucan-opening-header) .nav-links {
   font-size: 0.9rem;
   line-height: 1.5;
 }
+
+/* Round 73 (Joshua, 19 Oct 2026: "this whole section is prototypal, way too
+   wordy, and needs some visual help, some more toucan graphics" / "i
+   essentially aim to provide double the value of my service"): the Children
+   page keeps a short hero and the careful-match list, then shows everything
+   that comes with each lesson, led by the projects we build, with new toucan
+   art for each. */
+.campaign-page .offer-line {
+  margin: 0 0 24px;
+}
+
+.value-section {
+  padding-block: 72px;
+}
+
+.value-section .section-head {
+  display: block;
+  max-width: none;
+  margin: 0 0 24px;
+  text-align: left;
+}
+
+.value-section .section-head h2 {
+  margin: 0;
+  text-wrap: balance;
+}
+
+.value-copy {
+  display: grid;
+  gap: 12px;
+}
+
+.value-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.value-card {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  background: var(--paper);
+}
+
+.value-card h3 {
+  margin: 6px 4px 0;
+  color: var(--heading);
+  font-size: 1.25rem;
+  line-height: 1.2;
+}
+
+.value-card p {
+  margin: 0 4px 4px;
+  color: var(--ink);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.value-art {
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #ede5da;
+}
+
+.value-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.value-card--feature {
+  grid-column: 1 / -1;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 2fr);
+  align-items: center;
+  gap: 28px;
+  padding: 28px;
+  border-color: transparent;
+  background: radial-gradient(circle at 90% 100%, rgba(55, 147, 137, 0.5), transparent 22rem), var(--blue);
+}
+
+.value-card--feature h3,
+.value-card--feature p {
+  color: white;
+}
+
+.value-card--feature h3 {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+}
+
+.value-card--feature p {
+  font-size: 1.05rem;
+}
+
+.value-feature-art {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 1000px) {
+  .value-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .value-card--feature { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 600px) {
+  .value-section { padding-block: 48px; }
+  .value-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .value-card--feature { padding: 20px; }
+  .value-feature-art { gap: 8px; }
+  /* Phones: small art beside the words, so each card stays short. */
+  .value-card:not(.value-card--feature) {
+    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    column-gap: 14px;
+    row-gap: 4px;
+    padding: 12px;
+    align-items: start;
+  }
+  .value-card:not(.value-card--feature) .value-art { grid-row: 1 / span 2; border-radius: 14px; }
+  .value-card:not(.value-card--feature) h3 { margin: 4px 0 0; font-size: 1.1rem; }
+  .value-card:not(.value-card--feature) p { margin: 0; font-size: 0.95rem; }
+}
+
+/* Round 74 (Joshua, 19 Oct 2026: "we have who we help, covering target
+   audiences, and what subjects we do (need to add psychology and SEN)" / "yes
+   do it"): the short Psychology page uses three value cells. */
+.value-grid--3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+@media (max-width: 1000px) {
+  .value-grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .value-grid--3 { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Round 75 (Joshua, 19 Oct 2026: "the 'our team' panel on left is a huge
+   selling point, we should have that as 2nd section" / "my dad said that
+   section, the header, the look, its very good"): the homepage shows the same
+   team section straight after the opening. Its founder name is an h3 there
+   (the section heading is the h2), with the team page's exact look. */
+#main > .team-section .team-founder h3 { margin: 0; color: white; font-size: clamp(1.4rem, 2vw, 1.85rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.025em; text-wrap: wrap; }
+
+/* Round 77 (Joshua, 19 Oct 2026: "the adults page needs a revamp, it needs to
+   go over the many things we'd be able to support on, all those adult
+   qualifications"): six short cells with toucan art; three link on to the
+   subject pages. */
+.value-card .value-link {
+  display: inline-block;
+  margin-top: 6px;
+  color: var(--heading);
+  font-weight: 800;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Round 78 (Joshua, 19 Oct 2026: "for kids, we need to take the opportunity to
+   show off what i've done for everyone"): the feature card shows real learner
+   projects (no names) as captioned tiles. */
+.value-card--feature:has(.project-tiles) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.project-tiles {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-tile {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  min-width: 0;
+  color: white;
+}
+
+.project-tile strong {
+  margin-top: 4px;
+  font-size: 1rem;
+  line-height: 1.25;
+}
+
+.project-tile span {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  opacity: 0.9;
+}
+
+@media (max-width: 1000px) {
+  .project-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+  .project-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+}

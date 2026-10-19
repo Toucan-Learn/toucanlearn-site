@@ -317,3 +317,53 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 @media (prefers-reduced-motion: reduce) {
   .living-hero .hero-actions .button.approach-button { transition: none; transform: none; }
 }
+
+/* Round 71 (Joshua, 19 Oct 2026: "logo colours across the whole site"): in
+   light mode the homepage top bar matches every other page and the logo, with
+   navy "Tou", burnt orange "can", teal "LEARN", navy links and the navy free
+   trial button. Dark mode keeps the dark bar. The opening's "you." takes the
+   logo's burnt orange (3.7:1 on the dark opening, large text). */
+.living-hero #hero-title em { color: #c45f21; }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .toucan-opening-header { background: rgba(233, 226, 216, 0.94); color: #0b3f51; border-bottom-color: rgba(11, 63, 81, 0.12); }
+  :root:not([data-theme="dark"]) .toucan-opening-header .brand-lockup strong { color: #0b3f51; }
+  :root:not([data-theme="dark"]) .toucan-opening-header .brand-lockup .brand-can { color: #c45f21; }
+  :root:not([data-theme="dark"]) .toucan-opening-header .brand-lockup > span { color: #1f7a75; }
+  :root:not([data-theme="dark"]) .toucan-opening-header .nav-links { color: #0b3f51; }
+  :root:not([data-theme="dark"]) .toucan-opening-header .theme-toggle { color: #0b3f51; border-color: #0b3f51; }
+  :root:not([data-theme="dark"]) .toucan-opening-header .mobile-menu summary { color: #0b3f51; }
+  :root:not([data-theme="dark"]) .toucan-opening-header .mobile-home { color: #0b3f51; }
+  :root:not([data-theme="dark"]) body .toucan-opening-header .nav .button.trial-button { --trial-fill: var(--trial-light-fill); --trial-ink: var(--trial-light-ink); --trial-hover: var(--trial-light-hover); --trial-glow: var(--trial-light-glow); }
+  :root:not([data-theme="dark"]) .toucan-opening-header .nav .button:focus-visible { outline-color: #0b3f51; }
+}
+:root[data-theme="light"] .toucan-opening-header { background: rgba(233, 226, 216, 0.94); color: #0b3f51; border-bottom-color: rgba(11, 63, 81, 0.12); }
+:root[data-theme="light"] .toucan-opening-header .brand-lockup strong { color: #0b3f51; }
+:root[data-theme="light"] .toucan-opening-header .brand-lockup .brand-can { color: #c45f21; }
+:root[data-theme="light"] .toucan-opening-header .brand-lockup > span { color: #1f7a75; }
+:root[data-theme="light"] .toucan-opening-header .nav-links { color: #0b3f51; }
+:root[data-theme="light"] .toucan-opening-header .theme-toggle { color: #0b3f51; border-color: #0b3f51; }
+:root[data-theme="light"] .toucan-opening-header .mobile-menu summary { color: #0b3f51; }
+:root[data-theme="light"] .toucan-opening-header .mobile-home { color: #0b3f51; }
+:root[data-theme="light"] body .toucan-opening-header .nav .button.trial-button { --trial-fill: var(--trial-light-fill); --trial-ink: var(--trial-light-ink); --trial-hover: var(--trial-light-hover); --trial-glow: var(--trial-light-glow); }
+:root[data-theme="light"] .toucan-opening-header .nav .button:focus-visible { outline-color: #0b3f51; }
+@media (max-width: 620px) {
+  :root[data-theme="light"] body.homepage .toucan-opening-header { --mobile-menu-surface: #e9e2d8; --mobile-menu-ink: #0b3f51; }
+  :root[data-theme="light"] body.homepage .toucan-opening-header .mobile-sub-links .nav-group-label { color: #b94e25; }
+}
+@media (max-width: 620px) and (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) body.homepage .toucan-opening-header { --mobile-menu-surface: #e9e2d8; --mobile-menu-ink: #0b3f51; }
+  :root:not([data-theme="dark"]) body.homepage .toucan-opening-header .mobile-sub-links .nav-group-label { color: #b94e25; }
+}
+
+/* Round 76: a one-line keyboard hint above the keys, and each key's computer
+   key in small type, shown only where there is a mouse and keyboard. */
+.living-hero .piano-hint { margin: 0; padding: 8px 12px 0; color: #c1d2c4; font-size: 12px; line-height: 1.4; text-align: center; }
+.living-hero .piano-key[data-key] { position: relative; }
+.living-hero .piano-key--black[data-key] { position: absolute; }
+@media (hover: hover) and (pointer: fine) {
+  .living-hero .piano-key[data-key]::after { content: attr(data-key); position: absolute; inset: auto 0 6px; color: #0a272c99; font: 700 9px/1 var(--hero-sans); text-align: center; pointer-events: none; }
+  .living-hero .piano-key--black[data-key]::after { bottom: 5px; color: #f0ebe0b3; }
+}
+@media (hover: none), (pointer: coarse) {
+  .living-hero .piano-hint { display: none; }
+}

@@ -2358,10 +2358,10 @@ body.team-page {
   --section-heading-size: clamp(2rem, 3.2vw, 3rem);
 }
 
-/* The landing-zone height uses the 109px laptop header; phones keep 64px. */
+/* The landing-zone height uses the 95px laptop header (round 67); phones keep 64px. */
 @media (min-width: 900px) {
   body.team-page {
-    --sticky-header-height: 109px;
+    --sticky-header-height: 95px;
   }
 }
 
@@ -2536,4 +2536,113 @@ body.team-page {
 
 @media (max-width: 560px) {
   .approach-page .approach-report .report-parts { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Round 67 (Joshua, 19 Oct 2026): "where we teach in the who we help section
+   should be in the our approach section" and "it should go 'how it works',
+   then 'online sessions' and 'in-person tutoring'". Our approach gains Online
+   1-1 sessions and In-person sessions (two cells each, in the approach card
+   frame) and "What a session looks like" as five numbered cells. */
+.approach-page .approach-places {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.approach-page .approach-places .approach-card p a {
+  color: var(--heading);
+  font-weight: 700;
+}
+
+.approach-page .session-steps {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: session-step;
+}
+
+.approach-page .session-steps li {
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  counter-increment: session-step;
+}
+
+.approach-page .session-steps li::before {
+  content: counter(session-step, decimal-leading-zero);
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  background: #b94e25;
+  color: white;
+  font-weight: 800;
+  font-size: 0.85rem;
+}
+
+.approach-page .session-steps strong {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+@media (max-width: 1000px) {
+  .approach-page .session-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .approach-page .approach-places,
+  .approach-page .session-steps { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Round 67 (Joshua, 19 Oct 2026: "we need to make the placement of the top
+   menu bar placements and size the same"): every inner-page header uses the
+   homepage header's frame, a 1280px container with 20px gutters, a 95px bar,
+   the 29px wordmark and 26px gaps, so nothing moves between pages. Colours
+   stay as they are. */
+header:not(.toucan-opening-header) > .container.nav {
+  width: min(calc(100% - 40px), 1280px);
+  min-height: 90px;
+  padding-block: 15px;
+}
+
+header:not(.toucan-opening-header) .brand-lockup strong {
+  font-size: 29px;
+}
+
+header:not(.toucan-opening-header) .nav-links {
+  gap: 26px;
+}
+
+@media (max-width: 620px) {
+  header:not(.toucan-opening-header) > .container.nav {
+    min-height: 0;
+    padding-block: 0;
+  }
+}
+
+/* Round 68 (Joshua, 19 Oct 2026: "i'd like various examples in the weekly
+   lesson reports!"): each report part shows a short example line from a
+   different kind of lesson, set apart in italics. */
+.approach-page .approach-report .report-parts .report-example {
+  display: block;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+  color: var(--ink);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }

@@ -2600,3 +2600,11 @@ h1 {
   .nav .nav-links > :not(.theme-toggle) { display: none; }
   .nav .theme-toggle { margin-left: auto; }
 }
+
+/* Keep the current destination clear in the flat desktop and mobile menus. */
+.nav-links a[aria-current="page"],
+.mobile-menu nav a[aria-current="page"] {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 5px;
+}

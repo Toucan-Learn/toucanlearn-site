@@ -41,4 +41,43 @@ Preserve all four Example review cards byte for byte, every Apps Script file, al
 
 ## Execution record
 
-Pending implementation and verification.
+Jobs A and B completed by GPT-6 Luna with low reasoning. The lead inspected both diffs and performed the browser checks independently. No worker committed or pushed.
+
+### Owner correction during verification
+
+The owner rejected the brighter LEARN green and the revised cost question, and asked to remove the form's "keep it brief" and medical-details guidance. This later instruction supersedes the cost-label and hint text above.
+
+Job E is handled by the lead because it requires interpreting the correction and tracing the original colours, and another worker would add overhead:
+
+- `contact.html:124,128,130`: keep only `The subject or goal, and what's tricky at the moment.` as the support hint; restore `What's your desired lesson rate?` and `Optional. A rough figure per session is fine.` No form attributes or validation changes.
+- `privacy.html:60,72`: update the revision date to 25 October 2026 and retain the original desired-rate collection description to match the restored question.
+- `style.css:118-120,2493,2522,2554` and `hero.css:14`: restore main's original logo colours, `#1f7a75` in light mode and `#45a59b` in dark mode. Give the logo its own variable so the earlier contrast correction to small text is retained.
+- All eleven full HTML pages that reference `style.css`, including policy, thank-you and 404 pages: bump its cache token. Bump the changed `hero.css` token in `index.html` again. These additional pages receive version-query changes only.
+- Recheck both headers and the form in both widths and themes, plus links, protected content and source syntax, before committing and pushing.
+
+### Results
+
+- Implemented A in `fd4e138`, B plus the form correction in `bf019c6`, and the homepage/Approach/logo work in `1b5dd11`. The original plan was committed first as `d2c3a0a`.
+- Final browser matrix: Home, Children, Adults, Approach, Contact, Team and Privacy at 1440 x 900 and 390 x 844, each in light and dark mode, 28 page states. No document overflow, broken loaded images, console warnings or console errors were reported. The lead inspected screenshots, including the revised form and Chemi's card.
+- Computed logo colour on both Home and Contact: `rgb(31, 122, 117)` in light mode and `rgb(69, 165, 155)` in dark mode, matching main's original colours. The homepage header remains dark in both modes. The mobile header retains its Home treatment.
+- Both homepage carousels were exercised in all four viewport/theme combinations. Tutor next/previous controls moved the track and the next control disabled at the end. Review keyboard arrows changed the displayed review and returned it, and pause/resume changed the control state. The Team page's tutor track and Chemi's longer role were also checked. One test loop attempted an extra click as smooth scrolling disabled Next; inspecting the end state confirmed the expected behaviour.
+- Mobile Menu opened in both themes, contained six links, navigated to Children, marked the current page, closed on Escape with focus returned to its summary, and reached the Children enquiry URL. The Subjects grid has three desktop columns and one mobile column, with all six subjects including Art.
+- Contact validation was exercised in all four viewport/theme combinations: empty submissions, child age, in-person location, invalid email, all three phone reply methods, the unchanged 60-character cost limit, and hidden/disabled conditional fields. Focus returned to the first invalid field. Fifteen additional local validation cases passed, including valid adult/child data, 60/61-character boundaries, valid UK phone numbers, unknown fields and the three-second minimum. No valid enquiry was submitted and Apps Script delivery was not tested.
+- Static checks: 17 HTML pages, 373 local file/link/fragment references, no missing targets or duplicate IDs; 16 JavaScript files passed syntax checking. All six legacy redirects also reached the correct existing anchors in the browser.
+- Protected comparisons passed: all seven review cards, including the four Example cards, are byte-for-byte unchanged; all form attributes, field names, limits and `contact.js` are unchanged; the headline and other tutor cards are unchanged. No Apps Script, results or guarantee copy was edited.
+- Changed assets are `hero.css` and `style.css`. Their references use `20261025-offer-96` and `20261025-logo-96` respectively. All eleven full HTML pages load the updated main stylesheet; Thank-you, 404, Complaints and Safeguarding otherwise match the baseline.
+- Evidence is saved outside the repository in `../outputs/offer-update-20261025/`: `browser-audit.json`, `interaction-audit.json`, `static-checks.json`, `validation-rules.json`, and screenshots. The final browser matrix was repeated after the owner's form/logo correction.
+
+### Remaining search matches
+
+The public website's only case-insensitive `diagnos` match is `approach.html:65`: `live-diagnostic session`, the requested exception. No matching message exists in `contact.js`; Thank-you needed only the stylesheet cache bump.
+
+Historical reports are unchanged snapshots of the earlier offer: `review.md:23`; `offer-review.md:3,27,33,45`; `lead-plan.md:24,49,65,103,109`. They still contain diagnostic/diagnosis wording. This plan also mentions the search term and exception as documentation. Those old outreach templates should use the newly approved offer when actually used.
+
+### Delegation cost estimate
+
+Two mechanical jobs ran on GPT-6 Luna, low reasoning, without conversation history. The lead handled wording decisions, the rename exception, CSS, the owner's correction, integration and all browser verification. No further jobs were delegated because the remaining changes were too small or required judgment.
+
+Usage and billing totals for workers are not exposed by these tools. A rough estimate is 1,000 to 2,000 lead-model editing tokens displaced, offset by 2,000 to 4,000 worker and coordination tokens, excluding inherited tool instructions and caching effects. That is roughly 1,000 to 3,000 extra task tokens overall, with no measured cash saving. This batch was small enough that delegation probably offered little economic benefit; direct editing would be preferable for a similar correction.
+
+The requested branch changes pass these checks. The earlier merge recommendation remains NO-GO while the Example review cards remain; the owner explicitly reserved their replacement. No merge to main is part of this work.

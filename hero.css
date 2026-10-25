@@ -11,7 +11,7 @@
 .toucan-opening-header .nav { min-height: 90px; padding-block: 15px; }
 .toucan-opening-header .brand-lockup strong { color: var(--hero-cream); font-size: 29px; }
 .toucan-opening-header .brand-lockup .brand-can { color: #d9733a; }
-.toucan-opening-header .brand-lockup > span { color: #2a8a80; }
+.toucan-opening-header .brand-lockup > span { color: #45a59b; }
 .toucan-opening-header .nav-links { gap: 26px; color: #d5ded3; }
 .toucan-opening-header .button { background: transparent; color: var(--hero-cream); border: 1px solid #bed0bc6b; box-shadow: none; }
 .toucan-opening-header .mobile-note { color: #c1d2c4; }

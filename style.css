@@ -116,8 +116,7 @@
     }
 
     .brand-lockup > span {
-      /* Original wordmark colours, independent of small-text contrast roles. */
-      color: var(--logo-green);
+      color: var(--brand-green);
       font-size: 0.63rem;
       font-weight: 900;
       letter-spacing: 0.24em;
@@ -2482,16 +2481,15 @@ h1 {
   }
 }
 
-/* Brand blues remain surfaces. Small green text needs stronger contrast on
-   the light backgrounds; the LEARN wordmark keeps its separate brand colour. */
+/* Round 31: the light colour roles retain their exact live values. Brand blues
+   remain surfaces; heading ink can change without recolouring teal cards. */
 :root {
   color-scheme: light;
   --heading: #0b3f51;
   --heading-rgb: 11, 63, 81;
   --ink-rgb: 16, 36, 45;
   --line-rgb: 11, 63, 81;
-  --brand-green: #17645f;
-  --logo-green: #1f7a75;
+  --brand-green: #1f7a75;
   --badge-ink: #10242d;
   --teal-soft-rgb: 205, 223, 215;
   --warm-rgb: 244, 192, 155;
@@ -2521,7 +2519,6 @@ h1 {
     --heading-rgb: 246, 240, 230;
     /* Round 85 (Joshua, 19 Oct 2026: "you pciekd the wrong colours for toucan learn logo. i wantedd the other one, not this one with the peach"): dark mode uses the logo's burnt orange and teal, a shade brighter for contrast, not peach and pale green. */
     --brand-green: #45a59b;
-    --logo-green: #1f7a75;
     --orange-display: #d9733a;
     --orange-text: #f4b78f;
     --teal-soft: #1e383b;
@@ -2554,7 +2551,6 @@ h1 {
   --heading: #f6f0e6;
   --heading-rgb: 246, 240, 230;
   --brand-green: #45a59b;
-  --logo-green: #1f7a75;
   --orange-display: #d9733a;
   --orange-text: #f4b78f;
   --teal-soft: #1e383b;
@@ -2602,12 +2598,4 @@ h1 {
   .nav .nav-links { display: contents; }
   .nav .nav-links > :not(.theme-toggle) { display: none; }
   .nav .theme-toggle { margin-left: auto; }
-}
-
-/* Keep the current destination clear in the flat desktop and mobile menus. */
-.nav-links a[aria-current="page"],
-.mobile-menu nav a[aria-current="page"] {
-  text-decoration: underline;
-  text-decoration-thickness: 2px;
-  text-underline-offset: 5px;
 }

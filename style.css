@@ -2482,15 +2482,15 @@ h1 {
   }
 }
 
-/* Round 31: the light colour roles retain their exact live values. Brand blues
-   remain surfaces; heading ink can change without recolouring teal cards. */
+/* Brand blues remain surfaces. Small green text needs stronger contrast on
+   the light backgrounds; the LEARN wordmark keeps its separate brand colour. */
 :root {
   color-scheme: light;
   --heading: #0b3f51;
   --heading-rgb: 11, 63, 81;
   --ink-rgb: 16, 36, 45;
   --line-rgb: 11, 63, 81;
-  --brand-green: #1f7a75;
+  --brand-green: #17645f;
   --badge-ink: #10242d;
   --teal-soft-rgb: 205, 223, 215;
   --warm-rgb: 244, 192, 155;

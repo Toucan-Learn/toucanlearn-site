@@ -11,7 +11,7 @@
 .toucan-opening-header .nav { min-height: 90px; padding-block: 15px; }
 .toucan-opening-header .brand-lockup strong { color: var(--hero-cream); font-size: 29px; }
 .toucan-opening-header .brand-lockup .brand-can { color: #d9733a; }
-.toucan-opening-header .brand-lockup > span { color: #45a59b; }
+.toucan-opening-header .brand-lockup > span { color: #2a8a80; }
 .toucan-opening-header .nav-links { gap: 26px; color: #d5ded3; }
 .toucan-opening-header .button { background: transparent; color: var(--hero-cream); border: 1px solid #bed0bc6b; box-shadow: none; }
 .toucan-opening-header .mobile-note { color: #c1d2c4; }
@@ -251,6 +251,8 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
   .living-hero .hero-layout { align-content: center; align-items: stretch; }
   .living-hero .hero-copy { align-self: stretch; padding-block: 0; }
   .living-hero .hero-world { align-self: end; padding-block: 0; }
+  /* Keeps the ticks off the buttons when the two-line heading uses up the free space. */
+  .living-hero .hero-benefits { padding-top: 32px; }
 }
 
 @media (max-width: 760px) {
@@ -318,42 +320,10 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
   .living-hero .hero-actions .button.approach-button { transition: none; transform: none; }
 }
 
-/* Round 71 (Joshua, 19 Oct 2026: "logo colours across the whole site"): in
-   light mode the homepage top bar matches every other page and the logo, with
-   navy "Tou", burnt orange "can", teal "LEARN", navy links and the navy free
-   trial button. Dark mode keeps the dark bar. The opening's "you." takes the
+/* Round 71, revised 25 Oct 2026 (Joshua: "why has it gone cream? revert that top menu"): the
+   homepage top bar stays dark in light and dark mode. The opening's "you." takes the
    logo's burnt orange (3.7:1 on the dark opening, large text). */
 .living-hero #hero-title em { color: #c45f21; }
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) .toucan-opening-header { background: rgba(233, 226, 216, 0.94); color: #0b3f51; border-bottom-color: rgba(11, 63, 81, 0.12); }
-  :root:not([data-theme="dark"]) .toucan-opening-header .brand-lockup strong { color: #0b3f51; }
-  :root:not([data-theme="dark"]) .toucan-opening-header .brand-lockup .brand-can { color: #c45f21; }
-  :root:not([data-theme="dark"]) .toucan-opening-header .brand-lockup > span { color: #1f7a75; }
-  :root:not([data-theme="dark"]) .toucan-opening-header .nav-links { color: #0b3f51; }
-  :root:not([data-theme="dark"]) .toucan-opening-header .theme-toggle { color: #0b3f51; border-color: #0b3f51; }
-  :root:not([data-theme="dark"]) .toucan-opening-header .mobile-menu summary { color: #0b3f51; }
-  :root:not([data-theme="dark"]) .toucan-opening-header .mobile-home { color: #0b3f51; }
-  :root:not([data-theme="dark"]) body .toucan-opening-header .nav .button.trial-button { --trial-fill: var(--trial-light-fill); --trial-ink: var(--trial-light-ink); --trial-hover: var(--trial-light-hover); --trial-glow: var(--trial-light-glow); }
-  :root:not([data-theme="dark"]) .toucan-opening-header .nav .button:focus-visible { outline-color: #0b3f51; }
-}
-:root[data-theme="light"] .toucan-opening-header { background: rgba(233, 226, 216, 0.94); color: #0b3f51; border-bottom-color: rgba(11, 63, 81, 0.12); }
-:root[data-theme="light"] .toucan-opening-header .brand-lockup strong { color: #0b3f51; }
-:root[data-theme="light"] .toucan-opening-header .brand-lockup .brand-can { color: #c45f21; }
-:root[data-theme="light"] .toucan-opening-header .brand-lockup > span { color: #1f7a75; }
-:root[data-theme="light"] .toucan-opening-header .nav-links { color: #0b3f51; }
-:root[data-theme="light"] .toucan-opening-header .theme-toggle { color: #0b3f51; border-color: #0b3f51; }
-:root[data-theme="light"] .toucan-opening-header .mobile-menu summary { color: #0b3f51; }
-:root[data-theme="light"] .toucan-opening-header .mobile-home { color: #0b3f51; }
-:root[data-theme="light"] body .toucan-opening-header .nav .button.trial-button { --trial-fill: var(--trial-light-fill); --trial-ink: var(--trial-light-ink); --trial-hover: var(--trial-light-hover); --trial-glow: var(--trial-light-glow); }
-:root[data-theme="light"] .toucan-opening-header .nav .button:focus-visible { outline-color: #0b3f51; }
-@media (max-width: 620px) {
-  :root[data-theme="light"] body.homepage .toucan-opening-header { --mobile-menu-surface: #e9e2d8; --mobile-menu-ink: #0b3f51; }
-  :root[data-theme="light"] body.homepage .toucan-opening-header .mobile-sub-links .nav-group-label { color: #b94e25; }
-}
-@media (max-width: 620px) and (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) body.homepage .toucan-opening-header { --mobile-menu-surface: #e9e2d8; --mobile-menu-ink: #0b3f51; }
-  :root:not([data-theme="dark"]) body.homepage .toucan-opening-header .mobile-sub-links .nav-group-label { color: #b94e25; }
-}
 
 /* Round 76: a one-line keyboard hint above the keys, and each key's computer
    key in small type, shown only where there is a mouse and keyboard. */

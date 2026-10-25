@@ -116,7 +116,8 @@
     }
 
     .brand-lockup > span {
-      color: var(--brand-green);
+      /* One green for LEARN on both the cream and the dark bar (3:1+ on each). */
+      color: #2a8a80;
       font-size: 0.63rem;
       font-weight: 900;
       letter-spacing: 0.24em;

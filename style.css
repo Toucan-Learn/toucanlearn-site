@@ -116,8 +116,8 @@
     }
 
     .brand-lockup > span {
-      /* One green for LEARN on both the cream and the dark bar. */
-      color: #45a59b;
+      /* Original wordmark colours, independent of small-text contrast roles. */
+      color: var(--logo-green);
       font-size: 0.63rem;
       font-weight: 900;
       letter-spacing: 0.24em;
@@ -2491,6 +2491,7 @@ h1 {
   --ink-rgb: 16, 36, 45;
   --line-rgb: 11, 63, 81;
   --brand-green: #17645f;
+  --logo-green: #1f7a75;
   --badge-ink: #10242d;
   --teal-soft-rgb: 205, 223, 215;
   --warm-rgb: 244, 192, 155;
@@ -2520,6 +2521,7 @@ h1 {
     --heading-rgb: 246, 240, 230;
     /* Round 85 (Joshua, 19 Oct 2026: "you pciekd the wrong colours for toucan learn logo. i wantedd the other one, not this one with the peach"): dark mode uses the logo's burnt orange and teal, a shade brighter for contrast, not peach and pale green. */
     --brand-green: #45a59b;
+    --logo-green: #45a59b;
     --orange-display: #d9733a;
     --orange-text: #f4b78f;
     --teal-soft: #1e383b;
@@ -2552,6 +2554,7 @@ h1 {
   --heading: #f6f0e6;
   --heading-rgb: 246, 240, 230;
   --brand-green: #45a59b;
+  --logo-green: #45a59b;
   --orange-display: #d9733a;
   --orange-text: #f4b78f;
   --teal-soft: #1e383b;

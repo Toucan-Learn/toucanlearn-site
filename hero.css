@@ -11,7 +11,7 @@
 .toucan-opening-header .nav { min-height: 90px; padding-block: 15px; }
 .toucan-opening-header .brand-lockup strong { color: var(--hero-cream); font-size: 29px; }
 .toucan-opening-header .brand-lockup .brand-can { color: #d9733a; }
-.toucan-opening-header .brand-lockup > span { color: #45a59b; }
+.toucan-opening-header .brand-lockup > span { color: #1f7a75; }
 .toucan-opening-header .nav-links { gap: 26px; color: #d5ded3; }
 .toucan-opening-header .button { background: transparent; color: var(--hero-cream); border: 1px solid #bed0bc6b; box-shadow: none; }
 .toucan-opening-header .mobile-note { color: #c1d2c4; }
@@ -367,8 +367,7 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 @media (hover: none), (pointer: coarse) {
   .living-hero .piano-hint { display: none; }
 }
-/* Round 85: in dark mode the opening wordmark uses the logo's burnt orange and teal
-   (#d9733a, #45a59b) instead of peach; light mode keeps #c45f21 and #1f7a75. */
+/* The wordmark keeps its original theme-dependent orange; LEARN stays #1f7a75 in both themes. */
 
 /* Keep breathing room when the longer headline uses the spare vertical space. */
 @media (min-width: 761px) {

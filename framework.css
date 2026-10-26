@@ -115,6 +115,9 @@
 .framework-portrait-frame--aaron .framework-portrait { position: absolute; max-width: none; width: 138.71%; height: 200.47%; left: -17.65%; top: -66.67%; object-fit: fill; }
 .framework-portrait-frame--chemi .framework-portrait { position: absolute; max-width: none; width: 108.53%; height: 156.86%; left: -4.41%; top: -28.24%; object-fit: fill; }
 .framework-portrait-frame--connor .framework-portrait { position: absolute; max-width: none; width: 110.30%; height: 162.93%; left: -4.48%; top: -31.36%; object-fit: fill; }
+/* Temporary supplied photos stay complete and unaltered inside the existing frames. */
+.framework-portrait-frame--temporary { background: transparent; }
+.framework-portrait-frame--temporary .framework-portrait { width: auto; max-width: 100%; height: 100%; margin-inline: auto; border-radius: 14px; object-fit: contain; object-position: center top; }
 
 .framework-portrait-placeholder { display: grid; place-items: center; width: 88px; height: 116px; background: #f0ebe0; color: #0b3f51; font-size: 1.6rem; font-weight: 800; }
 .homepage .framework-profile-footer { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }

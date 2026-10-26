@@ -20,6 +20,12 @@
     };
     if (links.some(link => !linkPanel(link))) return;
     const defaultPanel = panels.find(panel => panel.id === 'overview') || panels[0];
+    const viewport = shell.querySelector('.framework-panels');
+    if (viewport) {
+      viewport.tabIndex = 0;
+      viewport.setAttribute('role', 'region');
+      viewport.setAttribute('aria-label', 'Selected section');
+    }
     let current;
     let scrollFrame;
     const show = (panel, target, options = {}) => {
@@ -44,7 +50,12 @@
       }
       if (options.scroll && target) {
         cancelAnimationFrame(scrollFrame);
-        scrollFrame = requestAnimationFrame(() => target.scrollIntoView({ block: 'start', behavior: 'instant' }));
+        scrollFrame = requestAnimationFrame(() => {
+          if (document.body.hasAttribute('data-page-frame') && viewport) {
+            const top = target === panel ? 0 : target.getBoundingClientRect().top - viewport.getBoundingClientRect().top + viewport.scrollTop - 20;
+            viewport.scrollTo({ top: Math.max(0, top), behavior: 'instant' });
+          } else target.scrollIntoView({ block: 'start', behavior: 'instant' });
+        });
       }
     };
     const sync = (scroll = true) => {

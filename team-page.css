@@ -2,7 +2,7 @@
 .team-page .team-page-intro { padding: 28px 0 0; }
 .team-page-intro > .container, .team-page .cta > .container { width: min(calc(100% - 80px), 1280px); }
 .team-page-intro h1 { max-width: none; margin: 6px 0 24px; font-size: clamp(2rem, 2.8vw, 2.5rem); line-height: 1.08; letter-spacing: -0.045em; }
-.team-page-layout { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 24px; align-items: start; }
+.team-page-layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 24px; align-items: start; }
 .team-page-info { display: grid; gap: 20px; min-width: 0; }
 .team-page-coverage-cell { min-width: 0; padding: 28px; border-radius: var(--radius-xl); background: var(--teal-soft); color: var(--ink); }
 .team-page-coverage-cell p { margin: 0; font-size: 1rem; line-height: 1.55; }
@@ -12,7 +12,7 @@
 .team-page-promise-cell .team-page-promise,
 .team-page-coverage-cell p,
 .team-biography .team-biography-role + p { color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
-.team-page-viewer { min-width: 0; }
+.team-page-viewer { min-width: 0; order: -1; }
 .team-page-viewer:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 6px; }
 .team-biography { display: flow-root; min-width: 0; padding: 26px 28px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); scroll-margin-top: calc(var(--sticky-header-height, 95px) + 20px); }
 .team-biography + .team-biography { margin-top: 20px; }
@@ -43,6 +43,7 @@
 }
 @media (max-width: 1100px) {
   .team-page-layout { grid-template-columns: minmax(0, 1fr); }
+  .team-page-viewer { order: initial; }
   .team-page-info { gap: 16px; }
   .team-page-promise-cell, .team-page-coverage-cell { padding: 24px; }
   .team-page-promise-cell .team-page-promise,
@@ -67,7 +68,35 @@
   .team-biography .framework-portrait-frame { width: 88px; height: 132px; margin-left: 12px; }
   .team-deck-enhanced .team-profiles { width: calc(100% - 16px); }
 }
+/* The shared controller enables this only for a suitable enhanced window. */
+body.team-page[data-page-frame] main { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: var(--back-page-height); min-height: 0; }
+body.team-page[data-page-frame] .team-page-intro { min-height: 0; padding-top: 12px; }
+body.team-page[data-page-frame] .team-page-intro > .container { display: grid; grid-template-rows: auto auto minmax(0, 1fr); height: 100%; min-height: 0; }
+body.team-page[data-page-frame] .team-page-intro h1 { margin: 4px 0 14px; }
+body.team-page[data-page-frame] .team-page-layout { grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 360px); gap: 20px; min-height: 0; align-items: stretch; }
+body.team-page[data-page-frame] .team-page-viewer { display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; order: -1; }
+body.team-page[data-page-frame] .team-deck-stage { min-height: 0; height: 100%; margin-block: 0; }
+body.team-page[data-page-frame] .team-page-info { min-height: 0; overflow-y: auto; align-content: start; gap: 16px; scrollbar-gutter: stable; }
+body.team-page[data-page-frame] .team-page-promise-cell,
+body.team-page[data-page-frame] .team-page-coverage-cell { padding: 22px; }
+body.team-page[data-page-frame] .team-biography { overflow-y: auto; overflow-x: hidden; scrollbar-gutter: stable; overscroll-behavior-y: contain; }
+body.team-page[data-page-frame] .team-deck-controls { padding-top: 8px; }
+body.team-page[data-page-frame] .cta { padding: 12px 0 16px; }
+body.team-page[data-page-frame] .cta-box { padding-block: 12px; }
+@media (min-width: 760px) and (max-width: 1000px) {
+  body.team-page[data-page-frame] .team-page-layout { gap: 16px; }
+  body.team-page[data-page-frame] .team-page-intro h1 { margin-bottom: 10px; }
+  body.team-page[data-page-frame] .team-page-promise-cell,
+  body.team-page[data-page-frame] .team-page-coverage-cell { padding: 20px; }
+}
 @media print {
+  body.team-page[data-page-frame] main { display: block; height: auto; }
+  body.team-page[data-page-frame] .team-page-intro > .container { display: block; height: auto; }
+  body.team-page[data-page-frame] .team-page-layout { display: block; }
+  body.team-page[data-page-frame] .team-page-viewer { display: block; }
+  body.team-page[data-page-frame] .team-page-info { overflow: visible; }
+  body.team-page[data-page-frame] .team-deck-stage { height: auto; }
+  body.team-page[data-page-frame] .team-biography { overflow: visible; }
   .team-page-layout { display: block; }
   .team-deck-controls { display: none !important; }
   .team-page-viewer .team-deck-stage { overflow: visible !important; perspective: none !important; }

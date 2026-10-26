@@ -1,0 +1,63 @@
+/* A single rounded content frame, with the existing Toucan illustrations. */
+.framework-panels {
+  padding: clamp(20px, 2vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--paper);
+}
+.framework-panels:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
+.framework-panels .section-head { display: flow-root; }
+.framework-panel-art { float: right; width: clamp(120px, 13vw, 170px); height: auto; margin: 0 0 12px 20px; border-radius: 12px; }
+.learning-step-art { float: right; width: clamp(84px, 9vw, 120px); height: auto; margin: 0 0 12px 16px; border-radius: 10px; }
+.learning-page #steps-to-success .learning-steps li { display: flow-root; }
+body[data-page-frame]:not(.team-page) #main { display: flex; flex-direction: column; gap: 12px; height: var(--back-page-height); min-height: 0; padding-block: 16px; }
+body[data-page-frame]:not(.team-page) #main > .framework-intro { flex: 0 0 auto; padding: 0; }
+body[data-page-frame] .framework-intro .eyebrow { margin: 0 0 7px; }
+body[data-page-frame] .framework-intro h1 { margin: 0 0 8px; font-size: clamp(1.75rem, 2.8vw, 2.25rem); line-height: 1.08; }
+body[data-page-frame] .framework-intro .lead { margin: 0 0 6px; font-size: 1rem; line-height: 1.5; }
+body[data-page-frame] .framework-intro .offer-line { margin: 4px 0 0; line-height: 1.5; }
+body[data-page-frame] #main > .framework-shell { flex: 1 1 0; min-height: 0; padding: 0; grid-template-columns: 190px minmax(0, 1fr); gap: 24px; align-items: stretch; }
+body[data-page-frame] .framework-section-nav { display: flex; flex-direction: column; gap: 6px; min-height: 0; overflow-y: auto; }
+body[data-page-frame] .framework-section-nav a { min-height: 44px; padding: 10px 12px; }
+body[data-page-frame] .framework-panels { min-height: 0; overflow-y: auto; scrollbar-gutter: stable; overscroll-behavior-y: contain; scroll-padding-top: 20px; padding: 20px; }
+body[data-page-frame] .framework-panels [data-content-panel] { scroll-margin-top: 0; }
+body[data-page-frame] .framework-panels .section-head { margin-bottom: 16px; }
+body[data-page-frame] .framework-panels h2 { font-size: clamp(1.5rem, 2.3vw, 2rem); }
+body[data-page-frame] .framework-project { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 24px; }
+body[data-page-frame] .framework-project-media { align-self: center; }
+body[data-page-frame] .learning-common-note { flex: 0 0 auto; margin-block: 0; font-size: .875rem; }
+body[data-page-frame] .learning-common-note p { margin: 0; }
+body[data-page-frame]:not(.team-page) #main > .cta { flex: 0 0 auto; padding: 0; margin: 0; }
+body[data-page-frame]:not(.team-page) .cta .cta-box { padding: 16px 20px; gap: 20px; flex-direction: row; align-items: center; }
+body[data-page-frame]:not(.team-page) .cta .cta-box > .button { width: auto; }
+body[data-page-frame]:not(.team-page) .cta .cta-box h2 { font-size: 1.25rem; }
+body[data-page-frame]:not(.team-page) .cta .cta-box p { font-size: .9rem; line-height: 1.45; }
+@media (min-width: 760px) and (max-width: 1000px) {
+  body[data-page-frame] #main > .framework-shell { grid-template-columns: 160px minmax(0, 1fr); gap: 16px; }
+  body[data-page-frame]:not(.team-page) .cta .cta-box { gap: 16px; }
+  body[data-page-frame]:not(.team-page) .cta .cta-box > .button { padding: 12px 14px; font-size: .9rem; }
+}
+@media (max-width: 759px) {
+  .framework-panel-art { width: 110px; margin-left: 14px; }
+  .framework-panels { padding: 20px; }
+}
+@media print {
+  .framework-panels { overflow: visible !important; height: auto !important; border: 0; padding: 0; background: none; }
+  .framework-panel-art { width: 140px; }
+}
+/* Keep the four illustrated steps compact inside the shared section frame. */
+body[data-page-frame] #steps-to-success .learning-steps { gap: 16px; margin-block: 12px; }
+body[data-page-frame] #steps-to-success .learning-steps li { padding: 14px; }
+body[data-page-frame] #steps-to-success .learning-steps p { line-height: 1.45; }
+body[data-page-frame] #steps-to-success > p { margin: 10px 0 0; }
+body[data-page-frame] #steps-to-success .section-head { margin-bottom: 12px; }
+body[data-page-frame] #steps-to-success .learning-steps h3 { font-size: 1.125rem; line-height: 1.3; margin-bottom: 8px; }
+body[data-page-frame] #steps-to-success .learning-steps h3::before { display: inline; margin: 0 8px 0 0; }
+body[data-page-frame] #steps-to-success .section-head p { max-width: none; }
+body[data-page-frame] #steps-to-success .learning-step-art { width: 100px; margin-left: 12px; }
+/* Visible scroll thumbs make the longer text discoverable without extra labels. */
+body[data-page-frame] :is(.framework-panels, .team-biography, .team-page-info) { scrollbar-width: thin; scrollbar-color: var(--brand-green) transparent; }
+body[data-page-frame] :is(.framework-panels, .team-biography, .team-page-info)::-webkit-scrollbar { width: 8px; }
+body[data-page-frame] :is(.framework-panels, .team-biography, .team-page-info)::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 8px; background: var(--brand-green); background-clip: padding-box; }
+body.team-page[data-page-frame] .cta .cta-box { flex-direction: row; align-items: center; gap: 20px; }
+body.team-page[data-page-frame] .cta .cta-box > .button { width: auto; }

@@ -1,0 +1,206 @@
+/* Shared framework, 20261026-framework-1. Existing fonts and page art remain authoritative. */
+:root body > header,
+:root body.homepage > header.toucan-opening-header {
+  background: #0a272c;
+  color: #f0ebe0;
+  border-bottom-color: #c3d2ba30;
+  --mobile-menu-surface: #0a272c;
+  --mobile-menu-ink: #f0ebe0;
+}
+:root body > header .nav-links,
+:root body.homepage > header.toucan-opening-header .nav-links,
+:root body > header .theme-toggle,
+:root body.homepage > header.toucan-opening-header .theme-toggle,
+:root body > header .mobile-menu summary,
+:root body.homepage > header.toucan-opening-header .mobile-menu summary {
+  color: #f0ebe0;
+  border-color: currentColor;
+}
+:root body > header .logo,
+:root body.homepage > header.toucan-opening-header .logo {
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: 0;
+  gap: 8px;
+  padding: 6px 11px 6px 7px;
+  border-radius: 9px;
+  background: #f0ebe0;
+  color: #0b3f51;
+}
+:root body > header .logo img { width: 48px; height: 48px; filter: none; }
+:root body > header .logo .brand-lockup { display: grid; margin-left: 0; }
+:root body > header .logo .brand-lockup strong,
+:root body.homepage > header.toucan-opening-header .logo .brand-lockup strong {
+  color: #0b3f51;
+  -webkit-text-stroke: 0;
+  text-shadow: none;
+}
+:root body > header .logo .brand-lockup .brand-can,
+:root body.homepage > header.toucan-opening-header .logo .brand-lockup .brand-can { color: #c45f21; }
+:root body > header .logo .brand-lockup > span,
+:root body.homepage > header.toucan-opening-header .logo .brand-lockup > span { color: #1f7a75; }
+:root body > header .mobile-home { display: none; }
+:root body > header .mobile-menu { --mobile-menu-surface: #0a272c; --mobile-menu-ink: #f0ebe0; }
+:root body > header .mobile-menu .mobile-sub-links .nav-group-label,
+:root body.homepage > header.toucan-opening-header .mobile-sub-links .nav-group-label { color: #f4b78f; }
+:root body > header .nav .button.trial-button,
+:root body.homepage > header.toucan-opening-header .nav .button.trial-button {
+  --trial-fill: #f0ebe0;
+  --trial-ink: #0a272c;
+  --trial-hover: #fbf8f2;
+  --trial-glow: 240, 235, 224;
+}
+:root body > header .logo:focus-visible { outline: 3px solid #f4b78f; outline-offset: 4px; }
+
+/* Children: an ordinary linked section menu, enhanced only when its controller is ready. */
+.framework-intro { padding-block: clamp(32px, 5vw, 64px) 28px; }
+.framework-intro h1 { max-width: 940px; margin-block: 0 18px; font-size: clamp(2.35rem, 5vw, 4.2rem); line-height: 1.07; }
+.framework-intro .lead { max-width: 760px; margin-block: 0 14px; }
+.framework-intro .offer-line { margin-block: 14px 0; }
+.framework-shell { display: grid; grid-template-columns: minmax(220px, 245px) minmax(0, 1fr); gap: clamp(24px, 4vw, 56px); align-items: start; padding-block: 20px 56px; }
+.framework-section-nav { display: grid; gap: 8px; align-content: start; }
+.framework-section-nav a { display: flex; align-items: center; min-height: 52px; padding: 13px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); color: var(--heading); font-weight: 800; line-height: 1.35; text-decoration: none; }
+.framework-section-nav a:hover { border-color: var(--brand-green); text-decoration: underline; text-underline-offset: 4px; }
+.framework-section-nav a[aria-current="location"] { background: #0b3f51; color: #f0ebe0; border-color: #0b3f51; }
+.framework-panels, .framework-shell [data-content-panel] { min-width: 0; }
+.framework-shell [data-content-panel] { padding: 0; scroll-margin-top: calc(var(--sticky-header-height, 95px) + 20px); }
+.framework-shell [data-content-panel] + [data-content-panel] { margin-top: 48px; }
+.framework-shell[data-enhanced] [data-content-panel] { margin-top: 0; }
+.framework-shell [data-content-panel] > :first-child { margin-top: 0; }
+.framework-shell .section-head { display: block; margin-bottom: 28px; }
+.framework-shell .section-head p { margin: 0; max-width: none; }
+.framework-shell .project-story img { display: block; max-width: 100%; height: auto; }
+.framework-shell [data-content-panel] h2 { margin-block: 0 20px; font-size: clamp(1.8rem, 3vw, 2.7rem); line-height: 1.14; }
+.framework-shell [data-content-panel] h3 { color: var(--heading); }
+.framework-shell [data-content-panel] p { max-width: 76ch; }
+.framework-shell [data-content-panel] a:not(.button) { text-underline-offset: 4px; }
+.framework-shell [data-content-panel] h2:focus { outline: none; }
+.framework-shell [data-content-panel] h2:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 6px; }
+.framework-shell [data-content-panel][hidden],
+.framework-project-viewer [data-project-slide][hidden],
+.framework-team-viewer [data-profile-slide][hidden] { display: none; }
+.framework-section-nav a:focus-visible,
+.framework-project-controls button:focus-visible,
+.framework-profile-controls button:focus-visible,
+[data-project-viewer]:focus-visible,
+[data-profile-viewer]:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 4px; }
+
+/* Open narrative and media: no enclosing project card or fixed prose height. */
+.framework-project-viewer { min-width: 0; }
+.framework-project { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(20px, 3vw, 36px); align-items: center; padding-block: 10px 24px; }
+.framework-project + .framework-project { margin-top: 28px; padding-top: 28px; border-top: 1px solid var(--line); }
+.framework-project-viewer[data-enhanced] .framework-project { margin-top: 0; border-top: 0; padding-top: 10px; }
+.framework-project-copy, .framework-project-media { min-width: 0; }
+.framework-project-copy h3 { margin-block: 0 14px; font-size: clamp(1.4rem, 2.3vw, 1.85rem); line-height: 1.2; }
+.framework-project-copy p { margin-block: 0 16px; }
+.framework-project-media img,
+.framework-project-media video { display: block; width: 100%; max-width: 100%; height: auto; border-radius: 14px; }
+.framework-project-media video { background: #0a272c; }
+.framework-project-media figure { margin: 0; }
+.framework-project-media figcaption { margin-top: 10px; font-size: .88rem; line-height: 1.5; }
+.framework-placeholder { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px; width: 100%; aspect-ratio: 16 / 9; padding: 20px; border: 1px dashed var(--line); border-radius: 14px; background: var(--paper-soft); color: var(--ink); text-align: center; }
+.framework-placeholder p { margin: 0; }
+.framework-placeholder strong { color: var(--heading); }
+.framework-project-controls, .framework-profile-controls { display: none; clear: both; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 20px; }
+[data-project-viewer][data-enhanced] .framework-project-controls,
+[data-profile-viewer][data-enhanced] .framework-profile-controls { display: flex; }
+.framework-project-controls button,
+.framework-profile-controls button { display: inline-flex; flex: 0 0 auto; align-items: center; justify-content: center; min-width: 46px; min-height: 46px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 999px; background: var(--paper); color: var(--heading); font: inherit; font-weight: 800; cursor: pointer; }
+.framework-project-controls button:hover { background: var(--teal-soft); }
+.framework-project-controls button:disabled,
+.framework-profile-controls button:disabled { opacity: .5; cursor: default; }
+[data-project-status], [data-profile-status] { min-width: 4.8em; font-size: .88rem; font-weight: 700; text-align: center; font-variant-numeric: tabular-nums; }
+.framework-offer { padding-block: clamp(28px, 4vw, 44px); background: #0a272c; color: #f0ebe0; }
+.framework-offer > .container { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px 32px; }
+.framework-offer h2 { margin-block: 0 10px; color: #f0ebe0; font-size: clamp(1.5rem, 2.8vw, 2.2rem); line-height: 1.2; }
+.framework-offer p { margin-block: 0 8px; }
+.framework-offer .button { flex-shrink: 0; background: #f0ebe0; color: #0a272c; }
+
+/* Home: retain the marketplace promise beside a manual, naturally sized profile viewer. */
+.framework-team-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: var(--section-gap, 24px); align-items: stretch; }
+.framework-team-intro { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
+.framework-team-intro h2 { margin-top: 0; }
+.team-section .framework-team-grid .team-promise { flex: 1; width: 100%; margin: 0; padding: clamp(24px, 3vw, 36px); background: var(--teal-soft); color: var(--ink); }
+.framework-team-viewer { min-width: 0; padding: clamp(24px, 3vw, 36px); border-radius: var(--radius-xl); background: radial-gradient(circle at 90% 100%, #37938955, transparent 22rem), #0b3f51; color: #fff; }
+.framework-profile-content { display: flow-root; }
+.framework-profile + .framework-profile { margin-top: 28px; padding-top: 28px; border-top: 1px solid #f0ebe040; }
+.framework-team-viewer[data-enhanced] .framework-profile { margin-top: 0; padding-top: 0; border-top: 0; }
+#main .team-section .framework-profile h3 { margin-block: 0 8px; color: #fff; font-size: clamp(1.4rem, 2vw, 1.85rem); line-height: 1.2; }
+.framework-profile p { margin-block: 0 14px; color: #fff; font-size: 1rem; line-height: 1.6; }
+.framework-profile .framework-profile-role { color: #f4c09b; font-size: .9rem; font-weight: 800; line-height: 1.45; }
+.framework-portrait,
+.framework-portrait-frame,
+.framework-portrait-placeholder { float: right; width: 125px; height: 185px; margin: 0 0 16px 20px; border-radius: 14px; }
+.framework-portrait { display: block; object-fit: cover; object-position: center 30%; }
+.framework-portrait-frame { display: block; position: relative; overflow: hidden; background: #0a272c; }
+.framework-portrait-frame .framework-portrait { float: none; width: 100%; height: 100%; margin: 0; border-radius: 0; }
+/* Frame the supplied screenshots inside their original files, excluding phone UI/letterboxing. */
+.framework-portrait-frame--joshua .framework-portrait { position: absolute; max-width: none; width: 220%; height: auto; left: -42%; top: -82%; }
+.framework-portrait-frame--aaron .framework-portrait { position: absolute; max-width: none; width: 138.71%; height: 200.47%; left: -17.65%; top: -66.67%; object-fit: fill; }
+.framework-portrait-frame--chemi .framework-portrait { position: absolute; max-width: none; width: 108.53%; height: 156.86%; left: -4.41%; top: -28.24%; object-fit: fill; }
+.framework-portrait-frame--connor .framework-portrait { position: absolute; max-width: none; width: 110.30%; height: 159.20%; left: -4.48%; top: -30.55%; object-fit: fill; }
+
+.framework-portrait-placeholder { display: grid; place-items: center; width: 88px; height: 116px; background: #f0ebe0; color: #0b3f51; font-size: 1.6rem; font-weight: 800; }
+.framework-profile .framework-profile-link { clear: both; margin-block: 20px 0; }
+.framework-profile-link a { color: #f0ebe0; font-weight: 800; text-underline-offset: 4px; }
+.framework-profile-link a:focus-visible { outline: 3px solid #f4c09b; outline-offset: 4px; }
+.framework-team-viewer .framework-profile-controls { border-top: 1px solid #f0ebe040; margin-top: 22px; }
+.framework-team-viewer .framework-profile-controls button { border-color: #f0ebe080; background: transparent; color: #f0ebe0; }
+.framework-team-viewer .framework-profile-controls button:hover { background: #f0ebe018; }
+.framework-team-viewer .framework-profile-controls button:focus-visible,
+.framework-team-viewer:focus-visible { outline-color: #f4c09b; }
+.framework-team-cta { grid-column: 2; justify-self: end; }
+
+@media (max-width: 1000px) and (min-width: 621px) {
+  :root body > header > .nav { gap: 16px; }
+  :root body > header .nav-links,
+  :root body.homepage > header.toucan-opening-header .nav-links { gap: 14px; font-size: .88rem; }
+  :root body > header .nav-links > .button { padding-inline: 14px; }
+}
+@media (max-width: 899px) {
+  .framework-team-grid { grid-template-columns: minmax(0, 1fr); }
+  .framework-team-cta { grid-column: auto; justify-self: start; }
+  .framework-project { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 760px) {
+  .framework-shell { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 12px 36px; }
+  .framework-section-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .framework-section-nav a { padding: 12px; }
+}
+@media (max-width: 620px) {
+  :root body > header > .container.nav,
+  :root body.homepage > header.toucan-opening-header > .container.nav { width: calc(100% - 24px); min-height: 0; height: 63px; padding: 0; gap: 8px; }
+  :root body > header .logo,
+  :root body.homepage > header.toucan-opening-header .logo { min-height: 44px; padding: 4px 8px 4px 4px; gap: 5px; }
+  :root body > header .logo img { width: 34px; height: 34px; }
+  :root body > header .logo .brand-lockup strong,
+  :root body.homepage > header.toucan-opening-header .logo .brand-lockup strong { font-size: 23px; }
+  :root body > header .logo .brand-lockup > span { font-size: 8px; letter-spacing: .2em; }
+  :root body > header .nav .theme-toggle { margin-left: auto; }
+  :root body > header .mobile-menu summary { gap: 6px; padding-inline: 10px; }
+  .framework-intro { padding-top: 30px; }
+  .framework-project { gap: 22px; }
+  .framework-project-controls { justify-content: center; }
+  .framework-offer .button { width: 100%; }
+  .framework-portrait, .framework-portrait-frame { width: 105px; height: 156px; margin-left: 16px; }
+  .framework-portrait-placeholder { width: 72px; height: 96px; margin-left: 16px; }
+}
+@media (max-width: 360px) {
+  :root body > header > .container.nav { gap: 6px; }
+  :root body > header .logo .brand-lockup strong,
+  :root body.homepage > header.toucan-opening-header .logo .brand-lockup strong { font-size: 21px; }
+  :root body > header .mobile-menu summary { padding-inline: 8px; }
+  .framework-portrait, .framework-portrait-frame { width: 88px; height: 132px; margin-left: 12px; }
+}
+@media print {
+  .framework-section-nav, .framework-project-controls, .framework-profile-controls { display: none !important; }
+  .framework-shell, .framework-team-grid, .framework-project { display: block; }
+  .framework-shell [data-content-panel][hidden],
+  .framework-project-viewer [data-project-slide][hidden],
+  .framework-team-viewer [data-profile-slide][hidden] { display: block !important; }
+  .framework-shell [data-content-panel], .framework-project, .framework-profile { margin-block: 24px !important; }
+  .framework-team-viewer, .framework-offer { background: #fff; color: #10242d; border: 1px solid #aaa; }
+  .framework-team-viewer .framework-profile :is(h3, p, a), .framework-offer :is(h2, p, a) { color: #10242d !important; }
+  .framework-project-media { margin-block: 18px; max-width: 500px; }
+  .framework-placeholder, .framework-profile { break-inside: avoid; }
+}

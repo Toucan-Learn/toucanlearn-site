@@ -95,8 +95,9 @@ export function initHeroKeyboard(ripple) {
     ripple((midi(note) - midi(shifted('C3'))) / (midi(shifted('C6')) - midi(shifted('C3'))));
   }
 
-  toggle.addEventListener('click', () => {
-    open = !open;
+  function setOpen(value) {
+    if (open === value) return;
+    open = value;
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', `${open ? 'Hide' : 'Show'} piano keyboard`);
     if (!open && panel.contains(document.activeElement)) toggle.focus({ preventScroll: true });
@@ -106,7 +107,21 @@ export function initHeroKeyboard(ripple) {
     if (!open) { pointers.clear(); held.clear(); }
     keepInView();
     if (open) revealInViewport();
-  });
+  }
+  toggle.addEventListener('click', () => setOpen(!open));
+
+  const hero = toggle.closest('.living-hero');
+  const header = document.querySelector('body > header');
+  function closeAfterHero() {
+    if (!open || !hero) return;
+    const headerBottom = Math.max(0, header?.getBoundingClientRect().bottom ?? 0);
+    // Wait until the next section reaches the header, so the small scroll
+    // that reveals the keyboard itself cannot immediately close it again.
+    // Allow the one-pixel difference between the header and its anchor offset.
+    if (hero.getBoundingClientRect().bottom <= headerBottom + 2) setOpen(false);
+  }
+  window.addEventListener('scroll', closeAfterHero, { passive: true });
+  window.addEventListener('resize', closeAfterHero);
 
   const keyFrom = element => {
     const key = element?.closest?.('[data-note]');

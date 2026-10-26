@@ -113,10 +113,10 @@
 .framework-portrait-frame--connor .framework-portrait { position: absolute; max-width: none; width: 110.30%; height: 159.20%; left: -4.48%; top: -30.55%; object-fit: fill; }
 
 .framework-portrait-placeholder { display: grid; place-items: center; width: 88px; height: 116px; background: #f0ebe0; color: #0b3f51; font-size: 1.6rem; font-weight: 800; }
-.homepage .framework-profile .framework-profile-link { clear: both; margin-block: 20px 0; }
-.homepage .framework-profile-link a { color: var(--heading); font-weight: 800; text-underline-offset: 4px; }
-.homepage .framework-profile-link a:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 4px; }
-.homepage .framework-team-viewer .framework-profile-controls { border-top: 1px solid var(--line); margin-top: 22px; }
+.homepage .framework-profile-footer { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); }
+.homepage .framework-profile-link { color: var(--heading); font-weight: 800; line-height: 1.35; text-underline-offset: 4px; }
+.homepage .framework-profile-link:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 4px; }
+.homepage .framework-team-viewer .framework-profile-controls { margin: 0; padding: 0; }
 .homepage .framework-team-viewer .framework-profile-controls button { border-color: var(--line); background: var(--paper); color: var(--heading); }
 .homepage .framework-team-viewer .framework-profile-controls button:hover { background: var(--teal-soft); }
 .homepage .framework-team-viewer .framework-profile-controls button:focus-visible,
@@ -135,6 +135,8 @@
 }
 @media (max-width: 420px) {
   .homepage .framework-team-viewer { padding: 20px; }
+  .homepage .framework-profile-controls { gap: 8px; }
+  .homepage [data-profile-status] { min-width: 3.5em; }
   .homepage #main .team-section .framework-profile h3 { font-size: 1.5rem; }
   .homepage .framework-profile .framework-portrait-frame { width: 88px; height: 132px; margin-left: 12px; }
 }

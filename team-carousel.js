@@ -1,4 +1,4 @@
-/* Manual team viewers and the original scrolling team track, 20261026-framework-1. */
+/* Manual team viewers and the original scrolling team track, 20261026-final-4. */
 (() => {
   'use strict';
   const interactive = 'a, button, input, textarea, select, video, audio, summary, [contenteditable]:not([contenteditable="false"]), [role="slider"]';
@@ -10,6 +10,9 @@
     const next = viewer.querySelector('[data-profile-next]');
     const status = viewer.querySelector('[data-profile-status]');
     if (!slides.length || !previous || !next || !status) return;
+    const jumpLinks = [...document.querySelectorAll('[data-profile-link]')].filter(link =>
+      slides.some(slide => slide.id && link.getAttribute('href') === `#${slide.id}`)
+    );
     let index = 0;
     let gesture;
     if (!viewer.hasAttribute('tabindex')) viewer.tabIndex = 0;
@@ -31,6 +34,10 @@
         slide.hidden = position !== index;
       });
       status.textContent = `${index + 1} of ${slides.length}`;
+      jumpLinks.forEach(link => {
+        if (link.getAttribute('href') === `#${slides[index].id}`) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      });
       previous.disabled = next.disabled = slides.length < 2;
     };
     const revealHash = () => {
@@ -42,6 +49,16 @@
     show(0);
     revealHash();
     viewer.setAttribute('data-enhanced', '');
+    jumpLinks.forEach(link => link.addEventListener('click', event => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      event.preventDefault();
+      const hash = link.getAttribute('href');
+      const selected = slides.findIndex(slide => `#${slide.id}` === hash);
+      if (location.hash !== hash) history.pushState(null, '', hash);
+      show(selected);
+      const heading = slides[selected].querySelector('h2, h3');
+      if (heading) { heading.tabIndex = -1; heading.focus({ preventScroll: true }); }
+    }));
     previous.addEventListener('click', () => show(index - 1));
     next.addEventListener('click', () => show(index + 1));
     viewer.addEventListener('keydown', event => {

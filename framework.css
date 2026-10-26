@@ -1,65 +1,4 @@
 /* Shared framework, 20261026-final-2. Existing fonts and page art remain authoritative. */
-:root body > header,
-:root body.homepage > header.toucan-opening-header {
-  background: #0a272c;
-  color: #f0ebe0;
-  border-bottom: 0;
-  --mobile-menu-surface: #0a272c;
-  --mobile-menu-ink: #f0ebe0;
-}
-:root body > header .nav-links,
-:root body.homepage > header.toucan-opening-header .nav-links,
-:root body > header .theme-toggle,
-:root body.homepage > header.toucan-opening-header .theme-toggle,
-:root body > header .mobile-menu summary,
-:root body.homepage > header.toucan-opening-header .mobile-menu summary {
-  color: #f0ebe0;
-  border-color: currentColor;
-}
-:root body > header .logo,
-:root body.homepage > header.toucan-opening-header .logo {
-  flex: 0 0 auto;
-  width: max-content;
-  min-width: 0;
-  gap: 2px;
-  padding: 3px 15px 3px 2px;
-  border-radius: 6px;
-  background: #f0ebe0;
-  color: #0b3f51;
-}
-:root body > header .logo img { width: 64px; height: 64px; filter: none; }
-/* Move the wordmark towards the bird; keep the freed space inside the right edge. */
-:root body > header .logo .brand-lockup { display: grid; margin-left: -6px; }
-:root body > header .logo .brand-lockup strong,
-:root body.homepage > header.toucan-opening-header .logo .brand-lockup strong {
-  color: #0b3f51;
-  font-size: 29px;
-  -webkit-text-stroke: 0;
-  text-shadow: none;
-}
-:root body > header .logo .brand-lockup .brand-can,
-:root body.homepage > header.toucan-opening-header .logo .brand-lockup .brand-can { color: #c45f21; }
-:root body > header .logo .brand-lockup > span,
-:root body.homepage > header.toucan-opening-header .logo .brand-lockup > span { color: #1f7a75; }
-:root body > header .mobile-home { display: none; }
-:root body > header .mobile-menu { --mobile-menu-surface: #0a272c; --mobile-menu-ink: #f0ebe0; }
-:root body > header .mobile-menu .mobile-sub-links .nav-group-label,
-:root body.homepage > header.toucan-opening-header .mobile-sub-links .nav-group-label { color: #f4b78f; }
-:root body > header .nav .button.trial-button,
-:root body.homepage > header.toucan-opening-header .nav .button.trial-button {
-  --trial-fill: #f0ebe0;
-  --trial-ink: #0a272c;
-  --trial-hover: #fbf8f2;
-  --trial-glow: 240, 235, 224;
-}
-:root body > header .logo:focus-visible { outline: 3px solid #f4b78f; outline-offset: 4px; }
-/* The cream logo tile belongs only to the Team page. */
-:root body:not(.team-page) > header .logo,
-:root body.homepage > header.toucan-opening-header .logo { background: transparent; border: 0; }
-:root body:not(.team-page) > header .logo .brand-lockup strong,
-:root body.homepage > header.toucan-opening-header .logo .brand-lockup strong { color: #f0ebe0; }
-
-
 /* Children: an ordinary linked section menu, enhanced only when its controller is ready. */
 .framework-intro { padding-block: clamp(28px, 3vw, 42px) 20px; }
 .framework-intro > .container, .container.framework-shell, .framework-shell ~ .cta > .container, .framework-cta > .container { width: min(calc(100% - 80px), 1280px); }
@@ -182,12 +121,6 @@
 .framework-team-viewer:focus-visible { outline-color: #f4c09b; }
 .framework-team-cta { grid-column: 2; justify-self: end; }
 
-@media (max-width: 1000px) and (min-width: 621px) {
-  :root body > header > .nav { gap: 16px; }
-  :root body > header .nav-links,
-  :root body.homepage > header.toucan-opening-header .nav-links { gap: 14px; font-size: .88rem; }
-  :root body > header .nav-links > .button { padding-inline: 14px; }
-}
 @media (max-width: 899px) {
   .framework-team-grid { grid-template-columns: minmax(0, 1fr); }
   .framework-team-cta { grid-column: auto; justify-self: start; }
@@ -199,17 +132,6 @@
   .framework-section-nav a { padding: 12px; }
 }
 @media (max-width: 620px) {
-  :root body > header > .container.nav,
-  :root body.homepage > header.toucan-opening-header > .container.nav { width: calc(100% - 24px); min-height: 0; height: 63px; padding: 0; gap: 8px; }
-  :root body > header .logo,
-  :root body.homepage > header.toucan-opening-header .logo { min-height: 44px; padding: 4px 12px 4px 4px; gap: 5px; }
-  :root body > header .logo .brand-lockup { margin-left: -4px; }
-  :root body > header .logo img { width: 40px; height: 40px; }
-  :root body > header .logo .brand-lockup strong,
-  :root body.homepage > header.toucan-opening-header .logo .brand-lockup strong { font-size: 23px; }
-  :root body > header .logo .brand-lockup > span { font-size: 8px; letter-spacing: .2em; }
-  :root body > header .nav .theme-toggle { margin-left: auto; }
-  :root body > header .mobile-menu summary { gap: 6px; padding-inline: 10px; }
   .framework-intro { padding-top: 30px; }
   .framework-project { grid-template-columns: minmax(0, 1fr); gap: 22px; }
   .framework-project-controls { justify-content: center; }
@@ -219,10 +141,6 @@
   .framework-portrait-placeholder { width: 72px; height: 96px; margin-left: 16px; }
 }
 @media (max-width: 360px) {
-  :root body > header > .container.nav { gap: 6px; }
-  :root body > header .logo .brand-lockup strong,
-  :root body.homepage > header.toucan-opening-header .logo .brand-lockup strong { font-size: 21px; }
-  :root body > header .mobile-menu summary { padding-inline: 8px; }
   .framework-portrait, .framework-portrait-frame { width: 88px; height: 132px; margin-left: 12px; }
 }
 
@@ -232,11 +150,11 @@
   :root body > header .nav-links { display: contents; }
   :root body > header .nav-links > :not(.theme-toggle) { display: none; }
   :root body > header .theme-toggle { margin-left: auto; }
-  :root body > header .mobile-menu { display: block; color: #f0ebe0; font-weight: 700; }
+  :root body > header .mobile-menu { display: block; color: var(--mobile-menu-ink, var(--heading)); font-weight: 700; }
   .mobile-menu summary { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 9px 12px; border: 1px solid currentColor; border-radius: 10px; cursor: pointer; list-style: none; }
   .mobile-menu summary::-webkit-details-marker { display: none; }
   .mobile-menu summary::marker { content: ''; }
-  .mobile-menu nav { position: absolute; top: 100%; left: 0; right: 0; display: grid; gap: 8px; max-height: calc(100dvh - 78px); overflow-y: auto; padding: 12px 20px 16px; background: #0a272c; border-bottom: 1px solid currentColor; }
+  .mobile-menu nav { position: absolute; top: 100%; left: 0; right: 0; display: grid; gap: 8px; max-height: calc(100dvh - 78px); overflow-y: auto; padding: 12px 20px 16px; background: var(--mobile-menu-surface, var(--bg)); border-bottom: 1px solid currentColor; }
   .mobile-menu nav a { display: flex; align-items: center; min-height: 48px; padding: 12px 16px; border-radius: 10px; text-decoration: none; }
   .mobile-menu nav a:hover { text-decoration: underline; }
   .mobile-menu nav .button { width: 100%; transform: none; font: inherit; }

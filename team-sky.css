@@ -1,15 +1,14 @@
 /* The original CTA renderer now fills the Team page. One sky, no separate image. */
-body.team-page { position: relative; isolation: isolate; background: #071219; }
+body.team-page { position: relative; isolation: isolate; background: var(--bg); }
 body.team-page::before { display: none; }
-:root body.team-page > header { position: relative; top: auto; background: transparent; border-bottom: 0; backdrop-filter: none; }
 .team-page main { background: transparent; }
 .team-page > .reviews-enquiry-sky {
   position: absolute;
-  inset: 0;
+  inset: var(--back-page-header-height, var(--sticky-header-height, 95px)) 0 0;
   z-index: -2;
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
   padding: 0;
   border: 0;
   border-radius: 0;
@@ -40,7 +39,6 @@ body.team-page::before { display: none; }
 .team-page .team-page-intro > .container > .eyebrow,
 .team-page [data-team-status],
 .team-page .cta-box h2, .team-page .cta-box p,
-.team-page header .nav-links > a:not(.button), .team-page header .nav-item > a,
 .team-page footer.site-footer { text-shadow: 0 1px 1px #071219, 0 0 3px #071219; }
 .team-page .team-biography { box-shadow: 0 12px 32px #0003; }
 /* The enquiry sits directly on the same sky, without a capsule or corner seam. */

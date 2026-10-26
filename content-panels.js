@@ -27,6 +27,7 @@
         const inactive = candidate !== panel;
         if (inactive) pause(candidate);
         candidate.hidden = inactive;
+        candidate.inert = inactive;
       });
       links.forEach(link => {
         if (linkPanel(link) === panel) link.setAttribute('aria-current', 'location');
@@ -75,7 +76,7 @@
     window.addEventListener('pageshow', () => sync(false));
     document.addEventListener('visibilitychange', () => { if (document.hidden) pause(shell); });
     window.addEventListener('pagehide', () => pause(shell));
-    window.addEventListener('beforeprint', () => { pause(shell); panels.forEach(panel => { panel.hidden = false; }); });
+    window.addEventListener('beforeprint', () => { pause(shell); panels.forEach(panel => { panel.hidden = false; panel.inert = false; }); });
     window.addEventListener('afterprint', () => show(current || defaultPanel, hashTarget()));
   });
 })();

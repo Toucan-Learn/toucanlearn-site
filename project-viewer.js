@@ -29,6 +29,7 @@
           pause(slide);
         }
         slide.hidden = position !== index;
+        slide.inert = position !== index;
       });
       status.textContent = `${index + 1} of ${slides.length}`;
       previous.disabled = next.disabled = slides.length < 2;
@@ -79,7 +80,7 @@
     }).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden'] });
     document.addEventListener('visibilitychange', () => { if (document.hidden) pause(viewer); });
     window.addEventListener('pagehide', () => pause(viewer));
-    window.addEventListener('beforeprint', () => { pause(viewer); slides.forEach(slide => { slide.hidden = false; }); });
+    window.addEventListener('beforeprint', () => { pause(viewer); slides.forEach(slide => { slide.hidden = false; slide.inert = false; }); });
     window.addEventListener('afterprint', () => show(index));
   });
 })();

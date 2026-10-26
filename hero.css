@@ -369,3 +369,11 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 }
 /* Round 85: in dark mode the opening wordmark uses the logo's burnt orange and teal
    (#d9733a, #45a59b) instead of peach; light mode keeps #c45f21 and #1f7a75. */
+
+/* Keep breathing room when the longer headline uses the spare vertical space. */
+@media (min-width: 761px) {
+  .living-hero .hero-benefits { padding-top: 40px; }
+}
+@media (min-width: 900px) {
+  .living-hero .hero-layout { padding-block: 44px; }
+}

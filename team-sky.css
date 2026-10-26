@@ -46,6 +46,8 @@ body.team-page::before { display: none; }
 /* The enquiry sits directly on the same sky, without a capsule or corner seam. */
 .team-page .cta-box { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
 .team-page .cta-box h2, .team-page .cta-box p { color: #f0ebe0; }
+.team-page .cta-box > div { padding: 14px 20px; border-radius: 12px; background: #f0ebe0; }
+.team-page .cta-box > div :is(h2, p) { color: #0a272c; text-shadow: none; }
 .team-page .cta-box > .button { background: #f0ebe0; color: #0a272c; }
 .team-page .cta-box > .button:is(:hover, :focus-visible) { background: #fbf8f2; color: #0a272c; }
 .team-page footer.site-footer { background: transparent; color: #f0ebe0; border: 0; }
@@ -56,4 +58,13 @@ body.team-page::before { display: none; }
   .team-page .team-page-intro h1, .team-page .team-page-intro > .container > .eyebrow,
   .team-page .cta-box h2, .team-page .cta-box p { color: var(--heading); text-shadow: none; }
   .team-page .team-biography { box-shadow: none; }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  body.team-page, .team-page > .reviews-enquiry-sky { cursor: none; }
+  .team-page header, .team-page footer,
+  .team-page .team-page-info, .team-page .team-biography,
+  .team-page .cta-box > div { cursor: auto; }
+  .team-page a, .team-page button:not(.reviews-enquiry-sky),
+  .team-page summary { cursor: pointer; }
 }

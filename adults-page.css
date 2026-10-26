@@ -1,9 +1,9 @@
 /* Adult learning: practical content with open space and readable topic rows. */
-.adults-page .adult-topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 34px; margin-block: 28px; }
-.adults-page .adult-topics article { min-width: 0; border-top: 1px solid var(--line); padding-top: 18px; }
+.adults-page .adult-topics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; margin-block: 24px; }
+.adults-page .adult-topics article { display: flex; flex-direction: column; min-width: 0; border-top: 1px solid var(--line); padding-top: 24px; }
 .adults-page .adult-topics h3 { margin: 0 0 10px; font-size: 1.22rem; line-height: 1.3; }
 .adults-page .adult-topics p { margin: 0 0 12px; }
-.adults-page .adult-topics a { font-weight: 700; }
+.adults-page .adult-topics a { margin-top: auto; font-weight: 700; }
 .adults-page .adult-language-list { margin-block: 28px; }
 .adults-page .adult-language-list > div { display: grid; grid-template-columns: minmax(130px, .32fr) minmax(0, 1fr); gap: 16px 28px; padding-block: 22px; border-top: 1px solid var(--line); }
 .adults-page .adult-language-list dt { color: var(--heading); font-weight: 800; font-size: 1.15rem; }
@@ -16,6 +16,6 @@
 .adults-page .adult-format { border-top: 1px solid var(--line); padding-top: 22px; }
 .adults-page .adult-format h3 { margin-top: 0; }
 @media (max-width: 650px) {
-  .adults-page .adult-topics { grid-template-columns: 1fr; gap: 22px; }
+  .adults-page .adult-topics { grid-template-columns: 1fr; gap: 24px; }
   .adults-page .adult-language-list > div { grid-template-columns: 1fr; gap: 10px; }
 }

@@ -26,6 +26,8 @@
     let suppressClick = false;
     let lastWidth = 0;
     let initialising = true;
+    let resizeFrame = 0;
+    let printing = false;
     const modulo = value => ((value % count) + count) % count;
     const relative = index => {
       let delta = modulo(index - modulo(position));
@@ -39,6 +41,7 @@
     status.setAttribute('aria-atomic', 'true');
 
     function render() {
+      if (printing) return;
       const width = cards[0].offsetWidth;
       const radius = Math.max(width * .88, (width + 24) / (2 * Math.tan(Math.PI / count)));
       deck.classList.toggle('team-deck-instant', initialising || motion.matches);
@@ -75,8 +78,15 @@
         contents[index].setAttribute('aria-hidden', String(!current));
         if (visible) card.removeAttribute('aria-hidden');
         else card.setAttribute('aria-hidden', 'true');
-        height = Math.max(height, card.offsetHeight);
+        // Measure the natural inner flow, never the equal-height outer card.
+        // Computed height avoids perspective transforms and preserves subpixels.
+        const contentHeight = parseFloat(getComputedStyle(contents[index]).height);
+        const style = getComputedStyle(card);
+        const verticalFrame = ['paddingTop', 'paddingBottom', 'borderTopWidth', 'borderBottomWidth']
+          .reduce((total, property) => total + parseFloat(style[property]), 0);
+        height = Math.max(height, Math.ceil(contentHeight + verticalFrame));
       });
+      ring.style.setProperty('--team-card-height', `${height}px`);
       ring.style.height = `${height}px`;
       status.textContent = `${modulo(position) + 1} of ${count}`;
     }
@@ -147,17 +157,30 @@
       initialising = false;
       deck.classList.toggle('team-deck-instant', motion.matches);
     });
-    if ('ResizeObserver' in window) new ResizeObserver(entries => {
-      const width = entries[0].contentRect.width;
-      if (Math.abs(width - lastWidth) < .5) return;
-      lastWidth = width;
-      render();
-    }).observe(stage);
-    else addEventListener('resize', render);
+    function scheduleResize() {
+      if (resizeFrame || printing) return;
+      resizeFrame = requestAnimationFrame(() => {
+        resizeFrame = 0;
+        render();
+      });
+    }
+    if ('ResizeObserver' in window) {
+      new ResizeObserver(entries => {
+        const width = entries[0].contentRect.width;
+        if (Math.abs(width - lastWidth) < .5) return;
+        lastWidth = width;
+        scheduleResize();
+      }).observe(stage);
+      // Inner content stays naturally sized when outer cards are equalised,
+      // so height changes here do not feed back from the imposed card height.
+      const contentObserver = new ResizeObserver(scheduleResize);
+      contents.forEach(content => contentObserver.observe(content));
+    } else addEventListener('resize', render);
     if (document.fonts) document.fonts.ready.then(render);
     addEventListener('beforeprint', () => {
+      printing = true;
       cards.forEach((card, index) => {card.inert=false;card.removeAttribute('aria-hidden');contents[index].inert=false;contents[index].removeAttribute('aria-hidden');});
     });
-    addEventListener('afterprint', render);
+    addEventListener('afterprint', () => { printing = false; render(); });
   });
 })();

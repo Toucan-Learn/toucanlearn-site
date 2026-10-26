@@ -16,7 +16,7 @@
 .team-page-viewer:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 6px; }
 .team-biography { display: flow-root; min-width: 0; padding: 26px 28px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); scroll-margin-top: calc(var(--sticky-header-height, 95px) + 20px); }
 .team-biography + .team-biography { margin-top: 20px; }
-.team-card-content { display: flow-root; }
+.team-card-content { display: flow-root; height: auto; }
 .team-biography h2 { margin: 0 0 8px; color: var(--heading); font-size: clamp(1.5rem, 2.3vw, 2rem); line-height: 1.2; letter-spacing: -0.025em; }
 .team-biography p { margin: 0 0 12px; line-height: 1.55; }
 .team-biography p:last-child { margin-bottom: 0; }
@@ -27,7 +27,7 @@
 /* As in Reviews, enhancement supplies ring geometry and natural card height. */
 .team-deck-enhanced .team-deck-stage { overflow: clip; padding-block: 8px; margin-block: -6px; perspective: 1600px; touch-action: pan-y; }
 .team-deck-enhanced .team-profiles { position: relative; width: min(560px, calc(100% - 90px)); margin: 0 auto; transform-style: preserve-3d; transition: transform 1100ms cubic-bezier(.22,.7,.24,1); }
-.team-deck-enhanced .team-biography { position: absolute; inset: 0 0 auto; width: 100%; margin-top: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transition: transform 1100ms cubic-bezier(.22,.7,.24,1), opacity 1100ms ease; }
+.team-deck-enhanced .team-biography { position: absolute; inset: 0 0 auto; width: 100%; height: var(--team-card-height, auto); margin-top: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transition: transform 1100ms cubic-bezier(.22,.7,.24,1), opacity 1100ms ease; }
 .team-deck-enhanced .team-biography[data-neighbour] { cursor: pointer; }
 .team-deck-enhanced .team-biography.is-current { cursor: default; }
 .team-deck-controls { display: none; align-items: center; justify-content: flex-end; gap: 12px; padding-top: 12px; }
@@ -72,5 +72,5 @@
   .team-deck-controls { display: none !important; }
   .team-page-viewer .team-deck-stage { overflow: visible !important; perspective: none !important; }
   .team-page-viewer .team-profiles { width: 100% !important; height: auto !important; transform: none !important; }
-  .team-page-viewer .team-biography { display: flow-root !important; position: static !important; margin-top: 20px !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; break-inside: avoid; }
+  .team-page-viewer .team-biography { display: flow-root !important; position: static !important; height: auto !important; margin-top: 20px !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; break-inside: avoid; }
 }

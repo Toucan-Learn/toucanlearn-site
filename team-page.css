@@ -68,18 +68,15 @@
   .team-biography .framework-portrait-frame { width: 88px; height: 132px; margin-left: 12px; }
   .team-deck-enhanced .team-profiles { width: calc(100% - 16px); }
 }
-/* The shared controller enables this only for a suitable enhanced window. */
-body.team-page[data-page-frame] main { display: grid; grid-template-rows: minmax(0, 1fr) auto; height: var(--back-page-height); min-height: 0; }
-body.team-page[data-page-frame] .team-page-intro { min-height: 0; padding-top: 12px; }
-body.team-page[data-page-frame] .team-page-intro > .container { display: grid; grid-template-rows: auto auto minmax(0, 1fr); height: 100%; min-height: 0; }
+/* Keep compact desktop spacing while the full biographies set the page height. */
+body.team-page[data-page-frame] .team-page-intro { padding-top: 12px; }
 body.team-page[data-page-frame] .team-page-intro h1 { margin: 4px 0 14px; }
-body.team-page[data-page-frame] .team-page-layout { grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 360px); gap: 20px; min-height: 0; align-items: stretch; }
-body.team-page[data-page-frame] .team-page-viewer { display: grid; grid-template-rows: minmax(0, 1fr) auto; min-height: 0; order: -1; }
-body.team-page[data-page-frame] .team-deck-stage { min-height: 0; height: 100%; margin-block: 0; }
-body.team-page[data-page-frame] .team-page-info { min-height: 0; overflow-y: auto; align-content: start; gap: 16px; scrollbar-gutter: stable; }
+body.team-page[data-page-frame] .team-page-layout { grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 360px); gap: 20px; }
+body.team-page[data-page-frame] .team-page-viewer { order: -1; }
+body.team-page[data-page-frame] .team-deck-stage { margin-block: 0; }
+body.team-page[data-page-frame] .team-page-info { align-content: start; gap: 16px; }
 body.team-page[data-page-frame] .team-page-promise-cell,
 body.team-page[data-page-frame] .team-page-coverage-cell { padding: 22px; }
-body.team-page[data-page-frame] .team-biography { overflow-y: auto; overflow-x: hidden; scrollbar-gutter: stable; overscroll-behavior-y: contain; }
 body.team-page[data-page-frame] .team-deck-controls { padding-top: 8px; }
 body.team-page[data-page-frame] .cta { padding: 12px 0 16px; }
 body.team-page[data-page-frame] .cta-box { padding-block: 12px; }
@@ -90,13 +87,7 @@ body.team-page[data-page-frame] .cta-box { padding-block: 12px; }
   body.team-page[data-page-frame] .team-page-coverage-cell { padding: 20px; }
 }
 @media print {
-  body.team-page[data-page-frame] main { display: block; height: auto; }
-  body.team-page[data-page-frame] .team-page-intro > .container { display: block; height: auto; }
   body.team-page[data-page-frame] .team-page-layout { display: block; }
-  body.team-page[data-page-frame] .team-page-viewer { display: block; }
-  body.team-page[data-page-frame] .team-page-info { overflow: visible; }
-  body.team-page[data-page-frame] .team-deck-stage { height: auto; }
-  body.team-page[data-page-frame] .team-biography { overflow: visible; }
   .team-page-layout { display: block; }
   .team-deck-controls { display: none !important; }
   .team-page-viewer .team-deck-stage { overflow: visible !important; perspective: none !important; }

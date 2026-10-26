@@ -1,10 +1,11 @@
 /* The original CTA renderer now fills the Team page. One sky, no separate image. */
 body.team-page { position: relative; isolation: isolate; background: var(--bg); }
 body.team-page::before { display: none; }
+body.team-page > header { background: rgba(var(--bg-rgb), 0.5); }
 .team-page main { background: transparent; }
 .team-page > .reviews-enquiry-sky {
   position: absolute;
-  inset: var(--back-page-header-height, var(--sticky-header-height, 95px)) 0 0;
+  inset: 0;
   z-index: -2;
   display: block;
   width: 100%;

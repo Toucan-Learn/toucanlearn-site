@@ -87,11 +87,6 @@
           .reduce((total, property) => total + parseFloat(style[property]), 0);
         height = Math.max(height, Math.ceil(contentHeight + verticalFrame));
       });
-      if (document.body.hasAttribute('data-page-frame')) {
-        const stageStyle = getComputedStyle(stage);
-        const available = stage.clientHeight - parseFloat(stageStyle.paddingTop) - parseFloat(stageStyle.paddingBottom);
-        if (available > 0) height = Math.min(height, Math.floor(available));
-      }
       ring.style.setProperty('--team-card-height', `${height}px`);
       ring.style.height = `${height}px`;
       status.textContent = `${modulo(position) + 1} of ${count}`;
@@ -126,8 +121,6 @@
     });
     deck.addEventListener('keydown', event => {
       if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.target.closest(interactive)) return;
-      // Home/End read the focused biography; the carousel itself still uses them to select slides.
-      if (document.body.hasAttribute('data-page-frame') && ['Home', 'End'].includes(event.key) && event.target.closest('.team-biography.is-current')) return;
       const delta = {ArrowLeft:-1, ArrowRight:1, Home:-modulo(position), End:count - 1 - modulo(position)}[event.key];
       if (delta === undefined) return;
       event.preventDefault();

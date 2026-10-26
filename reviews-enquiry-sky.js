@@ -26,21 +26,20 @@ if (
 ) {
   const fallbackCtx = fallback.getContext('2d');
   const heroPreset = document.getElementById('ripple-button')?.dataset.skyPreset;
-  const preset = SKY_PRESETS.find(candidate => candidate.id === heroPreset)
-    || (heroArt ? SKY_PRESETS[0] : SKY_PRESETS[Math.floor(Math.random() * SKY_PRESETS.length)]);
-  const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-  scene.dataset.skyPreset = preset.id;
-  art.dataset.skyPreset = preset.id;
-  sky.dataset.skyPreset = preset.id;
-
-  const fallbackImage = new Image();
-  fallbackImage.onload = () => {
-    resizeSky();
-    renderer?.loadPixel?.();
-    draw();
+  const followsPageTheme = scene.dataset.skyTheme === 'page';
+  const deviceTheme = followsPageTheme ? window.matchMedia('(prefers-color-scheme: dark)') : null;
+  const pagePreset = () => {
+    const dark = document.documentElement.dataset.theme === 'dark'
+      || (document.documentElement.dataset.theme !== 'light' && deviceTheme.matches);
+    return SKY_PRESETS.find(candidate => candidate.id === (dark ? 'og' : 'earth'));
   };
-  fallbackImage.src = preset.image || 'assets/loading-pixel-sky.png';
+  let preset = followsPageTheme ? pagePreset() : (
+    SKY_PRESETS.find(candidate => candidate.id === heroPreset)
+    || (heroArt ? SKY_PRESETS[0] : SKY_PRESETS[Math.floor(Math.random() * SKY_PRESETS.length)])
+  );
+  const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let fallbackImage = new Image();
+  let imageRevision = 0;
 
   function drawFallback() {
     if (!fallbackCtx) return;
@@ -129,6 +128,10 @@ if (
   }
 
   function createSky() {
+    // Each renderer owns its palette and image even if a theme changes mid-load.
+    const renderPreset = preset;
+    const sourceImage = fallbackImage;
+    let disposed = false;
     sky.hidden = true;
     const gl = sky.getContext('webgl2', {
       alpha: false,
@@ -147,9 +150,9 @@ if (
       'float cover_scale=max(grid.x/pixel_size.x,grid.y/pixel_size.y);',
       'float cover_scale=pixel_cover_scale;',
     );
-    const fragment = preset.image ? framedPixelFragmentSource : pixelFragmentSource.replace(
+    const fragment = renderPreset.image ? framedPixelFragmentSource : pixelFragmentSource.replace(
       /const vec3 PALETTE\[9\]=vec3\[\]\([\s\S]*?\);/,
-      `const vec3 PALETTE[9]=vec3[](${preset.palette.map(colour => `vec3(${colour.map(channel => channel.toFixed(3)).join(',')})`).join(',')});`,
+      `const vec3 PALETTE[9]=vec3[](${renderPreset.palette.map(colour => `vec3(${colour.map(channel => channel.toFixed(3)).join(',')})`).join(',')});`,
     ).replace('colour*=1.0-navigation*.40;', 'colour*=1.0-navigation*.12;');
 
     function compile(type, source) {
@@ -165,14 +168,21 @@ if (
 
     const vertex = compile(gl.VERTEX_SHADER, vertexSource);
     const pixel = compile(gl.FRAGMENT_SHADER, fragment);
-    if (!vertex || !pixel) return null;
+    if (!vertex || !pixel) {
+      if (vertex) gl.deleteShader(vertex);
+      if (pixel) gl.deleteShader(pixel);
+      return null;
+    }
     const program = gl.createProgram();
     gl.attachShader(program, vertex);
     gl.attachShader(program, pixel);
     gl.linkProgram(program);
     gl.deleteShader(vertex);
     gl.deleteShader(pixel);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      gl.deleteProgram(program);
+      return null;
+    }
     gl.useProgram(program);
 
     const buffer = gl.createBuffer();
@@ -195,14 +205,14 @@ if (
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
     gl.uniform1i(gl.getUniformLocation(program, 'nebula_noise'), 0);
     gl.uniform1f(gl.getUniformLocation(program, 'home_view'), 1);
-    gl.uniform1f(gl.getUniformLocation(program, 'pixel_view'), preset.image ? 1 : 0);
-    if (!preset.image) {
-      gl.uniform3fv(gl.getUniformLocation(program, 'star_low'), preset.stars[0]);
-      gl.uniform3fv(gl.getUniformLocation(program, 'star_high'), preset.stars[1]);
-      gl.uniform3fv(gl.getUniformLocation(program, 'meteor_tint'), preset.meteor);
+    gl.uniform1f(gl.getUniformLocation(program, 'pixel_view'), renderPreset.image ? 1 : 0);
+    if (!renderPreset.image) {
+      gl.uniform3fv(gl.getUniformLocation(program, 'star_low'), renderPreset.stars[0]);
+      gl.uniform3fv(gl.getUniformLocation(program, 'star_high'), renderPreset.stars[1]);
+      gl.uniform3fv(gl.getUniformLocation(program, 'meteor_tint'), renderPreset.meteor);
     }
 
-    const pixelTexture = preset.image ? gl.createTexture() : null;
+    const pixelTexture = renderPreset.image ? gl.createTexture() : null;
     let pixelLoaded = false;
     if (pixelTexture) {
       gl.activeTexture(gl.TEXTURE1);
@@ -223,7 +233,7 @@ if (
         new Uint8Array([11, 19, 30, 255]),
       );
       gl.uniform1i(gl.getUniformLocation(program, 'pixel_sky'), 1);
-      gl.uniform3fv(gl.getUniformLocation(program, 'ink'), preset.ink);
+      gl.uniform3fv(gl.getUniformLocation(program, 'ink'), renderPreset.ink);
     }
 
     const resolution = gl.getUniformLocation(program, 'resolution');
@@ -231,14 +241,14 @@ if (
     let noiseLoaded = false;
 
     function loadPixel() {
-      if (!pixelTexture || !fallbackImage.complete || !fallbackImage.naturalWidth || gl.isContextLost()) return;
+      if (disposed || !pixelTexture || !sourceImage.complete || !sourceImage.naturalWidth || gl.isContextLost()) return;
       gl.activeTexture(gl.TEXTURE1);
       gl.bindTexture(gl.TEXTURE_2D, pixelTexture);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, fallbackImage);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourceImage);
       gl.uniform2f(
         gl.getUniformLocation(program, 'pixel_size'),
-        fallbackImage.naturalWidth,
-        fallbackImage.naturalHeight,
+        sourceImage.naturalWidth,
+        sourceImage.naturalHeight,
       );
       pixelLoaded = true;
       sky.hidden = !noiseLoaded;
@@ -247,23 +257,32 @@ if (
     loadPixel();
     const noise = new Image();
     noise.onload = () => {
-      if (gl.isContextLost()) return;
+      if (disposed || gl.isContextLost()) return;
       gl.activeTexture(gl.TEXTURE0);
       gl.bindTexture(gl.TEXTURE_2D, noiseTexture);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, noise);
       noiseLoaded = true;
-      sky.hidden = Boolean(preset.image && !pixelLoaded);
+      sky.hidden = Boolean(renderPreset.image && !pixelLoaded);
       draw();
     };
     noise.src = 'assets/galaxy-noise.png';
 
     return {
       loadPixel,
+      destroy() {
+        if (disposed) return;
+        disposed = true;
+        noise.onload = null;
+        gl.deleteTexture(noiseTexture);
+        if (pixelTexture) gl.deleteTexture(pixelTexture);
+        gl.deleteBuffer(buffer);
+        gl.deleteProgram(program);
+      },
       draw(seconds) {
-        if (!noiseLoaded || (preset.image && !pixelLoaded) || gl.isContextLost()) return;
+        if (disposed || !noiseLoaded || (renderPreset.image && !pixelLoaded) || gl.isContextLost()) return;
         gl.viewport(0, 0, sky.width, sky.height);
         gl.uniform2f(resolution, sky.width, sky.height);
-        if (preset.image) gl.uniform1f(gl.getUniformLocation(program, 'pixel_cover_scale'), framing.coverScale);
+        if (renderPreset.image) gl.uniform1f(gl.getUniformLocation(program, 'pixel_cover_scale'), framing.coverScale);
         gl.uniform1f(clock, seconds);
 
         const brushValues = new Float32Array(48);
@@ -348,9 +367,11 @@ if (
   sky.addEventListener('webglcontextlost', event => {
     event.preventDefault();
     sky.hidden = true;
+    renderer?.destroy();
     renderer = null;
   });
   sky.addEventListener('webglcontextrestored', () => {
+    renderer?.destroy();
     renderer = createSky();
     draw();
   });
@@ -372,6 +393,41 @@ if (
     drawFallback();
     draw();
   }
+  function rebuildSky(nextPreset) {
+    renderer?.destroy();
+    renderer = null;
+    fallbackImage.onload = null;
+    preset = nextPreset;
+    scene.dataset.skyPreset = preset.id;
+    art.dataset.skyPreset = preset.id;
+    sky.dataset.skyPreset = preset.id;
+    const revision = ++imageRevision;
+    const image = new Image();
+    fallbackImage = image;
+    image.onload = () => {
+      if (revision !== imageRevision || fallbackImage !== image) return;
+      resizeSky();
+      renderer?.loadPixel?.();
+      draw();
+    };
+    image.src = preset.image || 'assets/loading-pixel-sky.png';
+    resizeSky();
+    renderer = createSky();
+    draw();
+  }
+
+  if (followsPageTheme) {
+    const syncPageTheme = () => {
+      const nextPreset = pagePreset();
+      if (nextPreset.id !== preset.id) rebuildSky(nextPreset);
+    };
+    new MutationObserver(syncPageTheme).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    });
+    deviceTheme.addEventListener('change', syncPageTheme);
+  }
+
   const resizeObserver = new ResizeObserver(resizeSky);
   resizeObserver.observe(scene);
   if (heroArt) resizeObserver.observe(heroArt);
@@ -381,7 +437,6 @@ if (
   }, { threshold: .01 }).observe(scene);
   document.addEventListener('visibilitychange', sync);
 
-  resizeSky();
-  renderer = createSky();
+  rebuildSky(preset);
   applyMotionPreference();
 }

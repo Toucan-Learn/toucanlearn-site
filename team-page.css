@@ -3,9 +3,15 @@
 .team-page-intro > .container, .team-page .cta > .container { width: min(calc(100% - 80px), 1280px); }
 .team-page-intro h1 { max-width: none; margin: 6px 0 24px; font-size: clamp(2rem, 2.8vw, 2.5rem); line-height: 1.08; letter-spacing: -0.045em; }
 .team-page-layout { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 24px; align-items: start; }
+.team-page-info { display: grid; gap: 20px; min-width: 0; }
+.team-page-coverage-cell { min-width: 0; padding: 28px; border-radius: var(--radius-xl); background: var(--teal-soft); color: var(--ink); }
+.team-page-coverage-cell p { margin: 0; font-size: 1rem; line-height: 1.55; }
 .team-page-promise-cell { min-width: 0; padding: 28px; border-radius: var(--radius-xl); background: var(--teal-soft); color: var(--ink); }
 .team-page-promise-cell p { margin: 0; font-size: 1rem; line-height: 1.55; }
-.team-page-promise-cell .team-page-promise { margin-bottom: 0; color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
+.team-page-promise-cell .team-page-promise { margin-bottom: 0; }
+.team-page-promise-cell .team-page-promise,
+.team-page-coverage-cell p,
+.team-biography .team-biography-role + p { color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
 .team-page-viewer { min-width: 0; }
 .team-page-viewer:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 6px; }
 .team-biography { display: flow-root; min-width: 0; padding: 26px 28px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); scroll-margin-top: calc(var(--sticky-header-height, 95px) + 20px); }
@@ -19,7 +25,7 @@
 .team-biography .framework-portrait-placeholder { margin-left: 22px; }
 .team-biography-availability { padding-top: 12px; border-top: 1px solid var(--line); font-size: .95rem; }
 /* As in Reviews, enhancement supplies ring geometry and natural card height. */
-.team-deck-enhanced .team-deck-stage { overflow: clip; padding-block: 2px; perspective: 1600px; touch-action: pan-y; }
+.team-deck-enhanced .team-deck-stage { overflow: clip; padding-block: 8px; margin-block: -6px; perspective: 1600px; touch-action: pan-y; }
 .team-deck-enhanced .team-profiles { position: relative; width: min(560px, calc(100% - 90px)); margin: 0 auto; transform-style: preserve-3d; transition: transform 1100ms cubic-bezier(.22,.7,.24,1); }
 .team-deck-enhanced .team-biography { position: absolute; inset: 0 0 auto; width: 100%; margin-top: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; transition: transform 1100ms cubic-bezier(.22,.7,.24,1), opacity 1100ms ease; }
 .team-deck-enhanced .team-biography[data-neighbour] { cursor: pointer; }
@@ -37,8 +43,11 @@
 }
 @media (max-width: 1100px) {
   .team-page-layout { grid-template-columns: minmax(0, 1fr); }
-  .team-page-promise-cell { padding: 24px; }
-  .team-page-promise-cell .team-page-promise { margin-bottom: 0; font-size: 1.15rem; }
+  .team-page-info { gap: 16px; }
+  .team-page-promise-cell, .team-page-coverage-cell { padding: 24px; }
+  .team-page-promise-cell .team-page-promise,
+  .team-page-coverage-cell p,
+  .team-biography .team-biography-role + p { font-size: 1.15rem; }
 }
 @media (max-width: 899px) {
   .team-deck-enhanced .team-deck-stage { perspective: none; }

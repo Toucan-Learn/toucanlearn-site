@@ -1,6 +1,6 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-ripple-1';
-import { playNextNote } from './hero-piano.js?v=20261026-vocal-verse-1';
-import { initHeroKeyboard } from './hero-keyboard.js?v=20261026-vocal-verse-1';
+import { playNextNote } from './hero-piano.js?v=20261026-vocal-verse-2';
+import { initHeroKeyboard } from './hero-keyboard.js?v=20261026-vocal-verse-2';
 import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
 
 const art = document.querySelector('.world-art');

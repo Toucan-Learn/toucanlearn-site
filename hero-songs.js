@@ -1,6 +1,8 @@
-// Three compositions are public domain; Runaway (8 notes) and No One Noticed (2 bars)
-// are short credited quotations. Joshua, 19 Oct 2026: "the first 2 bars ... good for no one
-// noticed" / vocal tab: G F# E, G F# E.
+// Three compositions are public domain. Runaway retains its eight-note excerpt.
+// No One Noticed follows Joshua's supplied vocal tab (26 Oct 2026, 22:26), bars 1-16:
+// 43 new attacks, with tied continuations counted once. Standard tuning as labelled:
+// B8/e3=G4, B7/e2=F#4, G2=A3, B1=C4, B3=D4, B0=B3, G0=G3.
+// The site advances one note per interaction; the 98 BPM rhythm map is in the work report.
 // Joshua, 19 Oct 2026: "keep the original entertainer snippet you originally
 // selected the first time. keep the dreamy song in its length. get rid of other
 // one i think or take a small snippet thats lovely like the entertainer" and
@@ -232,18 +234,56 @@ export const songs = [
   },
   {
     "id": "no-one-noticed",
-    "title": "No One Noticed (opening)",
+    "title": "No One Noticed (verse excerpt)",
     "composer": "The Marías",
     "year": 2024,
-    "source": "The opening vocal line, two bars",
-    "licence": "Short credited quotation (2 bars)",
+    "source": "Vocal tab supplied by Joshua, 26 October 2026 at 22:26. Bars 1-16 at 98 BPM; standard tuning as labelled. Tied continuations are not new attacks.",
+    "licence": "User-supplied excerpt; no licence asserted",
+    "tempo": 98,
     "notes": [
-      "G5",
-      "F#5",
-      "E5",
-      "G5",
-      "F#5",
-      "E5"
+      "G4",
+      "F#4",
+      "A3",
+      "G4",
+      "F#4",
+      "A3",
+      "C4",
+      "D4",
+      "C4",
+      "B3",
+      "C4",
+      "G3",
+      "B3",
+      "B3",
+      "G4",
+      "F#4",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "G4",
+      "F#4",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "A3",
+      "C4",
+      "D4",
+      "C4",
+      "B3",
+      "C4",
+      "G3",
+      "B3",
+      "B3"
     ]
   }
 ];

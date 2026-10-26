@@ -1,11 +1,10 @@
 /* Approach and Subjects: shared framework, with open, naturally sized content. */
 .learning-page .framework-intro h1 { max-width: 1000px; }
-.learning-page .learning-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; margin: 28px 0; padding: 0; list-style: none; counter-reset: learning-step; }
-.learning-page .learning-steps li { min-width: 0; counter-increment: learning-step; }
-.learning-page .learning-steps img { display: block; width: 100%; aspect-ratio: 8 / 5; height: auto; object-fit: contain; border-radius: 16px; background: #ede5da; }
-.learning-page .learning-steps h3 { margin: 18px 0 10px; font-size: 1.3rem; line-height: 1.3; }
-.learning-page .learning-steps h3::before { content: counter(learning-step, decimal-leading-zero); display: block; margin-bottom: 9px; color: var(--orange-text); font-size: .85rem; font-weight: 800; }
-.learning-page .learning-steps p { margin: 0; }
+.learning-page #steps-to-success .learning-steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; margin: 24px 0; padding: 0; list-style: none; counter-reset: learning-step; }
+.learning-page #steps-to-success .learning-steps li { min-width: 0; padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); counter-increment: learning-step; }
+.learning-page #steps-to-success .learning-steps h3 { margin: 0 0 10px; font-size: 1.3rem; line-height: 1.3; }
+.learning-page #steps-to-success .learning-steps h3::before { content: counter(learning-step, decimal-leading-zero); display: block; margin-bottom: 9px; color: var(--orange-text); font-size: .85rem; font-weight: 800; }
+.learning-page #steps-to-success .learning-steps p { margin: 0; }
 .learning-page .learning-outline { margin: 0; }
 .learning-page .learning-outline dt { margin-top: 16px; color: var(--heading); font-size: .9rem; font-weight: 800; }
 .learning-page .learning-outline dd { margin: 3px 0 0; }
@@ -14,6 +13,9 @@
 .learning-page .learning-examples figcaption { color: var(--ink); }
 .learning-page .learning-prose { margin-top: 36px; padding-top: 26px; border-top: 1px solid var(--line); }
 .learning-page .learning-prose h3, .learning-page .learning-note h3 { margin-top: 0; }
+.learning-page .learning-formats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; margin-top: 24px; }
+.learning-page .learning-formats > .learning-prose { min-width: 0; margin: 0; padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); }
+.learning-page .learning-formats > .learning-prose > :last-child { margin-bottom: 0; }
 .learning-page .learning-session { padding-left: 24px; margin-block: 18px 24px; }
 .learning-page .learning-session li { padding-left: 6px; margin-top: 12px; }
 .learning-page .learning-session li::marker { color: var(--orange-text); font-weight: 800; }
@@ -21,7 +23,8 @@
 .learning-page .learning-note p:last-child { margin-bottom: 0; }
 .learning-page .framework-shell .approach-report { padding: 28px; }
 .learning-page .framework-shell .approach-report .report-parts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.learning-page .learning-subject-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-top: 26px; }
+.learning-page .framework-shell .approach-report .report-parts { grid-auto-rows: 1fr; }
+.learning-page .learning-subject-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 24px; margin-top: 24px; }
 .learning-page .learning-subject-grid > div { min-width: 0; }
 .learning-page .learning-subject-grid h3 { margin: 0 0 12px; font-size: 1.3rem; }
 .learning-page .learning-subject-grid p { margin-top: 0; }
@@ -33,31 +36,22 @@
 .learning-page .learning-languages dd { max-width: 76ch; margin: 0; }
 .learning-page .learning-common-note { margin-top: -16px; margin-bottom: 20px; }
 .learning-page :is(.learning-prose, .learning-note, .learning-steps li, #how-it-works) { scroll-margin-top: calc(var(--sticky-header-height, 95px) + 20px); }
-@media (max-width: 1100px) and (min-width: 761px) {
-  .learning-page .learning-steps { grid-template-columns: minmax(0, 1fr); }
-  .learning-page .learning-steps li { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 22px; align-items: start; }
-  .learning-page .learning-steps h3 { margin-top: 0; }
-}
+
 @media (max-width: 899px) {
   .learning-page .learning-examples .framework-project { grid-template-columns: minmax(0, 1fr); }
   .learning-page .learning-examples .framework-project-media { max-width: 600px; padding-top: 0; }
 }
 @media (max-width: 760px) {
-  .learning-page .learning-steps { grid-template-columns: minmax(0, 1fr); gap: 30px; }
-  .learning-page .learning-steps li { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 20px; align-items: start; }
-  .learning-page .learning-steps h3 { margin-top: 0; }
+  .learning-page #steps-to-success .learning-steps { grid-template-columns: minmax(0, 1fr); }
+  .learning-page .learning-formats { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   .learning-page .learning-subject-grid { grid-template-columns: minmax(0, 1fr); gap: 20px; }
   .learning-page .framework-shell .approach-report .report-parts { grid-template-columns: minmax(0, 1fr); }
   .learning-page .framework-shell .approach-report, .learning-page .learning-note { padding: 22px; }
-  .learning-page .learning-steps li { display: block; }
-  .learning-page .learning-steps img { max-width: 230px; }
-  .learning-page .learning-steps h3 { margin-top: 16px; }
 }
 @media print {
-  .learning-page .learning-steps { display: block; }
-  .learning-page .learning-steps li { display: block; margin-block: 24px; break-inside: avoid; }
-  .learning-page .learning-steps img { max-width: 180px; }
+  .learning-page #steps-to-success .learning-steps { display: block; }
+  .learning-page #steps-to-success .learning-steps li { margin-block: 24px; break-inside: avoid; }
   .learning-page .learning-note, .learning-page .approach-report { background: white; color: black; }
 }

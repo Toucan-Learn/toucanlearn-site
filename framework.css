@@ -22,13 +22,14 @@
   width: max-content;
   min-width: 0;
   gap: 2px;
-  padding: 3px 9px 3px 2px;
+  padding: 3px 15px 3px 2px;
   border-radius: 6px;
   background: #f0ebe0;
   color: #0b3f51;
 }
 :root body > header .logo img { width: 52px; height: 52px; filter: none; }
-:root body > header .logo .brand-lockup { display: grid; margin-left: 0; }
+/* Move the wordmark towards the bird; keep the freed space inside the right edge. */
+:root body > header .logo .brand-lockup { display: grid; margin-left: -6px; }
 :root body > header .logo .brand-lockup strong,
 :root body.homepage > header.toucan-opening-header .logo .brand-lockup strong {
   color: #0b3f51;
@@ -191,7 +192,8 @@
   :root body > header > .container.nav,
   :root body.homepage > header.toucan-opening-header > .container.nav { width: calc(100% - 24px); min-height: 0; height: 63px; padding: 0; gap: 8px; }
   :root body > header .logo,
-  :root body.homepage > header.toucan-opening-header .logo { min-height: 44px; padding: 4px 8px 4px 4px; gap: 5px; }
+  :root body.homepage > header.toucan-opening-header .logo { min-height: 44px; padding: 4px 12px 4px 4px; gap: 5px; }
+  :root body > header .logo .brand-lockup { margin-left: -4px; }
   :root body > header .logo img { width: 34px; height: 34px; }
   :root body > header .logo .brand-lockup strong,
   :root body.homepage > header.toucan-opening-header .logo .brand-lockup strong { font-size: 23px; }

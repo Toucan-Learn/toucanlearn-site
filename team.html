@@ -19,7 +19,9 @@
   <link rel="stylesheet" href="style.css?v=20261019-logo-85" />
   <link rel="stylesheet" href="campaigns.css?v=20261019-team-89" />
   <script src="menu.js?v=20261017-menu-1" defer></script>
-  <link rel="stylesheet" href="framework.css?v=20261026-framework-1" />
+  <link rel="stylesheet" href="framework.css?v=20261026-final-3" />
+  <link rel="stylesheet" href="team-page.css?v=20261026-final-5" />
+  <script src="team-carousel.js?v=20261026-final-4" defer></script>
 </head>
 <body class="campaign-page team-page">
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -29,28 +31,19 @@
       <div class="nav-item">
         <a href="index.html#support-routes">Who we help <span class="nav-chevron" aria-hidden="true">▾</span></a>
         <ul class="nav-dropdown">
-          <li class="nav-group-label">Ages</li>
-          <li><a href="children.html">Children and young people</a></li>
-          <li><a href="adults.html">Adults</a></li>
-          <li class="nav-group-label">Subjects</li>
-          <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
-          <li><a href="languages.html">Languages</a></li>
-          <li><a href="english-for-uk-work.html">English for UK work</a></li>
-          <li><a href="psychology.html">Psychology</a></li>
-          <li><a href="sen-support.html">SEN support</a></li>
-        </ul>
+            <li><a href="children.html">Children and young people</a></li>
+            <li><a href="adults.html">Adults</a></li>
+            <li><a href="subjects.html">Subjects</a></li>
+          </ul>
       </div>
       <div class="nav-item">
-        <a href="index.html#how-it-works">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
+        <a href="approach.html#steps-to-success">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
         <ul class="nav-dropdown">
-          <li class="nav-group-label">How we teach</li>
-          <li><a href="approach.html#how-it-works">The steps</a></li>
-          <li><a href="approach.html#ways-of-working">Our methods</a></li>
-          <li><a href="approach.html#weekly-reports">Weekly reports</a></li>
-          <li class="nav-group-label">Where we teach</li>
-          <li><a href="approach.html#online-sessions">Online 1-1 sessions</a></li>
-          <li><a href="approach.html#in-person-sessions">In-person sessions</a></li>
-        </ul>
+            <li><a href="approach.html#steps-to-success">The steps to success</a></li>
+            <li><a href="approach.html#our-lessons">Our lessons</a></li>
+            <li><a href="approach.html#weekly-reports">Weekly reports</a></li>
+            <li><a href="approach.html#where-we-teach">Where we teach</a></li>
+          </ul>
       </div>
       <a href="index.html#reviews">Reviews</a>
       <a href="team.html">Our team</a>
@@ -68,27 +61,18 @@
         <div class="mobile-nav-item">
           <a href="index.html#support-routes">Who we help</a>
           <ul class="mobile-sub-links">
-            <li class="nav-group-label">Ages</li>
             <li><a href="children.html">Children and young people</a></li>
             <li><a href="adults.html">Adults</a></li>
-            <li class="nav-group-label">Subjects</li>
-            <li><a href="maths-numeracy.html">Maths and numeracy</a></li>
-            <li><a href="languages.html">Languages</a></li>
-            <li><a href="english-for-uk-work.html">English for UK work</a></li>
-            <li><a href="psychology.html">Psychology</a></li>
-            <li><a href="sen-support.html">SEN support</a></li>
+            <li><a href="subjects.html">Subjects</a></li>
           </ul>
         </div>
         <div class="mobile-nav-item">
-          <a href="index.html#how-it-works">Our approach</a>
+          <a href="approach.html#steps-to-success">Our approach</a>
           <ul class="mobile-sub-links">
-            <li class="nav-group-label">How we teach</li>
-            <li><a href="approach.html#how-it-works">The steps</a></li>
-            <li><a href="approach.html#ways-of-working">Our methods</a></li>
+            <li><a href="approach.html#steps-to-success">The steps to success</a></li>
+            <li><a href="approach.html#our-lessons">Our lessons</a></li>
             <li><a href="approach.html#weekly-reports">Weekly reports</a></li>
-            <li class="nav-group-label">Where we teach</li>
-            <li><a href="approach.html#online-sessions">Online 1-1 sessions</a></li>
-            <li><a href="approach.html#in-person-sessions">In-person sessions</a></li>
+            <li><a href="approach.html#where-we-teach">Where we teach</a></li>
           </ul>
         </div>
         <a href="index.html#reviews">Reviews</a>
@@ -98,41 +82,69 @@
     </details>
   </div></header>
   <main id="main" tabindex="-1">
-    <section class="homepage-section team-section" id="team">
+    <section class="team-page-intro" id="team" aria-labelledby="team-heading">
       <div class="container">
-        <div class="section-head">
-          <div class="eyebrow">Your team</div>
-          <h1>A team behind every learner, not just a tutor.</h1>
-        </div>
-        <div class="team-grid">
-          <p class="team-promise">We're not a tutor marketplace, so nobody gets left on their own. Your tutor works with our founder and specialist and the wider Toucan team, our tutors are trained, and we review and refine every learner's plan each week.</p>
-          <article class="team-founder">
-            <h2>Joshua Gordon Jones</h2>
-            <p class="team-founder-role">Founder · Psychology graduate &amp; SEN specialist</p>
-            <p>Joshua has a 2:1 in Psychology, with a first-class mark (80) in neurodevelopmental disorders. He's worked with children and in education for over seven years, first as a lead football coach and now as a tutor, and he's been teaching learners with ADHD, autism, dyslexia and DLD since day one. He also has over five years of professional writing experience.</p>
+        <div class="eyebrow">Your team</div>
+        <h1 id="team-heading">A team behind every learner, not just a tutor.</h1>
+        <p class="team-page-promise">We're not a tutor marketplace, so nobody gets left on their own. Your tutor works with our founder and specialist and the wider Toucan team, our tutors are trained, and we review and refine every learner's plan each week.</p>
+        <p>We teach online, with in-person sessions in Bristol, London and Henley, subject to tutor availability. Each tutor's subjects and local availability are set out below.</p>
+        <div class="team-page-viewer" data-profile-viewer aria-label="Meet the Toucan Learn team">
+          <div class="team-profiles" id="tutors">
+          <article class="team-biography" data-profile-slide id="joshua" aria-labelledby="joshua-heading">
+            <span class="framework-portrait-frame framework-portrait-frame--joshua"><img class="framework-portrait" src="assets/team/joshua-escalator-original.jpeg?v=20261026-framework-1" alt="Joshua Gordon Jones" width="1200" height="1600" loading="lazy" decoding="async" /></span>
+            <h2 id="joshua-heading">Joshua Gordon Jones</h2>
+            <p class="team-biography-role">Founder · Psychology graduate and SEN specialist</p>
+            <p>Hallo, my name is Josh. I started this because too many students are forgotten about, or handed worksheets and left to get on with it. We started Toucan so every learner has a team behind them.</p>
+            <p>I have a 2:1 in BSc Psychology, with a first-class mark (80) in neurodevelopmental disorders. I’ve worked in education for over seven years, first as a lead football coach, then as a one-to-one SEN specialist, and now running Toucan Learn. I also have over five years of professional writing experience and am currently preparing for a PhD in Educational Psychology. I’ve been teaching learners with ADHD, autism, dyslexia, PDA and DLD since day one. I oversee every lesson and work closely with our team to provide the most effective support possible.</p>
+            <p class="team-biography-availability">Joshua is taking new enquiries for online sessions.</p>
           </article>
+          <article class="team-biography" data-profile-slide id="aaron" aria-labelledby="aaron-heading">
+            <span class="framework-portrait-frame framework-portrait-frame--aaron"><img class="framework-portrait" src="assets/team/aaron-video-call-original.png?v=20261026-framework-1" alt="Aaron Gelsthorpe" width="1179" height="2556" loading="lazy" decoding="async" /></span>
+            <h2 id="aaron-heading">Aaron Gelsthorpe</h2>
+            <p class="team-biography-role">English and Maths tutor · Art and design lead · Online</p>
+            <p>Hi, I’m Aaron. I graduated with a degree in design and moved to Russia with my lovely wife. I have just received my CELTA qualification and am passionate about supporting students with their English and Maths skills!</p>
+            <p>Aaron is a star tutor, creating strong dynamics with students and producing fantastic results. Creative, sharp and hard-working, and you can see it in every lesson he plans. Aaron provides English and Art tutoring for all ages and needs, alongside brilliant Maths sessions up to GCSE level. Aaron has SEN experience and is a great pick if you need a creative, fun and hardworking online tutor.</p>
+          </article>
+          <article class="team-biography" data-profile-slide id="connor" aria-labelledby="connor-heading">
+            <span class="framework-portrait-frame framework-portrait-frame--connor"><img class="framework-portrait" src="assets/team/connor-snake-original.png?v=20261026-framework-1" alt="Connor Wright" width="739" height="1600" loading="lazy" decoding="async" /></span>
+            <h2 id="connor-heading">Connor Wright</h2>
+            <p class="team-biography-role">Primary tutor · Online and in person (Oxfordshire)</p>
+            <p>Hello, Connor here! I’m currently a teaching assistant and one-to-one SEN specialist in schools, with several years of experience working with children. I am an avid Chelsea fan and really enjoy making positive impacts and facilitating growth for my students.</p>
+            <p>Connor is a patient, steady tutor and brilliant with younger learners. His several years working in SEN environments and one-to-one in mainstream settings have given him invaluable hands-on experience that university degrees do not provide, and he is as reliable as they come. Connor tutors primary-age students and subjects, both online and in person in Oxfordshire.</p>
+          </article>
+          <article class="team-biography" data-profile-slide id="chemi" aria-labelledby="chemi-heading">
+            <span class="framework-portrait-frame framework-portrait-frame--chemi"><img class="framework-portrait" src="assets/team/chemi-suit-original.png?v=20261026-framework-1" alt="Chemi Joan Miquel" width="738" height="1600" loading="lazy" decoding="async" /></span>
+            <h2 id="chemi-heading">Chemi Joan Miquel</h2>
+            <p class="team-biography-role">Spanish and SEN tutor · Online and in person (Bristol)</p>
+            <p>Hi guys! My name is Chemi! I am a psychology graduate, with a few years’ experience in SEN schools! I love music, making people smile, and helping discover their potential!</p>
+            <p>Chemi is a psychology graduate with years of SEN experience in schools. Funny, warm and great at getting learners talking, Chemi’s approach is strengthened by his psychology degree and work with SEN students. Chemi provides Spanish ↔ English lessons for all ages and levels, alongside SEN tutoring at primary level, both online and in person in Bristol.</p>
+          </article>
+          <article class="team-biography" data-profile-slide id="owen" aria-labelledby="owen-heading">
+            <span class="framework-portrait-placeholder" aria-hidden="true">OY</span>
+            <h2 id="owen-heading">Owen Young</h2>
+            <p class="team-biography-role">French tutor · Sports Science student at Loughborough University · Online</p>
+            <p>Hi there, I’m Owen and I’m a former student of our founder, and now I’m at university doing a degree in Sports Science. I’m bilingual and I’m ready to help you learn French! <span lang="fr">Si tu veux apprendre l’anglais, je peux aussi t’aider.</span></p>
+            <p>Owen is a former Toucan learner and showed a brilliant eye for knowledge and incredible persistence to improve his IB grades substantially in a year. Owen is a calm, friendly young lad with lots of energy and enthusiasm, and is easy to learn with. He’s fluent in both French and English, and provides online English ↔ French sessions for all ages and for SEN students under our founder’s supervision.</p>
+            <p class="team-biography-availability">French support includes study up to GCSE and conversational French.</p>
+          </article>
+          <article class="team-biography" data-profile-slide id="sara" aria-labelledby="sara-heading">
+            <span class="framework-portrait-placeholder" aria-hidden="true">SS</span>
+            <h2 id="sara-heading">Sara Maria Sarrah</h2>
+            <p class="team-biography-role">Italian tutor · Studying in Bristol · Online and in person (Bristol)</p>
+            <p>Ciao! My name is Sara and I’m excited to meet some new students! I am currently studying in Bristol and am looking for new students who need Italian/English language lessons!</p>
+            <p>Sara is a lovely, driven university student who grew up in Italy and is keen to help students with their language skills. She is warm, bright and will be exceptional for students looking for Italian ↔ English support, whether it be for school or for work qualifications. Sara provides online one-to-one sessions and in-person sessions in Bristol.</p>
+            <p class="team-biography-availability">Tell us the language and qualification you are working towards so we can confirm the right level of support.</p>
+          </article>
+          </div>
+          <div class="framework-profile-controls">
+            <button type="button" data-profile-prev aria-label="Previous team member"><span aria-hidden="true">←</span></button>
+            <span data-profile-status aria-live="polite">1 of 6</span>
+            <button type="button" data-profile-next aria-label="Next team member"><span aria-hidden="true">→</span></button>
+          </div>
         </div>
       </div>
     </section>
-    <section class="team-carousel-section" id="tutors" aria-labelledby="tutors-heading">
-      <div class="container">
-        <div class="section-head"><div class="eyebrow">Our tutors</div><h2 id="tutors-heading">Meet the team.</h2></div>
-        <div class="team-carousel" data-team-carousel>
-          <div class="team-track" role="region" aria-label="Toucan tutors, scroll sideways for more" tabindex="0">
-          <article class="team-card"><div class="team-avatar" aria-hidden="true">C</div><h3>Connor</h3><p class="team-card-role">Primary · Online and in person (Henley)</p><p>A teaching assistant and one-to-one specialist in schools, with years of experience working with children. Patient, steady and brilliant with younger learners.</p></article>
-          <article class="team-card"><div class="team-avatar" aria-hidden="true">A</div><h3>Aaron</h3><p class="team-card-role">Maths, English and art</p><p>Creative, sharp and hard-working, and you can see it in every lesson he plans. He also teaches English to adults.</p></article>
-          <article class="team-card"><div class="team-avatar" aria-hidden="true">C</div><h3>Chemi</h3><p class="team-card-role">Spanish, English and SEN support (primary)</p><p>A psychology graduate with years of SEN experience in schools. Funny, warm and great at getting learners talking.</p></article>
-          <article class="team-card"><div class="team-avatar" aria-hidden="true">O</div><h3>Owen</h3><p class="team-card-role">French</p><p>A former Toucan learner, now a tutor himself. Calm, friendly and easy to learn with.</p></article>
-          <article class="team-card"><div class="team-avatar" aria-hidden="true">S</div><h3>Sara</h3><p class="team-card-role">Italian</p><p>Warm, driven and full of energy.</p></article>
-          </div>
-          <div class="team-carousel-controls">
-            <button class="team-carousel-button" type="button" data-team-prev aria-label="Previous tutors"><span aria-hidden="true">←</span></button>
-            <button class="team-carousel-button" type="button" data-team-next aria-label="More tutors"><span aria-hidden="true">→</span></button>
-          </div>
-        </div>
-        <script src="team-carousel.js?v=20261026-framework-1"></script>
-      </div>
-    </section>
+    <section class="cta"><div class="container cta-box cta-sky" data-enquiry-sky><button class="reviews-enquiry-sky" type="button" data-enquiry-sky-button aria-label="Toucan pixel sky: click or press Enter to make waves"><canvas class="reviews-enquiry-sky__fallback" data-enquiry-sky-fallback aria-hidden="true"></canvas><canvas class="reviews-enquiry-sky__canvas" data-enquiry-sky-canvas aria-hidden="true"></canvas></button><div><h2>Find the right tutor for you.</h2><p>Tell us what you want to learn and the support you are looking for.</p></div><a class="button" href="contact.html">Book a free first session <span aria-hidden="true">→</span></a></div></section><script src="reviews-enquiry-sky.js?v=20261018-cta-64" type="module"></script>
   </main>
   <footer class="site-footer"><div class="container footer-grid"><div>© <span id="year">2026</span> Joshua Gordon Jones trading as Toucan Learn · 10 Foxglove Close, Stoke Gifford, Bristol BS34 8LH</div><nav class="footer-links" aria-label="Policies and support"><a href="privacy.html">Privacy</a><a href="safeguarding.html">Safeguarding</a><a href="complaints.html">Complaints</a><a href="index.html#support-routes">All support</a><a href="contact.html">Enquire</a><a href="tel:+447309639095">07309 639095</a></nav></div></footer>
   <script src="site.js"></script>

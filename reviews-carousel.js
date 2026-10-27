@@ -1,17 +1,17 @@
 (function () {
   'use strict';
 
-  // Approved decorative art only. Choose before the lazy images are laid out.
-  // Joshua, 18 Oct 2026: the cuddling/family-contact scenes (a, c, e) are
-  // withdrawn; single-character scenes g, h, i and j were added.
-  const REVIEW_ART = {
-    "b": "assets/art/review-b.png",
-    "d": "assets/art/review-d.png",
-    "f": "assets/art/review-f.png",
-    "g": "assets/art/review-g.png",
-    "h": "assets/art/review-h.png",
-    "i": "assets/art/review-i.png",
-    "j": "assets/art/review-j.png"
+  // Illustrative adult stock portraits, not actual reviewers.
+  // Provenance and licence evidence: assets/reviews/SOURCES.md.
+  // Existing illustration keys retain the established card pairing.
+  const REVIEW_PHOTOS = {
+    "b": "assets/reviews/pexels-15026471.jpg",
+    "d": "assets/reviews/pexels-20233027.jpg",
+    "f": "assets/reviews/pexels-2362887.jpg",
+    "g": "assets/reviews/pexels-2379004.jpg",
+    "h": "assets/reviews/pexels-33202132.jpg",
+    "i": "assets/reviews/pexels-4584543.jpg",
+    "j": "assets/reviews/pexels-5698208.jpg"
   };
   const carousel = document.querySelector('[data-reviews-carousel]');
   if (!carousel) return;
@@ -19,7 +19,7 @@
   const cards = Array.from(ring.querySelectorAll('.review-quote'));
   const count = cards.length;
   if (count < 3 || count > 8) return;
-  const keys = Object.keys(REVIEW_ART);
+  const keys = Object.keys(REVIEW_PHOTOS);
   const requested = (new URLSearchParams(window.location.search).get('reviewart') || '').split(',');
   const validOverride = requested.length === Math.min(count, keys.length) &&
     new Set(requested).size === requested.length && requested.every(key => keys.includes(key));
@@ -51,15 +51,14 @@
     return delta;
   };
 
-  // Joshua, 18 Oct 2026: "select one for each card". When every card names a
-  // distinct approved scene (data-review-art="g"), that pairing is fixed;
-  // otherwise (or with a valid ?reviewart= override) the shuffled set is used.
+  // Retain the established distinct slot pairing and legacy ?reviewart= override.
+  // The keys now select illustrative stock portraits documented in SOURCES.md.
   const chosen = cards.map(card => card.querySelector('[data-review-art]').getAttribute('data-review-art'));
   if (!validOverride && chosen.every(key => keys.includes(key)) && new Set(chosen).size === count) art = chosen;
 
   cards.forEach((card, index) => {
     const image = card.querySelector('[data-review-art]');
-    image.src = REVIEW_ART[art[index % art.length]];
+    image.src = REVIEW_PHOTOS[art[index % art.length]];
     card.setAttribute('role', 'group');
     card.setAttribute('aria-roledescription', 'slide');
     card.setAttribute('aria-label', `Review ${index + 1} of ${count}`);
@@ -80,7 +79,11 @@
     const radius = Math.max(width * 1.15, (width + 32) / (2 * Math.tan(Math.PI / count)));
     carousel.classList.toggle('reviews-instant', motion.matches);
     ring.style.transform = laptop.matches ? `translateZ(${-radius}px) rotateY(${-position * 360 / count}deg)` : 'none';
-    let height = 0;
+    // Remove the previous equal height before measuring natural content again.
+    // This allows shorter layouts after a wider resize, new font or image load.
+    cards.forEach(card => { card.style.height = ''; });
+    const height = Math.ceil(Math.max(...cards.map(card => card.offsetHeight)));
+    cards.forEach(card => { card.style.height = `${height}px`; });
     cards.forEach((card, index) => {
       const delta = relative(index);
       const angle = delta * 360 / count;
@@ -104,7 +107,6 @@
       // Keep visible side cards keyboard reachable, but their text out of AT.
       if (!visible) card.setAttribute('aria-hidden', 'true');
       else card.removeAttribute('aria-hidden');
-      height = Math.max(height, card.offsetHeight);
     });
     ring.style.height = `${height}px`;
     pause.setAttribute('aria-label', userPaused ? 'Play reviews' : 'Pause reviews');
@@ -178,6 +180,15 @@
   laptop.addEventListener('change', render);
   carousel.classList.add('reviews-enhanced');
   render();
+  cards.forEach(card => {
+    const image = card.querySelector('[data-review-art]');
+    image.addEventListener('load', render);
+    image.addEventListener('error', render);
+  });
+  if (document.fonts) {
+    document.fonts.ready.then(render);
+    document.fonts.addEventListener('loadingdone', render);
+  }
   if ('ResizeObserver' in window) new window.ResizeObserver(render).observe(carousel);
   else window.addEventListener('resize', render);
   if ('IntersectionObserver' in window) {

@@ -2,7 +2,7 @@
 .team-page .team-page-intro { padding: 28px 0 0; }
 .team-page-intro > .container, .team-page .cta > .container { width: min(calc(100% - 80px), 1280px); }
 .team-page-intro h1 { max-width: none; margin: 6px 0 24px; font-size: clamp(2rem, 2.8vw, 2.5rem); line-height: 1.08; letter-spacing: -0.045em; }
-.team-page-layout { display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 24px; align-items: start; }
+.team-page-layout { display: grid; grid-template-columns: 400px minmax(0, 1fr); gap: 24px; align-items: start; }
 .team-page-info { display: grid; gap: 20px; min-width: 0; }
 .team-page-coverage-cell { min-width: 0; padding: 28px; border-radius: var(--radius-xl); background: var(--teal-soft); color: var(--ink); }
 .team-page-coverage-cell p { margin: 0; font-size: 1rem; line-height: 1.55; }
@@ -12,7 +12,7 @@
 .team-page-promise-cell .team-page-promise,
 .team-page-coverage-cell p,
 .team-biography .team-biography-role + p { color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
-.team-page-viewer { min-width: 0; order: -1; }
+.team-page-viewer { min-width: 0; }
 .team-page-viewer:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 6px; }
 .team-biography { display: flow-root; min-width: 0; padding: 26px 28px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); scroll-margin-top: calc(var(--sticky-header-height, 95px) + 20px); }
 .team-biography + .team-biography { margin-top: 20px; }
@@ -71,8 +71,7 @@
 /* Keep compact desktop spacing while the full biographies set the page height. */
 body.team-page[data-page-frame] .team-page-intro { padding-top: 12px; }
 body.team-page[data-page-frame] .team-page-intro h1 { margin: 4px 0 14px; }
-body.team-page[data-page-frame] .team-page-layout { grid-template-columns: minmax(0, 1fr) clamp(300px, 26vw, 360px); gap: 20px; }
-body.team-page[data-page-frame] .team-page-viewer { order: -1; }
+body.team-page[data-page-frame] .team-page-layout { grid-template-columns: 400px minmax(0, 1fr); gap: 20px; }
 body.team-page[data-page-frame] .team-deck-stage { margin-block: 0; }
 body.team-page[data-page-frame] .team-page-info { align-content: start; gap: 16px; }
 body.team-page[data-page-frame] .team-page-promise-cell,
@@ -93,4 +92,75 @@ body.team-page[data-page-frame] .cta-box { padding-block: 12px; }
   .team-page-viewer .team-deck-stage { overflow: visible !important; perspective: none !important; }
   .team-page-viewer .team-profiles { width: 100% !important; height: auto !important; transform: none !important; }
   .team-page-viewer .team-biography { display: flow-root !important; position: static !important; height: auto !important; margin-top: 20px !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; break-inside: avoid; }
+}
+
+/* Desktop keeps full biographies and the closing enquiry in one screen. */
+@media screen and (min-width: 1101px) {
+  body.team-page .team-page-intro { padding-top: 12px; }
+  body.team-page .team-page-intro h1 { margin: 4px 0 14px; font-size: 32px; }
+  body.team-page .team-page-layout { grid-template-columns: 400px minmax(0, 1fr); gap: 20px; }
+  body.team-page .team-deck-enhanced .team-profiles { width: min(600px, calc(100% - 110px)); }
+  body.team-page .team-biography { padding: 20px 24px; }
+  body.team-page .team-biography h2 { margin-bottom: 6px; font-size: 26px; }
+  body.team-page .team-biography p { margin-bottom: 10px; font-size: 16px; line-height: 1.45; }
+  body.team-page .team-biography p:last-child { margin-bottom: 0; }
+  body.team-page .team-biography .team-biography-role { font-size: 16px; line-height: 1.35; }
+  body.team-page .team-biography .team-biography-role + p { font-size: 18px; line-height: 1.4; }
+  body.team-page .team-biography .framework-portrait-frame { width: 120px; height: 180px; margin-left: 18px; margin-bottom: 10px; }
+  body.team-page .team-biography-availability { padding-top: 10px; }
+  body.team-page .team-page-info { gap: 16px; }
+  body.team-page .team-page-promise-cell,
+  body.team-page .team-page-coverage-cell { padding: 22px; }
+  body.team-page .team-page-promise-cell .team-page-promise,
+  body.team-page .team-page-coverage-cell p { font-size: 18px; line-height: 1.4; }
+  body.team-page .team-deck-controls { padding-top: 8px; }
+  body.team-page .cta { padding: 12px 0 16px; }
+  body.team-page .cta .cta-box { padding: 12px 0; }
+  body.team-page .cta .cta-box { align-items: flex-end; }
+  body.team-page .cta .cta-box > div { width: 400px; }
+  body.team-page .cta .cta-box h2 { margin-block: 0 6px; font-size: 22px; }
+  body.team-page .cta .cta-box p { margin-block: 0; font-size: 16px; line-height: 1.45; }
+}
+
+/* The desktop Team composition uses the same one-screen contract as the other back pages. */
+@media screen and (min-width: 1101px) and (min-height: 760px) {
+  body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-y: auto; padding-bottom: 24px; }
+  body.team-page[data-page-frame] #main {
+    display: flex;
+    flex-direction: column;
+    height: var(--back-page-height);
+    min-height: 0;
+  }
+  body.team-page[data-page-frame] .team-page-intro { flex: 1 1 auto; min-height: 0; padding-top: 10px; }
+  body.team-page[data-page-frame] .team-page-intro > .container { height: 100%; }
+  body.team-page[data-page-frame] .team-page-layout { align-items: start; }
+  body.team-page[data-page-frame] .team-page-info {
+    align-self: start;
+    height: calc(var(--team-card-height, 450px) + 16px);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  body.team-page[data-page-frame] .team-page-promise-cell,
+  body.team-page[data-page-frame] .team-page-coverage-cell { display: flex; align-items: center; }
+  body.team-page[data-page-frame] .cta { flex: 0 0 auto; padding-block: 8px 10px; }
+  body.team-page[data-page-frame] .cta .cta-box { padding-inline: 0; }
+  body.team-page[data-page-frame] .cta .cta-box > div { width: min(560px, 46vw); }
+}
+@media screen and (min-width: 1101px) and (min-height: 760px) and (max-height: 850px) {
+  body.team-page[data-page-frame] .team-page-intro { padding-top: 6px; }
+  body.team-page[data-page-frame] .team-page-intro h1 { margin-bottom: 8px; font-size: 28px; }
+  body.team-page[data-page-frame] .team-page-layout { gap: 16px; }
+  body.team-page[data-page-frame] .team-biography { padding: 16px 20px; }
+  body.team-page[data-page-frame] .team-biography h2 { font-size: 23px; }
+  body.team-page[data-page-frame] .team-biography p { margin-bottom: 7px; font-size: 14px; line-height: 1.35; }
+  body.team-page[data-page-frame] .team-biography .team-biography-role { font-size: 14px; }
+  body.team-page[data-page-frame] .team-biography .team-biography-role + p { font-size: 16px; line-height: 1.32; }
+  body.team-page[data-page-frame] .team-biography .framework-portrait-frame { width: 100px; height: 150px; margin-left: 16px; margin-bottom: 8px; }
+  body.team-page[data-page-frame] .team-page-promise-cell,
+  body.team-page[data-page-frame] .team-page-coverage-cell { padding: 17px; }
+  body.team-page[data-page-frame] .team-page-promise-cell .team-page-promise,
+  body.team-page[data-page-frame] .team-page-coverage-cell p { font-size: 15px; line-height: 1.35; }
+  body.team-page[data-page-frame] .team-deck-controls { padding-top: 5px; }
+  body.team-page[data-page-frame] .team-deck-controls button { min-width: 40px; min-height: 40px; padding: 7px 11px; }
+  body.team-page[data-page-frame] .cta { padding-block: 5px 7px; }
+  body.team-page[data-page-frame] .cta .cta-box { padding-block: 8px; }
 }

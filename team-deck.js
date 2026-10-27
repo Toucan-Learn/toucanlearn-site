@@ -88,6 +88,7 @@
         height = Math.max(height, Math.ceil(contentHeight + verticalFrame));
       });
       ring.style.setProperty('--team-card-height', `${height}px`);
+      deck.closest('.team-page-layout')?.style.setProperty('--team-card-height', `${height}px`);
       ring.style.height = `${height}px`;
       status.textContent = `${modulo(position) + 1} of ${count}`;
     }

@@ -1,7 +1,37 @@
 /* The original CTA renderer now fills the Team page. One sky, no separate image. */
 body.team-page { position: relative; isolation: isolate; background: var(--bg); }
 body.team-page::before { display: none; }
-body.team-page > header { background: rgba(var(--bg-rgb), 0.5); }
+/* Team navigation floats directly on the shared pixel sky. */
+body.team-page > header {
+  background: transparent;
+  border-bottom-color: transparent;
+  box-shadow: none;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+/* The bar itself stays absent, while its controls remain readable on the sky. */
+.team-page > header .nav-links,
+.team-page > header .theme-toggle { color: #f0ebe0; }
+.team-page > header .logo {
+  padding: 7px 12px 7px 9px;
+  border-radius: 10px;
+  background: #f3eee4;
+}
+.team-page > header .brand-lockup strong { color: #0b3f51; }
+.team-page > header .brand-lockup .brand-can { color: #c45f21; }
+.team-page > header .brand-lockup > span { color: #1f7a75; }
+.team-page > header .button.trial-button,
+.team-page > header .button.trial-button--light-surface {
+  border-color: #f3eee4;
+  background: #f3eee4;
+  color: #0a272c;
+  box-shadow: 0 10px 24px rgba(7, 18, 25, .2);
+}
+.team-page > header .button.trial-button:is(:hover, :focus-visible),
+.team-page > header .button.trial-button--light-surface:is(:hover, :focus-visible) {
+  background: #fbf8f2;
+  color: #0a272c;
+}
 .team-page main { background: transparent; }
 .team-page > .reviews-enquiry-sky {
   position: absolute;
@@ -42,11 +72,26 @@ body.team-page > header { background: rgba(var(--bg-rgb), 0.5); }
 .team-page .cta-box h2, .team-page .cta-box p,
 .team-page footer.site-footer { text-shadow: 0 1px 1px #071219, 0 0 3px #071219; }
 .team-page .team-biography { box-shadow: 0 12px 32px #0003; }
+
+/* Cream cells frame the content in both themes; the sky remains visible around them. */
+.team-page :is(.team-biography, .team-page-promise-cell, .team-page-coverage-cell) {
+  --heading: #0b3f51;
+  --ink: #142f3a;
+  --line: rgba(11, 63, 81, .18);
+  background: #f3eee4;
+  color: #142f3a;
+  border-color: rgba(11, 63, 81, .18);
+}
+.team-page :is(.team-biography, .team-page-promise-cell, .team-page-coverage-cell) :is(h2, p) {
+  color: inherit;
+  text-shadow: none;
+}
+.team-page .team-biography .team-biography-role { color: #b74716; }
 /* The enquiry sits directly on the same sky, without a capsule or corner seam. */
 .team-page .cta-box { background: transparent; border: 0; border-radius: 0; box-shadow: none; }
 .team-page .cta-box h2, .team-page .cta-box p { color: #f0ebe0; }
-.team-page .cta-box > div { padding: 14px 20px; border-radius: 12px; background: #f0ebe0; }
-.team-page .cta-box > div :is(h2, p) { color: #0a272c; text-shadow: none; }
+.team-page .cta-box > div { padding: 0; border-radius: 0; background: transparent; }
+.team-page .cta-box > div :is(h2, p) { color: #f0ebe0; text-shadow: 0 1px 1px #071219, 0 0 3px #071219; }
 .team-page .cta-box > .button { background: #f0ebe0; color: #0a272c; }
 .team-page .cta-box > .button:is(:hover, :focus-visible) { background: #fbf8f2; color: #0a272c; }
 .team-page footer.site-footer { background: transparent; color: #f0ebe0; border: 0; }

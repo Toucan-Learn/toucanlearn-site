@@ -1,17 +1,15 @@
 (function () {
   'use strict';
 
-  // Illustrative adult stock portraits, not actual reviewers.
-  // Provenance and licence evidence: assets/reviews/SOURCES.md.
-  // Existing illustration keys retain the established card pairing.
-  const REVIEW_PHOTOS = {
-    "b": "assets/reviews/pexels-15026471.jpg",
-    "d": "assets/reviews/pexels-20233027.jpg",
-    "f": "assets/reviews/pexels-2362887.jpg",
-    "g": "assets/reviews/pexels-2379004.jpg",
-    "h": "assets/reviews/pexels-33202132.jpg",
-    "i": "assets/reviews/pexels-4584543.jpg",
-    "j": "assets/reviews/pexels-5698208.jpg"
+  // Approved decorative Toucan art only.
+  const REVIEW_ART = {
+    "b": "assets/art/review-b.png",
+    "d": "assets/art/review-d.png",
+    "f": "assets/art/review-f.png",
+    "g": "assets/art/review-g.png",
+    "h": "assets/art/review-h.png",
+    "i": "assets/art/review-i.png",
+    "j": "assets/art/review-j.png"
   };
   const carousel = document.querySelector('[data-reviews-carousel]');
   if (!carousel) return;
@@ -19,7 +17,7 @@
   const cards = Array.from(ring.querySelectorAll('.review-quote'));
   const count = cards.length;
   if (count < 3 || count > 8) return;
-  const keys = Object.keys(REVIEW_PHOTOS);
+  const keys = Object.keys(REVIEW_ART);
   const requested = (new URLSearchParams(window.location.search).get('reviewart') || '').split(',');
   const validOverride = requested.length === Math.min(count, keys.length) &&
     new Set(requested).size === requested.length && requested.every(key => keys.includes(key));
@@ -52,13 +50,12 @@
   };
 
   // Retain the established distinct slot pairing and legacy ?reviewart= override.
-  // The keys now select illustrative stock portraits documented in SOURCES.md.
   const chosen = cards.map(card => card.querySelector('[data-review-art]').getAttribute('data-review-art'));
   if (!validOverride && chosen.every(key => keys.includes(key)) && new Set(chosen).size === count) art = chosen;
 
   cards.forEach((card, index) => {
     const image = card.querySelector('[data-review-art]');
-    image.src = REVIEW_PHOTOS[art[index % art.length]];
+    image.src = REVIEW_ART[art[index % art.length]];
     card.setAttribute('role', 'group');
     card.setAttribute('aria-roledescription', 'slide');
     card.setAttribute('aria-label', `Review ${index + 1} of ${count}`);

@@ -1,4 +1,10 @@
 (() => {
+  document.querySelectorAll('.nav-links, .mobile-menu > nav').forEach(nav => {
+    const team = nav.querySelector(':scope > a[href="team.html"]');
+    const reviews = nav.querySelector(':scope > a[href$="#reviews"]');
+    if (team && reviews) nav.insertBefore(team, reviews);
+  });
+
   document.querySelectorAll('details.mobile-menu').forEach(menu => {
     const summary = menu.querySelector('summary');
 

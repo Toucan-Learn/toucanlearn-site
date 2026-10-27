@@ -79,6 +79,7 @@ body.team-page[data-page-frame] .team-page-coverage-cell { padding: 22px; }
 body.team-page[data-page-frame] .team-deck-controls { padding-top: 8px; }
 body.team-page[data-page-frame] .cta { padding: 12px 0 16px; }
 body.team-page[data-page-frame] .cta-box { padding-block: 12px; }
+body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-x: hidden; overflow-y: auto; padding-bottom: 24px; }
 @media (min-width: 760px) and (max-width: 1000px) {
   body.team-page[data-page-frame] .team-page-layout { gap: 16px; }
   body.team-page[data-page-frame] .team-page-intro h1 { margin-bottom: 10px; }
@@ -136,7 +137,7 @@ body.team-page[data-page-frame] .cta-box { padding-block: 12px; }
   body.team-page[data-page-frame] .team-page-layout { align-items: start; }
   body.team-page[data-page-frame] .team-page-info {
     align-self: start;
-    height: calc(var(--team-card-height, 450px) + 16px);
+    height: calc(var(--team-card-height, 450px) + 8px);
     grid-template-rows: auto minmax(0, 1fr);
   }
   body.team-page[data-page-frame] .team-page-promise-cell,

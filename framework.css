@@ -244,10 +244,3 @@
 }
 
 .language-flag { display: inline-block; margin-right: .35em; font-size: 1.15em; line-height: 1; vertical-align: -.08em; }
-
-/* Review photos are illustrative stock portraits, separate from the testimony. */
-#reviews .review-photo-note { margin: 10px 0 0; font-size: .8125rem; line-height: 1.5; color: var(--ink); }
-#reviews .reviews-enhanced .review-art img { object-fit: cover; object-position: center 27%; }
-#reviews .reviews-enhanced .review-art img[data-review-art="f"] { object-position: center 35%; }
-#reviews .reviews-enhanced .review-art img[data-review-art="g"] { object-position: center 21%; }
-#reviews .reviews-enhanced .review-art img[data-review-art="h"] { object-position: center 23%; }

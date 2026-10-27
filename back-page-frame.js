@@ -9,7 +9,7 @@
   const isTeam = body.classList.contains('team-page');
   const eligible = matchMedia(isTeam
     ? '(min-width: 760px) and (min-height: 650px)'
-    : '(min-width: 1100px) and (min-height: 760px)');
+    : '(min-width: 1100px) and (min-height: 600px)');
   const viewport = main.querySelector('.framework-panels');
   const panels = [...main.querySelectorAll('[data-content-panel]')];
   const groupSelector = '.learning-steps, .learning-formats, .learning-session, .report-parts, .framework-route-grid, .framework-benefits, .adult-topics, .adult-language-list, .adult-lesson-steps, .learning-subject-grid, .learning-languages';
@@ -158,6 +158,13 @@
     });
     clear();
     if (!printing) paginate(target);
+    // A shorter viewport can fit the desktop frame but not its contents.
+    // In that case restore normal document scrolling rather than clipping.
+    if (!isTeam && body.hasAttribute('data-page-frame') &&
+        main.scrollHeight > main.clientHeight + 2) {
+      body.removeAttribute('data-page-frame');
+      clear();
+    }
     window.dispatchEvent(new Event('backpage:resize'));
   }
   function schedule() {

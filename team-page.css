@@ -79,7 +79,7 @@ body.team-page[data-page-frame] .team-page-coverage-cell { padding: 22px; }
 body.team-page[data-page-frame] .team-deck-controls { padding-top: 8px; }
 body.team-page[data-page-frame] .cta { padding: 12px 0 16px; }
 body.team-page[data-page-frame] .cta-box { padding-block: 12px; }
-body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-x: hidden; overflow-y: auto; padding-bottom: 24px; }
+body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-x: hidden; overflow-y: auto; padding-bottom: 0; }
 @media (min-width: 760px) and (max-width: 1000px) {
   body.team-page[data-page-frame] .team-page-layout { gap: 16px; }
   body.team-page[data-page-frame] .team-page-intro h1 { margin-bottom: 10px; }
@@ -124,8 +124,8 @@ body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-x: 
 }
 
 /* The desktop Team composition uses the same one-screen contract as the other back pages. */
-@media screen and (min-width: 1101px) and (min-height: 760px) {
-  body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-y: auto; padding-bottom: 24px; }
+@media screen and (min-width: 1101px) and (min-height: 600px) {
+  body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-y: auto; padding-bottom: 0; }
   body.team-page[data-page-frame] #main {
     display: flex;
     flex-direction: column;
@@ -146,7 +146,7 @@ body.team-page[data-page-frame] { height: auto; min-height: 100dvh; overflow-x: 
   body.team-page[data-page-frame] .cta .cta-box { padding-inline: 0; }
   body.team-page[data-page-frame] .cta .cta-box > div { width: min(560px, 46vw); }
 }
-@media screen and (min-width: 1101px) and (min-height: 760px) and (max-height: 850px) {
+@media screen and (min-width: 1101px) and (min-height: 600px) and (max-height: 850px) {
   body.team-page[data-page-frame] .team-page-intro { padding-top: 6px; }
   body.team-page[data-page-frame] .team-page-intro h1 { margin-bottom: 8px; font-size: 28px; }
   body.team-page[data-page-frame] .team-page-layout { gap: 16px; }

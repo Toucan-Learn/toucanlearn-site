@@ -431,3 +431,5 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
   body[data-page-frame] #learner-projects .project-note { grid-column: 1; grid-row: 2; align-self: center; margin: 0; padding: 0; font-size: .85rem; opacity: .85; }
   body[data-page-frame] #learner-projects .framework-project-controls { grid-column: 2; grid-row: 2; justify-content: flex-end; padding-top: 16px; }
 }
+/* Language cards: even padding so the last line never sits on the card edge (8 cards, 4 x 2). */
+.subjects-page #languages .learning-languages > .subject-card { padding: 14px 16px 16px; }

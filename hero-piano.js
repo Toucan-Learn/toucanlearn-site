@@ -64,7 +64,7 @@ function recordNoteTiming() {
 }
 export function noteWavePosition() { return wavePosition; }
 
-export function peekNextNote() { return song.notes[nextNote]; }
+export function peekNextNote(offset = 0) { return song.notes[(nextNote + offset) % song.notes.length]; }
 
 // Round 87 (Joshua: "just change the keyboard if this song comes up"): a song can move
 // the keyboard up an octave so its high notes have keys (Runaway's high E6).

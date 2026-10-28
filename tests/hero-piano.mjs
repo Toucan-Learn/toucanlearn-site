@@ -58,12 +58,15 @@ async function openPiano(page, id, colour, viewport, reduced = false) {
 
 async function highlighted(page, expected) {
   const state = await page.evaluate(() => {
-    const keys = [...document.querySelectorAll('.piano-key.is-next')];
+    const keys = [...document.querySelectorAll('.piano-key.is-now')];
     const button = keys[0];
     if (!button) return { count: keys.length };
     const rect = button.getBoundingClientRect();
     const view = document.querySelector('.piano-scroll').getBoundingClientRect();
     const css = getComputedStyle(button);
+    const followingKeys = [...document.querySelectorAll('.piano-key.is-next')];
+    const following = followingKeys[0];
+    const followingCss = following && getComputedStyle(following);
     const white = button.classList.contains('piano-key--white');
     const x = (rect.left + rect.right) / 2;
     const y = white ? rect.bottom - 10 : (rect.top + rect.bottom) / 2;
@@ -75,6 +78,13 @@ async function highlighted(page, expected) {
       count: keys.length, pitch: button.dataset.pitch, note: button.dataset.note,
       key: button.dataset.key.toLowerCase(), x, y,
       background: css.backgroundColor, letterColour: getComputedStyle(button, '::after').color,
+      shadow: css.boxShadow, text: button.textContent.trim(),
+      following: following && { count: followingKeys.length, pitch: following.dataset.pitch,
+        expected: window.pianoUnderTest.peekNextNote(1), same: following === button,
+        background: followingCss.backgroundColor, shadow: followingCss.boxShadow,
+        letterColour: getComputedStyle(following, '::after').color,
+        rendered: following.getClientRects().length > 0 && followingCss.visibility === 'visible',
+        text: following.textContent.trim() },
       lettersShown: matchMedia('(hover: hover) and (pointer: fine)').matches,
       visible: css.display !== 'none' && css.visibility === 'visible' && rect.width > 0 && rect.height > 0
         && rect.left >= Math.max(0, view.left) - 1 && rect.right <= Math.min(innerWidth, view.right) + 1
@@ -82,12 +92,27 @@ async function highlighted(page, expected) {
       hit: hit === button, hitElement: describe(hit), focusedElement: describe(document.activeElement),
     };
   });
-  assert.equal(state.count, 1, 'Exactly one highlighted key');
+  assert.equal(state.count, 1, 'Exactly one orange current key');
   assert.equal(state.pitch, expected, `Correct highlighted pitch: ${JSON.stringify(state)}`);
   assert.ok(state.visible, `Highlighted key is in the keyboard and screen: ${JSON.stringify(state)}`);
   assert.ok(state.hit, `Highlighted key can actually be hit: ${JSON.stringify(state)}`);
-  assert.equal(state.background, 'rgb(99, 196, 123)', 'Next white/black keys are green, even while pressed on repetitions');
-  if (state.lettersShown) assert.equal(state.letterColour, 'rgb(10, 39, 44)', 'Computer letters stay dark and readable on green');
+  assert.equal(state.background, 'rgb(239, 172, 142)', 'The current white/black key stays brand orange, including pressed repetitions');
+  assert.equal(state.text, '', 'No visible now/next text labels are added');
+  assert.equal(state.following?.count, 1, 'Exactly one following-note cue');
+  assert.equal(state.following.pitch, state.following.expected, 'Green previews the note after the orange one');
+  assert.ok(state.following.rendered, 'The following-note cue is on a rendered key');
+  assert.equal(state.following.text, '');
+  assert.ok(state.following.shadow.includes('rgb(99, 196, 123)'), 'The following note has a green inner edge');
+  if (state.following.same) {
+    assert.match(state.shadow, /0px 0px 0px 3px/, 'A repeated pitch combines orange with a clear green ring');
+  } else {
+    assert.equal(state.following.background, 'rgb(197, 221, 201)', 'A distinct following note has the softer green tint');
+    assert.match(state.following.shadow, /0px 0px 0px 2px/, 'A distinct following note has a secondary green edge');
+  }
+  if (state.lettersShown) {
+    assert.equal(state.letterColour, 'rgb(10, 39, 44)', 'Computer letters remain readable on orange');
+    assert.equal(state.following.letterColour, 'rgb(10, 39, 44)', 'Computer letters remain readable on green');
+  }
   return state;
 }
 

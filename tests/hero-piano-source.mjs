@@ -54,11 +54,20 @@ const html = await readFile(new URL('index.html', root), 'utf8');
 const keyboard = await readFile(new URL('hero-keyboard.js', root), 'utf8');
 const css = await readFile(new URL('hero.css', root), 'utf8');
 assert.match(css, /--piano-next-green:\s*#63c47b;/, 'The cue uses a saturated sage green');
+for (const selector of ['.piano-key.is-now', '.piano-key.is-now.is-pressed', '.piano-key.is-now.is-next', '.piano-key.is-now.is-next.is-pressed']) {
+  const rule = css.slice(css.indexOf(`${selector} {`)).split('}')[0];
+  assert.match(rule, /background: var\(--hero-peach\)/, 'The current note stays brand orange, including repeated/pressed pitches');
+}
 for (const selector of ['.piano-key.is-next', '.piano-key.is-next.is-pressed']) {
   const rule = css.slice(css.indexOf(`${selector} {`)).split('}')[0];
-  assert.match(rule, /background: var\(--piano-next-green\)/, 'Next keys stay green, including repeated pressed pitches');
+  assert.match(rule, /background: var\(--piano-next-tint\)/, 'The following note has a softer green fill');
+  assert.match(rule, /inset 0 0 0 2px var\(--piano-next-green\)/, 'The following note has a green edge');
 }
-assert.match(css, /\.piano-key:is\(\.is-next, \.is-pressed\)\[data-key\]::after \{ color: #0a272c;/,
+for (const selector of ['.piano-key.is-now.is-next', '.piano-key.is-now.is-next.is-pressed']) {
+  const rule = css.slice(css.indexOf(`${selector} {`)).split('}')[0];
+  assert.match(rule, /inset 0 0 0 3px var\(--piano-next-green\)/, 'A repeated pitch has a clear green inner ring');
+}
+assert.match(css, /\.piano-key:is\(\.is-now, \.is-next, \.is-pressed\)\[data-key\]::after \{ color: #0a272c;/,
   'Both black and white highlighted keys retain dark readable computer letters');
 assert.match(html, /<progress class="piano-tempo-bar" max="1" value="0" aria-hidden="true">/,
   'A native progress value avoids CSP-blocked inline styles');
@@ -94,8 +103,9 @@ for (const song of seed.songs) {
   const advanced = [];
   const unsubscribe = api.onSongAdvance(note => advanced.push(note));
   for (let loop = 0; loop < 3; loop++) {
-    for (const note of song.notes) {
+    for (const [i, note] of song.notes.entries()) {
       assert.equal(api.peekNextNote(), note, `${song.id}: every note in order`);
+      assert.equal(api.peekNextNote(1), song.notes[(i + 1) % song.notes.length], `${song.id}: following note includes repeats and loop boundary`);
       clock.now += 300;
       const before = clock.attacks;
       api.playNextNote();
@@ -238,7 +248,7 @@ for (const song of seed.songs) {
   cueResults.push({ id: song.id, bpm, attacks: song.notes.length, practice: !song.noteBeats });
 }
 
-const result = { status: 'PASS', songs: songResults, joplinTranscriptions: 'PASS', exactRunaway: 'PASS', mobileAndResize: 'PASS', rotationStateRetention: 'PASS', songCycling: 'PASS', greenHighlightSource: 'PASS', tempoCue: cueResults, tempo: { fast, slow, sweep },
+const result = { status: 'PASS', songs: songResults, joplinTranscriptions: 'PASS', exactRunaway: 'PASS', mobileAndResize: 'PASS', rotationStateRetention: 'PASS', songCycling: 'PASS', twoColourHighlightSource: 'PASS', tempoCue: cueResults, tempo: { fast, slow, sweep },
   scope: 'Source and simulated audio only; browser layout, real audio and GPU unverified' };
 const output = globalThis.process?.env?.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/final-pass-20261028/codex-piano2';
 await mkdir(output, { recursive: true });

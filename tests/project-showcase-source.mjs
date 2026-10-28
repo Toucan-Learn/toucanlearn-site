@@ -94,7 +94,7 @@ for (const page of ['index.html', 'children.html']) {
 await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.url)), 'Retire the alternate piano implementation');
 
 const site = fileURLToPath(new URL('../', import.meta.url));
-const before = execFileSync('git', ['show', '0070267:index.html'], { cwd: site, encoding: 'utf8' });
+const before = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || '0070267'}:index.html`], { cwd: site, encoding: 'utf8' });
 const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');

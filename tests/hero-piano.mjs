@@ -464,6 +464,7 @@ async function tempoCue(page, viewport, colour, song, reduced = false) {
 let page;
 try {
   page = await browser.newPage();
+  await page.evaluateOnNewDocument(() => { try { localStorage.setItem('toucan-launch-offer-last-shown', String(Date.now())); } catch {} }); // offer pop-up already seen
   await page.evaluateOnNewDocument(() => {
     window.pianoAudio = { contexts: 0, attacks: 0 };
     document.addEventListener('securitypolicyviolation', event => {

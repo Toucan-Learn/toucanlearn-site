@@ -25,6 +25,7 @@ async function open(view, theme, reduced = true, options = {}) {
   const page = await context.newPage();
   await page.setViewport({ ...view, deviceScaleFactor: 1 });
   await page.emulateMediaFeatures([{ name: 'prefers-color-scheme', value: theme === 'light' ? 'light' : 'dark' }, { name: 'prefers-reduced-motion', value: reduced ? 'reduce' : 'no-preference' }]);
+  await page.evaluateOnNewDocument(() => { try { localStorage.setItem('toucan-launch-offer-last-shown', String(Date.now())); } catch {} }); // offer pop-up already seen
   await page.evaluateOnNewDocument(({ theme, random, fast }) => {
     localStorage.removeItem('toucan-theme');
     if (theme !== 'system-dark') localStorage.setItem('toucan-theme', theme);

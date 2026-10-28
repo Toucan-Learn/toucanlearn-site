@@ -43,6 +43,7 @@ async function setup({ viewport = viewports[0], colour = 'light', mode = 'active
     });
     return route.fallback();
   });
+  if (mode === 'baseline') await context.route('**/launch-offer.js*', route => route.fulfill({ contentType: 'text/javascript', body: '' }));
   if (mode === 'inactive') await context.route('**/launch-offer.js*', route => route.fulfill({ contentType: 'text/javascript', body: source.replace('active: true', 'active: false') }));
   await context.addInitScript(({ resetSeen, storageThrows, storageKey }) => {
     // Context scripts also run on about:blank, whose opaque origin denies storage access.

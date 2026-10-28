@@ -273,3 +273,6 @@
   .homepage .framework-profile .framework-profile-role + p { font-size: 1.12rem; line-height: 1.38; }
   .homepage .framework-team-viewer { padding-block: 22px; }
 }
+
+/* Keep short Arabic phrases on one line inside English quotes. */
+bdi[lang="ar"] { white-space: nowrap; }

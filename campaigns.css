@@ -2925,3 +2925,6 @@ header:not(.toucan-opening-header) .nav-links {
 /* Instagram handle in the footer: no underline (owner, 28 Oct 2026). */
 .footer-slogan a, .team-page footer.site-footer .footer-slogan a { text-decoration: none; }
 .footer-slogan a:hover, .footer-slogan a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+/* Reviews: the third card colour is soft teal, not peach (owner, 28 Oct 2026: "the orange cell colour is ugly"). */
+.homepage-section .review-quote:nth-child(3n),
+#reviews .reviews-enhanced .review-quote:nth-child(3n) { background: var(--teal-soft); border-color: var(--line); }

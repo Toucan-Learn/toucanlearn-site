@@ -1,11 +1,9 @@
 (function () {
   'use strict';
 
-  // Approved decorative Toucan art only.
+  // Approved decorative Toucan art only: single-toucan scenes (owner's art rule; b, d and f
+  // showed more than one toucan, one an adult touching a chick, so they are retired).
   const REVIEW_ART = {
-    "b": "assets/art/review-b.png",
-    "d": "assets/art/review-d.png",
-    "f": "assets/art/review-f.png",
     "g": "assets/art/review-g.png",
     "h": "assets/art/review-h.png",
     "i": "assets/art/review-i.png",

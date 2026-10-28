@@ -6,10 +6,16 @@ export const projects = [
   { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-preview.png', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
-// ?project=<id> is a review/test override. Ordinary homepage loads are random.
-export function initialProject(requested, random = Math.random) {
+// Owner, 28 Oct 2026: "lets have piano as the 1st in the carousel on the frontpage for now".
+// Set to null to go back to a random project on each homepage load.
+export const homepageStart = 'piano';
+
+// ?project=<id> is a review/test override; otherwise homepageStart, else random.
+export function initialProject(requested, random = Math.random, start = homepageStart) {
   const index = projects.findIndex(project => project.id === requested);
-  return index < 0 ? Math.floor(random() * projects.length) : index;
+  if (index >= 0) return index;
+  const fixed = projects.findIndex(project => project.id === start);
+  return fixed >= 0 ? fixed : Math.floor(random() * projects.length);
 }
 
 // Injectable clock keeps the real 20-second policy testable without a browser.

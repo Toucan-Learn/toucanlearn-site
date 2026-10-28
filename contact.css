@@ -88,3 +88,11 @@
   .pricing-bands dd { margin-top: 2px; font-size: .88rem; line-height: 1.35; }
   .pricing-footer { padding-top: 10px; font-size: .82rem; }
 }
+/* Two-line band descriptions (owner's copy, 28 Oct): a touch tighter, and clear of the menu bar. */
+@media (min-width: 901px) {
+  .contact-pricing { margin: 22px 0 -20px; padding: 16px 22px; }
+  .pricing-bands { margin: 8px 0 10px; }
+  .pricing-bands > div { padding-block: 7px; }
+  .pricing-bands dd { font-size: .85rem; line-height: 1.32; }
+  .pricing-footer { padding-top: 8px; }
+}

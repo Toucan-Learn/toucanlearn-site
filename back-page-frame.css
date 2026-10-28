@@ -384,12 +384,21 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
   #qualifications .qualification-art { height: 150px; }
 }
 
-/* Children, Projects & learning (owner, 28 Oct 2026: "just need to address this section"). Text and
-   picture start level at the top, every picture sits in the same fixed box, and one footer row
-   holds the permission note (left) and the project arrows (right). */
+/* Project copy shares the subject cards' cream/dark palette and local text tokens. */
+#learner-projects .framework-project-copy.subject-card {
+  display: flex; flex-direction: column; padding: 14px; border: 1px solid transparent; border-radius: var(--radius-md, 16px);
+}
 #learner-projects .project-label { margin: 0 0 8px; color: var(--orange-text); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+#learner-projects .project-copy-cells { display: grid; margin-bottom: 8px; }
+#learner-projects .project-copy-cells > div { padding-block: 8px; border-top: 1px solid var(--line); }
+#learner-projects .project-copy-cells h4 { margin: 0 0 3px; color: var(--heading); font-size: .85rem; line-height: 1.3; }
+#learner-projects .project-copy-cells p { margin: 0; }
+#learner-projects .project-design-lines > span { display: block; }
+#learner-projects .framework-project-copy > a { align-self: flex-start; margin-top: auto; font-size: .85rem; font-weight: 700; }
+#learner-projects .framework-project-copy > a:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
 #learner-projects .framework-project-media { --project-media-height: clamp(220px, 46vh, 400px); }
 #learner-projects .framework-project-media > img,
+#learner-projects .framework-project-media > video,
 #learner-projects .screenshot-gallery img:not([hidden]),
 #learner-projects .framework-project-media > .project-embed {
   display: block; width: 100%; height: var(--project-media-height); max-height: none; object-fit: contain; border: 0; border-radius: 14px; background: #0b1119;
@@ -398,6 +407,10 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
 #learner-projects [data-enhanced] .framework-project-media > .project-embed { display: block; }
 #learner-projects [data-enhanced] .framework-project-media > .project-embed-fallback { display: none; }
 @media screen and (max-width: 759px) {
+  #learner-projects .framework-project { grid-template-columns: minmax(0, 1fr); align-items: start; }
+  #learner-projects .framework-project-copy { font-size: .95rem; line-height: 1.45; }
+  #learner-projects .framework-project-controls { justify-content: center; gap: 8px; padding-top: 12px; }
+  #learner-projects .framework-project-controls button { min-width: 0; padding-inline: 10px; font-size: .85rem; }
   #learner-projects .screenshot-gallery { position: relative; }
   #learner-projects .screenshot-gallery-controls { position: absolute; right: 8px; bottom: 8px; left: 8px; margin: 0; padding: 4px 8px; border-radius: 10px; background: #04161ee6; }
 }
@@ -410,26 +423,49 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
   #learner-projects .framework-project-media > .project-embed-fallback { display: block !important; height: auto; }
 }
 @media screen and (min-width: 1000px) {
+  /* Reclaim heading/footer space, then let media stretch into the existing frame.
+     The natural minimum also applies during .is-measuring: no height feedback loop. */
+  body[data-page-frame] #learner-projects > .section-head { margin-bottom: 10px; }
+  body[data-page-frame] #learner-projects > .section-head h2 { margin: 0 0 4px; font-size: clamp(1.4rem, 3.2vh, 1.8rem); }
+  body[data-page-frame] #learner-projects > .section-head p { margin: 0; font-size: .9rem; line-height: 1.4; }
   body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] {
-    flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); grid-template-rows: 1fr auto; column-gap: 36px;
+    flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); grid-template-rows: 1fr auto; gap: 8px 20px;
   }
-  body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] > .framework-project-slides { grid-column: 1 / -1; grid-row: 1; align-self: start; }
-  body[data-page-frame] #learner-projects .framework-project { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); column-gap: 36px; align-items: start; padding: 0; }
-  body[data-page-frame] #learner-projects .framework-project-media { align-self: start; justify-self: stretch; max-width: none; width: 100%; }
-  body[data-page-frame] #learner-projects .project-label { margin: 0 0 8px; color: var(--orange-text); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
-  body[data-page-frame] #learner-projects .framework-project-copy h3 { margin: 0 0 10px; font-size: clamp(1.3rem, 3.4vh, 1.7rem); }
-  body[data-page-frame] #learner-projects .framework-project-copy p:not(.project-label) { margin: 0 0 14px; }
+  body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] > .framework-project-slides { grid-column: 1 / -1; grid-row: 1; align-self: stretch; }
+  body[data-page-frame] #learner-projects .framework-project { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); column-gap: 20px; align-items: stretch; padding: 0; }
+  body[data-page-frame] #learner-projects .framework-project-copy { padding: 12px 14px; font-size: clamp(.825rem, 1.8vh, .9rem); line-height: 1.4; }
+  body[data-page-frame] #learner-projects .project-label { margin: 0 0 4px; font-size: .65rem; line-height: 1.3; letter-spacing: .08em; }
+  body[data-page-frame] #learner-projects .framework-project-copy h3 { margin: 0 0 8px; font-size: clamp(1.2rem, 2.9vh, 1.5rem); line-height: 1.2; }
+  body[data-page-frame] #learner-projects .project-copy-cells > div { padding-block: 5px; }
+  body[data-page-frame] #learner-projects .project-copy-cells h4 { margin-bottom: 2px; font-size: .8rem; }
+  body[data-page-frame] #learner-projects .project-copy-cells p { margin: 0; }
+  body[data-page-frame] #learner-projects .framework-project-copy > a { font-size: .8rem; }
+  body[data-page-frame] #learner-projects .framework-project-media {
+    --project-media-height: clamp(248px, calc(46vh + 28px), 428px);
+    align-self: stretch; justify-self: stretch; max-width: none; width: 100%; min-height: var(--project-media-height);
+  }
   body[data-page-frame] #learner-projects .framework-project-media > img,
-  body[data-page-frame] #learner-projects .framework-project-media > a > img,
+  body[data-page-frame] #learner-projects .framework-project-media > video,
+  body[data-page-frame] #learner-projects .framework-project-media > .project-embed,
   body[data-page-frame] #learner-projects .screenshot-gallery img:not([hidden]) {
-    display: block; width: 100%; height: clamp(220px, 46vh, 400px); max-height: none; object-fit: contain; border-radius: 14px; background: rgba(4, 22, 30, .55);
+    height: var(--project-media-height); max-height: none; background: rgba(4, 22, 30, .55);
+  }
+  /* Absolute contents fill the stretched grid item without contributing an iframe's
+     intrinsic height to equalise(). Images remain in normal flow without JS/for print. */
+  body[data-page-frame] #learner-projects [data-project-viewer][data-enhanced] .framework-project-media { position: relative; }
+  body[data-page-frame] #learner-projects [data-project-viewer][data-enhanced] .framework-project-media > :is(img, video, iframe, .screenshot-gallery) {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+  }
+  body[data-page-frame] #learner-projects [data-project-viewer][data-enhanced] .screenshot-gallery img:not([hidden]) {
+    position: absolute; inset: 0; width: 100%; height: 100%;
   }
   /* DARTY's own screenshot control sits on the picture, so it never reads as a second set of arrows. */
-  body[data-page-frame] #learner-projects .screenshot-gallery { position: relative; }
   body[data-page-frame] #learner-projects .screenshot-gallery-controls { position: absolute; right: 10px; bottom: 10px; left: 10px; margin: 0; padding: 4px 4px 4px 12px; border-radius: 10px; background: rgba(4, 22, 30, .72); color: #f5f0e6; }
   body[data-page-frame] #learner-projects .screenshot-gallery-controls button { min-height: 34px; padding: 4px 10px; }
   body[data-page-frame] #learner-projects .project-note { grid-column: 1; grid-row: 2; align-self: center; margin: 0; padding: 0; font-size: .85rem; opacity: .85; }
-  body[data-page-frame] #learner-projects .framework-project-controls { grid-column: 2; grid-row: 2; justify-content: flex-end; padding-top: 16px; }
+  /* Reserve the gap between rows, outside both footer items, without increasing
+     the combined footer/gap height or reducing the generic media slot. */
+  body[data-page-frame] #learner-projects .framework-project-controls { grid-column: 2; grid-row: 2; justify-content: flex-end; padding-top: 0; }
 }
 /* Language cards: even padding so the last line never sits on the card edge (8 cards, 4 x 2). */
 .subjects-page #languages .learning-languages > .subject-card { padding: 14px 16px 16px; }

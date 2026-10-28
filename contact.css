@@ -74,3 +74,17 @@
 .enquiry-form .field :is(input, textarea, select):focus { border-color: var(--field-focus); outline-color: var(--field-focus); }
 .enquiry-form :is(.radio-options input, .consent input):focus-visible { outline-color: var(--field-focus); }
 .enquiry-form .field :is(input, textarea, select)[aria-invalid="true"]:focus { border-color: var(--error-ink); }
+
+/* Owner, 28 Oct 2026: "there was a slot perfect for the cell there before". Pricing sits in the empty
+   space beside the intro; What happens next stays level with the form, as before. */
+@media (min-width: 901px) {
+  .contact-sidebar { display: contents; }
+  .contact-pricing { grid-column: 2; grid-row: 1; align-self: end; margin-bottom: -44px; padding: 18px 22px; }
+  .contact-next { grid-column: 2; grid-row: 2; align-self: start; margin-top: 60px; }
+  .contact-pricing h2 { font-size: 1.25rem; }
+  .pricing-bands { margin: 10px 0 12px; }
+  .pricing-bands > div { padding-block: 8px; }
+  .pricing-bands dt { font-size: .95rem; }
+  .pricing-bands dd { margin-top: 2px; font-size: .88rem; line-height: 1.35; }
+  .pricing-footer { padding-top: 10px; font-size: .82rem; }
+}

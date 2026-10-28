@@ -2907,3 +2907,9 @@ header:not(.toucan-opening-header) .nav-links {
 .team-carousel-button:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
 @media (max-width: 1000px) { .team-track { grid-auto-columns: calc((100% - 20px) / 2); } }
 @media (max-width: 700px) { .team-track { grid-auto-columns: 85%; } }
+
+/* Slogan above the footer address (owner, 28 Oct 2026). */
+.footer-slogan { margin: 0 0 4px; color: var(--heading); font-weight: 800; }
+.footer-slogan a { color: var(--orange-text); }
+.team-page .footer-slogan { color: inherit; }
+.team-page footer.site-footer .footer-slogan a { color: #ffb486; }

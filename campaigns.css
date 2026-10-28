@@ -2925,9 +2925,10 @@ header:not(.toucan-opening-header) .nav-links {
 /* Instagram handle in the footer: no underline (owner, 28 Oct 2026). */
 .footer-slogan a, .team-page footer.site-footer .footer-slogan a { text-decoration: none; }
 .footer-slogan a:hover, .footer-slogan a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
-/* Reviews: the third card is the sage green of the toucan's pencil (owner, 28 Oct 2026: peach was
-   "ugly", then the soft teal read as baby blue). Dark text in both themes. */
+/* Reviews: the third card is the logo's bold teal with white text, as strong as the blue and cream cards
+   (owner, 28 Oct 2026: peach was "ugly", soft teal read as baby blue, sage was too muted). */
 .homepage-section .review-quote:nth-child(3n),
-#reviews .reviews-enhanced .review-quote:nth-child(3n) { background: var(--green, #6f987b); border-color: transparent; color: #10242d; }
-.homepage-section .review-quote:nth-child(3n) :is(p, cite, figcaption, a, span, .review-mark),
-#reviews .reviews-enhanced .review-quote:nth-child(3n) :is(p, cite, figcaption, a, span, .review-mark) { color: #10242d; }
+#reviews .reviews-enhanced .review-quote:nth-child(3n) { background: radial-gradient(circle at 90% 100%, rgba(11, 63, 81, 0.45), transparent 22rem), var(--brand-green, #1f7a75); border-color: transparent; color: #fff; }
+.homepage-section .review-quote:nth-child(3n) :is(p, cite, figcaption, a, span),
+#reviews .reviews-enhanced .review-quote:nth-child(3n) :is(p, cite, figcaption, a, span) { color: #fff; }
+.homepage-section .review-quote:nth-child(3n) .review-mark { color: var(--orange-soft); }

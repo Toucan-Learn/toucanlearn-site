@@ -1,0 +1,112 @@
+{
+  "entertainer": {
+    "source": "https://raw.githubusercontent.com/MutopiaProject/MutopiaProject/refs/heads/master/ftp/JoplinS/entertainer/entertainer.ly",
+    "edition": "Mutopia-2016/11/25-263",
+    "licence": "Public Domain",
+    "timeSignature": "2/4",
+    "transposeSemitones": -12,
+    "pickup": [
+      "D4",
+      "D#4"
+    ],
+    "loop": "Opening four-bar phrase (bars 5-8). Place the two-note pickup before bar 5, omitting its duplicate at the end of bar 8. Tied continuations are not new attacks. Preserve the final resolving C and transpose the whole melody together.",
+    "bars": [
+      {
+        "number": 5,
+        "lilypond": "e16 c'8 e,16 c'8 e,16 c' ~",
+        "attacks": [
+          "E4",
+          "C5",
+          "E4",
+          "C5",
+          "E4",
+          "C5"
+        ]
+      },
+      {
+        "number": 6,
+        "lilypond": "c4 ~ c16 <c' e, c> <d f, d> <dis fis, dis>",
+        "attacks": [
+          "C6",
+          "D6",
+          "D#6"
+        ]
+      },
+      {
+        "number": 7,
+        "lilypond": "<e g, e> <c e, c> <d f, d> <e g, e> ~ <e g, e> <b d, b> <d f, d>8",
+        "attacks": [
+          "E6",
+          "C6",
+          "D6",
+          "E6",
+          "B5",
+          "D6"
+        ]
+      },
+      {
+        "number": 8,
+        "lilypond": "<c e, c>4 ~ <c e, c>8 d,,16( dis)",
+        "attacks": [
+          "C6",
+          "D4",
+          "D#4"
+        ]
+      }
+    ]
+  },
+  "maple-leaf-rag": {
+    "source": "https://raw.githubusercontent.com/MutopiaProject/MutopiaProject/master/ftp/JoplinS/maple/maple.ly",
+    "edition": "Mutopia-2011/11/13-23",
+    "licence": "Public Domain",
+    "timeSignature": "2/4",
+    "transposeSemitones": 0,
+    "bars": [
+      {
+        "number": 1,
+        "lilypond": "r16 as' <es' es,> as, c <es es,>8 g,16",
+        "attacks": [
+          "G#4",
+          "D#5",
+          "G#4",
+          "C5",
+          "D#5",
+          "G4"
+        ]
+      },
+      {
+        "number": 2,
+        "lilypond": "<es' es,>16 g, bes <es es,> ~ <es es,>4",
+        "attacks": [
+          "D#5",
+          "G4",
+          "A#4",
+          "D#5"
+        ]
+      },
+      {
+        "number": 3,
+        "lilypond": "r16 as, <es' es,> as, c <es es,>8 g,16",
+        "attacks": [
+          "G#4",
+          "D#5",
+          "G#4",
+          "C5",
+          "D#5",
+          "G4"
+        ]
+      },
+      {
+        "number": 4,
+        "lilypond": "<es' es,>16 g, bes <es es,> ~ <es es,>8 r16 <es es,>",
+        "attacks": [
+          "D#5",
+          "G4",
+          "A#4",
+          "D#5",
+          "D#5"
+        ]
+      }
+    ]
+  }
+}

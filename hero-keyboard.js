@@ -1,4 +1,4 @@
-import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave } from './hero-piano.js?v=20261026-vocal-verse-2';
+import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition } from './hero-piano.js?v=20261028-piano-3';
 
 // Round 76 (Joshua, 19 Oct 2026: "is it possible for us to be able to play the
 // whole piano with keyboard?"): two manuals, so every key from C3 to C6 has its
@@ -16,8 +16,7 @@ const PITCHES = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'
 const midi = note => (Number(note.at(-1)) + 1) * 12 + PITCHES.indexOf(note.slice(0, -1));
 // A song may move the whole keyboard up an octave (round 87); notes, labels and the
 // computer keys all follow.
-const OCTAVE = songKeyboardOctave();
-const shifted = note => note.slice(0, -1) + (Number(note.at(-1)) + OCTAVE);
+const shifted = note => note.slice(0, -1) + (Number(note.at(-1)) + songKeyboardOctave());
 
 export function initHeroKeyboard(ripple) {
   const toggle = document.getElementById('piano-toggle');
@@ -26,23 +25,46 @@ export function initHeroKeyboard(ripple) {
   const keys = panel.querySelector('.piano-keys');
   const scroll = panel.querySelector('.piano-scroll');
   const buttons = [...keys.querySelectorAll('[data-note]')];
-  // data-note stays each key's place on the keyboard (the CSS positions black keys by it);
-  // data-pitch is what it plays, an octave up when the song asks.
-  for (const button of buttons) {
-    button.dataset.pitch = shifted(button.dataset.note);
-    if (OCTAVE) button.setAttribute('aria-label', button.dataset.pitch);
-  }
-  panel.dataset.octave = String(OCTAVE);
-  const byNote = new Map(buttons.map(button => [button.dataset.pitch, button]));
-  const names = new Map(buttons.map(button => [button, button.getAttribute('aria-label')]));
-  // Each key shows its computer key (CSS shows it only with a mouse and keyboard).
-  for (const [key, note] of KEY_NOTES) {
-    const button = byNote.get(shifted(note));
-    if (button) button.dataset.key = key.toUpperCase();
-  }
+  const byNote = new Map();
+  const names = new Map();
+  const credit = panel.querySelector('.piano-credit');
   const timers = new Map();
   const pointers = new Map();
   const held = new Set();
+  let mappedSong;
+  function mapSong() {
+    if (mappedSong === currentSong()) return;
+    pointers.clear();
+    held.clear();
+    for (const [button, timer] of timers) {
+      clearTimeout(timer);
+      button.classList.remove('is-pressed');
+    }
+    timers.clear();
+    mappedSong = currentSong();
+    byNote.clear();
+    // data-note is the immutable CSS position; only data-pitch changes register.
+    for (const button of buttons) {
+      const pitch = shifted(button.dataset.note);
+      button.dataset.pitch = pitch;
+      names.set(button, pitch.replace('#', ' sharp '));
+      button.setAttribute('aria-label', names.get(button));
+      byNote.set(pitch, button);
+    }
+    panel.dataset.octave = String(songKeyboardOctave());
+    panel.dataset.song = mappedSong.id;
+    if (credit) credit.textContent = `${mappedSong.title} · ${mappedSong.composer}`;
+    // CSS repositions the compact phone keys without inline styles.
+    for (const [key, note] of KEY_NOTES) {
+      const button = byNote.get(shifted(note));
+      if (button) button.dataset.key = key.toUpperCase();
+    }
+  }
+  mapSong();
+  panel.querySelector('.piano-next')?.addEventListener('click', () => {
+    nextSong();
+    if (open) revealInViewport();
+  });
   let open = false;
   let next = peekNextNote();
   let highlighted;
@@ -57,14 +79,15 @@ export function initHeroKeyboard(ripple) {
     }
   }
 
-  function revealInViewport() {
+  function revealInViewport(instant = false) {
     // This untransformed outer panel already has its full height while sliding.
-    // Nudge only on opening, and only when the keys extend below the viewport.
-    const bottom = panel.getBoundingClientRect().bottom;
-    if (bottom > window.innerHeight) {
-      window.scrollBy({ top: bottom - window.innerHeight + 12, left: 0,
-        behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
-    }
+    // On opening/reflow, keep the keys between the sticky header and viewport edge.
+    const rect = panel.getBoundingClientRect();
+    const headerBottom = Math.max(0, header?.getBoundingClientRect().bottom ?? 0);
+    const offset = rect.top < headerBottom + 12 ? rect.top - headerBottom - 12
+      : rect.bottom > window.innerHeight ? rect.bottom - window.innerHeight + 12 : 0;
+    if (offset) window.scrollBy({ top: offset, left: 0,
+      behavior: instant || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }
 
   function highlight(note) {
@@ -73,6 +96,7 @@ export function initHeroKeyboard(ripple) {
       highlighted.classList.remove('is-next');
       highlighted.setAttribute('aria-label', names.get(highlighted));
     }
+    mapSong();
     highlighted = byNote.get(note);
     if (highlighted) {
       highlighted.classList.add('is-next');
@@ -92,7 +116,7 @@ export function initHeroKeyboard(ripple) {
       button.classList.remove('is-pressed');
       timers.delete(button);
     }, 150));
-    ripple((midi(note) - midi(shifted('C3'))) / (midi(shifted('C6')) - midi(shifted('C3'))));
+    ripple((midi(note) - midi(shifted('C3'))) / (midi(shifted('C6')) - midi(shifted('C3'))), noteWavePosition());
   }
 
   function setOpen(value) {
@@ -121,7 +145,13 @@ export function initHeroKeyboard(ripple) {
     if (hero.getBoundingClientRect().bottom <= headerBottom + 2) setOpen(false);
   }
   window.addEventListener('scroll', closeAfterHero, { passive: true });
-  window.addEventListener('resize', closeAfterHero);
+  window.addEventListener('resize', () => {
+    if (!open) return;
+    // Reflow can move the floating panel off-screen during rotation. Reveal it
+    // immediately, before a layout scroll could mistake that for leaving the hero.
+    keepInView();
+    revealInViewport(true);
+  });
 
   const keyFrom = element => {
     const key = element?.closest?.('[data-note]');
@@ -159,7 +189,7 @@ export function initHeroKeyboard(ripple) {
     const note = KEY_NOTES.get(key);
     if (!note) return;
     const button = byNote.get(shifted(note));
-    if (!button) return;
+    if (!button || !button.getClientRects().length) return;
     event.preventDefault();
     if (event.repeat || held.has(key)) return;
     held.add(key);

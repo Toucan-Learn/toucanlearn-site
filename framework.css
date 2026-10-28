@@ -261,3 +261,15 @@
   .homepage .framework-team-viewer[data-enhanced] .framework-profile-content { position: relative; flex: 1 0 auto; padding-bottom: 44px; }
   .homepage .framework-team-viewer[data-enhanced] .framework-profile-content > .profile-availability { position: absolute; left: 0; right: 0; bottom: 4px; margin: 0; }
 }
+/* Home "Our team" landing (owner, 28 Oct 2026): clicking Our team shows the heading, both cells and
+   the Book a free trial button on one screen at 100% zoom. */
+@media (min-width: 1000px) {
+  .homepage .homepage-section.team-section { padding-top: 18px; padding-bottom: 28px; scroll-margin-top: var(--sticky-header-height, 95px); }
+  .homepage .team-section .framework-team-intro h2,
+  .homepage .team-section h2 { margin-bottom: 14px; }
+  .homepage .team-section .framework-team-grid { row-gap: 14px; }
+}
+@media (min-width: 1000px) and (max-height: 820px) {
+  .homepage .framework-profile .framework-profile-role + p { font-size: 1.12rem; line-height: 1.38; }
+  .homepage .framework-team-viewer { padding-block: 22px; }
+}

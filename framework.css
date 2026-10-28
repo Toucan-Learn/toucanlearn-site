@@ -252,3 +252,12 @@
 .profile-availability { display: flex; flex-wrap: wrap; gap: 6px; clear: both; margin: 12px 0 0; }
 .avail-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--heading); font-size: .82rem; font-weight: 700; line-height: 1.4; white-space: nowrap; }
 .avail-chip svg { width: 15px; height: 15px; flex: 0 0 auto; }
+/* Chips sit on the card's bottom edge, at the same height on every profile (owner, 28 Oct 2026:
+   "the bottom chips need to be aligned with said border ... they're a bit floaty atm"). */
+@media (min-width: 900px) {
+  .team-deck-enhanced .team-biography .team-card-content { padding-bottom: 44px; }
+  .team-deck-enhanced .team-biography .profile-availability { position: absolute; left: 24px; right: 24px; bottom: 18px; margin: 0; }
+  .homepage .framework-team-viewer[data-enhanced] .framework-profile { display: flex; flex-direction: column; }
+  .homepage .framework-team-viewer[data-enhanced] .framework-profile-content { position: relative; flex: 1 0 auto; padding-bottom: 44px; }
+  .homepage .framework-team-viewer[data-enhanced] .framework-profile-content > .profile-availability { position: absolute; left: 0; right: 0; bottom: 4px; margin: 0; }
+}

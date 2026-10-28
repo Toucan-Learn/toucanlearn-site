@@ -90,8 +90,8 @@
   body.team-page footer.site-footer .footer-grid > div { white-space: nowrap; }
   body.team-page footer.site-footer .footer-links { flex-wrap: nowrap; gap: 4px 12px; }
   body.team-page footer.site-footer .footer-links > a { min-height: 28px; }
-  body.team-page .team-page-intro { flex: 1 0 auto; padding-top: 0; }
-  body.team-page .team-page-intro h1 { margin: 0 0 clamp(10px, 2vh, 20px); font-size: clamp(26px, 4.2vh, 34px); }
+  body.team-page .team-page-intro { flex: 1 0 auto; padding-top: clamp(32px, 7.3vh, 64px); }
+  body.team-page .team-page-intro h1 { margin: 0 0 clamp(14px, 3vh, 26px); font-size: clamp(26px, 4.2vh, 34px); }
   body.team-page .team-page-layout { grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }
   body.team-page .team-page-info { height: var(--team-card-height, auto); margin-top: 2px; align-content: center; gap: clamp(10px, 2vh, 16px); }
   body.team-page :is(.team-page-promise-cell, .team-page-coverage-cell) { padding: clamp(14px, 2.6vh, 22px); }

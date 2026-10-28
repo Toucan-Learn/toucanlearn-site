@@ -60,10 +60,13 @@ var EnquiryRules = (function () {
   const formMessage = document.getElementById("form-message");
   const formEndpoint = form.dataset.formEndpoint.trim();
   const endpointPattern = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
-  const requestedService = new URLSearchParams(window.location.search).get("service");
+  const params = new URLSearchParams(window.location.search);
+  const requestedService = params.get("service");
+  const campaignSource = document.getElementById("campaign-source");
   if (["children", "english-work", "ielts", "qualifications", "languages", "maths", "in-person", "not-sure"].includes(requestedService)) {
-    document.getElementById("campaign-source").value = requestedService;
+    campaignSource.value = requestedService;
   }
+  if (params.get("offer") === "launch") campaignSource.value = "launch-offer";
   document.getElementById("loaded-at").value = String(Date.now());
   form.noValidate = true;
   // HTML starts disabled so no-JavaScript visitors use the alternatives below.

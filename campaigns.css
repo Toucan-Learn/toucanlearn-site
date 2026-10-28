@@ -2932,3 +2932,19 @@ header:not(.toucan-opening-header) .nav-links {
 .homepage-section .review-quote:nth-child(3n) :is(p, cite, figcaption, a, span),
 #reviews .reviews-enhanced .review-quote:nth-child(3n) :is(p, cite, figcaption, a, span) { color: #fff; }
 .homepage-section .review-quote:nth-child(3n) .review-mark { color: var(--orange-soft); }
+
+/* Launch pop-up only: no page selectors, layout changes or copy replacements. */
+.launch-offer-dialog { position: fixed; inset: 0; width: min(420px, calc(100% - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 28px; overflow-y: auto; border: 1px solid var(--line); border-radius: var(--radius-lg, 22px); background: var(--paper); color: var(--ink); box-shadow: var(--shadow); font-family: inherit; }
+.launch-offer-dialog::backdrop { background: rgba(0, 0, 0, .45); }
+.launch-offer-dialog[open] { animation: launch-offer-appear 160ms ease-out; }
+.launch-offer-dialog__close { position: absolute; top: 8px; right: 8px; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; border-radius: 8px; background: transparent; color: inherit; font: inherit; font-size: 1.5rem; cursor: pointer; }
+.launch-offer-dialog__eyebrow { margin: 0 36px 8px 0; color: var(--orange-text); font-size: .75rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.launch-offer-dialog__heading { margin: 0 20px 12px 0; color: var(--heading); font-size: 1.75rem; line-height: 1.15; }
+.launch-offer-dialog__summary { margin: 0 0 20px; font-size: .9375rem; line-height: 1.5; }
+.launch-offer-dialog__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.launch-offer-dialog__claim { min-height: 44px; font-size: .9375rem; }
+.launch-offer-dialog__later { min-height: 44px; padding: 8px 0; border: 0; background: transparent; color: inherit; font: inherit; font-size: .875rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.launch-offer-dialog__terms { margin: 16px 0 0; font-size: .75rem; line-height: 1.45; }
+.launch-offer-dialog :is(a, button):focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
+@keyframes launch-offer-appear { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) { .launch-offer-dialog[open] { animation: none; } }

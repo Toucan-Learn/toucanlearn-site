@@ -1,5 +1,5 @@
 /* The opening keeps the sky's original height; every project shares that slot. */
-[data-showcase] { --showcase-height: 450px; --showcase-bar: 38px; }
+[data-showcase] { --showcase-height: 450px; --showcase-bar: 38px; --showcase-inset: 8px; --drink-backdrop: var(--brand-green, #1f7a75); }
 .showcase-cell { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) var(--showcase-bar); width: 100%; height: 100%; min-width: 0; color: #f0ebe0; font-family: 'Avenir Next', Avenir, ui-sans-serif, system-ui, sans-serif; }
 .hero-world > [data-showcase] { display: block; }
 .hero-world .showcase-cell { height: calc(var(--showcase-height) + var(--showcase-bar)); }
@@ -7,7 +7,7 @@
 .showcase-stage > :is(img, iframe, .screenshot-gallery, .showcase-drinks, .piano-world) { display: block; width: 100%; height: 100%; min-width: 0; border: 0; margin: 0; }
 .showcase-stage > img { object-fit: contain; border-radius: 14px 14px 0 0; }
 .showcase-stage > .showcase-newspaper { color-scheme: light dark; border-radius: 14px 14px 0 0; }
-.showcase-caption { display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--showcase-bar); padding: 0 8px; border-top: 1px solid #adc4b533; border-radius: 0 0 14px 14px; background: #0b2228; font-size: 12px; line-height: 1.2; }
+.showcase-caption { display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--showcase-bar); padding: 0 var(--showcase-inset); border-top: 1px solid #adc4b533; border-radius: 0 0 14px 14px; background: #0b2228; font-size: 12px; line-height: 1.2; }
 .showcase-caption .showcase-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .showcase-cell button { min-width: 0; border: 0; color: #f0ebe0; background: transparent; font: inherit; cursor: pointer; }
 .showcase-caption > button { flex: 0 0 32px; align-self: stretch; padding: 0; font-size: 18px; }
@@ -25,12 +25,32 @@
 .showcase-stage .screenshot-gallery img { display: block; width: 100%; height: 100%; max-height: none; object-fit: contain; border-radius: 0; }
 .showcase-stage .screenshot-gallery-controls { position: absolute; right: 8px; bottom: 8px; left: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0; padding: 4px 8px; border-radius: 10px; background: #04161ee6; color: #f0ebe0; font-size: 12px; }
 .showcase-stage .screenshot-gallery-controls button { flex-shrink: 0; min-height: 34px; padding: 4px 8px; border-radius: 6px; }
-.showcase-stage .showcase-drinks { position: relative; overflow: hidden; border-radius: 14px 14px 0 0; }
-.showcase-drink-screen, .showcase-drink-screen > :is(img, video) { position: absolute; inset: 0; width: 100%; height: 100%; }
-.showcase-drink-screen > :is(img, video) { display: block; max-height: none; object-fit: contain; border-radius: 0; }
-.showcase-drink-controls { position: absolute; right: 8px; bottom: 8px; left: 8px; display: flex; justify-content: center; gap: 4px; padding: 4px; border-radius: 10px; background: #04161ee6; }
-.showcase-drink-controls button { min-height: 34px; padding: 4px 10px; border-radius: 6px; font-size: 12px; }
+[data-showcase][data-project="drinks"] .showcase-stage,
+.showcase-stage .showcase-drinks,
+.showcase-drink-screen { background: var(--drink-backdrop); }
+[data-showcase][data-project="drinks"] .showcase-stage > img,
+[data-project="drinks"] .showcase-fallback { object-fit: cover; object-position: center; background: var(--drink-backdrop, #1f7a75); }
+.showcase-stage .showcase-drinks { --drink-controls-height: 42px; position: relative; overflow: hidden; border-radius: 14px 14px 0 0; container-type: inline-size; }
+.showcase-drink-screen { position: absolute; inset: 0 0 var(--drink-controls-height); }
+.showcase-drink-screen .drink-spin, .showcase-drink-screen img { position: absolute; inset: 0; width: 100%; height: 100%; }
+.showcase-drink-screen img { display: block; max-height: none; object-fit: cover; object-position: center; border-radius: 0; pointer-events: none; user-select: none; }
+.showcase-cell .drink-spin { display: block; padding: 0; border-radius: 14px 14px 0 0; cursor: grab; touch-action: pan-y; user-select: none; }
+.showcase-cell .drink-spin[data-dragging] { cursor: grabbing; }
+.drink-spin-hint { position: absolute; right: var(--showcase-inset); bottom: 8px; padding: 3px 7px; border-radius: 6px; color: #f0ebe0; background: #04161eb3; font-size: 11px; pointer-events: none; transition: opacity .4s; }
+.drink-spin[data-interacted] .drink-spin-hint { opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .drink-spin-hint { transition: none; } }
+.showcase-drink-controls { position: absolute; right: 0; bottom: 0; left: 0; display: flex; align-items: stretch; justify-content: center; gap: 4px; height: var(--drink-controls-height); padding: 4px var(--showcase-inset); background: #0b2228; }
+.showcase-drink-controls button { flex: 1; min-height: 34px; padding: 4px 6px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
 .showcase-drink-controls button[aria-pressed="true"] { color: #071c23; background: #efac8e; }
+.drink-info { position: absolute; top: var(--showcase-inset); right: var(--showcase-inset); width: min(168px, 28cqw); margin: 0; padding: 8px 10px; border: 1px solid var(--blue, #0b3f51); border-radius: 10px; color: var(--hero-night, #0a272c); background: var(--hero-cream, #f0ebe0); font-size: 11px; line-height: 1.35; pointer-events: none; }
+.drink-info strong { display: block; color: inherit; font-size: 12px; line-height: 1.25; }
+.showcase-cell .drink-info p { margin: 4px 0 0; color: inherit; font-size: inherit; line-height: inherit; }
+/* Narrow cells reserve a fixed header band, keeping every quote off the drink
+   without changing the media slot's height when switching designs. */
+@container (max-width: 520px) {
+  .showcase-drink-screen { top: 84px; }
+  .drink-info { width: min(200px, calc(100% - 16px)); }
+}
 .showcase-cell [hidden] { display: none !important; }
 [data-showcase][data-enhanced] .showcase-fallback { display: none !important; }
 .hero-world .showcase-fallback { display: block; width: 100%; height: calc(var(--showcase-height) + var(--showcase-bar)); object-fit: cover; border-radius: 14px; }
@@ -38,7 +58,7 @@
 #learner-projects .framework-project-media > .showcase-cell { height: var(--project-media-height); }
 #learner-projects [data-showcase][data-enhanced] .framework-project-media { overflow: visible; }
 #learner-projects .showcase-stage > img,
-#learner-projects .showcase-drink-screen > :is(img, video) { height: 100%; max-height: none; }
+#learner-projects .showcase-drink-screen img { height: 100%; max-height: none; }
 #learner-projects .showcase-stage .screenshot-gallery-controls { right: 8px; bottom: 8px; left: 8px; }
 /* The section keyboard opens inside its media cell so the section footer stays clear. */
 #learner-projects .showcase-stage .piano-world { overflow: clip; min-height: 0; }
@@ -63,6 +83,8 @@
    proportions and let media previews fill the available stage. */
 body[data-page-frame] #learner-projects .showcase-stage > img,
 body[data-page-frame] #learner-projects .showcase-stage .screenshot-gallery img,
-body[data-page-frame] #learner-projects .showcase-drink-screen > :is(img, video) { width: 100%; height: 100%; max-height: none; }
+body[data-page-frame] #learner-projects .showcase-drink-screen img { width: 100%; height: 100%; max-height: none; }
+body[data-page-frame] #learner-projects .showcase-drink-screen img,
+body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallback { object-fit: cover; object-position: center; }
 #learner-projects .showcase-stage .piano-world .hero-mascot { width: 51%; height: auto; max-height: none; border-radius: 0; }
 [data-showcase]:focus-visible { outline: 2px solid #efac8e; outline-offset: 3px; }

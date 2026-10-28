@@ -1,8 +1,14 @@
+import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261028-spin-2';
+
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
   { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-newspaper.webp', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/index.html#football' },
   { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp', alt: 'DARTY football gameplay', type: 'gallery', images: [1, 2, 3, 4].map(n => `assets/projects/darty-still-0${n}.webp`) },
-  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids-poster.jpg', alt: 'Skids drink design', type: 'drinks', drinks: [{ id: 'skids', name: 'Skids' }, { id: 'fizzy', name: 'Fizzy' }, { id: 'ground-pinch', name: 'Ground Pinch' }] },
+  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp', alt: 'Skids drink design', type: 'drinks', drinks: [
+    { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
+    { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red.', 'Fizzy, extreme.'] },
+    { id: 'ground-pinch', name: 'Ground Pinch', lines: ['Designed for everyone.'] },
+  ] },
   { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-preview.png', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
@@ -119,6 +125,7 @@ export function initShowcase(root) {
   let dispose = null;
   let mounted = null;
   let printing = false;
+  let inView = typeof IntersectionObserver === 'undefined';
   let gesture = null;
   const pointers = new Set();
   const held = new Set();
@@ -136,8 +143,8 @@ export function initShowcase(root) {
   const visible = () => !printing && !document.hidden && !root.closest('[hidden], [inert]');
   const timer = idleAdvance({
     advance: () => show(index + 1),
-    blocked: () => root.contains(document.activeElement) || pointers.size > 0 || held.size > 0 || Boolean(dispose?.isPlaying?.()),
-    enabled: () => automatic && visible() && !motion.matches,
+    blocked: () => root.contains(document.activeElement) || pointers.size > 0 || held.size > 0 || Boolean(dispose?.isPlaying?.()) || Boolean(dispose?.isDragging?.()),
+    enabled: () => automatic && inView && visible() && !motion.matches,
   });
   const activity = () => timer.reset();
   const preview = project => {
@@ -209,74 +216,50 @@ export function initShowcase(root) {
       drinks.className = 'showcase-drinks';
       const screen = document.createElement('div');
       screen.className = 'showcase-drink-screen';
+      const info = document.createElement('div');
       const controls = document.createElement('div');
       controls.className = 'showcase-drink-controls';
       controls.setAttribute('role', 'group');
       controls.setAttribute('aria-label', 'Drink designs');
-      let video = null;
-      function stopVideo() {
-        if (!video) return;
-        video.pause();
-        video.removeAttribute('src');
-        video.querySelectorAll('source').forEach(source => source.remove());
-        video.load();
-        video = null;
-      }
-      function select(drink) {
-        stopVideo();
+      let viewer = null;
+      function select(drink, pauseAuto = false) {
+        viewer?.destroy();
         controls.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.drink === drink.id)));
-        const poster = `assets/projects/drinks/${drink.id}-poster.jpg`;
-        const image = document.createElement('img');
-        image.src = poster;
-        image.alt = `${drink.name} drink design`;
-        screen.replaceChildren(image);
-        // Posters are the first paint and the complete reduced-motion view.
-        if (motion.matches) return;
-        const player = document.createElement('video');
-        video = player;
-        player.muted = true;
-        player.defaultMuted = true;
-        player.loop = true;
-        player.playsInline = true;
-        player.preload = 'none';
-        player.poster = poster;
-        player.setAttribute('aria-label', `${drink.name} turntable`);
-        for (const extension of ['webm', 'mp4']) {
-          const source = document.createElement('source');
-          source.src = `assets/projects/drinks/${drink.id}.${extension}`;
-          source.type = `video/${extension}`;
-          player.append(source);
-        }
-        player.addEventListener('playing', () => {
-          if (video === player) image.hidden = true;
-        });
-        screen.append(player);
-        player.play().catch(() => {}); // The poster remains if autoplay is unavailable.
+        renderDrinkInfo(info, drink);
+        viewer = createDrinkSpin(screen, drink, { reduced: motion.matches, activity });
+        if (pauseAuto) viewer.pauseAuto();
+        viewer.setActive(inView && visible());
       }
       project.drinks.forEach(drink => {
         const button = document.createElement('button');
         button.type = 'button';
         button.textContent = drink.name;
         button.dataset.drink = drink.id;
-        button.addEventListener('click', () => select(drink));
+        button.addEventListener('click', () => select(drink, true));
         controls.append(button);
       });
-      drinks.append(screen, controls);
+      drinks.append(screen, info, controls);
       stage.replaceChildren(drinks);
       select(project.drinks[0]);
-      dispose = stopVideo;
+      dispose = () => viewer?.destroy();
+      dispose.setActive = value => viewer?.setActive(value);
+      dispose.setReduced = value => viewer?.setReduced(value);
+      dispose.isDragging = () => viewer?.isDragging();
     }
   }
   function sync() {
     if (!visible()) {
-      if (mounted) unmount();
+      if (dispose?.setActive) dispose.setActive(false);
+      else if (mounted) unmount();
+      if (!mounted) stage.replaceChildren(preview(projects[index]));
       pointers.clear();
       held.clear();
       timer.pause();
       return;
     }
     if (mounted !== projects[index].id) mount(projects[index]);
-    if (automatic && !motion.matches) timer.resume();
+    dispose?.setActive?.(inView);
+    if (automatic && inView && !motion.matches) timer.resume();
     else timer.pause();
   }
   function show(requestedIndex) {
@@ -305,6 +288,7 @@ export function initShowcase(root) {
   root.addEventListener('pointerdown', event => pointers.add(event.pointerId));
   window.addEventListener('pointerup', event => { if (pointers.delete(event.pointerId)) activity(); });
   window.addEventListener('pointercancel', event => { if (pointers.delete(event.pointerId)) activity(); });
+  root.addEventListener('lostpointercapture', event => { if (pointers.delete(event.pointerId)) activity(); });
   root.addEventListener('keydown', event => held.add(event.code));
   window.addEventListener('keyup', event => { if (held.delete(event.code)) activity(); });
   root.addEventListener('focusout', () => queueMicrotask(() => { if (visible()) activity(); }));
@@ -339,11 +323,24 @@ export function initShowcase(root) {
   document.addEventListener('framework:panelchange', sync);
   new MutationObserver(sync).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden', 'inert'] });
   document.addEventListener('visibilitychange', sync);
-  motion.addEventListener('change', () => { unmount(); timer.reset(); sync(); });
+  motion.addEventListener('change', () => {
+    if (dispose?.setReduced) dispose.setReduced(motion.matches);
+    else unmount();
+    timer.reset();
+    sync();
+  });
   window.addEventListener('pagehide', () => { unmount(); timer.pause(); });
   window.addEventListener('pageshow', sync);
   window.addEventListener('beforeprint', () => { printing = true; unmount(); timer.pause(); slides.forEach(slide => { slide.hidden = false; slide.inert = false; }); });
   window.addEventListener('afterprint', () => { printing = false; show(index); });
+  if (typeof IntersectionObserver !== 'undefined') {
+    new IntersectionObserver(entries => {
+      const entry = entries.find(item => item.target === cell);
+      if (!entry || inView === entry.isIntersecting) return;
+      inView = entry.isIntersecting;
+      sync();
+    }).observe(cell);
+  }
   root.dataset.enhanced = '';
   root.dataset.showcaseReady = '';
   show(index);

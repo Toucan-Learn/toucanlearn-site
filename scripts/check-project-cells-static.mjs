@@ -37,8 +37,8 @@ assert(section.includes('data-showcase data-showcase-mode="manual"'), 'Missing s
 const showcase = await readFile(path.join(site, 'project-showcase.js'), 'utf8');
 assert(showcase.includes('data-project-prev') && showcase.includes('data-project-next'), 'Missing showcase controls');
 for (const drink of ['skids', 'fizzy', 'ground-pinch']) {
-  for (const ext of ['.mp4', '.webm', '-poster.jpg']) {
-    assert((await stat(path.join(site, 'assets/projects/drinks', drink + ext))).size > 0, `Missing drink asset: ${drink}${ext}`);
+  for (const file of ['poster.webp', 'manifest.json']) {
+    assert((await stat(path.join(site, 'assets/projects/drinks', drink, file))).size > 0, `Missing drink asset: ${drink}/${file}`);
   }
 }
 console.log('Project copy checks passed (4 cards, 12 rows, exact quotes, local assets and CSP).');

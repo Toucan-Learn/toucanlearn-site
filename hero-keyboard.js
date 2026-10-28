@@ -1,4 +1,4 @@
-import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition, noteTiming, pauseNoteTiming } from './hero-piano.js?v=20261028-piano-5';
+import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition, noteTiming, pauseNoteTiming } from './hero-piano.js?v=20261028-piano-6';
 
 // Round 76 (Joshua, 19 Oct 2026: "is it possible for us to be able to play the
 // whole piano with keyboard?"): two manuals, so every key from C3 to C6 has its
@@ -46,7 +46,7 @@ export function initHeroKeyboard(ripple) {
     const label = `${timing.practice ? 'Practice ' : ''}♩ = ${timing.bpm}`;
     if (tempoLabel.textContent !== label) {
       tempoLabel.textContent = label;
-      tempo.setAttribute('aria-label', `${timing.practice ? 'Practice tempo' : 'Tempo'}: ${timing.bpm} beats per minute. Play the green key when the bar fills.`);
+      tempo.setAttribute('aria-label', `${timing.practice ? 'Practice tempo' : 'Tempo'}: ${timing.bpm} beats per minute. Play the orange key when the bar fills.`);
     }
     // Reduced motion has just one discrete change at the due time, with no glow.
     tempoBar.value = reducedMotion.matches ? Number(timing.progress === 1) : timing.progress;
@@ -97,6 +97,7 @@ export function initHeroKeyboard(ripple) {
   let open = false;
   let next = peekNextNote();
   let highlighted;
+  let following;
 
   function keepInView() {
     if (!open || !highlighted) return;
@@ -121,15 +122,21 @@ export function initHeroKeyboard(ripple) {
 
   function highlight(note) {
     next = note;
-    if (highlighted) {
-      highlighted.classList.remove('is-next');
-      highlighted.setAttribute('aria-label', names.get(highlighted));
+    for (const button of new Set([highlighted, following])) {
+      if (!button) continue;
+      button.classList.remove('is-now', 'is-next');
+      button.setAttribute('aria-label', names.get(button));
     }
     mapSong();
     highlighted = byNote.get(note);
+    following = byNote.get(peekNextNote(1));
+    if (following) {
+      following.classList.add('is-next');
+      following.setAttribute('aria-label', `${names.get(following)}, following note`);
+    }
     if (highlighted) {
-      highlighted.classList.add('is-next');
-      highlighted.setAttribute('aria-label', `${names.get(highlighted)}, next note`);
+      highlighted.classList.add('is-now');
+      highlighted.setAttribute('aria-label', `${names.get(highlighted)}, play now${following === highlighted ? ', then again' : ''}`);
     }
     keepInView();
     renderTempo();

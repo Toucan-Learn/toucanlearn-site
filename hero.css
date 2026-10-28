@@ -5,6 +5,7 @@
   --hero-cream: #f0ebe0;
   --hero-peach: #efac8e;
   --piano-next-green: #63c47b;
+  --piano-next-tint: #c5ddc9;
   --hero-serif: Georgia, 'Times New Roman', serif;
   --hero-sans: 'Avenir Next', Avenir, ui-sans-serif, system-ui, sans-serif;
 }
@@ -122,14 +123,19 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 .living-hero .piano-key { padding: 0; touch-action: none; border-radius: 0 0 4px 4px; }
 .living-hero .piano-key--white { min-width: 0; height: 100%; border: 1px solid #0a272c80; color: #0a272c; background: linear-gradient(#dcd6c9, var(--hero-cream) 12%, #fff9ed 92%, #c5bdad); box-shadow: inset 0 -4px 0 #b7ae9b; }
 .living-hero .piano-key--black { position: absolute; top: 0; z-index: 2; width: 2.9%; height: 62%; transform: translateX(-50%); border: 1px solid #020d10; background: linear-gradient(90deg, #071519, #203136 50%, #061317); box-shadow: 0 4px 3px #00101380, inset 0 -5px 0 #010b0e; }
-.living-hero .piano-key.is-next { background: var(--piano-next-green); box-shadow: inset 0 0 0 2px #a7e6b5, 0 0 13px #63c47b88; }
+.living-hero .piano-key.is-next { background: var(--piano-next-tint); box-shadow: inset 0 0 0 2px var(--piano-next-green); }
+.living-hero .piano-key.is-now { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, 0 0 13px #efac8e88; }
 .living-hero .piano-key.is-pressed { background: #f9c4a9; box-shadow: inset 0 4px 7px #6b342b77; }
-/* A repeated pitch stays visibly green while depressed; peach still marks a
-   freely played key. The inset shadow distinguishes the pressed next note. */
-.living-hero .piano-key.is-next.is-pressed { background: var(--piano-next-green); box-shadow: inset 0 4px 7px #153d2580, inset 0 0 0 2px #a7e6b5; }
+/* Keep the two cues distinct during the short pressed state. A repeated pitch
+   carries both colours: orange for this attack, a green inner edge for the next. */
+.living-hero .piano-key.is-next.is-pressed { background: var(--piano-next-tint); box-shadow: inset 0 0 0 2px var(--piano-next-green), inset 0 4px 7px #153d2580; }
+.living-hero .piano-key.is-now.is-pressed { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, inset 0 4px 7px #6b342b77; }
+.living-hero .piano-key.is-now.is-next { background: var(--hero-peach); box-shadow: inset 0 0 0 3px var(--piano-next-green), 0 0 13px #efac8e88; }
+.living-hero .piano-key.is-now.is-next.is-pressed { background: var(--hero-peach); box-shadow: inset 0 0 0 3px var(--piano-next-green), inset 0 4px 7px #6b342b77, 0 0 13px #efac8e88; }
 /* Keep the outline inside the key. Raising a focused white key would cover
    its neighbouring black keys and steal their pointer/touch hits. */
 .living-hero .piano-key:focus-visible { outline: 3px solid #bc653e; outline-offset: -4px; }
+.living-hero .piano-key.is-next:focus-visible { outline-color: var(--piano-next-green); }
 .living-hero .piano-key[data-note="C#3"] { left: calc(100% * 1 / 22); }
 .living-hero .piano-key[data-note="D#3"] { left: calc(100% * 2 / 22); }
 .living-hero .piano-key[data-note="F#3"] { left: calc(100% * 4 / 22); }
@@ -400,7 +406,7 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 @media (hover: hover) and (pointer: fine) {
   .living-hero .piano-key[data-key]::after { content: attr(data-key); position: absolute; inset: auto 0 6px; color: #0a272c99; font: 700 9px/1 var(--hero-sans); text-align: center; pointer-events: none; }
   .living-hero .piano-key--black[data-key]::after { bottom: 5px; color: #f0ebe0b3; }
-  .living-hero .piano-key:is(.is-next, .is-pressed)[data-key]::after { color: #0a272c; }
+  .living-hero .piano-key:is(.is-now, .is-next, .is-pressed)[data-key]::after { color: #0a272c; }
 }
 /* Fits the existing ten-pixel padding below the keys without adding height. */
 .living-hero .piano-tempo { position: absolute; inset: auto 12px 1px; height: 9px; display: flex; align-items: center; gap: 7px; color: #c1d2c4; pointer-events: none; }

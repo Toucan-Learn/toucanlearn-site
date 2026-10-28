@@ -2599,3 +2599,19 @@ h1 {
   .nav .nav-links > :not(.theme-toggle) { display: none; }
   .nav .theme-toggle { margin-left: auto; }
 }
+
+/* Owner, 28 Oct 2026: the moon (switch to dark) sits on black; the sun (switch to light) sits on a
+   bright background. */
+:root body .theme-toggle,
+:root .team-page > header .theme-toggle { border-color: transparent; color: #f3ece2; background: #10242d; }
+.theme-toggle:hover { background: #1d3a44; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body .theme-toggle,
+  :root:not([data-theme="light"]) .team-page > header .theme-toggle { color: #10242d; background: #f3ece2; }
+  :root:not([data-theme="light"]) .theme-toggle:hover { background: #ffffff; }
+}
+:root[data-theme="dark"] body .theme-toggle,
+:root[data-theme="dark"] .team-page > header .theme-toggle { color: #10242d; background: #f3ece2; }
+:root[data-theme="dark"] .theme-toggle:hover { background: #ffffff; }
+:root:not([data-theme="dark"]) body .toucan-opening-header .theme-toggle { color: #f3ece2; background: #10242d; border-color: transparent; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body .toucan-opening-header .theme-toggle { color: #10242d; background: #f3ece2; } }

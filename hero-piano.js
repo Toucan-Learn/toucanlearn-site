@@ -1,11 +1,20 @@
-import { songs } from './hero-songs.js?v=20261026-vocal-verse-2';
+import { songs } from './hero-songs.js?v=20261028-piano-3';
 
 // One fresh choice per page load, independent of the sky. The query parameter
 // is a listening/test override; unknown ids use the same random selection.
 const requestedSong = new URLSearchParams(globalThis.location?.search || '').get('song');
-const song = songs.find(candidate => candidate.id === requestedSong)
-  || songs[Math.floor(Math.random() * songs.length)];
-const MELODY = song.notes;
+const phonePortrait = globalThis.matchMedia?.('(max-width: 600px) and (orientation: portrait)');
+const PHONE_SONGS = new Set(['runaway', 'no-one-noticed']);
+export function availableSongs() {
+  return phonePortrait?.matches ? songs.filter(candidate => PHONE_SONGS.has(candidate.id)) : songs;
+}
+const chooseSong = () => {
+  const choices = availableSongs();
+  return choices.find(candidate => candidate.id === requestedSong)
+    || choices[Math.floor(Math.random() * choices.length)];
+};
+let song = chooseSong();
+export function currentSong() { return song; }
 
 const MAX_VOICES = 8;
 const FLOOR = 0.0001;
@@ -19,8 +28,22 @@ let nextNote = 0;
 const voices = [];
 const tails = new Set();
 const listeners = new Set();
+let lastNoteTime = null;
+let wavePosition = .5;
 
-export function peekNextNote() { return MELODY[nextNote]; }
+// Screen coordinates: small y is high. A long pause starts a fresh phrase.
+function recordNoteTiming() {
+  const now = performance.now();
+  const interval = lastNoteTime === null ? Infinity : now - lastNoteTime;
+  lastNoteTime = now;
+  if (interval >= 2400) { wavePosition = .5; return; }
+  const t = Math.max(0, Math.min(1, (interval - 150) / 1050));
+  const target = .18 + .64 * t * t * (3 - 2 * t);
+  wavePosition += (target - wavePosition) * .8;
+}
+export function noteWavePosition() { return wavePosition; }
+
+export function peekNextNote() { return song.notes[nextNote]; }
 
 // Round 87 (Joshua: "just change the keyboard if this song comes up"): a song can move
 // the keyboard up an octave so its high notes have keys (Runaway's high E6).
@@ -31,10 +54,34 @@ export function onSongAdvance(listener) {
   return () => listeners.delete(listener);
 }
 
-export function advance() {
-  nextNote = (nextNote + 1) % MELODY.length;
+function selectSong(candidate) {
+  song = candidate;
+  nextNote = 0;
+  lastNoteTime = null;
+  wavePosition = .5;
   listeners.forEach(listener => listener(peekNextNote()));
 }
+
+// Selection is silent, just like opening the piano. Phone choices stay local.
+export function nextSong() {
+  const choices = availableSongs();
+  selectSong(choices[(choices.indexOf(song) + 1) % choices.length]);
+  return song;
+}
+
+export function advance() {
+  nextNote = (nextNote + 1) % song.notes.length;
+  listeners.forEach(listener => listener(peekNextNote()));
+}
+
+// Rotation/resizing also applies the phone restriction to an already open piano.
+phonePortrait?.addEventListener('change', () => {
+  if (!availableSongs().includes(song)) {
+    selectSong(chooseSong());
+    return;
+  }
+  listeners.forEach(listener => listener(peekNextNote()));
+});
 
 function frequencyFor(note) {
   const [, letter, sharp, octave] = /^([A-G])(#?)(\d)$/.exec(note);
@@ -145,6 +192,7 @@ function soundNote(frequency) {
 // peeking, opening the panel and advancing the song never create audio.
 export function playNote(noteName) {
   if (!/^[A-G]#?[3-7]$/.test(noteName)) return false;
+  recordNoteTiming();
   const AudioContext = globalThis.AudioContext || globalThis.webkitAudioContext;
   if (!AudioContext) return false;
   try {

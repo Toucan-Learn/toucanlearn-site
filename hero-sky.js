@@ -1,6 +1,6 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-ripple-1';
-import { playNextNote } from './hero-piano.js?v=20261026-vocal-verse-2';
-import { initHeroKeyboard } from './hero-keyboard.js?v=20261026-vocal-verse-2';
+import { playNextNote, noteWavePosition } from './hero-piano.js?v=20261028-piano-3';
+import { initHeroKeyboard } from './hero-keyboard.js?v=20261028-piano-4';
 import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
 
 const art = document.querySelector('.world-art');
@@ -57,7 +57,8 @@ class PixelRipplePool {
   }
   add(x, y, now) {
     this.expire(now);
-    if (this.active.length < MAX_PIXEL_RIPPLES) this.active.push({ x, y, born: now });
+    if (this.active.length === MAX_PIXEL_RIPPLES) this.active.shift();
+    this.active.push({ x, y, born: now });
   }
 }
 const pixelRipples = new PixelRipplePool();
@@ -296,14 +297,10 @@ function applyCalm() {
 }
 art.addEventListener('click', event => {
   playNextNote();
-  if (calm) return;
   const rect = art.getBoundingClientRect();
   const keyboard = event.detail === 0;
   const x = keyboard ? .5 : (event.clientX - rect.left) / rect.width;
-  const y = keyboard ? .5 : (event.clientY - rect.top) / rect.height;
-  pixelRipples.add(x, y, time);
-  recordPixelBrush(x, y, true);
-  draw();
+  addNoteWave(x);
 });
 art.addEventListener('pointermove', event => {
   if (calm || event.pointerType === 'touch') return;
@@ -346,10 +343,13 @@ renderer = createSky();
 });
 applyCalm();
 
-// Keyboard gestures feed the same wave pool and flock as direct sky clicks.
-initHeroKeyboard(x => {
+// Both input paths use the same note clock, pool, brush and flock.
+function addNoteWave(x, y = noteWavePosition()) {
   if (calm) return;
-  pixelRipples.add(x, .65, time);
-  recordPixelBrush(x, .65, true);
+  pixelRipples.add(x, y, time);
+  recordPixelBrush(x, y, true);
+  // A receipt of the actual origin, also available when WebGL is unavailable.
+  sky.dispatchEvent(new CustomEvent('piano-wave', { detail: { x, y } }));
   draw();
-});
+}
+initHeroKeyboard(addNoteWave);

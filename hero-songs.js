@@ -1,4 +1,4 @@
-// Three compositions are public domain. Runaway retains its eight-note excerpt.
+// Three compositions are public domain. Runaway uses the owner's exact 16 attacks.
 // No One Noticed follows Joshua's supplied vocal tab (26 Oct 2026, 22:26), bars 1-16:
 // 43 new attacks, with tied continuations counted once. Standard tuning as labelled:
 // B8/e3=G4, B7/e2=F#4, B1=C4, B3=D4, B0=B3, G0=G3.
@@ -7,8 +7,10 @@
 // The site advances one note per interaction; the 98 BPM rhythm map is in the work report.
 // Joshua, 19 Oct 2026: "keep the original entertainer snippet you originally
 // selected the first time. keep the dreamy song in its length. get rid of other
-// one i think or take a small snippet thats lovely like the entertainer" and
-// "kanyes intro is 8 notes total". The three public-domain compositions are below. Notes transcribed from Public Domain
+// one i think or take a small snippet thats lovely like the entertainer".
+// 28 Oct 2026: Runaway starts on the four-note progression, without the long
+// repeated-note intro, retaining the repeated high hits and low octave responses.
+// The three public-domain compositions are below. Notes transcribed from Public Domain
 // Mutopia Project MIDI editions using /tmp/toucan-midi/extract_melodies.py.
 // Source pages (each states "Copyright: Public Domain") and downloaded MIDI files:
 // The Entertainer: https://www.mutopiaproject.org/cgibin/piece-info.cgi?id=263
@@ -23,12 +25,14 @@
 // event order and encoded repeats; no manual repeat expansion or octave shifts.
 // Satie: the treble staff also contains accompaniment. Skip its four opening
 // chord-only onsets; the upper melody enters at tick 4992 (bar 5, beat 2).
-// Entertainer: retain all 16 introduction notes; the D D# E C theme starts at
-// note 17. Starting with that theme would omit or reorder the introduction.
+// Entertainer: the opening four-bar phrase, bars 5-8 in the printed 2/4 score.
+// Move the pickup to the start of the loop and keep the final resolving C.
+// Transpose the whole melody down one octave; never fold independent chunks.
+// Maple Leaf: include the separate final Eb5 attack in bar 4 after its rest.
+// Both transcriptions and bar boundaries are in tests/fixtures/joplin-openings.json.
 // Sharp spellings are enharmonic MIDI names (e.g. G# = Ab, D# = Eb).
 // Provenance links above are comments; exported data has no runtime URLs.
-// Joshua, 17 Oct 2026 ("too shrill"): Joplin melodies have any 8-note run that
-// climbs above A5 moved down by octaves (shape kept); Gymnopédie sits an octave down.
+// Gymnopédie's approved low-register arrangement is unchanged.
 
 export const songs = [
   {
@@ -36,17 +40,17 @@ export const songs = [
     "title": "The Entertainer",
     "composer": "Scott Joplin",
     "year": 1902,
-    "source": "First-strain opening, melody only, as first chosen on 17 Oct 2026 (Mutopia Project edition)",
+    "source": "Opening four-bar phrase, bars 5-8 in the printed 2/4 score, melody only; Mutopia-2016/11/25-263, entertainer.ly, top staff. Entire melody transposed down one octave to D3-E5, preserving intervals. Pickup D3 D#3 appears once at the loop start; the phrase ends on its resolving C5.",
     "licence": "Public Domain",
     "notes": [
-      "D4",
-      "D#4",
-      "E4",
-      "C5",
-      "E4",
-      "C5",
-      "E4",
-      "C5",
+      "D3",
+      "D#3",
+      "E3",
+      "C4",
+      "E3",
+      "C4",
+      "E3",
+      "C4",
       "C5",
       "D5",
       "D#5",
@@ -56,25 +60,7 @@ export const songs = [
       "E5",
       "B4",
       "D5",
-      "C5",
-      "D4",
-      "D#4",
-      "E4",
-      "C5",
-      "E4",
-      "C5",
-      "E4",
-      "C5",
-      "A4",
-      "G4",
-      "F#4",
-      "A4",
-      "C5",
-      "E5",
-      "D5",
-      "C5",
-      "A4",
-      "D5"
+      "C5"
     ]
   },
   {
@@ -82,7 +68,7 @@ export const songs = [
     "title": "Maple Leaf Rag",
     "composer": "Scott Joplin",
     "year": 1899,
-    "source": "Opening four bars, melody only (Mutopia Project, Mutopia-2011/11/13-23, maple.mid; treble track 1, MIDI channel 1)",
+    "source": "Opening four bars, melody only (Mutopia-2011/11/13-23, maple.ly, top staff, bars 1-4). Tied continuations are held; the separate final D#5 attack in bar 4 is included.",
     "licence": "Public Domain",
     "notes": [
       "G#4",
@@ -104,6 +90,7 @@ export const songs = [
       "D#5",
       "G4",
       "A#4",
+      "D#5",
       "D#5"
     ]
   },
@@ -197,25 +184,13 @@ export const songs = [
   },
   {
     "id": "runaway",
-    "title": "Runaway (intro)",
+    "title": "Runaway (piano riff)",
     "composer": "Kanye West",
     "year": 2010,
-    "source": "Intro 1 (14 bars) from a tab, at its real pitch: the high E on 2 and 4, then the falling octaves E, D#, C#, A, G#. The keyboard moves up an octave while this song is playing so every note has a key.",
+    "source": "Owner-specified 16-note riff, 28 October 2026: three E6 hits then E5; three D#6 then D#5; three C#6 then C#5; A5, A5, G#5, E6. The long opening run of E6 is cut to three hits. Keyboard shifted up one octave to retain the original register.",
     "keyboardOctave": 1,
-    "licence": "Short credited quotation (intro, 28 notes)",
+    "licence": "Short credited quotation (16-note piano riff)",
     "notes": [
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
-      "E6",
       "E6",
       "E6",
       "E6",

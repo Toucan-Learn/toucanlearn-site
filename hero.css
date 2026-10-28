@@ -123,7 +123,9 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 .living-hero .piano-key--black { position: absolute; top: 0; z-index: 2; width: 2.9%; height: 62%; transform: translateX(-50%); border: 1px solid #020d10; background: linear-gradient(90deg, #071519, #203136 50%, #061317); box-shadow: 0 4px 3px #00101380, inset 0 -5px 0 #010b0e; }
 .living-hero .piano-key.is-next { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, 0 0 13px #efac8e88; }
 .living-hero .piano-key.is-pressed { background: #f9c4a9; box-shadow: inset 0 4px 7px #6b342b77; }
-.living-hero .piano-key:focus-visible { outline: 3px solid #bc653e; outline-offset: -4px; z-index: 3; }
+/* Keep the outline inside the key. Raising a focused white key would cover
+   its neighbouring black keys and steal their pointer/touch hits. */
+.living-hero .piano-key:focus-visible { outline: 3px solid #bc653e; outline-offset: -4px; }
 .living-hero .piano-key[data-note="C#3"] { left: calc(100% * 1 / 22); }
 .living-hero .piano-key[data-note="D#3"] { left: calc(100% * 2 / 22); }
 .living-hero .piano-key[data-note="F#3"] { left: calc(100% * 4 / 22); }
@@ -145,6 +147,32 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 @media (max-width: 760px) {
   .living-hero .piano-keys { min-width: 528px; height: 64px; }
   .living-hero .hero-world > .eyebrow { margin-bottom: 12px; }
+}
+/* Each phone song keeps its real pitches and just the span it needs. The
+   original data-note positions and full keyboard remain intact elsewhere. */
+@media (max-width: 600px) and (orientation: portrait) {
+  .living-hero .piano-panel[data-song] .piano-scroll { overflow-x: hidden; }
+  .living-hero .piano-panel[data-song] .piano-keys { min-width: 0; }
+  .living-hero .piano-panel[data-song] .piano-key { display: none; }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-keys { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key:is([data-note="G3"], [data-note="G#3"], [data-note="A3"], [data-note="A#3"], [data-note="B3"], [data-note="C4"], [data-note="C#4"], [data-note="D4"], [data-note="D#4"], [data-note="E4"], [data-note="F4"], [data-note="F#4"], [data-note="G4"]) { display: block; }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key--black { width: 8%; }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="G#3"] { left: 12.5%; }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="A#3"] { left: 25%; }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="C#4"] { left: 50%; }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="D#4"] { left: 62.5%; }
+  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="F#4"] { left: 87.5%; }
+  /* Runaway has keyboardOctave=1: C5–E6 includes its low C#5 response. */
+  .living-hero .piano-panel[data-song="runaway"] .piano-keys { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key:is([data-note="C4"], [data-note="C#4"], [data-note="D4"], [data-note="D#4"], [data-note="E4"], [data-note="F4"], [data-note="F#4"], [data-note="G4"], [data-note="G#4"], [data-note="A4"], [data-note="A#4"], [data-note="B4"], [data-note="C5"], [data-note="C#5"], [data-note="D5"], [data-note="D#5"], [data-note="E5"]) { display: block; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key--black { width: 6.4%; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="C#4"] { left: 10%; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="D#4"] { left: 20%; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="F#4"] { left: 40%; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="G#4"] { left: 50%; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="A#4"] { left: 60%; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="C#5"] { left: 80%; }
+  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="D#5"] { left: 90%; }
 }
 @media (prefers-reduced-motion: reduce) {
   .living-hero .piano-panel, .living-hero .piano-panel-inner { transition: none; }
@@ -358,6 +386,11 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 /* Round 76: a one-line keyboard hint above the keys, and each key's computer
    key in small type, shown only where there is a mouse and keyboard. */
 .living-hero .piano-hint { margin: 0; padding: 8px 12px 0; color: #c1d2c4; font-size: 12px; line-height: 1.4; text-align: center; }
+.living-hero .piano-song-controls { display: flex; align-items: center; gap: 8px; padding: 6px 12px 0; }
+.living-hero .piano-credit { flex: 1; min-width: 0; margin: 0; color: #c1d2c4; font-size: 11px; line-height: 1.4; }
+.living-hero .piano-next { flex: none; min-height: 30px; padding: 4px 8px; border: 1px solid #adc4b566; border-radius: 6px; color: var(--hero-cream); background: transparent; font-size: 11px; }
+.living-hero .piano-next:hover { color: var(--hero-peach); border-color: var(--hero-peach); }
+.living-hero .piano-next:focus-visible { outline-offset: 2px; }
 .living-hero .piano-key[data-key] { position: relative; }
 .living-hero .piano-key--black[data-key] { position: absolute; }
 @media (hover: hover) and (pointer: fine) {

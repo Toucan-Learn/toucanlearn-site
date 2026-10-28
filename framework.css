@@ -102,7 +102,7 @@
 .homepage #main .team-section .framework-profile h3 { margin-block: 0 8px; color: var(--heading); font-size: clamp(1.5rem, 2.3vw, 2rem); line-height: 1.2; letter-spacing: -.025em; }
 .homepage .framework-profile p { margin-block: 0 12px; color: var(--ink); font-size: 1rem; line-height: 1.55; }
 .homepage .framework-profile .framework-profile-role { color: var(--orange-text); font-size: .95rem; font-weight: 800; line-height: 1.5; }
-.homepage .framework-profile .framework-profile-role + p { color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
+.homepage .framework-profile .profile-availability + p { color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
 .homepage .framework-profile .framework-portrait-frame { width: 135px; height: 200px; margin-left: 22px; margin-bottom: 14px; }
 .framework-portrait,
 .framework-portrait-frame,
@@ -134,7 +134,7 @@
   .homepage .framework-team-grid { grid-template-columns: minmax(0, 1fr) 560px; }
 }
 @media (max-width: 1100px) {
-  .homepage .framework-profile .framework-profile-role + p { font-size: 1.15rem; }
+  .homepage .framework-profile .profile-availability + p { font-size: 1.15rem; }
 }
 @media (max-width: 760px) {
   .homepage .framework-team-viewer { padding: 24px; }
@@ -247,3 +247,8 @@
 
 /* Supplied tutor photos, already cropped to the frame (20261028). */
 .framework-portrait-frame--photo .framework-portrait { float: none; width: 100%; height: 100%; margin: 0; border-radius: 0; object-fit: cover; object-position: center top; }
+
+/* Tutor availability as icon chips under the profile subheader (owner, 28 Oct 2026). */
+.profile-availability { display: flex; flex-wrap: wrap; gap: 6px; margin: -2px 0 12px; }
+.avail-chip { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px 3px 8px; border: 1px solid var(--line); border-radius: 999px; color: var(--heading); font-size: .82rem; font-weight: 700; line-height: 1.4; white-space: nowrap; }
+.avail-chip svg { width: 15px; height: 15px; flex: 0 0 auto; }

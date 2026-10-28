@@ -8,7 +8,7 @@ const source = await readFile(new URL('../project-showcase.js', import.meta.url)
 const spinSource = await readFile(new URL('../drink-spin.js', import.meta.url), 'utf8');
 const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString('base64')}`;
 const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL));
-const { projects, initialProject, idleAdvance } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
+const { projects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
 await import('./drink-spin-source.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 assert.deepEqual(projects.find(project => project.id === 'drinks').drinks.map(({ name, lines }) => ({ name, lines })), [
@@ -17,10 +17,12 @@ assert.deepEqual(projects.find(project => project.id === 'drinks').drinks.map(({
   { name: 'Ground Pinch', lines: ['Designed for everyone.'] },
 ], 'The drink cards retain the exact approved words and capitalisation');
 for (let i = 0; i < projects.length; i++) {
-  assert.equal(initialProject(undefined, () => (i + .5) / projects.length), i, 'Every project can start a load');
+  assert.equal(initialProject(undefined, () => (i + .5) / projects.length, null), i, 'With no fixed start, every project can start a load');
   assert.equal(initialProject(projects[i].id, () => 0), i, 'Review override is deterministic');
 }
-assert.equal(initialProject('unknown', () => .99), 3, 'Invalid overrides use random selection');
+assert.equal(initialProject('unknown', () => .99, null), 3, 'Invalid overrides use random selection when no fixed start');
+assert.equal(homepageStart, 'piano', 'Homepage opens on the piano for now');
+assert.equal(initialProject(undefined, () => .1), projects.findIndex(p => p.id === 'piano'), 'Ordinary homepage loads start on the piano');
 function fakeClock() {
   let time = 0;
   let id = 0;

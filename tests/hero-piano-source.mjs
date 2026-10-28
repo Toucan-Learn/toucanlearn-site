@@ -53,19 +53,20 @@ const songResults = [];
 const html = await readFile(new URL('project-showcase.js', root), 'utf8');
 const keyboard = await readFile(new URL('hero-keyboard.js', root), 'utf8');
 const css = await readFile(new URL('hero.css', root), 'utf8');
-assert.match(css, /--piano-next-green:\s*#63c47b;/, 'The cue uses a saturated sage green');
+assert.match(css, /--piano-now-green:\s*#63c47b;/, 'The note to play is green');
+assert.match(css, /--piano-next-violet:\s*#7b6fd6;/, 'The note after is blue-violet');
 for (const selector of ['.piano-key.is-now', '.piano-key.is-now.is-pressed', '.piano-key.is-now.is-next', '.piano-key.is-now.is-next.is-pressed']) {
   const rule = css.slice(css.indexOf(`${selector} {`)).split('}')[0];
-  assert.match(rule, /background: var\(--hero-peach\)/, 'The current note stays brand orange, including repeated/pressed pitches');
+  assert.match(rule, /background: var\(--piano-now-green\)/, 'The current note is green, including repeated/pressed pitches');
 }
 for (const selector of ['.piano-key.is-next', '.piano-key.is-next.is-pressed']) {
   const rule = css.slice(css.indexOf(`${selector} {`)).split('}')[0];
-  assert.match(rule, /background: var\(--piano-next-tint\)/, 'The following note has a softer green fill');
-  assert.match(rule, /inset 0 0 0 2px var\(--piano-next-green\)/, 'The following note has a green edge');
+  assert.match(rule, /background: var\(--piano-next-tint\)/, 'The following note has a soft violet fill');
+  assert.match(rule, /inset 0 0 0 2px var\(--piano-next-violet\)/, 'The following note has a violet edge');
 }
 for (const selector of ['.piano-key.is-now.is-next', '.piano-key.is-now.is-next.is-pressed']) {
   const rule = css.slice(css.indexOf(`${selector} {`)).split('}')[0];
-  assert.match(rule, /inset 0 0 0 3px var\(--piano-next-green\)/, 'A repeated pitch has a clear green inner ring');
+  assert.match(rule, /inset 0 0 0 3px var\(--piano-next-violet\)/, 'A repeated pitch has a clear violet inner ring');
 }
 assert.match(css, /\.piano-key:is\(\.is-now, \.is-next, \.is-pressed\)\[data-key\]::after \{ color: #0a272c;/,
   'Both black and white highlighted keys retain dark readable computer letters');

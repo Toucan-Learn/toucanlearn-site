@@ -12,10 +12,16 @@ export const projects = [
   { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-preview.png', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
-// ?project=<id> is a review/test override. Ordinary homepage loads are random.
-export function initialProject(requested, random = Math.random) {
+// Owner, 28 Oct 2026: "lets have piano as the 1st in the carousel on the frontpage for now".
+// Set to null to go back to a random project on each homepage load.
+export const homepageStart = 'piano';
+
+// ?project=<id> is a review/test override; otherwise homepageStart, else random.
+export function initialProject(requested, random = Math.random, start = homepageStart) {
   const index = projects.findIndex(project => project.id === requested);
-  return index < 0 ? Math.floor(random() * projects.length) : index;
+  if (index >= 0) return index;
+  const fixed = projects.findIndex(project => project.id === start);
+  return fixed >= 0 ? fixed : Math.floor(random() * projects.length);
 }
 
 // Injectable clock keeps the real 20-second policy testable without a browser.
@@ -121,6 +127,8 @@ export function initShowcase(root) {
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const requested = new URLSearchParams(location.search).get('project');
   let index = automatic ? initialProject(requested) : Math.max(0, projects.findIndex(project => project.id === requested));
+  // The homepage counts from wherever it opened, so its first project reads "1 of 4".
+  const countFrom = automatic ? index : 0;
   let generation = 0;
   let dispose = null;
   let mounted = null;
@@ -277,7 +285,7 @@ export function initShowcase(root) {
     const slot = automatic ? root : slides.find(slide => slide.dataset.project === projects[index].id).querySelector('.framework-project-media');
     slot.append(cell);
     name.textContent = projects[index].name;
-    status.textContent = `${index + 1} of ${projects.length}`;
+    status.textContent = `${(index - countFrom + projects.length) % projects.length + 1} of ${projects.length}`;
     timer.reset();
     sync();
   }

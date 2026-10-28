@@ -175,11 +175,11 @@ try {
     await context.close();
   }
   await checkDrinkSpin({ open, views, base, output, report });
-  // Seed the page's RNG to exercise all four random starts without query overrides.
+  // Homepage opens on the piano for now (owner, 28 Oct), whatever the RNG says.
   for (let i = 0; i < ids.length; i++) {
     const { context, page } = await open(views[0], 'system-dark', true, { random: (i + .5) / ids.length });
     await load(page, 'index.html');
-    assert.equal(await selected(page), ids[i], 'Page-load random start');
+    assert.equal(await selected(page), 'piano', 'Homepage starts on the piano');
     await context.close();
   }
   const { context, page } = await open(views[0], 'system-dark', false, { fast: true });

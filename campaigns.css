@@ -2965,3 +2965,8 @@ body:not(.team-page) footer.site-footer .footer-links > a:focus-visible { color:
   body:not(.team-page) footer.site-footer .footer-links { margin-top: 8px; gap: 0 18px; }
   body:not(.team-page) footer.site-footer .footer-links > a { min-height: 44px; }
 }
+
+/* Facebook has no star ratings, only "recommends": show that, never stars (owner, 28 Oct 2026). */
+.review-recommends { display: inline-flex; align-items: center; padding: 1px 8px; border-radius: 999px; background: #f4b40026; color: #f4b400; font-weight: 800; font-size: .85em; line-height: 1.6; }
+:root:not([data-theme="dark"]) .review-recommends { color: #8a5a00; background: #f4b40033; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .review-recommends { color: #f4b400; background: #f4b40026; } }

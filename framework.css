@@ -292,3 +292,14 @@ bdi[lang="ar"] { white-space: nowrap; }
 
 /* Arabic closing line in a tutor quote: its own line, right-aligned under the photo. */
 .quote-arabic { display: block; clear: right; margin-top: 14px; text-align: right; }
+/* Our team landing, refit after the seventh profile (Amin's longer quote) made the card taller. */
+@media (min-width: 1000px) and (max-height: 820px) {
+  .homepage .homepage-section.team-section { padding-top: 6px; }
+  .homepage .team-section h2 { margin-bottom: 10px; }
+  .homepage .framework-profile .framework-profile-role + p { font-size: 1.05rem; line-height: 1.36; }
+  .homepage .framework-team-viewer { padding-block: 18px; }
+  .homepage .framework-profile .framework-portrait-frame { width: 120px; height: 178px; }
+}
+@media (min-width: 1000px) and (max-height: 820px) {
+  #main > .homepage-section.team-section { scroll-margin-top: calc(var(--sticky-header-height, 95px) - 22px); }
+}

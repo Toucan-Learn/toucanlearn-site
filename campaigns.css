@@ -2913,3 +2913,10 @@ header:not(.toucan-opening-header) .nav-links {
 .footer-slogan a { color: var(--orange-text); }
 .team-page .footer-slogan { color: inherit; }
 .team-page footer.site-footer .footer-slogan a { color: #ffb486; }
+
+/* Real Google reviews: gold stars, source and a link to the review (owner, 28 Oct 2026). */
+.review-google { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+.review-stars { display: inline-flex; gap: 2px; }
+.review-stars svg { width: 17px; height: 17px; fill: #f4b400; }
+.review-google-meta { font-weight: 700; }
+.review-quote .review-google-link { font-weight: 700; color: inherit; opacity: .9; text-underline-offset: 3px; }

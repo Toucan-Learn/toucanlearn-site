@@ -22,10 +22,11 @@
   <link rel="stylesheet" href="framework.css?v=20261028-land-1" />
   <script src="menu.js?v=20261028-anchor-1" defer></script>
   <script src="content-panels.js?v=20261028-final-1" defer></script>
-  <script src="project-viewer.js?v=20261028-showcase-1" defer></script>
-  <script src="screenshot-gallery.js?v=20261026-final-2" defer></script>
   <link rel="stylesheet" href="back-page-frame.css?v=20261028-project-cells-1" />
-  <script src="back-page-frame.js?v=20261028-v2-7" defer></script>
+  <script src="back-page-frame.js?v=20261028-shared-layout-2" defer></script>
+  <link rel="stylesheet" href="hero.css?v=20261028-shared-1" />
+  <link rel="stylesheet" href="project-showcase.css?v=20261028-shared-3" />
+  <script src="project-showcase.js?v=20261028-shared-2" type="module"></script>
 </head>
 <body class="campaign-page children-page">
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -139,9 +140,9 @@
             <h2 id="projects-heading">More than an hour a week.</h2>
             <p>Real projects and tools, made for students.</p>
           </div>
-          <div class="framework-project-viewer" data-project-viewer>
+          <div class="framework-project-viewer" data-project-viewer data-showcase data-showcase-mode="manual">
             <div class="framework-project-slides">
-              <article class="framework-project" data-project-slide>
+              <article class="framework-project" data-project-slide data-project="football">
                 <div class="framework-project-copy subject-card">
                   <p class="project-label">GCSE English and maths</p>
                   <h3>Sports journalism</h3>
@@ -153,11 +154,10 @@
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
                 <div class="framework-project-media">
-                  <iframe class="project-embed" src="projects/football-journalism/index.html#football" title="Football newspaper: read the front page and articles" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
-                  <img class="project-embed-fallback" src="assets/projects/football-newspaper.webp" alt="A football newspaper front page with a lead story and two analysis pieces" width="934" height="747" loading="lazy" decoding="async" />
+                  <img class="showcase-fallback" src="assets/projects/football-newspaper.webp" alt="A football newspaper front page with analysis pieces" width="960" height="540" loading="lazy" decoding="async" />
                 </div>
               </article>
-              <article class="framework-project" data-project-slide>
+              <article class="framework-project" data-project-slide data-project="darty">
                 <div class="framework-project-copy subject-card">
                   <p class="project-label">English · game design</p>
                   <h3>DARTY</h3>
@@ -169,54 +169,41 @@
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
                 <div class="framework-project-media">
-                  <div class="screenshot-gallery" data-screenshot-gallery role="group" aria-label="DARTY gameplay screenshots">
-                    <img data-screenshot src="assets/projects/darty-still-01.webp?v=20261026-final-2" alt="DARTY football gameplay screenshot 1" width="960" height="540" loading="lazy" decoding="async" />
-                    <img data-screenshot src="assets/projects/darty-still-02.webp?v=20261026-final-2" alt="DARTY football gameplay screenshot 2" width="960" height="540" loading="lazy" decoding="async" />
-                    <img data-screenshot src="assets/projects/darty-still-03.webp?v=20261026-final-2" alt="DARTY football gameplay screenshot 3" width="960" height="540" loading="lazy" decoding="async" />
-                    <img data-screenshot src="assets/projects/darty-still-04.webp?v=20261026-final-2" alt="DARTY football gameplay screenshot 4" width="960" height="540" loading="lazy" decoding="async" />
-                    <div class="screenshot-gallery-controls"><span data-screenshot-status aria-live="polite">Gameplay screenshots · 1 of 4</span><button type="button" data-screenshot-next>Next image <span aria-hidden="true">→</span></button></div>
-                  </div>
+                  <img class="showcase-fallback" src="assets/projects/darty-still-01.webp" alt="DARTY football gameplay" width="960" height="540" loading="lazy" decoding="async" />
                 </div>
               </article>
-              <article class="framework-project" data-project-slide>
+              <article class="framework-project" data-project-slide data-project="drinks">
                 <div class="framework-project-copy subject-card">
                   <p class="project-label">English · writing and design</p>
                   <h3>Drink design</h3>
                   <div class="project-copy-cells">
-                    <div><h4>The spark</h4><p>Drink ideas became labels and adverts. Pencil drawings are becoming 3D renders.</p></div>
+                    <div><h4>The spark</h4><p>Drink ideas became labels and adverts. Pencil drawings became 3D renders.</p></div>
                     <div><h4>On the label</h4><p class="project-design-lines"><span>Fizzy: “light, bright red” and “Fizzy, extreme.”</span> <span>Ground Pinch, from a football phrase: “designed for everyone”.</span> <span>Skids: “When you're in a rush, have some Skids.”</span></p></div>
                     <div><h4>Skills</h4><p>Audience, word choice, persuasive language and design thinking.</p></div>
                   </div>
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
                 <div class="framework-project-media" data-project-media-slot="drink-design">
-                  <!-- Replace this still with a local MP4 video (controls, preload="none", this image as poster) when ready. -->
-                  <img src="assets/projects/drinks-brand.webp" alt="Two original drink bottle designs, Skids and Fizzy" width="640" height="512" loading="lazy" decoding="async" />
+                  <img class="showcase-fallback" src="assets/projects/drinks/skids-poster.jpg" alt="Skids drink design" width="960" height="540" loading="lazy" decoding="async" />
                 </div>
               </article>
-              <article class="framework-project" data-project-slide>
+              <article class="framework-project" data-project-slide data-project="piano">
                 <div class="framework-project-copy subject-card">
                   <p class="project-label">Music · notes and patterns</p>
                   <h3>Piano</h3>
                   <div class="project-copy-cells">
                     <div><h4>The spark</h4><p>A way into music through play: hear a note, spot a pattern and try again.</p></div>
-                    <div><h4>Try it</h4><p>On the homepage, follow the next green note at the song’s tempo. Try a key here, or play with your computer keyboard.</p></div>
+                    <div><h4>Try it</h4><p>Play the orange note, then the next green note. The tempo bar helps you keep time. Try a key or your computer keyboard.</p></div>
                     <div><h4>Skills</h4><p>Listening, recognising notes and patterns, and keeping time.</p></div>
                   </div>
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
                 <div class="framework-project-media">
-                  <iframe class="project-embed" src="projects/piano/index.html" title="Playable Toucan piano" sandbox="allow-scripts allow-same-origin" loading="lazy"></iframe>
-                  <img class="project-embed-fallback" src="projects/piano/keyboard.svg" alt="Piano keyboard; enable JavaScript to play" width="660" height="220" loading="lazy" decoding="async" />
+                  <img class="showcase-fallback" src="assets/projects/toucan-piano-preview.png" alt="Toucan piano and pixel sky" width="960" height="540" loading="lazy" decoding="async" />
                 </div>
               </article>
             </div>
             <p class="project-note">Shared with each family's permission, with names removed.</p>
-            <div class="framework-project-controls">
-              <button type="button" data-project-prev aria-label="Previous project">← Previous</button>
-              <span data-project-status aria-live="polite">1 of 4</span>
-              <button type="button" data-project-next aria-label="Next project">Next →</button>
-            </div>
           </div>
         </section>
 

@@ -50,7 +50,7 @@ assert.deepEqual(Array.from(seed.api.currentSong().notes), [
   'C#6', 'C#6', 'C#6', 'C#5', 'A5', 'A5', 'G#5', 'E6',
 ], 'Runaway exactly matches the owner-supplied 16 attacks');
 const songResults = [];
-const html = await readFile(new URL('index.html', root), 'utf8');
+const html = await readFile(new URL('project-showcase.js', root), 'utf8');
 const keyboard = await readFile(new URL('hero-keyboard.js', root), 'utf8');
 const css = await readFile(new URL('hero.css', root), 'utf8');
 assert.match(css, /--piano-next-green:\s*#63c47b;/, 'The cue uses a saturated sage green');
@@ -250,7 +250,7 @@ for (const song of seed.songs) {
 
 const result = { status: 'PASS', songs: songResults, joplinTranscriptions: 'PASS', exactRunaway: 'PASS', mobileAndResize: 'PASS', rotationStateRetention: 'PASS', songCycling: 'PASS', twoColourHighlightSource: 'PASS', tempoCue: cueResults, tempo: { fast, slow, sweep },
   scope: 'Source and simulated audio only; browser layout, real audio and GPU unverified' };
-const output = globalThis.process?.env?.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/final-pass-20261028/codex-piano2';
+const output = globalThis.process?.env?.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/shared-showcase-20261028/piano';
 await mkdir(output, { recursive: true });
 await writeFile(`${output}/source-report.json`, JSON.stringify(result, null, 2) + '\n');
 console.log(JSON.stringify(result, null, 2));

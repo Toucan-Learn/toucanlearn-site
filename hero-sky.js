@@ -1,11 +1,16 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-ripple-1';
-import { playNextNote, noteWavePosition } from './hero-piano.js?v=20261028-piano-6';
-import { initHeroKeyboard } from './hero-keyboard.js?v=20261028-piano-6';
+import { playNextNote, noteWavePosition, stopPiano, isPianoPlaying } from './hero-piano.js?v=20261028-shared-1';
+import { initHeroKeyboard } from './hero-keyboard.js?v=20261028-shared-2';
 import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
 
-const art = document.querySelector('.world-art');
-const sky = document.getElementById('sky-canvas');
-const flockCanvas = document.getElementById('flock-canvas');
+// Each showcase mounts the same world and disposes it before changing project.
+export function initHeroSky(root) {
+const controller = new AbortController();
+const listen = (target, type, callback, options = {}) => target?.addEventListener(type, callback, { ...options, signal: controller.signal });
+let disposed = false;
+const art = root.querySelector('.world-art');
+const sky = root.querySelector('#sky-canvas');
+const flockCanvas = root.querySelector('#flock-canvas');
 const flockCtx = flockCanvas.getContext('2d');
 
 // ?sky=<id> is only a testing/screenshot override. Unknown ids use the same
@@ -27,7 +32,7 @@ const fallbackImage = new Image();
 fallbackImage.onload = () => { drawFallback(); renderer?.loadPixel?.(); draw(); };
 fallbackImage.src = preset.image || 'assets/loading-pixel-sky.png';
 function drawFallback() {
-  if (!fallbackCtx) return;
+  if (disposed || !fallbackCtx) return;
   fallback.width = sky.width;
   fallback.height = sky.height;
   fallbackCtx.fillStyle = preset.image ? '#0b131e' : `rgb(${preset.palette[2].map(channel => Math.round(channel * 255)).join(',')})`;
@@ -77,7 +82,7 @@ function recordPixelBrush(x, y, down = false) {
   pixelDots = pixelDots.slice(-12);
 }
 
-const calmButton = document.getElementById('calm-button');
+const calmButton = root.querySelector('#calm-button');
 const preference = window.matchMedia('(prefers-reduced-motion: reduce)');
 let calm = preference.matches;
 let inView = true;
@@ -87,8 +92,10 @@ let time = 0;
 let width = 1;
 let height = 1;
 let renderer = null;
+let glContext = null;
 let pointer = null;
 const sprites = [];
+const spriteImages = [];
 let seed = 2718;
 const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
 const birds = Array.from({ length: 34 }, (_, index) => {
@@ -150,7 +157,7 @@ function drawFlock() {
 // behind the canvas uses the chosen palette when WebGL is unavailable or lost.
 function createSky() {
   sky.hidden = true;
-  const gl = sky.getContext('webgl2', { alpha: false, antialias: false, depth: false, powerPreference: 'low-power' });
+  const gl = glContext = sky.getContext('webgl2', { alpha: false, antialias: false, depth: false, powerPreference: 'low-power' });
   if (!gl) return null;
   const fragment = preset.image ? pixelFragmentSource : pixelFragmentSource.replace(
     /const vec3 PALETTE\[9\]=vec3\[\]\([\s\S]*?\);/,
@@ -226,7 +233,7 @@ function createSky() {
   loadPixel();
   const noise = new Image();
   noise.onload = () => {
-    if (gl.isContextLost()) return;
+    if (disposed || gl.isContextLost()) return;
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, texture);
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, noise);
@@ -238,6 +245,14 @@ function createSky() {
   sky.hidden = true;
   return {
     loadPixel,
+    dispose() {
+      noise.onload = null;
+      noise.removeAttribute('src');
+      gl.deleteTexture(texture);
+      if (pixelTexture) gl.deleteTexture(pixelTexture);
+      gl.deleteBuffer(buffer);
+      gl.deleteProgram(program);
+    },
     draw(seconds) {
       if (!loaded || (preset.image && !pixelLoaded) || gl.isContextLost()) return;
       gl.viewport(0, 0, sky.width, sky.height);
@@ -263,6 +278,7 @@ function createSky() {
 }
 
 function draw() {
+  if (disposed) return;
   pixelRipples.aspect = sky.width / sky.height;
   pixelRipples.expire(time);
   renderer?.draw(time);
@@ -271,7 +287,7 @@ function draw() {
 
 function animate(now) {
   frame = 0;
-  if (calm || !inView || document.hidden) return;
+  if (disposed || calm || !inView || document.hidden) return;
   if (!previous || now - previous >= 32) {
     time += previous ? Math.min((now - previous) / 1000, .1) : 0;
     previous = now;
@@ -283,7 +299,7 @@ function sync() {
   if (frame) cancelAnimationFrame(frame);
   frame = 0;
   previous = 0;
-  if (!calm && inView && !document.hidden) frame = requestAnimationFrame(animate);
+  if (!disposed && !calm && inView && !document.hidden) frame = requestAnimationFrame(animate);
 }
 function applyCalm() {
   document.body.classList.toggle('is-calm', calm);
@@ -295,25 +311,27 @@ function applyCalm() {
   draw();
   sync();
 }
-art.addEventListener('click', event => {
+listen(art, 'click', event => {
+  root.dispatchEvent(new CustomEvent('showcase:activity', { bubbles: true }));
   playNextNote();
   const rect = art.getBoundingClientRect();
   const keyboard = event.detail === 0;
   const x = keyboard ? .5 : (event.clientX - rect.left) / rect.width;
   addNoteWave(x);
 });
-art.addEventListener('pointermove', event => {
+listen(art, 'pointermove', event => {
   if (calm || event.pointerType === 'touch') return;
   const rect = art.getBoundingClientRect();
   pointer = { x: event.clientX - rect.left, y: event.clientY - rect.top };
   recordPixelBrush(pointer.x / rect.width, pointer.y / rect.height);
 }, { passive: true });
-art.addEventListener('pointerleave', () => { pointer = null; });
-calmButton?.addEventListener('click', () => { calm = !calm; applyCalm(); });
-preference.addEventListener('change', event => { calm = event.matches; applyCalm(); });
-sky.addEventListener('webglcontextlost', event => { event.preventDefault(); sky.hidden = true; renderer = null; });
-sky.addEventListener('webglcontextrestored', () => { renderer = createSky(); draw(); });
-new ResizeObserver(entries => {
+listen(art, 'pointerleave', () => { pointer = null; });
+listen(calmButton, 'click', () => { calm = !calm; applyCalm(); });
+listen(preference, 'change', event => { calm = event.matches; applyCalm(); });
+listen(sky, 'webglcontextlost', event => { event.preventDefault(); sky.hidden = true; renderer = null; });
+listen(sky, 'webglcontextrestored', () => { renderer = createSky(); draw(); });
+const resize = new ResizeObserver(entries => {
+  if (disposed) return;
   const rect = entries[0].contentRect;
   width = Math.max(1, rect.width);
   height = Math.max(1, rect.height);
@@ -325,13 +343,16 @@ new ResizeObserver(entries => {
   flockCanvas.height = Math.round(height * ratio);
   drawFallback();
   draw();
-}).observe(art);
-new IntersectionObserver(entries => { inView = entries[0].isIntersecting; sync(); }, { threshold: .01 }).observe(art);
-document.addEventListener('visibilitychange', sync);
+});
+resize.observe(art);
+const intersection = new IntersectionObserver(entries => { inView = entries[0].isIntersecting; sync(); }, { threshold: .01 });
+intersection.observe(art);
+listen(document, 'visibilitychange', sync);
 drawFallback();
 renderer = createSky();
 ['assets/toucan-logo-flat.png', 'assets/toucan-logo-outline.png'].forEach((path, index) => {
   const image = new Image();
+  spriteImages.push(image);
   image.onload = () => {
     const sprite = document.createElement('canvas');
     sprite.width = sprite.height = 100;
@@ -352,4 +373,24 @@ function addNoteWave(x, y = noteWavePosition()) {
   sky.dispatchEvent(new CustomEvent('piano-wave', { detail: { x, y } }));
   draw();
 }
-initHeroKeyboard(addNoteWave);
+const destroyKeyboard = initHeroKeyboard(addNoteWave, root);
+listen(document, 'visibilitychange', () => { if (document.hidden) stopPiano(); });
+const destroy = () => {
+  disposed = true;
+  controller.abort();
+  cancelAnimationFrame(frame);
+  resize.disconnect();
+  intersection.disconnect();
+  destroyKeyboard?.();
+  stopPiano();
+  fallbackImage.onload = null;
+  fallbackImage.removeAttribute('src');
+  spriteImages.forEach(image => { image.onload = null; image.removeAttribute('src'); });
+  renderer?.dispose();
+  if (glContext && !glContext.isContextLost()) glContext.getExtension('WEBGL_lose_context')?.loseContext();
+  fallback.remove();
+  document.body.classList.remove('is-calm');
+};
+destroy.isPlaying = () => isPianoPlaying() || Boolean(destroyKeyboard?.isPlaying());
+return destroy;
+}

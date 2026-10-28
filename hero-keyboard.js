@@ -1,4 +1,4 @@
-import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition, noteTiming, pauseNoteTiming } from './hero-piano.js?v=20261028-piano-6';
+import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition, noteTiming, pauseNoteTiming } from './hero-piano.js?v=20261028-shared-1';
 
 // Round 76 (Joshua, 19 Oct 2026: "is it possible for us to be able to play the
 // whole piano with keyboard?"): two manuals, so every key from C3 to C6 has its
@@ -18,9 +18,11 @@ const midi = note => (Number(note.at(-1)) + 1) * 12 + PITCHES.indexOf(note.slice
 // computer keys all follow.
 const shifted = note => note.slice(0, -1) + (Number(note.at(-1)) + songKeyboardOctave());
 
-export function initHeroKeyboard(ripple) {
-  const toggle = document.getElementById('piano-toggle');
-  const panel = document.getElementById('hero-keyboard');
+export function initHeroKeyboard(ripple, root = document) {
+  const controller = new AbortController();
+  const listen = (target, type, callback, options = {}) => target?.addEventListener(type, callback, { ...options, signal: controller.signal });
+  const toggle = root.querySelector('#piano-toggle');
+  const panel = root.querySelector('#hero-keyboard');
   if (!toggle || !panel) return;
   const keys = panel.querySelector('.piano-keys');
   const scroll = panel.querySelector('.piano-scroll');
@@ -36,6 +38,7 @@ export function initHeroKeyboard(ripple) {
   const tempoLabel = panel.querySelector('.piano-tempo-label');
   const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
   let tempoFrame = 0;
+  let layoutFrame = 0;
 
   function renderTempo() {
     cancelAnimationFrame(tempoFrame);
@@ -59,7 +62,7 @@ export function initHeroKeyboard(ripple) {
     pauseNoteTiming();
     renderTempo();
   }
-  reducedMotion.addEventListener('change', renderTempo);
+  listen(reducedMotion, 'change', renderTempo);
   let mappedSong;
   function mapSong() {
     if (mappedSong === currentSong()) return;
@@ -90,7 +93,7 @@ export function initHeroKeyboard(ripple) {
     }
   }
   mapSong();
-  panel.querySelector('.piano-next')?.addEventListener('click', () => {
+  listen(panel.querySelector('.piano-next'), 'click', () => {
     nextSong();
     if (open) revealInViewport();
   });
@@ -120,6 +123,21 @@ export function initHeroKeyboard(ripple) {
       behavior: instant || window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' });
   }
 
+  function revealAfterLayout() {
+    cancelAnimationFrame(layoutFrame);
+    if (!open) { layoutFrame = 0; return; }
+    // The back-page frame equalises in RAF, and browser focus/scroll restoration
+    // can follow that reflow. Read the finished geometry on the following frame.
+    layoutFrame = requestAnimationFrame(() => {
+      layoutFrame = requestAnimationFrame(() => {
+        layoutFrame = 0;
+        if (!open || document.hidden) return;
+        keepInView();
+        revealInViewport(true);
+      });
+    });
+  }
+
   function highlight(note) {
     next = note;
     for (const button of new Set([highlighted, following])) {
@@ -144,6 +162,7 @@ export function initHeroKeyboard(ripple) {
 
   function press(button) {
     if (!open || !button) return;
+    root.dispatchEvent(new CustomEvent('showcase:activity', { bubbles: true }));
     const note = button.dataset.pitch;
     const followsSong = note === peekNextNote();
     if (playNote(note) && followsSong) advance();
@@ -170,32 +189,32 @@ export function initHeroKeyboard(ripple) {
     keepInView();
     if (open) revealInViewport();
   }
-  toggle.addEventListener('click', () => setOpen(!open));
+  listen(toggle, 'click', () => setOpen(!open));
 
-  const hero = toggle.closest('.living-hero');
+  const hero = toggle.closest('.living-hero') || toggle.closest('[data-showcase]');
   const header = document.querySelector('body > header');
   function closeAfterHero() {
-    if (!open || !hero) return;
+    if (!open || !hero || layoutFrame) return;
     const headerBottom = Math.max(0, header?.getBoundingClientRect().bottom ?? 0);
     // Wait until the next section reaches the header, so the small scroll
     // that reveals the keyboard itself cannot immediately close it again.
     // Allow the one-pixel difference between the header and its anchor offset.
     if (hero.getBoundingClientRect().bottom <= headerBottom + 2) setOpen(false);
   }
-  window.addEventListener('scroll', closeAfterHero, { passive: true });
-  window.addEventListener('resize', () => {
+  listen(window, 'scroll', closeAfterHero, { passive: true });
+  listen(window, 'resize', () => {
     if (!open) return;
-    // Reflow can move the floating panel off-screen during rotation. Reveal it
-    // immediately, before a layout scroll could mistake that for leaving the hero.
-    keepInView();
-    revealInViewport(true);
+    revealAfterLayout();
+  });
+  listen(document, 'framework:layoutchange', event => {
+    if (event.target.contains(panel)) revealAfterLayout();
   });
 
   const keyFrom = element => {
     const key = element?.closest?.('[data-note]');
     return key && keys.contains(key) ? key : null;
   };
-  keys.addEventListener('pointerdown', event => {
+  listen(keys, 'pointerdown', event => {
     if (!open || (event.button !== undefined && event.button !== 0)) return;
     const key = keyFrom(event.target);
     if (!key) return;
@@ -205,7 +224,7 @@ export function initHeroKeyboard(ripple) {
     pointers.set(event.pointerId, key);
     press(key);
   });
-  keys.addEventListener('pointermove', event => {
+  listen(keys, 'pointermove', event => {
     if (!open || !pointers.has(event.pointerId)) return;
     event.preventDefault();
     const key = keyFrom(document.elementFromPoint(event.clientX, event.clientY));
@@ -213,14 +232,14 @@ export function initHeroKeyboard(ripple) {
     pointers.set(event.pointerId, key);
   });
   const release = event => { pointers.delete(event.pointerId); };
-  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) keys.addEventListener(type, release);
+  for (const type of ['pointerup', 'pointercancel', 'lostpointercapture']) listen(keys, type, release);
   // Native Enter/Space and assistive-technology activation produce detail=0.
   // Pointer activation already sounded at pointerdown, so never play it twice.
-  keys.addEventListener('click', event => {
+  listen(keys, 'click', event => {
     if (event.detail === 0) press(keyFrom(event.target));
   });
 
-  document.addEventListener('keydown', event => {
+  listen(document, 'keydown', event => {
     if (!open || event.ctrlKey || event.metaKey || event.altKey || event.isComposing ||
       event.target?.closest?.('input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]')) return;
     const key = event.key.toLowerCase();
@@ -233,12 +252,28 @@ export function initHeroKeyboard(ripple) {
     held.add(key);
     press(button);
   });
-  document.addEventListener('keyup', event => { held.delete(event.key.toLowerCase()); });
-  window.addEventListener('blur', () => { held.clear(); pointers.clear(); stopTempo(); });
-  document.addEventListener('visibilitychange', () => {
+  listen(document, 'keyup', event => { held.delete(event.key.toLowerCase()); });
+  listen(window, 'blur', () => { held.clear(); pointers.clear(); stopTempo(); });
+  listen(document, 'visibilitychange', () => {
     if (document.hidden) { held.clear(); pointers.clear(); stopTempo(); }
   });
-  new ResizeObserver(keepInView).observe(scroll);
-  onSongAdvance(highlight);
+  const resize = new ResizeObserver(() => { keepInView(); revealAfterLayout(); });
+  resize.observe(scroll);
+  resize.observe(root);
+  const unsubscribe = onSongAdvance(highlight);
   highlight(next);
+  const destroy = () => {
+    open = false;
+    controller.abort();
+    cancelAnimationFrame(tempoFrame);
+    cancelAnimationFrame(layoutFrame);
+    pauseNoteTiming();
+    resize.disconnect();
+    unsubscribe();
+    for (const timer of timers.values()) clearTimeout(timer);
+    pointers.clear();
+    held.clear();
+  };
+  destroy.isPlaying = () => pointers.size > 0 || held.size > 0;
+  return destroy;
 }

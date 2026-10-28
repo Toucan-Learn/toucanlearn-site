@@ -1,6 +1,6 @@
 /* Approved opening only. All rules are scoped so the existing site below it
    and its service pages retain their current layout and content. */
-.living-hero, .toucan-opening-header {
+.living-hero, .toucan-opening-header, .piano-world {
   --hero-night: #0a272c;
   --hero-cream: #f0ebe0;
   --hero-peach: #efac8e;
@@ -43,28 +43,28 @@
 .living-hero .hero-offer span { display: block; margin-top: 2px; color: var(--hero-cream); font-size: 12px; line-height: 1.6; }
 .living-hero .hero-world { min-width: 0; align-self: stretch; display: flex; align-items: center; padding: 32px 0 32px 32px; }
 .living-hero .sky-studio { width: 100%; overflow: visible; border: 1px solid #adc4b533; border-radius: 15px; background: #071c23; box-shadow: 0 24px 60px #01191d55; }
-.living-hero .world-art { display: block; padding: 0; border: 0; position: relative; width: 100%; height: 450px; background: #071219 url('assets/loading-pixel-sky.png') center / cover; cursor: default; touch-action: pan-y; }
-.living-hero .world-art:focus-visible { outline-offset: -6px; }
-.living-hero .world-art canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }
-.living-hero #sky-canvas { z-index: 0; opacity: .65; }
+:is(.living-hero, .piano-world) .world-art { display: block; padding: 0; border: 0; position: relative; width: 100%; height: 450px; background: #071219 url('assets/loading-pixel-sky.png') center / cover; cursor: default; touch-action: pan-y; }
+:is(.living-hero, .piano-world) .world-art:focus-visible { outline-offset: -6px; }
+:is(.living-hero, .piano-world) .world-art canvas { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; image-rendering: pixelated; }
+:is(.living-hero, .piano-world) #sky-canvas { z-index: 0; opacity: .65; }
 /* Present the refracted image directly, as in the reference Pixel sky. */
-.living-hero .world-art[data-sky-preset="pixel"] #sky-canvas { opacity: 1; }
-.living-hero #flock-canvas { z-index: 2; image-rendering: auto; }
-.living-hero .hero-mascot { position: absolute; z-index: 3; width: 51%; height: auto; left: 50%; top: 50%; pointer-events: none; transform: translate(-50%, -50%) rotate(-11deg); filter: drop-shadow(8px 15px 12px #02131788); animation: hero-toucan-float 8s ease-in-out infinite; }
+:is(.living-hero, .piano-world) .world-art[data-sky-preset="pixel"] #sky-canvas { opacity: 1; }
+:is(.living-hero, .piano-world) #flock-canvas { z-index: 2; image-rendering: auto; }
+:is(.living-hero, .piano-world) .hero-mascot { position: absolute; z-index: 3; width: 51%; height: auto; left: 50%; top: 50%; pointer-events: none; transform: translate(-50%, -50%) rotate(-11deg); filter: drop-shadow(8px 15px 12px #02131788); animation: hero-toucan-float 8s ease-in-out infinite; }
 .living-hero .scene-controls { display: flex; justify-content: flex-end; padding: 10px 14px; background: #0b2228; border-top: 1px solid #a9c8ba2b; }
 .living-hero .calm-button { border: 1px solid #96b4a73d; background: transparent; color: #c5d5ca; padding: 7px 12px; min-height: 38px; border-radius: 20px; font-size: 11px; white-space: nowrap; }
 .living-hero .calm-button:hover, .living-hero .calm-button[aria-pressed=true] { background: #dce3c8; color: #16363b; }
 .living-hero [hidden] { display: none !important; }
-body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .living-hero *::after { animation: none !important; transition: none !important; }
+body.is-calm :is(.living-hero, .piano-world) *, body.is-calm :is(.living-hero, .piano-world) *::before, body.is-calm :is(.living-hero, .piano-world) *::after { animation: none !important; transition: none !important; }
 @keyframes hero-toucan-float { 0%, 100% { transform: translate(-50%, -50%) rotate(-11deg); } 50% { transform: translate(-50%, calc(-50% - 9px)) rotate(-8deg); } }
-@media (min-width: 1550px) { .living-hero .hero-layout { min-height: 690px; }.living-hero .world-art { height: 540px; } }
+@media (min-width: 1550px) { .living-hero .hero-layout { min-height: 690px; }:is(.living-hero, .piano-world) .world-art { height: 540px; } }
 @media (max-width: 1050px) {
   .living-hero .container { width: calc(100% - 64px); }
   .living-hero .hero-layout { grid-template-columns: 1fr 1fr; min-height: 565px; }
   .living-hero .eyebrow { font-size: 8px; }
   .living-hero .hero-actions { gap: 17px; }
   .living-hero .hero-world { padding-left: 20px; }
-  .living-hero .world-art { height: 400px; }
+  :is(.living-hero, .piano-world) .world-art { height: 400px; }
 }
 @media (max-width: 760px) {
   .toucan-opening-header .nav { min-height: 78px; }
@@ -76,13 +76,13 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
   .living-hero .hero-description { margin-bottom: 32px; }
   .living-hero .hero-actions { gap: 25px; }
   .living-hero .hero-world { margin: 32px auto; width: min(490px, 100%); padding: 0; }
-  .living-hero .world-art { height: 340px; }
+  :is(.living-hero, .piano-world) .world-art { height: 340px; }
 }
 @media (max-width: 360px) {
   .living-hero .hero-actions { gap: 15px; }
   .living-hero .hero-actions .button { padding-inline: 18px; }
   .living-hero .quiet-link { font-size: 11px; }
-  .living-hero .world-art { height: 280px; }
+  :is(.living-hero, .piano-world) .world-art { height: 280px; }
 }
 /* Short laptops need room for the full description and the larger offer.
    Keep the sky, toucan, buttons and body text at their existing sizes. */
@@ -99,100 +99,100 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
   .living-hero .hero-layout { min-height: calc(100vh - 95px); min-height: calc(100svh - 95px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .living-hero *, .living-hero *::before, .living-hero *::after { animation: none !important; transition: none !important; }
+  :is(.living-hero, .piano-world) *, :is(.living-hero, .piano-world) *::before, :is(.living-hero, .piano-world) *::after { animation: none !important; transition: none !important; }
 }
 
 /* Joshua, 18 Oct 2026: eyebrow above the sky; an attached, optional piano. */
 .living-hero .hero-world { flex-direction: column; justify-content: center; align-items: stretch; }
 .living-hero .hero-world > .eyebrow { margin-bottom: 12px; }
 .living-hero .sky-studio { position: relative; display: grid; grid-template-columns: minmax(0, 1fr); }
-.living-hero .world-art { grid-area: 1 / 1 / 2 / 2; overflow: hidden; border-radius: 14px 14px 0 0; }
-.living-hero .piano-toggle { grid-area: 2 / 1 / 3 / 2; border-radius: 0 0 14px 14px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 38px; padding: 6px 14px; border: 0; border-top: 1px solid #adc4b533; color: var(--hero-cream); background: #0b2228; font-size: 12px; }
-.living-hero .piano-toggle:hover, .living-hero .piano-toggle[aria-expanded=true] { color: var(--hero-peach); background: #103138; }
-.living-hero .piano-toggle:focus-visible { outline-offset: -4px; }
+:is(.living-hero, .piano-world) .world-art { grid-area: 1 / 1 / 2 / 2; overflow: hidden; border-radius: 14px 14px 0 0; }
+:is(.living-hero, .piano-world) .piano-toggle { grid-area: 2 / 1 / 3 / 2; border-radius: 0 0 14px 14px; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; min-height: 38px; padding: 6px 14px; border: 0; border-top: 1px solid #adc4b533; color: var(--hero-cream); background: #0b2228; font-size: 12px; }
+:is(.living-hero, .piano-world) .piano-toggle:hover, :is(.living-hero, .piano-world) .piano-toggle[aria-expanded=true] { color: var(--hero-peach); background: #103138; }
+:is(.living-hero, .piano-world) .piano-toggle:focus-visible { outline-offset: -4px; }
 /* Round 54: the frame keeps its dimensions; only the sky clips its corners.
    The floating panel starts at the frame's outer bottom, across its full width.
    Its own clip reveals the keys downwards from behind the unchanged Piano bar.
    Inert removes closed keys from focus and accessibility navigation. */
-.living-hero .piano-panel { position: absolute; inset: calc(100% + 1px) -1px auto; z-index: 4; overflow: hidden; border-radius: 0 0 15px 15px; box-shadow: 0 18px 40px #00000066; visibility: hidden; pointer-events: none; transition: visibility 280ms; }
-.living-hero .piano-panel.is-open { visibility: visible; pointer-events: auto; }
-.living-hero .piano-panel-inner { position: relative; border: 1px solid #adc4b533; border-top: 0; border-radius: 0 0 15px 15px; overflow: hidden; background: #0b2228; transform: translateY(-100%); transition: transform 280ms ease; }
-.living-hero .piano-panel.is-open .piano-panel-inner { transform: translateY(0); }
-.living-hero .piano-scroll { overflow-x: auto; overscroll-behavior-x: contain; padding: 8px 12px 10px; background: #0b2228; scrollbar-color: #adc4b566 #0b2228; }
-.living-hero .piano-keys { position: relative; display: grid; grid-template-columns: repeat(22, minmax(0, 1fr)); min-width: 528px; height: 71px; isolation: isolate; touch-action: none; user-select: none; -webkit-user-select: none; }
-.living-hero .piano-key { padding: 0; touch-action: none; border-radius: 0 0 4px 4px; }
-.living-hero .piano-key--white { min-width: 0; height: 100%; border: 1px solid #0a272c80; color: #0a272c; background: linear-gradient(#dcd6c9, var(--hero-cream) 12%, #fff9ed 92%, #c5bdad); box-shadow: inset 0 -4px 0 #b7ae9b; }
-.living-hero .piano-key--black { position: absolute; top: 0; z-index: 2; width: 2.9%; height: 62%; transform: translateX(-50%); border: 1px solid #020d10; background: linear-gradient(90deg, #071519, #203136 50%, #061317); box-shadow: 0 4px 3px #00101380, inset 0 -5px 0 #010b0e; }
-.living-hero .piano-key.is-next { background: var(--piano-next-tint); box-shadow: inset 0 0 0 2px var(--piano-next-green); }
-.living-hero .piano-key.is-now { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, 0 0 13px #efac8e88; }
-.living-hero .piano-key.is-pressed { background: #f9c4a9; box-shadow: inset 0 4px 7px #6b342b77; }
+:is(.living-hero, .piano-world) .piano-panel { position: absolute; inset: calc(100% + 1px) -1px auto; z-index: 4; overflow: hidden; border-radius: 0 0 15px 15px; box-shadow: 0 18px 40px #00000066; visibility: hidden; pointer-events: none; transition: visibility 280ms; }
+:is(.living-hero, .piano-world) .piano-panel.is-open { visibility: visible; pointer-events: auto; }
+:is(.living-hero, .piano-world) .piano-panel-inner { position: relative; border: 1px solid #adc4b533; border-top: 0; border-radius: 0 0 15px 15px; overflow: hidden; background: #0b2228; transform: translateY(-100%); transition: transform 280ms ease; }
+:is(.living-hero, .piano-world) .piano-panel.is-open .piano-panel-inner { transform: translateY(0); }
+:is(.living-hero, .piano-world) .piano-scroll { overflow-x: auto; overscroll-behavior-x: contain; padding: 8px 12px 10px; background: #0b2228; scrollbar-color: #adc4b566 #0b2228; }
+:is(.living-hero, .piano-world) .piano-keys { position: relative; display: grid; grid-template-columns: repeat(22, minmax(0, 1fr)); min-width: 528px; height: 71px; isolation: isolate; touch-action: none; user-select: none; -webkit-user-select: none; }
+:is(.living-hero, .piano-world) .piano-key { padding: 0; touch-action: none; border-radius: 0 0 4px 4px; }
+:is(.living-hero, .piano-world) .piano-key--white { min-width: 0; height: 100%; border: 1px solid #0a272c80; color: #0a272c; background: linear-gradient(#dcd6c9, var(--hero-cream) 12%, #fff9ed 92%, #c5bdad); box-shadow: inset 0 -4px 0 #b7ae9b; }
+:is(.living-hero, .piano-world) .piano-key--black { position: absolute; top: 0; z-index: 2; width: 2.9%; height: 62%; transform: translateX(-50%); border: 1px solid #020d10; background: linear-gradient(90deg, #071519, #203136 50%, #061317); box-shadow: 0 4px 3px #00101380, inset 0 -5px 0 #010b0e; }
+:is(.living-hero, .piano-world) .piano-key.is-next { background: var(--piano-next-tint); box-shadow: inset 0 0 0 2px var(--piano-next-green); }
+:is(.living-hero, .piano-world) .piano-key.is-now { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, 0 0 13px #efac8e88; }
+:is(.living-hero, .piano-world) .piano-key.is-pressed { background: #f9c4a9; box-shadow: inset 0 4px 7px #6b342b77; }
 /* Keep the two cues distinct during the short pressed state. A repeated pitch
    carries both colours: orange for this attack, a green inner edge for the next. */
-.living-hero .piano-key.is-next.is-pressed { background: var(--piano-next-tint); box-shadow: inset 0 0 0 2px var(--piano-next-green), inset 0 4px 7px #153d2580; }
-.living-hero .piano-key.is-now.is-pressed { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, inset 0 4px 7px #6b342b77; }
-.living-hero .piano-key.is-now.is-next { background: var(--hero-peach); box-shadow: inset 0 0 0 3px var(--piano-next-green), 0 0 13px #efac8e88; }
-.living-hero .piano-key.is-now.is-next.is-pressed { background: var(--hero-peach); box-shadow: inset 0 0 0 3px var(--piano-next-green), inset 0 4px 7px #6b342b77, 0 0 13px #efac8e88; }
+:is(.living-hero, .piano-world) .piano-key.is-next.is-pressed { background: var(--piano-next-tint); box-shadow: inset 0 0 0 2px var(--piano-next-green), inset 0 4px 7px #153d2580; }
+:is(.living-hero, .piano-world) .piano-key.is-now.is-pressed { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, inset 0 4px 7px #6b342b77; }
+:is(.living-hero, .piano-world) .piano-key.is-now.is-next { background: var(--hero-peach); box-shadow: inset 0 0 0 3px var(--piano-next-green), 0 0 13px #efac8e88; }
+:is(.living-hero, .piano-world) .piano-key.is-now.is-next.is-pressed { background: var(--hero-peach); box-shadow: inset 0 0 0 3px var(--piano-next-green), inset 0 4px 7px #6b342b77, 0 0 13px #efac8e88; }
 /* Keep the outline inside the key. Raising a focused white key would cover
    its neighbouring black keys and steal their pointer/touch hits. */
-.living-hero .piano-key:focus-visible { outline: 3px solid #bc653e; outline-offset: -4px; }
-.living-hero .piano-key.is-next:focus-visible { outline-color: var(--piano-next-green); }
-.living-hero .piano-key[data-note="C#3"] { left: calc(100% * 1 / 22); }
-.living-hero .piano-key[data-note="D#3"] { left: calc(100% * 2 / 22); }
-.living-hero .piano-key[data-note="F#3"] { left: calc(100% * 4 / 22); }
-.living-hero .piano-key[data-note="G#3"] { left: calc(100% * 5 / 22); }
-.living-hero .piano-key[data-note="A#3"] { left: calc(100% * 6 / 22); }
-.living-hero .piano-key[data-note="C#4"] { left: calc(100% * 8 / 22); }
-.living-hero .piano-key[data-note="D#4"] { left: calc(100% * 9 / 22); }
-.living-hero .piano-key[data-note="F#4"] { left: calc(100% * 11 / 22); }
-.living-hero .piano-key[data-note="G#4"] { left: calc(100% * 12 / 22); }
-.living-hero .piano-key[data-note="A#4"] { left: calc(100% * 13 / 22); }
-.living-hero .piano-key[data-note="C#5"] { left: calc(100% * 15 / 22); }
-.living-hero .piano-key[data-note="D#5"] { left: calc(100% * 16 / 22); }
-.living-hero .piano-key[data-note="F#5"] { left: calc(100% * 18 / 22); }
-.living-hero .piano-key[data-note="G#5"] { left: calc(100% * 19 / 22); }
-.living-hero .piano-key[data-note="A#5"] { left: calc(100% * 20 / 22); }
+:is(.living-hero, .piano-world) .piano-key:focus-visible { outline: 3px solid #bc653e; outline-offset: -4px; }
+:is(.living-hero, .piano-world) .piano-key.is-next:focus-visible { outline-color: var(--piano-next-green); }
+:is(.living-hero, .piano-world) .piano-key[data-note="C#3"] { left: calc(100% * 1 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="D#3"] { left: calc(100% * 2 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="F#3"] { left: calc(100% * 4 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="G#3"] { left: calc(100% * 5 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="A#3"] { left: calc(100% * 6 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="C#4"] { left: calc(100% * 8 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="D#4"] { left: calc(100% * 9 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="F#4"] { left: calc(100% * 11 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="G#4"] { left: calc(100% * 12 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="A#4"] { left: calc(100% * 13 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="C#5"] { left: calc(100% * 15 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="D#5"] { left: calc(100% * 16 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="F#5"] { left: calc(100% * 18 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="G#5"] { left: calc(100% * 19 / 22); }
+:is(.living-hero, .piano-world) .piano-key[data-note="A#5"] { left: calc(100% * 20 / 22); }
 @media (min-width: 900px) {
   .living-hero .hero-world { padding-block: 24px; }
 }
 @media (max-width: 760px) {
-  .living-hero .piano-keys { min-width: 528px; height: 64px; }
+  :is(.living-hero, .piano-world) .piano-keys { min-width: 528px; height: 64px; }
   .living-hero .hero-world > .eyebrow { margin-bottom: 12px; }
 }
 /* Each phone song keeps its real pitches and just the span it needs. The
    original data-note positions and full keyboard remain intact elsewhere. */
 @media (max-width: 600px) and (orientation: portrait) {
-  .living-hero .piano-panel[data-song] .piano-scroll { overflow-x: hidden; }
-  .living-hero .piano-panel[data-song] .piano-keys { min-width: 0; }
-  .living-hero .piano-panel[data-song] .piano-key { display: none; }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-keys { grid-template-columns: repeat(8, minmax(0, 1fr)); }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key:is([data-note="G3"], [data-note="G#3"], [data-note="A3"], [data-note="A#3"], [data-note="B3"], [data-note="C4"], [data-note="C#4"], [data-note="D4"], [data-note="D#4"], [data-note="E4"], [data-note="F4"], [data-note="F#4"], [data-note="G4"]) { display: block; }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key--black { width: 8%; }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="G#3"] { left: 12.5%; }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="A#3"] { left: 25%; }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="C#4"] { left: 50%; }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="D#4"] { left: 62.5%; }
-  .living-hero .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="F#4"] { left: 87.5%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song] .piano-scroll { overflow-x: hidden; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song] .piano-keys { min-width: 0; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song] .piano-key { display: none; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-keys { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-key:is([data-note="G3"], [data-note="G#3"], [data-note="A3"], [data-note="A#3"], [data-note="B3"], [data-note="C4"], [data-note="C#4"], [data-note="D4"], [data-note="D#4"], [data-note="E4"], [data-note="F4"], [data-note="F#4"], [data-note="G4"]) { display: block; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-key--black { width: 8%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="G#3"] { left: 12.5%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="A#3"] { left: 25%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="C#4"] { left: 50%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="D#4"] { left: 62.5%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="no-one-noticed"] .piano-key[data-note="F#4"] { left: 87.5%; }
   /* Runaway has keyboardOctave=1: C5–E6 includes its low C#5 response. */
-  .living-hero .piano-panel[data-song="runaway"] .piano-keys { grid-template-columns: repeat(10, minmax(0, 1fr)); }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key:is([data-note="C4"], [data-note="C#4"], [data-note="D4"], [data-note="D#4"], [data-note="E4"], [data-note="F4"], [data-note="F#4"], [data-note="G4"], [data-note="G#4"], [data-note="A4"], [data-note="A#4"], [data-note="B4"], [data-note="C5"], [data-note="C#5"], [data-note="D5"], [data-note="D#5"], [data-note="E5"]) { display: block; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key--black { width: 6.4%; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="C#4"] { left: 10%; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="D#4"] { left: 20%; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="F#4"] { left: 40%; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="G#4"] { left: 50%; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="A#4"] { left: 60%; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="C#5"] { left: 80%; }
-  .living-hero .piano-panel[data-song="runaway"] .piano-key[data-note="D#5"] { left: 90%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-keys { grid-template-columns: repeat(10, minmax(0, 1fr)); }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key:is([data-note="C4"], [data-note="C#4"], [data-note="D4"], [data-note="D#4"], [data-note="E4"], [data-note="F4"], [data-note="F#4"], [data-note="G4"], [data-note="G#4"], [data-note="A4"], [data-note="A#4"], [data-note="B4"], [data-note="C5"], [data-note="C#5"], [data-note="D5"], [data-note="D#5"], [data-note="E5"]) { display: block; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key--black { width: 6.4%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key[data-note="C#4"] { left: 10%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key[data-note="D#4"] { left: 20%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key[data-note="F#4"] { left: 40%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key[data-note="G#4"] { left: 50%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key[data-note="A#4"] { left: 60%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key[data-note="C#5"] { left: 80%; }
+  :is(.living-hero, .piano-world) .piano-panel[data-song="runaway"] .piano-key[data-note="D#5"] { left: 90%; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .living-hero .piano-panel, .living-hero .piano-panel-inner { transition: none; }
+  :is(.living-hero, .piano-world) .piano-panel, :is(.living-hero, .piano-world) .piano-panel-inner { transition: none; }
 }
 
 /* Phones flash a dark tap highlight over any tapped button; the whole sky and
    the piano keys are buttons, so switch that flash off here (18 Oct 2026). */
-.living-hero .world-art,
-.living-hero .piano-toggle,
-.living-hero .piano-keys button {
+:is(.living-hero, .piano-world) .world-art,
+:is(.living-hero, .piano-world) .piano-toggle,
+:is(.living-hero, .piano-world) .piano-keys button {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -395,32 +395,32 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 
 /* Round 76: a one-line keyboard hint above the keys, and each key's computer
    key in small type, shown only where there is a mouse and keyboard. */
-.living-hero .piano-hint { margin: 0; padding: 8px 12px 0; color: #c1d2c4; font-size: 12px; line-height: 1.4; text-align: center; }
-.living-hero .piano-song-controls { display: flex; align-items: center; gap: 8px; padding: 6px 12px 0; }
-.living-hero .piano-credit { flex: 1; min-width: 0; margin: 0; color: #c1d2c4; font-size: 11px; line-height: 1.4; }
-.living-hero .piano-next { flex: none; min-height: 30px; padding: 4px 8px; border: 1px solid #adc4b566; border-radius: 6px; color: var(--hero-cream); background: transparent; font-size: 11px; }
-.living-hero .piano-next:hover { color: var(--hero-peach); border-color: var(--hero-peach); }
-.living-hero .piano-next:focus-visible { outline-offset: 2px; }
-.living-hero .piano-key[data-key] { position: relative; }
-.living-hero .piano-key--black[data-key] { position: absolute; }
+:is(.living-hero, .piano-world) .piano-hint { margin: 0; padding: 8px 12px 0; color: #c1d2c4; font-size: 12px; line-height: 1.4; text-align: center; }
+:is(.living-hero, .piano-world) .piano-song-controls { display: flex; align-items: center; gap: 8px; padding: 6px 12px 0; }
+:is(.living-hero, .piano-world) .piano-credit { flex: 1; min-width: 0; margin: 0; color: #c1d2c4; font-size: 11px; line-height: 1.4; }
+:is(.living-hero, .piano-world) .piano-next { flex: none; min-height: 30px; padding: 4px 8px; border: 1px solid #adc4b566; border-radius: 6px; color: var(--hero-cream); background: transparent; font-size: 11px; }
+:is(.living-hero, .piano-world) .piano-next:hover { color: var(--hero-peach); border-color: var(--hero-peach); }
+:is(.living-hero, .piano-world) .piano-next:focus-visible { outline-offset: 2px; }
+:is(.living-hero, .piano-world) .piano-key[data-key] { position: relative; }
+:is(.living-hero, .piano-world) .piano-key--black[data-key] { position: absolute; }
 @media (hover: hover) and (pointer: fine) {
-  .living-hero .piano-key[data-key]::after { content: attr(data-key); position: absolute; inset: auto 0 6px; color: #0a272c99; font: 700 9px/1 var(--hero-sans); text-align: center; pointer-events: none; }
-  .living-hero .piano-key--black[data-key]::after { bottom: 5px; color: #f0ebe0b3; }
-  .living-hero .piano-key:is(.is-now, .is-next, .is-pressed)[data-key]::after { color: #0a272c; }
+  :is(.living-hero, .piano-world) .piano-key[data-key]::after { content: attr(data-key); position: absolute; inset: auto 0 6px; color: #0a272c99; font: 700 9px/1 var(--hero-sans); text-align: center; pointer-events: none; }
+  :is(.living-hero, .piano-world) .piano-key--black[data-key]::after { bottom: 5px; color: #f0ebe0b3; }
+  :is(.living-hero, .piano-world) .piano-key:is(.is-now, .is-next, .is-pressed)[data-key]::after { color: #0a272c; }
 }
 /* Fits the existing ten-pixel padding below the keys without adding height. */
-.living-hero .piano-tempo { position: absolute; inset: auto 12px 1px; height: 9px; display: flex; align-items: center; gap: 7px; color: #c1d2c4; pointer-events: none; }
-.living-hero .piano-tempo-label { flex: none; font-size: 9px; line-height: 9px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.living-hero .piano-tempo-bar { appearance: none; -webkit-appearance: none; flex: 1; min-width: 0; width: 0; height: 3px; margin: 0; padding: 0; border: 0; border-radius: 2px; overflow: hidden; background: #adc4b533; color: var(--piano-next-green); }
-.living-hero .piano-tempo-bar::-webkit-progress-bar { background: #adc4b533; border-radius: 2px; }
-.living-hero .piano-tempo-bar::-webkit-progress-value { background: var(--piano-next-green); }
-.living-hero .piano-tempo-bar::-moz-progress-bar { background: var(--piano-next-green); }
-.living-hero .piano-tempo[data-phase="landing"] .piano-tempo-bar { box-shadow: 0 0 5px 1px #a7e6b5; }
+:is(.living-hero, .piano-world) .piano-tempo { position: absolute; inset: auto 12px 1px; height: 9px; display: flex; align-items: center; gap: 7px; color: #c1d2c4; pointer-events: none; }
+:is(.living-hero, .piano-world) .piano-tempo-label { flex: none; font-size: 9px; line-height: 9px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+:is(.living-hero, .piano-world) .piano-tempo-bar { appearance: none; -webkit-appearance: none; flex: 1; min-width: 0; width: 0; height: 3px; margin: 0; padding: 0; border: 0; border-radius: 2px; overflow: hidden; background: #adc4b533; color: var(--piano-next-green); }
+:is(.living-hero, .piano-world) .piano-tempo-bar::-webkit-progress-bar { background: #adc4b533; border-radius: 2px; }
+:is(.living-hero, .piano-world) .piano-tempo-bar::-webkit-progress-value { background: var(--piano-next-green); }
+:is(.living-hero, .piano-world) .piano-tempo-bar::-moz-progress-bar { background: var(--piano-next-green); }
+:is(.living-hero, .piano-world) .piano-tempo[data-phase="landing"] .piano-tempo-bar { box-shadow: 0 0 5px 1px #a7e6b5; }
 @media (prefers-reduced-motion: reduce) {
-  .living-hero .piano-tempo[data-phase="landing"] .piano-tempo-bar { box-shadow: none; }
+  :is(.living-hero, .piano-world) .piano-tempo[data-phase="landing"] .piano-tempo-bar { box-shadow: none; }
 }
 @media (hover: none), (pointer: coarse) {
-  .living-hero .piano-hint { display: none; }
+  :is(.living-hero, .piano-world) .piano-hint { display: none; }
 }
 /* The wordmark keeps its original theme-dependent orange; LEARN stays #1f7a75 in both themes. */
 

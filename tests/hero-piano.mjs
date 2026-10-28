@@ -1,6 +1,7 @@
 // Run from this worktree, with python3 -m http.server 4205 in another terminal:
 // node tests/hero-piano.mjs
 import assert from 'node:assert/strict';
+import { activatePianoToggle, assertProjectPianoFits } from './piano-toggle-helpers.mjs';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -14,8 +15,9 @@ const songSource = await readFile(new URL('hero-songs.js', root), 'utf8');
 const { songs } = await import(`data:text/javascript;base64,${Buffer.from(songSource).toString('base64')}`);
 const keyboardSource = await readFile(new URL('hero-keyboard.js', root), 'utf8');
 const pianoModule = keyboardSource.match(/from '(\.\/hero-piano\.js[^']*)'/)[1];
-const output = process.env.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/final-pass-20261028/codex-piano2';
+const output = process.env.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/shared-showcase-20261028/piano';
 const base = process.env.BASE_URL || 'http://127.0.0.1:4205';
+const pianoPage = process.env.PIANO_PAGE || 'index.html';
 const phoneIds = ['runaway', 'no-one-noticed'];
 const desktop = { width: 1440, height: 750, deviceScaleFactor: 1 };
 const phone = { width: 390, height: 844, deviceScaleFactor: 1, isMobile: true, hasTouch: true };
@@ -34,7 +36,7 @@ async function openPiano(page, id, colour, viewport, reduced = false) {
     { name: 'prefers-color-scheme', value: colour },
     { name: 'prefers-reduced-motion', value: reduced ? 'reduce' : 'no-preference' },
   ]);
-  await page.goto(`${base}/index.html?song=${id}&sky=pixel`, { waitUntil: 'networkidle0' });
+  await page.goto(`${base}/${pianoPage}?project=piano&song=${id}&sky=pixel${pianoPage === 'children.html' ? '#learner-projects' : ''}`, { waitUntil: 'networkidle0' });
   await page.waitForFunction(() => document.querySelector('#hero-keyboard')?.dataset.song);
   await page.evaluate(async path => {
     window.pianoUnderTest = await import(path);
@@ -47,8 +49,7 @@ async function openPiano(page, id, colour, viewport, reduced = false) {
     await document.fonts.ready;
   }, new URL(pianoModule, `${base}/index.html`).href);
   assert.equal(await page.evaluate(() => window.pianoAudio.contexts), 0, 'No audio on load');
-  await page.click('#piano-toggle');
-  await wait(550); // Let the panel transition and its own viewport-reveal scroll finish.
+  await activatePianoToggle(page, `${pianoPage}: piano input suite`);
   assert.equal(await page.evaluate(() => window.pianoAudio.contexts), 0, 'No audio on opening');
   const choices = await page.evaluate(() => window.pianoUnderTest.availableSongs().map(song => song.id));
   assert.deepEqual(choices, viewport.width <= 600 && viewport.height > viewport.width ? phoneIds : songs.map(song => song.id));
@@ -304,6 +305,7 @@ async function resizeOpenPiano(page, width, height, preserveSong = false) {
     assert.ok(phoneIds.includes(after.song), 'An unavailable song switches to a phone song');
     assert.equal(after.next, songs.find(song => song.id === after.song).notes[0]);
   }
+  after.slot = await assertProjectPianoFits(page, `${pianoPage}: resize to ${width}x${height}`);
   await highlighted(page, after.next);
   if (portraitPhone) await noOverflow(page);
   report.resizes.push({ viewport, before, after });
@@ -445,9 +447,9 @@ async function tempoCue(page, viewport, colour, song, reduced = false) {
   // Closing, reopening and losing focus all clear a partially filled cue.
   const state = await highlighted(page, await page.evaluate(() => window.pianoUnderTest.peekNextNote()));
   await gesture(page, state, viewport.isMobile ? 'touch' : 'computer');
-  await page.click('#piano-toggle');
+  await activatePianoToggle(page, `${pianoPage}: piano input suite`);
   assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle');
-  await page.click('#piano-toggle');
+  await activatePianoToggle(page, `${pianoPage}: piano input suite`);
   await wait(550);
   assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle');
   await gesture(page, await highlighted(page, await page.evaluate(() => window.pianoUnderTest.peekNextNote())), viewport.isMobile ? 'touch' : 'computer');
@@ -537,7 +539,7 @@ try {
 
   // Tablet and narrow landscape retain all songs; resizing an open piano remaps it.
   await openPiano(page, 'entertainer', 'light', desktop);
-  for (const viewport of [{ width: 768, height: 1024 }, { width: 600, height: 390 }]) {
+  for (const viewport of [{ width: 1280, height: 720 }, { width: 768, height: 1024 }, { width: 600, height: 390 }]) {
     await resizeOpenPiano(page, viewport.width, viewport.height);
   }
   await resizeOpenPiano(page, phone.width, phone.height);

@@ -176,6 +176,10 @@ function soundNote(frequency) {
   panner.connect(master);
 
   const voice = {
+    stop() {
+      oscillators.forEach(oscillator => { try { oscillator.stop(); } catch (_) { /* Already ended. */ } });
+      voice.finish();
+    },
     finish() {
       const index = voices.indexOf(voice);
       if (index !== -1) voices.splice(index, 1);
@@ -247,3 +251,13 @@ export function playNote(noteName) {
 export function playNextNote() {
   if (playNote(peekNextNote())) advance();
 }
+
+// Switching away and backgrounding must silence held notes and release tails.
+// Retain the context for a later user gesture; mounting never resumes it.
+export function stopPiano() {
+  pauseNoteTiming();
+  for (const voice of new Set([...voices, ...tails])) voice.stop();
+  if (audio?.state === 'running') audio.suspend?.().catch(() => {});
+}
+
+export function isPianoPlaying() { return voices.length > 0 || tails.size > 0; }

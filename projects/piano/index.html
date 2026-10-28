@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-src 'none'; worker-src 'none'" />
+  <link rel="icon" href="../../assets/toucan-favicon.png" />
+  <link rel="stylesheet" href="../../hero.css?v=20261026-logo-green-1" />
+  <link rel="stylesheet" href="piano.css?v=20261028-fit-2" />
+  <title>Toucan piano</title>
+</head>
+<body>
+  <main class="living-hero piano-showcase">
+    <h1>Toucan piano</h1>
+    <button id="piano-toggle" class="piano-toggle" type="button" aria-label="Show piano keyboard" aria-expanded="false" aria-controls="hero-keyboard" tabindex="-1">Piano keyboard</button>
+    <div class="piano-panel" id="hero-keyboard" role="group" aria-label="Piano keyboard" aria-hidden="true" inert>
+      <div class="piano-panel-inner">
+        <p class="piano-hint">Click a key, then play your own tune.</p>
+        <div class="piano-scroll">
+          <div class="piano-keys">
+                  <button class="piano-key piano-key--white" type="button" data-note="C3" aria-label="C3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="C#3" aria-label="C sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="D3" aria-label="D3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="D#3" aria-label="D sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="E3" aria-label="E3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="F3" aria-label="F3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="F#3" aria-label="F sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="G3" aria-label="G3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="G#3" aria-label="G sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="A3" aria-label="A3"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="A#3" aria-label="A sharp 3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="B3" aria-label="B3"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="C4" aria-label="C4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="C#4" aria-label="C sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="D4" aria-label="D4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="D#4" aria-label="D sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="E4" aria-label="E4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="F4" aria-label="F4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="F#4" aria-label="F sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="G4" aria-label="G4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="G#4" aria-label="G sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="A4" aria-label="A4"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="A#4" aria-label="A sharp 4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="B4" aria-label="B4"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="C5" aria-label="C5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="C#5" aria-label="C sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="D5" aria-label="D5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="D#5" aria-label="D sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="E5" aria-label="E5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="F5" aria-label="F5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="F#5" aria-label="F sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="G5" aria-label="G5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="G#5" aria-label="G sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="A5" aria-label="A5"></button>
+                  <button class="piano-key piano-key--black" type="button" data-note="A#5" aria-label="A sharp 5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="B5" aria-label="B5"></button>
+                  <button class="piano-key piano-key--white" type="button" data-note="C6" aria-label="C6"></button>
+                  </div>
+        </div>
+      </div>
+    </div>
+    <noscript><p>Enable JavaScript to play the piano.</p></noscript>
+  </main>
+  <script type="module" src="piano.js"></script>
+</body>
+</html>

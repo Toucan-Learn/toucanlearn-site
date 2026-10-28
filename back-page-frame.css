@@ -72,7 +72,7 @@ body.team-page[data-page-frame] .cta .cta-box > .button { width: auto; }
 .framework-panels .eyebrow { color: #a9e0d7; }
 .framework-panels :is(.lead, .section-head p, .project-note) { color: var(--ink); }
 .framework-panels a:not(.button) { color: inherit; }
-.framework-panels :is(.learning-steps > li, .framework-benefits > article, .learning-formats > .learning-prose, .learning-note, .report-parts > li) {
+.framework-panels :is(.learning-steps > li, .framework-benefits > article, .learning-formats > .learning-prose, .learning-note, .report-parts > li, .subject-card) {
   --heading: #0b3f51;
   --ink: #142f3a;
   --ink-rgb: 20, 47, 58;
@@ -88,7 +88,7 @@ body.team-page[data-page-frame] .cta .cta-box > .button { width: auto; }
 .learning-page .framework-shell .approach-report .report-parts li { border-radius: 16px; padding: 16px; }
 .learning-page .framework-shell .approach-report .report-example { color: #294c59; }
 :root[data-theme="dark"] .framework-panels { background: #132e3a; border-color: #50717a; }
-:root[data-theme="dark"] .framework-panels :is(.learning-steps > li, .framework-benefits > article, .learning-formats > .learning-prose, .learning-note, .report-parts > li) {
+:root[data-theme="dark"] .framework-panels :is(.learning-steps > li, .framework-benefits > article, .learning-formats > .learning-prose, .learning-note, .report-parts > li, .subject-card) {
   --heading: #f5f0e6; --ink: #f5f0e6; --ink-rgb: 245, 240, 230;
   --line: rgba(245, 240, 230, .25); --orange-text: #ffb486;
   background: #204653; color: #f5f0e6;
@@ -196,7 +196,7 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
 /* System dark mode (no manual toggle) gets the same frame and cards as the dark toggle. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .framework-panels { background: #132e3a; border-color: #50717a; }
-  :root:not([data-theme="light"]) .framework-panels :is(.learning-steps > li, .framework-benefits > article, .learning-formats > .learning-prose, .learning-note, .report-parts > li) {
+  :root:not([data-theme="light"]) .framework-panels :is(.learning-steps > li, .framework-benefits > article, .learning-formats > .learning-prose, .learning-note, .report-parts > li, .subject-card) {
   --heading: #f5f0e6; --ink: #f5f0e6; --ink-rgb: 245, 240, 230;
   --line: rgba(245, 240, 230, .25); --orange-text: #ffb486;
   background: #204653; color: #f5f0e6;
@@ -340,9 +340,75 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
   body[data-page-frame].approach-page #our-lessons .lesson-stage-grid img { width: clamp(72px, 12vh, 110px); height: auto; }
   body[data-page-frame].approach-page #our-lessons .lesson-example-rows > div { padding-block: clamp(8px, 1.6vh, 14px); }
 }
+/* Subjects: larger matching header art and clearly separated inner cards. */
+.subjects-page .framework-panels > [data-content-panel] > .section-head {
+  display: grid; grid-template-columns: minmax(0, 1fr) 220px; column-gap: 24px; row-gap: 4px; align-items: start;
+}
+.subjects-page .framework-panels .section-head > .subject-art {
+  grid-column: 2; grid-row: 1 / span 3; float: none; width: 220px; height: 137.5px; max-width: 100%; margin: 0; object-fit: contain; border-radius: 12px;
+}
+.subjects-page .framework-panels .section-head > :is(.eyebrow, h2, p) { grid-column: 1; margin: 0; }
+.subjects-page .framework-panels > [data-content-panel] > :is(.learning-subject-grid, .learning-languages) { align-items: stretch; grid-auto-rows: 1fr; }
+.subjects-page .framework-panels [data-content-panel] .subject-card {
+  display: flex; flex-direction: column; min-width: 0; padding: 16px; border: 1px solid transparent; border-radius: 16px;
+}
+.subjects-page .framework-panels .subject-card > :last-child { margin-bottom: 0; }
+.subjects-page .framework-panels .subject-card-link { align-self: flex-start; margin-top: auto; padding-top: 12px; font-weight: 700; }
+.subjects-page .framework-panels .learning-languages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.subjects-page .framework-panels .learning-languages dt { margin: 0 0 8px; font-size: 1.1rem; line-height: 1.35; }
+.subjects-page .framework-panels .learning-languages dd { margin: 0; }
+.subjects-page .framework-panels .send-points { counter-reset: send-point; gap: 12px; margin-block: 10px; }
+.subjects-page .framework-panels .send-points > .subject-card {
+  display: grid; grid-template-columns: minmax(0, 1fr) 88px; gap: 4px 10px; align-content: start; padding: 10px 12px; counter-increment: send-point;
+}
+.subjects-page .framework-panels .send-point-art { grid-column: 2; grid-row: 1; width: 88px; height: 55px; object-fit: contain; border-radius: 8px; }
+.subjects-page .framework-panels .send-points h3 { grid-column: 1; grid-row: 1; align-self: center; margin: 0; font-size: 1.05rem; line-height: 1.3; }
+.subjects-page .framework-panels .send-points h3::before { content: counter(send-point, decimal-leading-zero); margin-right: 8px; color: var(--orange-text); font-size: .85rem; font-weight: 800; }
+.subjects-page .framework-panels .send-points p { grid-column: 1 / -1; margin: 0; font-size: .92rem; line-height: 1.4; }
+.subjects-page .framework-panels .subject-note { margin: 0 0 8px; }
+@media (max-width: 759px) {
+  .subjects-page .framework-panels > [data-content-panel] > .section-head { grid-template-columns: minmax(0, 1fr) 120px; column-gap: 12px; }
+  .subjects-page .framework-panels .section-head > .subject-art { width: 120px; height: 75px; }
+  .subjects-page .framework-panels .learning-languages { grid-template-columns: minmax(0, 1fr); }
+}
+@media print {
+  .subjects-page .framework-panels .subject-card { --heading: #000; --ink: #000; color: #000; background: #fff; border-color: #aaa; break-inside: avoid; }
+}
+
+/* Children's exam cards: matching art, equal cells and aligned subject links. */
+#qualifications .qualification-cards { grid-auto-rows: 1fr; align-items: stretch; }
+#qualifications .qualification-cards > article { display: flex; flex-direction: column; min-width: 0; }
+#qualifications .qualification-art { display: block; flex: 0 0 auto; width: 100%; height: clamp(110px, 17vh, 140px); margin: 0 0 14px; object-fit: contain; border-radius: 12px; background: #eee6d9; }
+#qualifications .qualification-cards > article > a { align-self: flex-start; margin-top: auto; }
+@media screen and (max-width: 759px) {
+  #qualifications .qualification-art { height: 150px; }
+}
+
 /* Children, Projects & learning (owner, 28 Oct 2026: "just need to address this section"). Text and
    picture start level at the top, every picture sits in the same fixed box, and one footer row
    holds the permission note (left) and the project arrows (right). */
+#learner-projects .project-label { margin: 0 0 8px; color: var(--orange-text); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+#learner-projects .framework-project-media { --project-media-height: clamp(220px, 46vh, 400px); }
+#learner-projects .framework-project-media > img,
+#learner-projects .screenshot-gallery img:not([hidden]),
+#learner-projects .framework-project-media > .project-embed {
+  display: block; width: 100%; height: var(--project-media-height); max-height: none; object-fit: contain; border: 0; border-radius: 14px; background: #0b1119;
+}
+#learner-projects .framework-project-media > .project-embed { display: none; color-scheme: light dark; }
+#learner-projects [data-enhanced] .framework-project-media > .project-embed { display: block; }
+#learner-projects [data-enhanced] .framework-project-media > .project-embed-fallback { display: none; }
+@media screen and (max-width: 759px) {
+  #learner-projects .screenshot-gallery { position: relative; }
+  #learner-projects .screenshot-gallery-controls { position: absolute; right: 8px; bottom: 8px; left: 8px; margin: 0; padding: 4px 8px; border-radius: 10px; background: #04161ee6; }
+}
+@media print {
+  /* Emulated print need not fire beforeprint. Override the carousel's more
+     specific [hidden] visibility rule so every fallback can actually print. */
+  #learner-projects [data-project-viewer][data-enhanced] > .framework-project-slides > [data-project-slide],
+  #learner-projects [data-project-viewer][data-enhanced] > .framework-project-slides > [data-project-slide][hidden] { display: block !important; visibility: visible; }
+  #learner-projects .framework-project-media > .project-embed { display: none !important; }
+  #learner-projects .framework-project-media > .project-embed-fallback { display: block !important; height: auto; }
+}
 @media screen and (min-width: 1000px) {
   body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] {
     flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); grid-template-rows: 1fr auto; column-gap: 36px;

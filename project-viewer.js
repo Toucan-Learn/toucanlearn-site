@@ -1,7 +1,7 @@
 /* Manual project viewer, 20261026-framework-1. */
 (() => {
   'use strict';
-  const interactive = 'a, button, input, textarea, select, video, audio, summary, [contenteditable]:not([contenteditable="false"]), [role="slider"], [data-screenshot-gallery]';
+  const interactive = 'a, button, input, textarea, select, video, audio, iframe, summary, [contenteditable]:not([contenteditable="false"]), [role="slider"], [data-screenshot-gallery]';
   const pause = root => root.querySelectorAll('video, audio').forEach(media => media.pause());
   document.querySelectorAll('[data-project-viewer]').forEach(viewer => {
     if (viewer.hasAttribute('data-enhanced')) return;

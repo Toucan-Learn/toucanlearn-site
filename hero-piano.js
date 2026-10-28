@@ -1,4 +1,4 @@
-import { songs } from './hero-songs.js?v=20261028-piano-3';
+import { songs } from './hero-songs.js?v=20261028-piano-5';
 
 // One fresh choice per page load, independent of the sky. The query parameter
 // is a listening/test override; unknown ids use the same random selection.
@@ -30,6 +30,27 @@ const tails = new Set();
 const listeners = new Set();
 let lastNoteTime = null;
 let wavePosition = .5;
+let cueStarted = null;
+let cueDuration = 0;
+const PRACTICE_TEMPO = 100;
+const LANDING_MS = 140;
+
+// The wave and cue share performance.now(), but retain their different jobs:
+// waves respond to actual gestures; the cue guides the next song attack.
+// Only No One Noticed has a saved rhythm. Other songs use an explicit practice
+// pulse, rather than claiming that equal beats reproduce their score.
+export function noteTiming() {
+  const bpm = song.tempo || PRACTICE_TEMPO;
+  const duration = cueDuration || 60000 / bpm;
+  const now = performance.now();
+  const due = cueStarted === null ? null : cueStarted + duration;
+  const phase = due === null ? 'idle' : now < due ? 'filling'
+    : now < due + LANDING_MS ? 'landing' : 'waiting';
+  return { bpm, practice: !song.noteBeats, duration, started: cueStarted, due, phase,
+    progress: due === null ? 0 : now >= due ? 1 : Math.max(0, (now - cueStarted) / duration) };
+}
+
+export function pauseNoteTiming() { cueStarted = null; cueDuration = 0; }
 
 // Screen coordinates: small y is high. A long pause starts a fresh phrase.
 function recordNoteTiming() {
@@ -59,6 +80,7 @@ function selectSong(candidate) {
   nextNote = 0;
   lastNoteTime = null;
   wavePosition = .5;
+  pauseNoteTiming();
   listeners.forEach(listener => listener(peekNextNote()));
 }
 
@@ -70,6 +92,9 @@ export function nextSong() {
 }
 
 export function advance() {
+  // Duration belongs to the attack just played, including any following rest.
+  cueDuration = (song.noteBeats?.[nextNote] || 1) * 60000 / (song.tempo || PRACTICE_TEMPO);
+  cueStarted = performance.now();
   nextNote = (nextNote + 1) % song.notes.length;
   listeners.forEach(listener => listener(peekNextNote()));
 }

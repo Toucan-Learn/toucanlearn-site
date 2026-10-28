@@ -4,6 +4,7 @@
   --hero-night: #0a272c;
   --hero-cream: #f0ebe0;
   --hero-peach: #efac8e;
+  --piano-next-green: #63c47b;
   --hero-serif: Georgia, 'Times New Roman', serif;
   --hero-sans: 'Avenir Next', Avenir, ui-sans-serif, system-ui, sans-serif;
 }
@@ -114,15 +115,18 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
    Inert removes closed keys from focus and accessibility navigation. */
 .living-hero .piano-panel { position: absolute; inset: calc(100% + 1px) -1px auto; z-index: 4; overflow: hidden; border-radius: 0 0 15px 15px; box-shadow: 0 18px 40px #00000066; visibility: hidden; pointer-events: none; transition: visibility 280ms; }
 .living-hero .piano-panel.is-open { visibility: visible; pointer-events: auto; }
-.living-hero .piano-panel-inner { border: 1px solid #adc4b533; border-top: 0; border-radius: 0 0 15px 15px; overflow: hidden; background: #0b2228; transform: translateY(-100%); transition: transform 280ms ease; }
+.living-hero .piano-panel-inner { position: relative; border: 1px solid #adc4b533; border-top: 0; border-radius: 0 0 15px 15px; overflow: hidden; background: #0b2228; transform: translateY(-100%); transition: transform 280ms ease; }
 .living-hero .piano-panel.is-open .piano-panel-inner { transform: translateY(0); }
 .living-hero .piano-scroll { overflow-x: auto; overscroll-behavior-x: contain; padding: 8px 12px 10px; background: #0b2228; scrollbar-color: #adc4b566 #0b2228; }
 .living-hero .piano-keys { position: relative; display: grid; grid-template-columns: repeat(22, minmax(0, 1fr)); min-width: 528px; height: 71px; isolation: isolate; touch-action: none; user-select: none; -webkit-user-select: none; }
 .living-hero .piano-key { padding: 0; touch-action: none; border-radius: 0 0 4px 4px; }
 .living-hero .piano-key--white { min-width: 0; height: 100%; border: 1px solid #0a272c80; color: #0a272c; background: linear-gradient(#dcd6c9, var(--hero-cream) 12%, #fff9ed 92%, #c5bdad); box-shadow: inset 0 -4px 0 #b7ae9b; }
 .living-hero .piano-key--black { position: absolute; top: 0; z-index: 2; width: 2.9%; height: 62%; transform: translateX(-50%); border: 1px solid #020d10; background: linear-gradient(90deg, #071519, #203136 50%, #061317); box-shadow: 0 4px 3px #00101380, inset 0 -5px 0 #010b0e; }
-.living-hero .piano-key.is-next { background: var(--hero-peach); box-shadow: inset 0 0 0 2px #ffc8a8, 0 0 13px #efac8e88; }
+.living-hero .piano-key.is-next { background: var(--piano-next-green); box-shadow: inset 0 0 0 2px #a7e6b5, 0 0 13px #63c47b88; }
 .living-hero .piano-key.is-pressed { background: #f9c4a9; box-shadow: inset 0 4px 7px #6b342b77; }
+/* A repeated pitch stays visibly green while depressed; peach still marks a
+   freely played key. The inset shadow distinguishes the pressed next note. */
+.living-hero .piano-key.is-next.is-pressed { background: var(--piano-next-green); box-shadow: inset 0 4px 7px #153d2580, inset 0 0 0 2px #a7e6b5; }
 /* Keep the outline inside the key. Raising a focused white key would cover
    its neighbouring black keys and steal their pointer/touch hits. */
 .living-hero .piano-key:focus-visible { outline: 3px solid #bc653e; outline-offset: -4px; }
@@ -396,6 +400,18 @@ body.is-calm .living-hero *, body.is-calm .living-hero *::before, body.is-calm .
 @media (hover: hover) and (pointer: fine) {
   .living-hero .piano-key[data-key]::after { content: attr(data-key); position: absolute; inset: auto 0 6px; color: #0a272c99; font: 700 9px/1 var(--hero-sans); text-align: center; pointer-events: none; }
   .living-hero .piano-key--black[data-key]::after { bottom: 5px; color: #f0ebe0b3; }
+  .living-hero .piano-key:is(.is-next, .is-pressed)[data-key]::after { color: #0a272c; }
+}
+/* Fits the existing ten-pixel padding below the keys without adding height. */
+.living-hero .piano-tempo { position: absolute; inset: auto 12px 1px; height: 9px; display: flex; align-items: center; gap: 7px; color: #c1d2c4; pointer-events: none; }
+.living-hero .piano-tempo-label { flex: none; font-size: 9px; line-height: 9px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.living-hero .piano-tempo-bar { appearance: none; -webkit-appearance: none; flex: 1; min-width: 0; width: 0; height: 3px; margin: 0; padding: 0; border: 0; border-radius: 2px; overflow: hidden; background: #adc4b533; color: var(--piano-next-green); }
+.living-hero .piano-tempo-bar::-webkit-progress-bar { background: #adc4b533; border-radius: 2px; }
+.living-hero .piano-tempo-bar::-webkit-progress-value { background: var(--piano-next-green); }
+.living-hero .piano-tempo-bar::-moz-progress-bar { background: var(--piano-next-green); }
+.living-hero .piano-tempo[data-phase="landing"] .piano-tempo-bar { box-shadow: 0 0 5px 1px #a7e6b5; }
+@media (prefers-reduced-motion: reduce) {
+  .living-hero .piano-tempo[data-phase="landing"] .piano-tempo-bar { box-shadow: none; }
 }
 @media (hover: none), (pointer: coarse) {
   .living-hero .piano-hint { display: none; }

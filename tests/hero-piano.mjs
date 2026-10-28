@@ -1,4 +1,4 @@
-// Run from this worktree, with python3 -m http.server 4201 in another terminal:
+// Run from this worktree, with python3 -m http.server 4205 in another terminal:
 // node tests/hero-piano.mjs
 import assert from 'node:assert/strict';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -14,13 +14,13 @@ const songSource = await readFile(new URL('hero-songs.js', root), 'utf8');
 const { songs } = await import(`data:text/javascript;base64,${Buffer.from(songSource).toString('base64')}`);
 const keyboardSource = await readFile(new URL('hero-keyboard.js', root), 'utf8');
 const pianoModule = keyboardSource.match(/from '(\.\/hero-piano\.js[^']*)'/)[1];
-const output = process.env.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/final-pass-20261028/codex-piano';
-const base = process.env.BASE_URL || 'http://127.0.0.1:4201';
+const output = process.env.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/final-pass-20261028/codex-piano2';
+const base = process.env.BASE_URL || 'http://127.0.0.1:4205';
 const phoneIds = ['runaway', 'no-one-noticed'];
 const desktop = { width: 1440, height: 750, deviceScaleFactor: 1 };
 const phone = { width: 390, height: 844, deviceScaleFactor: 1, isMobile: true, hasTouch: true };
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
-const report = { cases: [], waves: [], focusRegression: [], hitTests: [], resizes: [], errors: [] };
+const report = { cases: [], waves: [], tempo: [], focusRegression: [], hitTests: [], resizes: [], errors: [] };
 await mkdir(output, { recursive: true });
 const browser = await puppeteer.launch({
   executablePath: process.env.CHROME_PATH || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -52,6 +52,8 @@ async function openPiano(page, id, colour, viewport, reduced = false) {
   assert.equal(await page.evaluate(() => window.pianoAudio.contexts), 0, 'No audio on opening');
   const choices = await page.evaluate(() => window.pianoUnderTest.availableSongs().map(song => song.id));
   assert.deepEqual(choices, viewport.width <= 600 && viewport.height > viewport.width ? phoneIds : songs.map(song => song.id));
+  assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle', 'No cue runs on load/open');
+  assert.equal(await page.$eval('.piano-tempo-bar', bar => bar.value), 0);
 }
 
 async function highlighted(page, expected) {
@@ -72,6 +74,8 @@ async function highlighted(page, expected) {
     return {
       count: keys.length, pitch: button.dataset.pitch, note: button.dataset.note,
       key: button.dataset.key.toLowerCase(), x, y,
+      background: css.backgroundColor, letterColour: getComputedStyle(button, '::after').color,
+      lettersShown: matchMedia('(hover: hover) and (pointer: fine)').matches,
       visible: css.display !== 'none' && css.visibility === 'visible' && rect.width > 0 && rect.height > 0
         && rect.left >= Math.max(0, view.left) - 1 && rect.right <= Math.min(innerWidth, view.right) + 1
         && rect.top >= 0 && rect.bottom <= innerHeight + 1,
@@ -82,6 +86,8 @@ async function highlighted(page, expected) {
   assert.equal(state.pitch, expected, `Correct highlighted pitch: ${JSON.stringify(state)}`);
   assert.ok(state.visible, `Highlighted key is in the keyboard and screen: ${JSON.stringify(state)}`);
   assert.ok(state.hit, `Highlighted key can actually be hit: ${JSON.stringify(state)}`);
+  assert.equal(state.background, 'rgb(99, 196, 123)', 'Next white/black keys are green, even while pressed on repetitions');
+  if (state.lettersShown) assert.equal(state.letterColour, 'rgb(10, 39, 44)', 'Computer letters stay dark and readable on green');
   return state;
 }
 
@@ -217,6 +223,9 @@ async function cycleSongs(page, viewport) {
     assert.ok((await page.$eval('.piano-credit', credit => credit.textContent)).includes(expected.composer));
     assert.equal((await counts(page)).attacks, before.attacks, 'Next song is silent');
     assert.equal((await counts(page)).waves, before.waves, 'Next song does not emit a wave');
+    assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle', 'Song cycling resets the cue');
+    assert.equal(await page.$eval('.piano-tempo-bar', bar => bar.value), 0);
+    assert.equal((await page.evaluate(() => window.pianoUnderTest.noteTiming())).bpm, expected.tempo || 100);
     assert.deepEqual(await page.$$eval('.piano-key', keys => keys.map(key => key.dataset.note)), positions, 'data-note never changes');
     await highlighted(page, expected.notes[0]);
     if (viewport.isMobile) await noOverflow(page);
@@ -300,6 +309,131 @@ async function waveSequences(page, song, kind) {
   report.waves.push(result);
 }
 
+async function tempoCue(page, viewport, colour, song, reduced = false) {
+  const layout = await page.evaluate(() => {
+    const cue = document.querySelector('.piano-tempo');
+    const panel = document.querySelector('.piano-panel-inner');
+    const keys = document.querySelector('.piano-keys').getBoundingClientRect();
+    const rect = cue.getBoundingClientRect();
+    const bar = cue.querySelector('progress').getBoundingClientRect();
+    const height = panel.getBoundingClientRect().height;
+    const parent = cue.parentNode;
+    cue.remove();
+    const withoutCue = panel.getBoundingClientRect().height;
+    parent.append(cue);
+    return { height, withoutCue, label: cue.textContent.trim(),
+      belowKeys: rect.top >= keys.bottom, inPanel: rect.bottom <= panel.getBoundingClientRect().bottom,
+      inView: rect.left >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight,
+      width: bar.width, barHeight: bar.height };
+  });
+  assert.equal(layout.height, layout.withoutCue, 'The indicator adds no panel height');
+  assert.ok(layout.belowKeys && layout.inPanel && layout.inView && layout.width > 50 && layout.barHeight === 3,
+    `Cue fits below the keys: ${JSON.stringify(layout)}`);
+  assert.equal(layout.label, `${song.noteBeats ? '' : 'Practice '}♩ = ${song.tempo || 100}`);
+
+  const traces = [];
+  // No One Noticed starts with two quarter notes, then a six-beat hold/rest.
+  // Its third attack proves this is a note-duration cue, not just a metronome.
+  for (let i = 0; i < (song.id === 'no-one-noticed' ? 3 : 1); i++) {
+    await page.evaluate(() => {
+      window.pianoTempoTrace = [];
+      const cue = document.querySelector('.piano-tempo');
+      const bar = cue.querySelector('progress');
+      let attackStarted = null;
+      const snapshot = () => {
+        const timing = window.pianoUnderTest.noteTiming();
+        const phase = cue.dataset.phase;
+        return { ...timing, phase, value: bar.value,
+          at: performance.now(), middle: phase === 'filling' && bar.value >= .35 && bar.value <= .65,
+          glow: getComputedStyle(bar).boxShadow };
+      };
+      // The previous note can still be filling while Puppeteer prepares the
+      // gesture. Capture this attack synchronously, after the keyboard's own
+      // onSongAdvance handler has set the bar, before any RAF/observer delay.
+      window.pianoTempoUnsubscribe = window.pianoUnderTest.onSongAdvance(() => {
+        const attack = snapshot();
+        attackStarted = attack.started;
+        window.pianoTempoTrace = [{ ...attack, attack: true }];
+      });
+      const sample = () => {
+        if (attackStarted === null) return;
+        const current = snapshot();
+        if (current.started !== attackStarted) return;
+        const previous = window.pianoTempoTrace.at(-1);
+        if (current.phase !== previous?.phase || (current.middle && !previous?.middle)) {
+          window.pianoTempoTrace.push(current);
+        }
+      };
+      window.pianoTempoObserver = new MutationObserver(sample);
+      window.pianoTempoObserver.observe(cue, { attributes: true, attributeFilter: ['data-phase'], subtree: true });
+    });
+    const next = await page.evaluate(() => window.pianoUnderTest.peekNextNote());
+    const state = await highlighted(page, next);
+    const before = await counts(page);
+    await gesture(page, state, viewport.isMobile ? 'touch' : 'computer');
+    await page.waitForFunction(() => document.querySelector('.piano-tempo').dataset.phase === 'waiting', { timeout: 10000, polling: 'raf' });
+    const trace = await page.evaluate(() => {
+      window.pianoTempoObserver.disconnect();
+      window.pianoTempoUnsubscribe();
+      return window.pianoTempoTrace;
+    });
+    const start = trace.find(sample => sample.phase === 'filling');
+    const middle = trace.find(sample => sample.middle);
+    const landing = trace.find(sample => sample.phase === 'landing');
+    const end = trace.find(sample => sample.phase === 'waiting');
+    assert.ok(start && landing && end, `Cue fills, lands once and stops: ${JSON.stringify(trace)}`);
+    assert.ok(start.attack && start.value < .05, `Each correct attack starts the bar from empty: ${JSON.stringify(trace)}`);
+    assert.ok(trace.every(sample => sample.started === start.started), 'Every sample belongs to this attack');
+    assert.ok(landing.at >= landing.due && landing.at - landing.due < 120, 'Landing follows the note clock within one rendering interval');
+    assert.equal(landing.value, 1, 'The bar is full when the next note is due');
+    assert.ok(end.at >= end.due + 140 && end.at - end.due < 260, 'The landing lasts about 140ms');
+    if (reduced) {
+      assert.ok(trace.every(sample => sample.value === 0 || sample.value === 1), 'Reduced motion has no animated fill');
+      assert.equal(landing.glow, 'none', 'Reduced motion has no landing glow');
+    } else {
+      assert.ok(middle && middle.value >= .35 && middle.value <= .65, 'The bar visibly advances through the duration');
+      assert.ok(Math.abs(middle.at - middle.started - middle.duration * middle.value) < 50, 'Fill uses the shared monotonic note clock');
+      assert.notEqual(landing.glow, 'none', 'A brief glow marks the due time');
+    }
+    const stopped = await counts(page);
+    await wait(200);
+    assert.deepEqual(await counts(page), stopped, 'No audio, notes or waves keep running when the player stops');
+    assert.equal(stopped.advances, before.advances + 1);
+    assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'waiting');
+    traces.push(trace);
+  }
+  if (song.id === 'no-one-noticed') {
+    assert.equal(traces[2][0].duration, 6 * 60000 / 98, 'The saved hold/rest is respected');
+  }
+
+  // A wrong/free note may sound and make a wave, but cannot restart the cue.
+  const clockBefore = await page.evaluate(() => window.pianoUnderTest.noteTiming().started);
+  const wrong = await page.evaluate(() => {
+    const button = [...document.querySelectorAll('.piano-key')].find(key =>
+      key.dataset.pitch !== window.pianoUnderTest.peekNextNote() && key.getClientRects().length);
+    const rect = button.getBoundingClientRect();
+    return { key: button.dataset.key.toLowerCase(), x: (rect.left + rect.right) / 2, y: rect.bottom - 10 };
+  });
+  await gesture(page, wrong, viewport.isMobile ? 'touch' : 'computer');
+  assert.equal(await page.evaluate(() => window.pianoUnderTest.noteTiming().started), clockBefore);
+
+  // Closing, reopening and losing focus all clear a partially filled cue.
+  const state = await highlighted(page, await page.evaluate(() => window.pianoUnderTest.peekNextNote()));
+  await gesture(page, state, viewport.isMobile ? 'touch' : 'computer');
+  await page.click('#piano-toggle');
+  assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle');
+  await page.click('#piano-toggle');
+  await wait(550);
+  assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle');
+  await gesture(page, await highlighted(page, await page.evaluate(() => window.pianoUnderTest.peekNextNote())), viewport.isMobile ? 'touch' : 'computer');
+  await page.evaluate(() => window.dispatchEvent(new Event('blur')));
+  assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle');
+  assert.equal(await page.$eval('.piano-tempo-bar', bar => bar.value), 0);
+  assert.deepEqual(await page.evaluate(() => window.pianoCspErrors || []), [], 'Tempo rendering respects strict CSP');
+  report.tempo.push({ viewport, colour, song: song.id, reduced, layout, traces });
+  console.log(`PASS TEMPO ${viewport.width}x${viewport.height} ${colour} ${song.id}: fill, due time, landing and pause; reduced=${reduced}`);
+}
+
 let page;
 try {
   page = await browser.newPage();
@@ -359,6 +493,7 @@ try {
         if (viewport.isMobile) await noOverflow(page);
         report.cases.push({ viewport, colour, song: song.id, notes: song.notes.length, inputs, overflow });
         console.log(`PASS ${viewport.width}x${viewport.height} ${colour} ${song.id}: ${song.notes.length} notes per input; loop checked`);
+        await tempoCue(page, viewport, colour, song);
         if (colour === 'light' && song.id === 'runaway') {
           await waveSequences(page, song, viewport.isMobile ? 'touch' : 'computer');
           await cycleSongs(page, viewport);
@@ -405,6 +540,7 @@ try {
     }
     await step(page, runaway.notes[0], runaway.notes[1], 'sky-keyboard', true);
     assert.ok(await page.$eval('body', body => body.classList.contains('is-calm')));
+    await tempoCue(page, viewport, 'dark', runaway, true);
   }
   assert.deepEqual(report.errors, [], 'No browser, asset, or CSP errors');
   report.status = 'PASS';

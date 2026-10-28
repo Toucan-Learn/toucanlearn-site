@@ -4,7 +4,8 @@
 // B8/e3=G4, B7/e2=F#4, B1=C4, B3=D4, B0=B3, G0=G3.
 // Joshua amended the repeating phrase pairs to G4 F#4 C4, then G4 F#4 B3.
 // Subsequent repeated notes follow their phrase destination (C4 or B3), 26 Oct 2026.
-// The site advances one note per interaction; the 98 BPM rhythm map is in the work report.
+// The site advances one note per interaction. noteBeats guides the next attack;
+// it includes ties/rests between onsets and never schedules automatic audio.
 // Joshua, 19 Oct 2026: "keep the original entertainer snippet you originally
 // selected the first time. keep the dreamy song in its length. get rid of other
 // one i think or take a small snippet thats lovely like the entertainer".
@@ -217,6 +218,11 @@ export const songs = [
     "source": "Vocal tab supplied by Joshua, 26 October 2026 at 22:26, amended by ear: repeated descent pairs are G4 F#4 C4, then G4 F#4 B3, including their subsequent repeated notes. Bars 1-16 at 98 BPM; tied continuations are not new attacks.",
     "licence": "User-supplied excerpt; no licence asserted",
     "tempo": 98,
+    // Onset gaps from outputs/website-plan-20261026/piano-verse/no-one-noticed-score.json.
+    // Last gap includes the written ending up to totalBeats=62.5, then loops.
+    "noteBeats": [1, 1, 6, 1, 1, 6, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1.5,
+      0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 1, 1.5,
+      0.5, 0.5, 0.5, 0.5, 0.5, 2, 1, 1, 1, 5, 1, 1, 1, 3.5],
     "notes": [
       "G4",
       "F#4",

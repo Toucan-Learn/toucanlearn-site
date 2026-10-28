@@ -1,4 +1,4 @@
-import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition } from './hero-piano.js?v=20261028-piano-3';
+import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition, noteTiming, pauseNoteTiming } from './hero-piano.js?v=20261028-piano-5';
 
 // Round 76 (Joshua, 19 Oct 2026: "is it possible for us to be able to play the
 // whole piano with keyboard?"): two manuals, so every key from C3 to C6 has its
@@ -31,6 +31,35 @@ export function initHeroKeyboard(ripple) {
   const timers = new Map();
   const pointers = new Map();
   const held = new Set();
+  const tempo = panel.querySelector('.piano-tempo');
+  const tempoBar = panel.querySelector('.piano-tempo-bar');
+  const tempoLabel = panel.querySelector('.piano-tempo-label');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let tempoFrame = 0;
+
+  function renderTempo() {
+    cancelAnimationFrame(tempoFrame);
+    tempoFrame = 0;
+    if (!tempo || !tempoBar || !tempoLabel) return;
+    const timing = noteTiming();
+    tempo.dataset.phase = timing.phase;
+    const label = `${timing.practice ? 'Practice ' : ''}♩ = ${timing.bpm}`;
+    if (tempoLabel.textContent !== label) {
+      tempoLabel.textContent = label;
+      tempo.setAttribute('aria-label', `${timing.practice ? 'Practice tempo' : 'Tempo'}: ${timing.bpm} beats per minute. Play the green key when the bar fills.`);
+    }
+    // Reduced motion has just one discrete change at the due time, with no glow.
+    tempoBar.value = reducedMotion.matches ? Number(timing.progress === 1) : timing.progress;
+    if (open && !document.hidden && (timing.phase === 'filling' || timing.phase === 'landing')) {
+      tempoFrame = requestAnimationFrame(renderTempo);
+    }
+  }
+
+  function stopTempo() {
+    pauseNoteTiming();
+    renderTempo();
+  }
+  reducedMotion.addEventListener('change', renderTempo);
   let mappedSong;
   function mapSong() {
     if (mappedSong === currentSong()) return;
@@ -103,6 +132,7 @@ export function initHeroKeyboard(ripple) {
       highlighted.setAttribute('aria-label', `${names.get(highlighted)}, next note`);
     }
     keepInView();
+    renderTempo();
   }
 
   function press(button) {
@@ -128,7 +158,8 @@ export function initHeroKeyboard(ripple) {
     panel.setAttribute('aria-hidden', String(!open));
     panel.inert = !open;
     panel.classList.toggle('is-open', open);
-    if (!open) { pointers.clear(); held.clear(); }
+    if (!open) { pointers.clear(); held.clear(); stopTempo(); }
+    else renderTempo();
     keepInView();
     if (open) revealInViewport();
   }
@@ -196,9 +227,9 @@ export function initHeroKeyboard(ripple) {
     press(button);
   });
   document.addEventListener('keyup', event => { held.delete(event.key.toLowerCase()); });
-  window.addEventListener('blur', () => { held.clear(); pointers.clear(); });
+  window.addEventListener('blur', () => { held.clear(); pointers.clear(); stopTempo(); });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) { held.clear(); pointers.clear(); }
+    if (document.hidden) { held.clear(); pointers.clear(); stopTempo(); }
   });
   new ResizeObserver(keepInView).observe(scroll);
   onSongAdvance(highlight);

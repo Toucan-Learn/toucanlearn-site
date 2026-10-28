@@ -19,3 +19,14 @@
   .adults-page .adult-topics { grid-template-columns: 1fr; gap: 24px; }
   .adults-page .adult-language-list > div { grid-template-columns: 1fr; gap: 10px; }
 }
+
+/* Keep the four English goals equal, including inside the shared desktop frame. */
+.adults-page #english-for-work .adult-topics--work { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; gap: 12px; margin-block: 12px; }
+.adults-page #english-for-work .adult-topics--work article { display: grid; grid-template-columns: minmax(0, 1fr) 96px; grid-template-rows: minmax(60px, auto) 1fr; gap: 6px 12px; align-items: start; padding-block: 12px 0; }
+.adults-page #english-for-work .adult-goal-art { grid-column: 2; grid-row: 1; display: block; width: 96px; height: 60px; object-fit: contain; border-radius: 10px; }
+.adults-page #english-for-work .adult-topics--work h3 { grid-column: 1; grid-row: 1; align-self: center; margin: 0; }
+.adults-page #english-for-work .adult-topics--work p { grid-column: 1 / -1; margin: 0; }
+.adults-page #english-for-work > :is(.adult-english-tutors, .adult-exam-note) { max-width: none; margin: 10px 0 0; }
+@media (max-width: 650px) {
+  .adults-page #english-for-work .adult-topics--work { grid-template-columns: 1fr; }
+}

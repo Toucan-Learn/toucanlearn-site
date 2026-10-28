@@ -2920,3 +2920,8 @@ header:not(.toucan-opening-header) .nav-links {
 .review-stars svg { width: 17px; height: 17px; fill: #f4b400; }
 .review-google-meta { font-weight: 700; }
 .review-quote .review-google-link { font-weight: 700; color: inherit; opacity: .9; text-underline-offset: 3px; }
+/* Menu arrow drawn in CSS: the ▾ character fell back to an outlined glyph in some browsers. */
+.nav-chevron { display: inline-block; width: 0; height: 0; font-size: 0; line-height: 0; border-left: 4px solid transparent; border-right: 4px solid transparent; border-top: 5px solid currentColor; vertical-align: middle; }
+/* Instagram handle in the footer: no underline (owner, 28 Oct 2026). */
+.footer-slogan a, .team-page footer.site-footer .footer-slogan a { text-decoration: none; }
+.footer-slogan a:hover, .footer-slogan a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }

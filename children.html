@@ -24,7 +24,7 @@
   <script src="content-panels.js?v=20261028-final-1" defer></script>
   <script src="project-viewer.js?v=20261028-showcase-1" defer></script>
   <script src="screenshot-gallery.js?v=20261026-final-2" defer></script>
-  <link rel="stylesheet" href="back-page-frame.css?v=20261028-exams-1" />
+  <link rel="stylesheet" href="back-page-frame.css?v=20261028-project-cells-1" />
   <script src="back-page-frame.js?v=20261028-v2-7" defer></script>
 </head>
 <body class="campaign-page children-page">
@@ -142,11 +142,14 @@
           <div class="framework-project-viewer" data-project-viewer>
             <div class="framework-project-slides">
               <article class="framework-project" data-project-slide>
-                <div class="framework-project-copy">
+                <div class="framework-project-copy subject-card">
                   <p class="project-label">GCSE English and maths</p>
                   <h3>Sports journalism</h3>
-                  <p>Match predictions gave English and maths a shared purpose: make a case and back it with evidence.</p>
-                  <p>Now a newspaper of previews, opinion and analysis — including an argument about hydration breaks disrupting a match.</p>
+                  <div class="project-copy-cells">
+                    <div><h4>The spark</h4><p>Match predictions brought English and maths together: make a case and use statistics to support it.</p></div>
+                    <div><h4>What we built</h4><p>A newspaper of previews, opinion and analysis, including a case against hydration breaks and “Leeds: a case for 13th”.</p></div>
+                    <div><h4>Skills</h4><p>Persuasive writing, evidence and data, structure and editing.</p></div>
+                  </div>
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
                 <div class="framework-project-media">
@@ -155,11 +158,14 @@
                 </div>
               </article>
               <article class="framework-project" data-project-slide>
-                <div class="framework-project-copy">
-                  <p class="project-label">English · Game design</p>
+                <div class="framework-project-copy subject-card">
+                  <p class="project-label">English · game design</p>
                   <h3>DARTY</h3>
-                  <p>A love of football became a game the learner directs. Every change starts with him writing it down.</p>
-                  <p>Requests become game updates, giving clear instructions a real purpose — from how players move to how goalkeepers react.</p>
+                  <div class="project-copy-cells">
+                    <div><h4>The spark</h4><p>A football game directed by the learner. Every change starts with a clear written request.</p></div>
+                    <div><h4>What we built</h4><p>Those requests become real updates, from player movement to goalkeeper reactions. A short video showcase is planned.</p></div>
+                    <div><h4>Skills</h4><p>Precise instructions, sequencing, cause and effect, and revising.</p></div>
+                  </div>
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
                 <div class="framework-project-media">
@@ -173,24 +179,30 @@
                 </div>
               </article>
               <article class="framework-project" data-project-slide>
-                <div class="framework-project-copy">
-                  <p class="project-label">English · Writing and design</p>
+                <div class="framework-project-copy subject-card">
+                  <p class="project-label">English · writing and design</p>
                   <h3>Drink design</h3>
-                  <p>Inventing a drink gave descriptions a purpose, growing into labels and adverts. Fizzy: “light, bright red” and “Fizzy, extreme.”</p>
-                  <p>A football phrase became Ground Pinch, a can concept “designed for everyone” — choosing words for an audience.</p>
-                  <p>The learner’s own description of Skids: “When you're in a rush, have some Skids.”</p>
+                  <div class="project-copy-cells">
+                    <div><h4>The spark</h4><p>Drink ideas became labels and adverts. Pencil drawings are becoming 3D renders.</p></div>
+                    <div><h4>On the label</h4><p class="project-design-lines"><span>Fizzy: “light, bright red” and “Fizzy, extreme.”</span> <span>Ground Pinch, from a football phrase: “designed for everyone”.</span> <span>Skids: “When you're in a rush, have some Skids.”</span></p></div>
+                    <div><h4>Skills</h4><p>Audience, word choice, persuasive language and design thinking.</p></div>
+                  </div>
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
-                <div class="framework-project-media">
+                <div class="framework-project-media" data-project-media-slot="drink-design">
+                  <!-- Replace this still with a local MP4 video (controls, preload="none", this image as poster) when ready. -->
                   <img src="assets/projects/drinks-brand.webp" alt="Two original drink bottle designs, Skids and Fizzy" width="640" height="512" loading="lazy" decoding="async" />
                 </div>
               </article>
               <article class="framework-project" data-project-slide>
-                <div class="framework-project-copy">
-                  <p class="project-label">Music · Notes and patterns</p>
+                <div class="framework-project-copy subject-card">
+                  <p class="project-label">Music · notes and patterns</p>
                   <h3>Piano</h3>
-                  <p>A way into music through play: hear a note, notice a pattern and try it again.</p>
-                  <p>The homepage piano now has its own space to explore. Click a key, then play with your keyboard or follow the highlighted notes.</p>
+                  <div class="project-copy-cells">
+                    <div><h4>The spark</h4><p>A way into music through play: hear a note, spot a pattern and try again.</p></div>
+                    <div><h4>Try it</h4><p>On the homepage, follow the next green note at the song’s tempo. Try a key here, or play with your computer keyboard.</p></div>
+                    <div><h4>Skills</h4><p>Listening, recognising notes and patterns, and keeping time.</p></div>
+                  </div>
                   <a href="approach.html#ways-of-working">See how our lessons work →</a>
                 </div>
                 <div class="framework-project-media">
@@ -201,9 +213,9 @@
             </div>
             <p class="project-note">Shared with each family's permission, with names removed.</p>
             <div class="framework-project-controls">
-              <button type="button" data-project-prev aria-label="Previous project">←</button>
+              <button type="button" data-project-prev aria-label="Previous project">← Previous</button>
               <span data-project-status aria-live="polite">1 of 4</span>
-              <button type="button" data-project-next aria-label="Next project">→</button>
+              <button type="button" data-project-next aria-label="Next project">Next →</button>
             </div>
           </div>
         </section>

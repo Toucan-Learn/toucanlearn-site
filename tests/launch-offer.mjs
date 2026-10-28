@@ -14,9 +14,10 @@ const pages = [];
 for (const file of (await readdir(root)).filter(file => file.endsWith('.html'))) {
   if ((await readFile(new URL(file, root), 'utf8')).includes('<header')) pages.push(file);
 }
-const head = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
+const baselineRef = process.env.BASELINE_REF || 'HEAD';
+const head = execFileSync('git', ['rev-parse', baselineRef], { cwd: root, encoding: 'utf8' }).trim();
 const originalAssets = new Map([...pages, 'campaigns.css', 'contact.js'].map(file => [file,
-  execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' })]));
+  execFileSync('git', ['show', `${baselineRef}:${file}`], { cwd: root, encoding: 'utf8' })]));
 const report = { revision: 'popup-only', baseline: `Original site checkout HEAD ${head}, served locally by interception`, cases: [], failures: [], errors: [], csp: [] };
 const viewports = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 390, height: 844 }];
 const storageKey = 'toucan-launch-offer-last-shown';

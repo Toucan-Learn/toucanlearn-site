@@ -206,3 +206,65 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
   :root:not([data-theme="light"]) .framework-panels .lesson-cell--structure .learning-session h4 { color: #f5f0e6; }
   :root:not([data-theme="light"]) .framework-panels .lesson-cell--structure .learning-session h4::before { color: #ffb486; }
 }
+
+/* Back pages at 100% zoom (owner, 28 Oct 2026: "the back pages ... arent resized"). On a laptop
+   the intro, the section frame and the enquiry all sit on the first screen, with a short scroll
+   to the footer. Spacing, type and pictures tighten with the window height; nothing is hidden. */
+@media screen and (min-width: 1000px) {
+  body[data-page-frame]:not(.team-page) #main { gap: clamp(10px, 1.6vh, 18px); padding-block: clamp(6px, 1.2vh, 16px) clamp(14px, 2.6vh, 26px); }
+  body[data-page-frame] .framework-intro .eyebrow { margin: 0 0 2px; }
+  body[data-page-frame] .framework-intro h1 { margin: 0 0 4px; font-size: clamp(1.6rem, 4.2vh, 2.4rem); line-height: 1.1; }
+  body[data-page-frame] .framework-intro :is(.lead, .offer-line) { margin: 0; font-size: clamp(14px, 2vh, 16px); line-height: 1.45; }
+  body[data-page-frame] .framework-intro .lead + .offer-line { margin-top: 2px; }
+  body[data-page-frame] #main > .framework-shell { grid-template-columns: 190px minmax(0, 1fr); gap: 24px; }
+  body[data-page-frame] .framework-section-nav a { min-height: 40px; padding-block: 8px; }
+  body[data-page-frame] .framework-panels { padding: clamp(14px, 2.4vh, 22px) clamp(18px, 2.4vh, 24px); font-size: clamp(14px, 2vh, 16px); line-height: 1.45; }
+  body[data-page-frame] .framework-panels .section-head { margin-bottom: clamp(8px, 1.6vh, 14px); }
+  body[data-page-frame] .framework-panels .section-head h2 { margin-block: 2px 6px; font-size: clamp(1.35rem, 3.4vh, 1.85rem); }
+  body[data-page-frame] .framework-panels .section-head p { margin-top: 4px; font-size: inherit; line-height: 1.45; }
+  body[data-page-frame] .framework-panels .eyebrow { margin-bottom: 2px; }
+  body[data-page-frame] .framework-panel-art { width: clamp(90px, 13vh, 130px); margin: 0 0 8px 16px; }
+  body[data-page-frame] .framework-panels p { margin-block: 0 clamp(6px, 1.2vh, 10px); }
+  body[data-page-frame] .framework-panels h3 { margin-block: 0 4px; font-size: clamp(1rem, 2.4vh, 1.2rem); line-height: 1.3; }
+  body[data-page-frame] .framework-panels :is(.learning-steps, .framework-route-grid, .framework-benefits, .adult-topics, .learning-formats, .learning-subject-grid, .report-parts) { gap: clamp(8px, 1.6vh, 14px); margin-block: clamp(6px, 1.4vh, 12px); }
+  body[data-page-frame] .framework-panels :is(.learning-steps > li, .framework-benefits > article, .report-parts > li) { padding: clamp(10px, 1.8vh, 16px) 16px; }
+  body[data-page-frame] .framework-panels :is(.framework-route-grid > article, .adult-topics > article) { padding-top: clamp(8px, 1.6vh, 14px); }
+  body[data-page-frame] .learning-step-art { width: clamp(64px, 10vh, 100px); margin: 0 0 6px 12px; }
+  body[data-page-frame] :is(.route-boundary, .scope-note) { margin-block: clamp(6px, 1.2vh, 10px); padding: 8px 14px; }
+  body[data-page-frame] .learning-links { margin-block: 4px 0; }
+  /* Adults */
+  body[data-page-frame].adults-page .adult-topics { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-auto-rows: auto; }
+  body[data-page-frame].adults-page .adult-topics p { margin-bottom: 6px; }
+  body[data-page-frame].adults-page .adult-lesson-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-block: clamp(6px, 1.4vh, 12px); }
+  body[data-page-frame].adults-page .adult-lesson-steps li { margin: 0; padding: 0 0 0 44px; }
+  body[data-page-frame].adults-page .adult-format { margin-top: 4px; padding-top: clamp(6px, 1.4vh, 12px); }
+  body[data-page-frame].adults-page .adult-language-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-block: clamp(6px, 1.4vh, 12px); }
+  body[data-page-frame].adults-page .adult-language-list > div { display: block; padding: 0; border: 0; }
+  body[data-page-frame].adults-page .adult-language-list dd { line-height: 1.45; }
+  /* Subjects: the three languages side by side */
+  body[data-page-frame] .learning-languages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  body[data-page-frame] .learning-languages > div { display: block; padding: 0; border: 0; }
+  body[data-page-frame] .learning-languages dd { margin: 4px 0 0; }
+  /* Children: project pictures */
+  body[data-page-frame] #learner-projects .framework-project-media img { max-height: clamp(160px, 27vh, 280px); }
+  /* Approach: lesson stages in one row, shorter photos, tighter example rows */
+  body[data-page-frame].approach-page #our-lessons .lesson-stage-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  body[data-page-frame].approach-page #our-lessons .lesson-stage-grid > li { gap: 6px; padding: 12px 14px; }
+  body[data-page-frame].approach-page #our-lessons .lesson-stage-grid img { width: 72px; height: 45px; }
+  body[data-page-frame].approach-page #our-lessons .lesson-example { padding: clamp(12px, 2vh, 20px) 20px; }
+  body[data-page-frame].approach-page #our-lessons .lesson-example-rows > div { padding-block: clamp(6px, 1.2vh, 11px); gap: 16px; grid-template-columns: 170px minmax(0, 1fr); }
+  body[data-page-frame].approach-page #where-we-teach .teaching-formats { gap: 16px; }
+  body[data-page-frame].approach-page #where-we-teach .teaching-format-photo { aspect-ratio: auto; height: clamp(100px, 18vh, 170px); }
+  body[data-page-frame].approach-page #where-we-teach .teaching-format-body { padding: clamp(10px, 1.8vh, 18px) 18px; }
+  body[data-page-frame].approach-page #where-we-teach .teaching-format h3 { margin: 0 0 6px; font-size: clamp(1.05rem, 2.5vh, 1.25rem); }
+  body[data-page-frame].approach-page #where-we-teach .teaching-format p { margin: 0 0 clamp(4px, 1vh, 10px); line-height: 1.42; }
+  body[data-page-frame].approach-page #where-we-teach .teaching-format-link { min-height: 32px; padding-block: 2px; }
+  body[data-page-frame] .framework-panels .report-parts > li { padding: 10px 14px; }
+  body[data-page-frame] .framework-panels .report-example { margin-top: 6px; padding-top: 6px; font-size: .92em; line-height: 1.4; }
+  body[data-page-frame] .framework-panels :is(.report-intro, .report-purpose) { margin-block: 4px; }
+  /* Enquiry bar */
+  body[data-page-frame]:not(.team-page) .cta .cta-box { padding: clamp(8px, 1.4vh, 14px) 20px; }
+  body[data-page-frame]:not(.team-page) .cta .cta-box > .button { padding: 10px 16px; }
+  body[data-page-frame]:not(.team-page) .cta .cta-box h2 { font-size: clamp(1.05rem, 2.6vh, 1.25rem); }
+  body[data-page-frame]:not(.team-page) .cta .cta-box p { margin-top: 2px; font-size: clamp(.82rem, 1.9vh, .9rem); }
+}

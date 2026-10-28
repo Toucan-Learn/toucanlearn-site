@@ -55,3 +55,175 @@
   .learning-page #steps-to-success .learning-steps li { margin-block: 24px; break-inside: avoid; }
   .learning-page .learning-note, .learning-page .approach-report { background: white; color: black; }
 }
+
+/* Approach lesson pages and teaching formats; independent of the shared frame. */
+.approach-page :is(#our-lessons, #where-we-teach) {
+  --approach-card: #f3eee4;
+  --approach-heading: #0b3f51;
+  --approach-ink: #142f3a;
+  --approach-line: rgba(11, 63, 81, .22);
+  --approach-accent: #b74716;
+}
+.approach-page #our-lessons .approach-lesson-page {
+  min-height: var(--section-page-height, auto);
+  margin: 0;
+}
+.approach-page #our-lessons .lesson-page-intro { margin: 0 0 16px; }
+.approach-page #our-lessons .lesson-stage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: lesson-stage;
+}
+.approach-page #our-lessons :is(.lesson-stage-grid > li, .lesson-example),
+.approach-page #where-we-teach .teaching-format {
+  --heading: var(--approach-heading);
+  --ink: var(--approach-ink);
+  min-width: 0;
+  border: 1px solid var(--approach-line);
+  border-radius: 16px;
+  background: var(--approach-card);
+  color: var(--approach-ink);
+}
+.approach-page #our-lessons .lesson-stage-grid > li {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 18px;
+  counter-increment: lesson-stage;
+}
+.approach-page #our-lessons .lesson-stage-grid img {
+  display: block;
+  float: none;
+  width: 88px;
+  height: 55px;
+  margin: 0;
+  object-fit: contain;
+  border-radius: 8px;
+}
+.approach-page #our-lessons .lesson-stage-grid h4 {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  color: var(--approach-heading);
+  font-size: 1.05rem;
+  line-height: 1.35;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+.approach-page #our-lessons .lesson-stage-grid h4::before {
+  content: counter(lesson-stage, decimal-leading-zero);
+  flex: 0 0 auto;
+  color: var(--approach-accent);
+  font-size: .85rem;
+  font-variant-numeric: tabular-nums;
+}
+.approach-page #our-lessons .lesson-stage-grid p { margin: 0; line-height: 1.45; }
+.approach-page #our-lessons .lesson-example { padding: 24px; }
+.approach-page #our-lessons .lesson-example-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 124px;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+.approach-page #our-lessons .lesson-example-head img {
+  display: block;
+  width: 124px;
+  height: 78px;
+  object-fit: contain;
+  border-radius: 10px;
+}
+.approach-page #our-lessons .lesson-example-label {
+  margin: 0 0 8px;
+  color: var(--approach-accent);
+  font-size: .8rem;
+  font-weight: 800;
+}
+.approach-page #our-lessons .lesson-example h3 { margin: 0 0 8px; color: var(--approach-heading); }
+.approach-page #our-lessons .lesson-example-head h3 + p { margin: 0; line-height: 1.45; }
+.approach-page #our-lessons .lesson-example-rows { margin: 0; }
+.approach-page #our-lessons .lesson-example-rows > div {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 20px;
+  padding-block: 14px;
+  border-top: 1px solid var(--approach-line);
+}
+.approach-page #our-lessons .lesson-example-rows dt { font-size: .9rem; font-weight: 800; line-height: 1.4; }
+.approach-page #our-lessons .lesson-example-rows dd { margin: 0; line-height: 1.45; }
+.approach-page #where-we-teach .teaching-formats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: 1fr;
+  gap: 20px;
+}
+.approach-page #where-we-teach .teaching-format { display: flex; flex-direction: column; overflow: hidden; }
+.approach-page #where-we-teach .teaching-format-photo {
+  display: block;
+  flex: 0 0 auto;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.approach-page #where-we-teach .teaching-format-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 22px;
+}
+.approach-page #where-we-teach .teaching-format h3 { margin: 0 0 12px; font-size: 1.3rem; line-height: 1.3; }
+.approach-page #where-we-teach .teaching-format p { margin: 0 0 14px; line-height: 1.5; }
+.approach-page #where-we-teach .teaching-format-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: auto;
+  padding-block: 8px;
+  color: var(--approach-heading);
+  font-weight: 800;
+  line-height: 1.4;
+  text-underline-offset: 4px;
+}
+.approach-page #where-we-teach .teaching-format-link:focus-visible { outline: 3px solid var(--approach-accent); outline-offset: 4px; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .approach-page :is(#our-lessons, #where-we-teach) {
+    --approach-card: #204653;
+    --approach-heading: #f5f0e6;
+    --approach-ink: #f5f0e6;
+    --approach-line: rgba(245, 240, 230, .25);
+    --approach-accent: #ffb486;
+  }
+}
+:root[data-theme="dark"] .approach-page :is(#our-lessons, #where-we-teach) {
+  --approach-card: #204653;
+  --approach-heading: #f5f0e6;
+  --approach-ink: #f5f0e6;
+  --approach-line: rgba(245, 240, 230, .25);
+  --approach-accent: #ffb486;
+}
+@media (max-width: 760px) {
+  .approach-page #our-lessons .lesson-stage-grid,
+  .approach-page #where-we-teach .teaching-formats { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 560px) {
+  .approach-page #our-lessons .lesson-example { padding: 18px; }
+  .approach-page #our-lessons .lesson-example-head { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .approach-page #our-lessons .lesson-example-head img { grid-row: 1; width: 88px; height: 55px; }
+  .approach-page #our-lessons .lesson-example-rows > div { grid-template-columns: minmax(0, 1fr); gap: 6px; padding-block: 12px; }
+  .approach-page #where-we-teach .teaching-format-body { padding: 18px; }
+}
+@media print {
+  .approach-page #our-lessons .approach-lesson-page { min-height: 0; }
+  .approach-page #our-lessons .lesson-stage-grid > li,
+  .approach-page #where-we-teach .teaching-format { break-inside: avoid; }
+}

@@ -53,6 +53,21 @@ const songResults = [];
 const html = await readFile(new URL('index.html', root), 'utf8');
 const keyboard = await readFile(new URL('hero-keyboard.js', root), 'utf8');
 const css = await readFile(new URL('hero.css', root), 'utf8');
+assert.match(css, /--piano-next-green:\s*#63c47b;/, 'The cue uses a saturated sage green');
+for (const selector of ['.piano-key.is-next', '.piano-key.is-next.is-pressed']) {
+  const rule = css.slice(css.indexOf(`${selector} {`)).split('}')[0];
+  assert.match(rule, /background: var\(--piano-next-green\)/, 'Next keys stay green, including repeated pressed pitches');
+}
+assert.match(css, /\.piano-key:is\(\.is-next, \.is-pressed\)\[data-key\]::after \{ color: #0a272c;/,
+  'Both black and white highlighted keys retain dark readable computer letters');
+assert.match(html, /<progress class="piano-tempo-bar" max="1" value="0" aria-hidden="true">/,
+  'A native progress value avoids CSP-blocked inline styles');
+const rhythm = JSON.parse(await readFile(new URL('tests/fixtures/no-one-noticed-timing.json', root), 'utf8'));
+const noticed = seed.songs.find(song => song.id === 'no-one-noticed');
+assert.equal(noticed.tempo, rhythm.tempo);
+assert.deepEqual(Array.from(noticed.notes), rhythm.attacks.map(([note]) => note));
+assert.deepEqual(Array.from(noticed.noteBeats), rhythm.attacks.map(([, beat], i) =>
+  (rhythm.attacks[i + 1]?.[1] ?? rhythm.totalBeats) - beat), 'Onset gaps include the saved rests, ties and loop ending');
 const positions = [...html.matchAll(/data-note="([A-G]#?\d)"/g)].map(match => match[1]);
 const mapped = [...keyboard.matchAll(/\['[^']+', '([A-G]#?\d)'\]/g)].map(match => match[1]);
 assert.equal(new Set(positions).size, 37);
@@ -70,6 +85,7 @@ for (const song of seed.songs) {
   assert.equal(api.currentSong().id, song.id);
   assert.equal(api.availableSongs().length, 5);
   assert.equal(clock.contexts, 0, 'No autoplay');
+  assert.equal(api.noteTiming().phase, 'idle', 'No cue starts on load');
   const shift = note => note.slice(0, -1) + (Number(note.at(-1)) + api.songKeyboardOctave());
   for (const note of song.notes) {
     assert.ok(positions.map(shift).includes(note), `${song.id}: piano button for ${note}`);
@@ -148,6 +164,9 @@ for (const portrait of [false, true]) {
     assert.equal(cycle.api.peekNextNote(), cycle.api.currentSong().notes[0], 'A new song starts at its first attack');
     assert.equal(notifications, before + 1, 'A selection updates the highlight once');
     assert.equal(cycle.api.noteWavePosition(), .5, 'A new song resets the tempo origin');
+    assert.equal(cycle.api.noteTiming().phase, 'idle', 'Song cycling resets the cue');
+    assert.equal(cycle.api.noteTiming().progress, 0);
+    assert.equal(cycle.api.noteTiming().bpm, cycle.api.currentSong().tempo || 100);
   }
   assert.equal(cycle.api.currentSong().id, initial, 'Song cycling wraps');
   assert.deepEqual([...new Set(seen)].sort(), [...choices].sort());
@@ -174,9 +193,54 @@ assert.ok(sweep.every((point, i) => i === 0 || point.y >= sweep[i - 1].y), 'Slow
 assert.equal(sweep[0].y, sweep[2].y, 'Fast end clamps');
 assert.equal(sweep.at(-1).y, sweep.at(-2).y, 'Slow end clamps');
 
-const result = { status: 'PASS', songs: songResults, joplinTranscriptions: 'PASS', exactRunaway: 'PASS', mobileAndResize: 'PASS', rotationStateRetention: 'PASS', songCycling: 'PASS', tempo: { fast, slow, sweep },
+// Advance the same monotonic clock used by the waves: no wall-clock sleeps.
+const cueResults = [];
+for (const song of seed.songs) {
+  const { api, clock } = await load(song.id);
+  const bpm = song.tempo || 100;
+  assert.equal(api.noteTiming().practice, !song.noteBeats);
+  for (let i = 0; i < song.notes.length; i++) {
+    api.playNextNote();
+    const cue = api.noteTiming();
+    const duration = (song.noteBeats?.[i] || 1) * 60000 / bpm;
+    assert.equal(cue.duration, duration, `${song.id} attack ${i}: correct onset gap`);
+    assert.equal(cue.progress, 0);
+    assert.equal(cue.phase, 'filling');
+    const next = api.peekNextNote();
+    const attacks = clock.attacks;
+    clock.now = cue.started + duration / 2;
+    assert.ok(Math.abs(api.noteTiming().progress - .5) < 1e-10, 'Half full at half the duration');
+    clock.now = cue.started + duration - .01;
+    assert.equal(api.noteTiming().phase, 'filling', 'Never lands before the due time');
+    clock.now = cue.started + duration;
+    assert.equal(api.noteTiming().phase, 'landing', 'Lands on the due time');
+    assert.equal(api.noteTiming().progress, 1);
+    clock.now += 140;
+    assert.equal(api.noteTiming().phase, 'waiting', 'One brief landing, then holds still');
+    clock.now += 10000;
+    assert.equal(api.noteTiming().phase, 'waiting', 'No metronome keeps running after the player stops');
+    assert.equal(clock.attacks, attacks, 'The cue never generates audio');
+    assert.equal(api.peekNextNote(), next, 'The cue never skips a note');
+  }
+  assert.equal(api.peekNextNote(), song.notes[0], 'Loop retains the first-note highlight');
+  api.pauseNoteTiming();
+  assert.equal(api.noteTiming().phase, 'idle');
+  assert.equal(api.noteTiming().progress, 0);
+  api.playNextNote();
+  assert.equal(api.noteTiming().progress, 0, 'Resuming starts a fresh cue');
+  const start = api.noteTiming().started;
+  clock.now += 60;
+  const wrong = api.peekNextNote() === 'C3' ? 'D3' : 'C3';
+  api.playNote(wrong);
+  assert.equal(api.noteTiming().started, start, 'Free/wrong notes do not restart the song cue');
+  api.nextSong();
+  assert.equal(api.noteTiming().phase, 'idle', 'A new song clears the previous duration');
+  cueResults.push({ id: song.id, bpm, attacks: song.notes.length, practice: !song.noteBeats });
+}
+
+const result = { status: 'PASS', songs: songResults, joplinTranscriptions: 'PASS', exactRunaway: 'PASS', mobileAndResize: 'PASS', rotationStateRetention: 'PASS', songCycling: 'PASS', greenHighlightSource: 'PASS', tempoCue: cueResults, tempo: { fast, slow, sweep },
   scope: 'Source and simulated audio only; browser layout, real audio and GPU unverified' };
-const output = globalThis.process?.env?.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/final-pass-20261028/codex-piano';
+const output = globalThis.process?.env?.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/outputs/final-pass-20261028/codex-piano2';
 await mkdir(output, { recursive: true });
 await writeFile(`${output}/source-report.json`, JSON.stringify(result, null, 2) + '\n');
 console.log(JSON.stringify(result, null, 2));

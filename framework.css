@@ -245,6 +245,19 @@
 
 .language-flag { display: inline-block; margin-right: .35em; font-size: 1.15em; line-height: 1; vertical-align: -.08em; }
 
+/* Seven language options: equal cells, with normal single-column flow on phones. */
+.framework-panels #languages > :is(.learning-languages, .adult-language-list) { display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 12px 20px; margin-block: 16px; }
+.framework-panels #languages > :is(.learning-languages, .adult-language-list) > div { display: block; min-width: 0; padding-block: 12px 0; border-top: 1px solid var(--line); }
+.framework-panels #languages > :is(.learning-languages, .adult-language-list) dt { margin: 0 0 6px; color: var(--heading); font-size: 1.05rem; font-weight: 800; line-height: 1.3; }
+.framework-panels #languages > :is(.learning-languages, .adult-language-list) dd { margin: 0; line-height: 1.45; }
+@media (min-width: 760px) {
+  .framework-panels #languages > :is(.learning-languages, .adult-language-list) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1100px) {
+  .framework-panels #languages > :is(.learning-languages, .adult-language-list) { grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 12px; }
+  .framework-panels #languages > :is(.learning-languages, .adult-language-list) dd { font-size: .95rem; line-height: 1.4; }
+}
+
 /* Supplied tutor photos, already cropped to the frame (20261028). */
 .framework-portrait-frame--photo .framework-portrait { float: none; width: 100%; height: 100%; margin: 0; border-radius: 0; object-fit: cover; object-position: center top; }
 

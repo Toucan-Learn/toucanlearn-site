@@ -1,2 +1,2 @@
 /* Test-only reproduction of the old focus stacking bug. */
-.living-hero .piano-key:focus-visible { z-index: 3; }
+:is(.living-hero, .piano-world) .piano-key:focus-visible { z-index: 3; }

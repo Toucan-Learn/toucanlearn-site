@@ -49,12 +49,13 @@
   // Measure every section (and every swapping page) on its own, then hold the frame at the
   // tallest. Runs synchronously, so nothing flashes on screen.
   let frame = 0;
+  const layoutChanged = () => viewport.dispatchEvent(new CustomEvent('framework:layoutchange', { bubbles: true }));
   function equalise() {
     frame = 0;
     body.toggleAttribute('data-page-frame', roomy.matches);
     viewport.style.removeProperty('min-height');
     carousels.forEach(state => state.pages.forEach(page => page.style.removeProperty('min-height')));
-    if (!roomy.matches) return;
+    if (!roomy.matches) { layoutChanged(); return; }
     const visible = panels.filter(panel => !panel.hidden);
     // Measure natural heights, not the height the page grid stretches the frame to.
     viewport.classList.add('is-measuring');
@@ -77,8 +78,8 @@
     });
     saved.forEach(([panel, hidden, inert]) => { panel.hidden = hidden; panel.inert = inert; });
     viewport.classList.remove('is-measuring');
-    if (!visible.length) return;
-    viewport.style.minHeight = `${Math.ceil(tallest)}px`;
+    if (visible.length) viewport.style.minHeight = `${Math.ceil(tallest)}px`;
+    layoutChanged();
   }
   const schedule = () => { if (!frame) frame = requestAnimationFrame(equalise); };
 

@@ -110,3 +110,6 @@ body.team-page > header {
   .team-page a, .team-page button:not(.reviews-enquiry-sky),
   .team-page summary { cursor: pointer; }
 }
+/* Phone header on the sky: the Home label and Menu button stay light (no cream logo box). */
+.team-page > header :is(.mobile-home, .mobile-menu summary) { color: #f0ebe0; text-shadow: 0 1px 1px #071219, 0 0 3px #071219; }
+.team-page > header .mobile-menu summary { border-color: rgba(240, 235, 224, .6); background: transparent; }

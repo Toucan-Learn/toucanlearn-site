@@ -63,12 +63,13 @@
       const state = carousels.get(panel);
       if (state) {
         let page = 0;
+        const keep = state.index;
         state.pages.forEach((item, i) => {
           show(state, i);
           page = Math.max(page, item.getBoundingClientRect().height);
         });
         state.pages.forEach(item => { item.style.minHeight = `${Math.ceil(page)}px`; });
-        show(state, state.index);
+        show(state, keep);
       }
       tallest = Math.max(tallest, viewport.getBoundingClientRect().height);
     });

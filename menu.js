@@ -26,7 +26,21 @@
   if (!location.hash) return;
   let target;
   try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
-  if (!target || target.closest('[data-content-panel], [data-team-card]')) return;
+  if (!target) return;
+  // Back pages fit one laptop screen: a link to a tab (or something inside it) lands at the top of
+  // the page, exactly like a direct visit, instead of the browser jumping part-way down (owner, 28 Oct).
+  if (target.closest('[data-content-panel]')) {
+    const wide = window.matchMedia('(min-width: 1000px)');
+    let touched = false;
+    ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(type => addEventListener(type, () => { touched = true; }, { once: true, passive: true }));
+    const top = () => { if (wide.matches && !touched) window.scrollTo({ top: 0, behavior: 'instant' }); };
+    top();
+    addEventListener('load', () => {
+      (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { top(); setTimeout(top, 400); });
+    }, { once: true });
+    return;
+  }
+  if (target.closest('[data-team-card]')) return;
   let moved = false;
   const stop = () => { moved = true; };
   ['wheel', 'touchstart', 'keydown', 'mousedown'].forEach(type => addEventListener(type, stop, { once: true, passive: true }));
@@ -62,3 +76,13 @@
     if (location.hash) history.replaceState(history.state, '', location.pathname + location.search);
   });
 })();
+
+// Same-page dropdown links to another tab (e.g. Our approach → Online while on Our approach):
+// switch tab and stay at the top on laptop screens.
+window.addEventListener('hashchange', () => {
+  let target;
+  try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
+  if (target && target.closest('[data-content-panel]') && window.matchMedia('(min-width: 1000px)').matches) {
+    requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  }
+});

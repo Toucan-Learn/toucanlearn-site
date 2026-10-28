@@ -11,7 +11,7 @@
 .team-page-promise-cell .team-page-promise { margin-bottom: 0; }
 .team-page-promise-cell .team-page-promise,
 .team-page-coverage-cell p,
-.team-biography .profile-availability + p { color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
+.team-biography .team-biography-role + p { color: var(--heading); font-size: 1.25rem; font-weight: 700; line-height: 1.4; letter-spacing: -.02em; }
 .team-page-viewer { min-width: 0; }
 .team-page-viewer:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 6px; }
 .team-biography { display: flow-root; min-width: 0; padding: 26px 28px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); scroll-margin-top: calc(var(--sticky-header-height, 95px) + 20px); }
@@ -48,7 +48,7 @@
   .team-page-promise-cell, .team-page-coverage-cell { padding: 24px; }
   .team-page-promise-cell .team-page-promise,
   .team-page-coverage-cell p,
-  .team-biography .profile-availability + p { font-size: 1.15rem; }
+  .team-biography .team-biography-role + p { font-size: 1.15rem; }
 }
 @media (max-width: 899px) {
   .team-deck-enhanced .team-deck-stage { perspective: none; }
@@ -102,7 +102,7 @@
   body.team-page .team-biography p { margin-bottom: clamp(5px, 1.1vh, 10px); font-size: clamp(13px, 1.95vh, 16px); line-height: 1.42; }
   body.team-page .team-biography p:last-child { margin-bottom: 0; }
   body.team-page .team-biography .team-biography-role { font-size: clamp(13px, 1.95vh, 16px); line-height: 1.35; }
-  body.team-page .team-biography .profile-availability + p { font-size: clamp(14px, 2.2vh, 18px); line-height: 1.38; }
+  body.team-page .team-biography .team-biography-role + p { font-size: clamp(14px, 2.2vh, 18px); line-height: 1.38; }
   body.team-page .team-biography .framework-portrait-frame { width: clamp(90px, 14vh, 120px); height: clamp(135px, 21vh, 180px); margin: 0 0 8px 16px; }
   body.team-page .team-biography-availability { padding-top: 8px; }
   body.team-page .team-deck-controls { padding-top: clamp(4px, 1vh, 8px); }

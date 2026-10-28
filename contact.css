@@ -23,11 +23,14 @@
 /* Round 82 (Joshua, 18 Oct 2026: "the enquiries form is spaced out strangely. that whole webpage
    could have a bit of a second look, a revamp" / "yes to all"): a wider page with the form on the
    left and a "What happens next" card on the right; on phones the card follows the form. */
-.contact-hero .contact-width,
-.contact-form-section .contact-width { width: min(calc(100% - 32px), 1120px); }
+.contact-main { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); column-gap: 36px; align-items: start; width: min(calc(100% - 32px), 1120px); margin-inline: auto; }
+.contact-main > .contact-hero { grid-column: 1; grid-row: 1; }
+.contact-main > .contact-form-section { grid-column: 1; grid-row: 2; }
+.contact-main .contact-width { width: 100%; }
+.contact-sidebar { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; display: flex; flex-direction: column; gap: 24px; min-width: 0; padding-block: 58px 100px; }
 .contact-hero .lead { max-width: 640px; }
 .contact-offer { margin: 14px 0 0; }
-.contact-layout { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: 36px; align-items: start; margin-top: 8px; }
+.contact-layout { margin-top: 8px; }
 .contact-next { position: sticky; top: calc(var(--sticky-header-height, 95px) + 24px); display: grid; gap: 14px; padding: 26px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); }
 .contact-next h3 { margin: 0; color: var(--heading); font-size: 1.25rem; }
 .contact-steps { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: contact-step; }
@@ -43,9 +46,25 @@
 .enquiry-form .button.form-submit.form-submit--trial:focus-visible { outline: 3px solid var(--trial-fill); outline-offset: 4px; }
 @media (prefers-reduced-motion: reduce) { .enquiry-form .button.form-submit.form-submit--trial { transition: none; } .enquiry-form .button.form-submit.form-submit--trial:is(:hover, :focus-visible) { transform: none; } }
 @media (max-width: 900px) {
-  .contact-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .contact-next { position: static; padding: 20px; }
+  .contact-main { grid-template-columns: minmax(0, 1fr); }
+  .contact-sidebar { display: contents; }
+  .contact-main > .contact-form-section { grid-column: 1; grid-row: 3; padding-bottom: 24px; }
+  .contact-pricing { grid-column: 1; grid-row: 2; margin-block: 8px 16px; }
+  .contact-next { position: static; grid-column: 1; grid-row: 4; margin-bottom: 48px; padding: 20px; }
 }
+
+/* Pricing shares the existing cell tokens and occupies the spare right column,
+   spanning the intro and form so it adds no desktop row or fixed-height scroll area. */
+.contact-pricing { flex: 0 0 auto; padding: 22px; border: 1px solid var(--line); border-radius: var(--radius-xl); color: var(--ink); background: var(--paper); }
+.contact-pricing h2 { margin: 0; color: var(--heading); font-size: 1.5rem; line-height: 1.2; }
+.pricing-intro { margin: 8px 0 0; font-size: .88rem; line-height: 1.4; }
+.pricing-bands { margin: 16px 0; }
+.pricing-bands > div { padding-block: 12px; border-top: 1px solid var(--line); }
+.pricing-bands > div:last-child { padding-bottom: 0; }
+.pricing-bands dt { color: var(--heading); font-size: 1rem; font-weight: 800; line-height: 1.4; }
+.pricing-bands dt span { white-space: nowrap; }
+.pricing-bands dd { margin: 5px 0 0; font-size: .92rem; line-height: 1.45; }
+.pricing-footer { margin: 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: .85rem; line-height: 1.45; }
 
 /* Owner, 28 Oct 2026: "When you click on cells in the enquiry page the cells outline red. That is
    very bad. We need a neutral or green." Focus rings use the logo teal; red stays for real errors. */

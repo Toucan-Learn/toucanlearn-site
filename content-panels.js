@@ -19,7 +19,8 @@
       } catch (_) { return null; }
     };
     if (links.some(link => !linkPanel(link))) return;
-    const defaultPanel = panels.find(panel => panel.id === 'overview') || panels[0];
+    // The first menu item is the opening section, whatever order the panels sit in.
+    const defaultPanel = panels.find(panel => panel.id === 'overview') || linkPanel(links[0]) || panels[0];
     const viewport = shell.querySelector('.framework-panels');
     if (viewport) {
       viewport.tabIndex = 0;

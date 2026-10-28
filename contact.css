@@ -46,3 +46,12 @@
   .contact-layout { grid-template-columns: minmax(0, 1fr); gap: 24px; }
   .contact-next { position: static; padding: 20px; }
 }
+
+/* Owner, 28 Oct 2026: "When you click on cells in the enquiry page the cells outline red. That is
+   very bad. We need a neutral or green." Focus rings use the logo teal; red stays for real errors. */
+.enquiry-form { --field-focus: #1f7a75; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .enquiry-form { --field-focus: #7fcfc3; } }
+:root[data-theme="dark"] .enquiry-form { --field-focus: #7fcfc3; }
+.enquiry-form .field :is(input, textarea, select):focus { border-color: var(--field-focus); outline-color: var(--field-focus); }
+.enquiry-form :is(.radio-options input, .consent input):focus-visible { outline-color: var(--field-focus); }
+.enquiry-form .field :is(input, textarea, select)[aria-invalid="true"]:focus { border-color: var(--error-ink); }

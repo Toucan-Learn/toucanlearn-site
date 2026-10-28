@@ -18,20 +18,21 @@
   <script src="theme.js?v=20261018-dark-1"></script>
   <link rel="stylesheet" href="style.css?v=20261027-logo-green-final" />
   <link rel="stylesheet" href="campaigns.css?v=20261019-team-89" />
+  <link rel="stylesheet" href="learning-pages.css?v=20261028-steps-5" />
   <link rel="stylesheet" href="framework.css?v=20261027-final-frames-1" />
   <script src="menu.js?v=20261027-order-2" defer></script>
   <script src="content-panels.js?v=20261026-frame-2" defer></script>
   <script src="project-viewer.js?v=20261026-consistency-3" defer></script>
   <script src="screenshot-gallery.js?v=20261026-final-2" defer></script>
-  <link rel="stylesheet" href="back-page-frame.css?v=20261027-compact-5" />
-  <script src="back-page-frame.js?v=20261027-final-frames-2" defer></script>
+  <link rel="stylesheet" href="back-page-frame.css?v=20261028-steady-1" />
+  <script src="back-page-frame.js?v=20261028-steady-1" defer></script>
 </head>
 <body class="campaign-page children-page">
   <a class="skip-link" href="#main">Skip to main content</a>
   <header><div class="container nav">
     <a class="logo logo--wordmark" href="index.html" aria-label="Toucan Learn home"><img class="brand-toucan" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" /><span class="brand-lockup"><strong>Tou<span class="brand-can">can</span></strong><span>Learn</span></span><span class="mobile-home">Home</span></a>
     <nav class="nav-links" aria-label="Primary">
-      <a href="team.html">Our team</a>
+      <a href="index.html#team">Our team</a>
       <div class="nav-item">
         <a href="index.html#support-routes">Who we help <span class="nav-chevron" aria-hidden="true">▾</span></a>
         <ul class="nav-dropdown">
@@ -44,11 +45,11 @@
           <li><a href="subjects.html#languages">Languages</a></li>
           <li><a href="subjects.html#psychology">Psychology</a></li>
           <li><a href="subjects.html#art">Art &amp; design</a></li>
-          <li><a href="approach.html#send-support">SEND support</a></li>
+          <li><a href="subjects.html#send-support">SEND support</a></li>
         </ul>
       </div>
       <div class="nav-item">
-        <a href="approach.html#steps-to-success">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
+        <a href="index.html#how-it-works">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
         <ul class="nav-dropdown">
           <li class="nav-group-label">How we teach</li>
           <li><a href="approach.html#steps-to-success">The steps to success</a></li>
@@ -71,7 +72,7 @@
     <details class="mobile-menu">
       <summary><span class="menu-icon" aria-hidden="true">☰</span> Menu</summary>
       <nav aria-label="Menu">
-        <a href="team.html">Our team</a>
+        <a href="index.html#team">Our team</a>
         <div class="mobile-nav-item">
           <a href="index.html#support-routes">Who we help</a>
           <ul class="mobile-sub-links">
@@ -84,11 +85,11 @@
             <li><a href="subjects.html#languages">Languages</a></li>
             <li><a href="subjects.html#psychology">Psychology</a></li>
             <li><a href="subjects.html#art">Art &amp; design</a></li>
-            <li><a href="approach.html#send-support">SEND support</a></li>
+            <li><a href="subjects.html#send-support">SEND support</a></li>
           </ul>
         </div>
         <div class="mobile-nav-item">
-          <a href="approach.html#steps-to-success">Our approach</a>
+          <a href="index.html#how-it-works">Our approach</a>
           <ul class="mobile-sub-links">
             <li class="nav-group-label">How we teach</li>
             <li><a href="approach.html#steps-to-success">The steps to success</a></li>
@@ -116,23 +117,21 @@
 
     <div class="container framework-shell" data-content-panels>
       <nav class="framework-section-nav" aria-label="Children and young people">
-        <a href="#overview" data-panel-link>Overview</a>
+        <a href="#getting-started" data-panel-link>Getting started</a>
         <a href="#learner-projects" data-panel-link>Projects &amp; learning</a>
         <a href="#qualifications" data-panel-link>Exams &amp; qualifications</a>
-        <a href="#getting-started" data-panel-link>Getting started</a>
       </nav>
 
       <div class="framework-panels">
-        <section id="overview" data-content-panel aria-labelledby="overview-heading">
-          <div class="section-head"><img class="framework-panel-art" src="assets/art/value-hello.png" alt="" width="960" height="600" loading="lazy" decoding="async" /><div class="eyebrow">A careful match</div><h2 id="overview-heading">Start with the learner, not the label.</h2></div>
-          <p class="lead">One-to-one support from KS1 through post-16 study, built around what your child needs and how they learn.</p>
-          <p>Tell us the subject, level and what feels difficult. We match the tutor and plan the first session around that starting point.</p>
-          <div class="framework-route-grid">
-            <article><h3>Schoolwork and confidence</h3><p>Primary support, GCSE English and maths, languages, art and design, and IB or A-level Psychology.</p><a href="#qualifications">See subjects and exam levels →</a></article>
-            <article><h3>A reason to practise</h3><p>Games, writing and design projects put skills to use in something the learner cares about.</p><a href="#learner-projects">Explore projects and learning →</a></article>
-          </div>
-          <p>Online across the UK, or in person in Bristol, London and Henley, subject to tutor availability.</p>
-          <p><a href="approach.html#send-support">How we adapt lessons for SEND →</a></p>
+        <section id="getting-started" class="steps-panel" data-content-panel aria-labelledby="getting-started-heading">
+          <div class="section-head"><span id="overview"></span><img class="framework-panel-art" src="assets/art/value-calendar.png" alt="" width="960" height="600" loading="lazy" decoding="async" /><h2 id="getting-started-heading">An easy sign-up process.</h2><p>Tell us the broad goal and current difficulty. We will take it from there.</p></div>
+                    <ol class="learning-steps">
+            <li><img class="learning-step-art" src="assets/art/value-hello.png" alt="" width="960" height="600" loading="lazy" decoding="async" /><h3>Start with a free session</h3><p>We use the first free-trial as a live-diagnostic session to get to know you and the best ways we can support you.</p></li>
+            <li><img class="learning-step-art" src="assets/art/value-plan.png" alt="" width="960" height="600" loading="lazy" decoding="async" /><h3>Agree the next steps</h3><p>We use the diagnostic report to choose the skills to practise and a pace that suits the learner.</p></li>
+            <li><img class="learning-step-art" src="assets/art/value-website.png" alt="" width="960" height="600" loading="lazy" decoding="async" /><h3>Work towards your goal</h3><p>Sessions can combine focused skill-building, exam preparation and meaningful longer-term projects.</p></li>
+            <li><img class="learning-step-art" src="assets/art/value-report.png" alt="" width="960" height="600" loading="lazy" decoding="async" /><h3>Review the plan each week</h3><p>Your tutor writes a weekly lesson report, and our founder reads it. We review what is working and adjust the learner’s plan.</p></li>
+          </ol>
+          <p><a href="approach.html#steps-to-success">See the Toucan approach →</a></p>
         </section>
 
         <section id="learner-projects" data-content-panel aria-labelledby="projects-heading">
@@ -210,16 +209,6 @@
           <p class="scope-note"><strong>Clear boundary:</strong> We do not guarantee grades or qualifications. Complex needs and exceptions receive Joshua’s review before tutoring is agreed.</p>
         </section>
 
-        <section id="getting-started" data-content-panel aria-labelledby="getting-started-heading">
-          <div class="section-head"><img class="framework-panel-art" src="assets/art/value-calendar.png" alt="" width="960" height="600" loading="lazy" decoding="async" /><h2 id="getting-started-heading">An easy sign-up process.</h2><p>Tell us the broad goal and current difficulty. We will take it from there.</p></div>
-          <div class="framework-benefits">
-            <article><span aria-hidden="true">01</span><h3>A free first lesson</h3><p>A proper session to get to know them, not a sales call.</p></article>
-            <article><span aria-hidden="true">02</span><h3>A report every week</h3><p>Written by their tutor, read by our founder.</p></article>
-            <article><span aria-hidden="true">03</span><h3>A team behind them</h3><p>We review and refine their plan every week.</p></article>
-            <article><span aria-hidden="true">04</span><h3>Easy to fit in</h3><p>Pay weekly, with flexible cancelling.</p></article>
-          </div>
-          <p><a href="approach.html#steps-to-success">See the Toucan approach →</a></p>
-        </section>
       </div>
     </div>
 

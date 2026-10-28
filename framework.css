@@ -276,3 +276,6 @@
 
 /* Keep short Arabic phrases on one line inside English quotes. */
 bdi[lang="ar"] { white-space: nowrap; }
+
+/* Arabic closing line in a tutor quote: its own line, right-aligned under the photo. */
+.quote-arabic { display: block; clear: right; margin-top: 14px; text-align: right; }

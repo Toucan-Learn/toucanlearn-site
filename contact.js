@@ -61,7 +61,7 @@ var EnquiryRules = (function () {
   const formEndpoint = form.dataset.formEndpoint.trim();
   const endpointPattern = /^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/;
   const requestedService = new URLSearchParams(window.location.search).get("service");
-  if (["children", "english-work", "ielts", "languages", "maths", "in-person", "not-sure"].includes(requestedService)) {
+  if (["children", "english-work", "ielts", "qualifications", "languages", "maths", "in-person", "not-sure"].includes(requestedService)) {
     document.getElementById("campaign-source").value = requestedService;
   }
   document.getElementById("loaded-at").value = String(Date.now());

@@ -77,18 +77,19 @@
   .team-page-viewer .team-biography { display: flow-root !important; position: static !important; height: auto !important; margin-top: 20px !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; break-inside: avoid; }
 }
 
-/* Team page on desktop (owner, 28 Oct 2026): the whole page fits one screen and the menu never
-   moves; the left cells sit centred on the profile card; type follows the window height so the
-   enquiry fits at 100-110% zoom. Very short windows scroll inside the page, under a still menu. */
+/* Team page on desktop (owner, 28 Oct 2026): "a small bit of scroll there is absolutely fine", but the
+   menu never moves. The menu stays fixed; the page and footer scroll beneath it, and the enquiry
+   fits on the first screen at 100-110% zoom. Type follows the window height. */
 @media screen and (min-width: 1000px) {
   body.team-page { height: 100dvh; min-height: 0; overflow: hidden; display: flex; flex-direction: column; padding-bottom: 0; }
-  body.team-page > header, body.team-page > footer.site-footer { flex: 0 0 auto; }
-  body.team-page > #main { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: flex; flex-direction: column; }
-  body.team-page > footer.site-footer { padding-block: 8px; font-size: .8rem; }
-  body.team-page > footer.site-footer .footer-grid { width: min(calc(100% - 80px), 1280px); flex-wrap: nowrap; gap: 14px; }
-  body.team-page > footer.site-footer .footer-grid > div { white-space: nowrap; }
-  body.team-page > footer.site-footer .footer-links { flex-wrap: nowrap; gap: 4px 12px; }
-  body.team-page > footer.site-footer .footer-links > a { min-height: 28px; }
+  body.team-page > header { flex: 0 0 auto; }
+  body.team-page > .team-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  body.team-page > .team-scroll > #main { min-height: 100%; display: flex; flex-direction: column; }
+  body.team-page footer.site-footer { padding-block: 14px; font-size: .85rem; }
+  body.team-page footer.site-footer .footer-grid { width: min(calc(100% - 80px), 1280px); flex-wrap: nowrap; gap: 14px; }
+  body.team-page footer.site-footer .footer-grid > div { white-space: nowrap; }
+  body.team-page footer.site-footer .footer-links { flex-wrap: nowrap; gap: 4px 12px; }
+  body.team-page footer.site-footer .footer-links > a { min-height: 28px; }
   body.team-page .team-page-intro { flex: 1 0 auto; padding-top: 0; }
   body.team-page .team-page-intro h1 { margin: 0 0 clamp(10px, 2vh, 20px); font-size: clamp(26px, 4.2vh, 34px); }
   body.team-page .team-page-layout { grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 20px; align-items: start; }

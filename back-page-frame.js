@@ -56,6 +56,8 @@
     carousels.forEach(state => state.pages.forEach(page => page.style.removeProperty('min-height')));
     if (!roomy.matches) return;
     const visible = panels.filter(panel => !panel.hidden);
+    // Measure natural heights, not the height the page grid stretches the frame to.
+    viewport.classList.add('is-measuring');
     const saved = panels.map(panel => [panel, panel.hidden, panel.inert]);
     let tallest = 0;
     panels.forEach(panel => {
@@ -74,6 +76,7 @@
       tallest = Math.max(tallest, viewport.getBoundingClientRect().height);
     });
     saved.forEach(([panel, hidden, inert]) => { panel.hidden = hidden; panel.inert = inert; });
+    viewport.classList.remove('is-measuring');
     if (!visible.length) return;
     viewport.style.minHeight = `${Math.ceil(tallest)}px`;
   }

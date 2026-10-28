@@ -274,3 +274,69 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
   body[data-page-frame]:not(.team-page) .cta .cta-box h2 { font-size: clamp(1.05rem, 2.6vh, 1.25rem); }
   body[data-page-frame]:not(.team-page) .cta .cta-box p { margin-top: 2px; font-size: clamp(.82rem, 1.9vh, .9rem); }
 }
+
+/* Back-page framework v2 (owner, 28 Oct 2026: "the use of space is awful. need to update the
+   framework"). Desktop: one sidebar on the left holds the page title, the section menu and the
+   offer card, and the section frame runs the full height beside it. No separate title row or
+   offer bar, so the left column is never empty and nothing floats loose below. */
+@media screen and (min-width: 1000px) {
+  body[data-page-frame]:not(.team-page) #main {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr);
+    grid-template-rows: auto 1fr auto;
+    column-gap: 32px;
+    row-gap: clamp(14px, 2.4vh, 24px);
+    width: min(calc(100% - 80px), 1280px);
+    margin-inline: auto;
+    padding-block: clamp(16px, 3vh, 28px) clamp(20px, 3.6vh, 32px);
+    min-height: calc(100dvh - var(--sticky-header-height, 95px) - 1px);
+    align-content: stretch;
+  }
+  body[data-page-frame]:not(.team-page) #main > .framework-intro { grid-column: 1; grid-row: 1; padding: 0; }
+  body[data-page-frame]:not(.team-page) #main > .framework-intro > .container { width: auto; margin: 0; }
+  body[data-page-frame] .framework-intro h1 { font-size: clamp(1.6rem, 4vh, 2.1rem); line-height: 1.12; text-wrap: balance; }
+  body[data-page-frame] .framework-intro .lead { margin-top: 6px; font-size: .95rem; }
+  body[data-page-frame] .framework-intro .offer-line { display: none; }
+  body[data-page-frame]:not(.team-page) #main > .framework-shell { display: contents; }
+  body[data-page-frame] .framework-section-nav { grid-column: 1; grid-row: 2; align-self: start; }
+  body[data-page-frame] .framework-section-nav a { min-height: 44px; }
+  body[data-page-frame]:not(.team-page) .framework-panels { grid-column: 2; grid-row: 1 / span 3; align-self: stretch; display: flex; flex-direction: column; }
+  body[data-page-frame] .framework-panels > [data-content-panel]:not([hidden]) { flex: 1 0 auto; display: flex; flex-direction: column; }
+  /* Links, page controls and closing lines sit at the foot of each section. */
+  body[data-page-frame] .framework-panels > [data-content-panel] > :is(.learning-links, .framework-page-controls, .project-note):last-child,
+  body[data-page-frame] .framework-panels > [data-content-panel] > .framework-project-viewer + .project-note,
+  body[data-page-frame] .framework-panels > [data-content-panel] > p:last-child:has(> a:only-child) { margin-top: auto; padding-top: 12px; }
+  body[data-page-frame] .framework-panels > [data-content-panel] > .approach-report { flex: 1 0 auto; display: flex; flex-direction: column; }
+  body[data-page-frame] .framework-panels .approach-report > .report-purpose { margin-top: auto; padding-top: 12px; }
+  /* The offer card closes the sidebar. */
+  body[data-page-frame]:not(.team-page) #main > .cta { grid-column: 1; grid-row: 3; align-self: end; margin: 0; padding: 0; }
+  body[data-page-frame]:not(.team-page) #main > .cta > .cta-box { width: auto; margin: 0; flex-direction: column; align-items: stretch; gap: 14px; padding: 20px; }
+  body[data-page-frame]:not(.team-page) #main > .cta > .cta-box h2 { font-size: 1.15rem; line-height: 1.25; }
+  body[data-page-frame]:not(.team-page) #main > .cta > .cta-box p { font-size: .9rem; line-height: 1.45; }
+  body[data-page-frame]:not(.team-page) #main > .cta > .cta-box > .button { width: 100%; justify-content: center; }
+}
+@media screen and (min-width: 1000px) {
+  body[data-page-frame]:not(.team-page) .framework-panels.is-measuring { align-self: start; }
+  body[data-page-frame] .framework-panels.is-measuring > [data-content-panel] { flex: none; }
+  body[data-page-frame] .framework-intro .lead { display: none; }
+  body[data-page-frame] .framework-section-nav { gap: 4px; }
+  body[data-page-frame] .framework-section-nav a { min-height: 40px; padding-block: 7px; }
+}
+/* v2 room: the frame now has the full height, so sections breathe again (larger type, art and
+   pictures) instead of leaving a gap under shorter sections. */
+@media screen and (min-width: 1000px) {
+  body[data-page-frame] .framework-panels { padding: clamp(18px, 3.2vh, 32px) clamp(22px, 3.2vh, 34px); font-size: clamp(15px, 2.15vh, 17px); line-height: 1.5; }
+  body[data-page-frame] .framework-panels .section-head { margin-bottom: clamp(12px, 2.4vh, 22px); }
+  body[data-page-frame] .framework-panels .section-head h2 { font-size: clamp(1.5rem, 4.2vh, 2.2rem); }
+  body[data-page-frame] .framework-panel-art { width: clamp(110px, 20vh, 180px); margin: 0 0 10px 22px; }
+  body[data-page-frame] .framework-panels h3 { font-size: clamp(1.05rem, 2.7vh, 1.3rem); margin-bottom: 6px; }
+  body[data-page-frame] .framework-panels p { margin-bottom: clamp(8px, 1.6vh, 14px); }
+  body[data-page-frame] .framework-panels :is(.learning-steps, .framework-route-grid, .framework-benefits, .adult-topics, .learning-formats, .learning-subject-grid, .report-parts) { gap: clamp(12px, 2.2vh, 20px); margin-block: clamp(8px, 1.8vh, 16px); }
+  body[data-page-frame] .framework-panels :is(.learning-steps > li, .framework-benefits > article, .report-parts > li) { padding: clamp(14px, 2.4vh, 22px) clamp(16px, 2.4vh, 22px); }
+  body[data-page-frame] .learning-step-art { width: clamp(80px, 13vh, 120px); }
+  body[data-page-frame].approach-page #where-we-teach .teaching-format-photo { height: clamp(100px, 22vh, 220px); }
+  body[data-page-frame] #learner-projects .framework-project-media img { max-height: clamp(180px, 40vh, 380px); }
+  body[data-page-frame].approach-page #our-lessons .lesson-stage-grid > li { padding: clamp(12px, 2.2vh, 20px); gap: 8px; }
+  body[data-page-frame].approach-page #our-lessons .lesson-stage-grid img { width: clamp(72px, 12vh, 110px); height: auto; }
+  body[data-page-frame].approach-page #our-lessons .lesson-example-rows > div { padding-block: clamp(8px, 1.6vh, 14px); }
+}

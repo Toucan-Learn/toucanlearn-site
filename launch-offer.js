@@ -1,7 +1,7 @@
 /* One switch for the launch pop-up. Existing page content is never changed. */
 (() => {
   'use strict';
-  const config = { active: true, spotsTotal: 5, closes: '2026-11-30' };
+  const config = { active: false, spotsTotal: 5, closes: '2026-11-30' };
   function isActive(now = new Date()) {
     if (!config.active) return false;
     const parts = new Intl.DateTimeFormat('en-GB', {

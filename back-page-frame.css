@@ -340,3 +340,28 @@ body[data-page-frame] .framework-panels .lesson-cell--structure > p { line-heigh
   body[data-page-frame].approach-page #our-lessons .lesson-stage-grid img { width: clamp(72px, 12vh, 110px); height: auto; }
   body[data-page-frame].approach-page #our-lessons .lesson-example-rows > div { padding-block: clamp(8px, 1.6vh, 14px); }
 }
+/* Children, Projects & learning (owner, 28 Oct 2026: "just need to address this section"). Text and
+   picture start level at the top, every picture sits in the same fixed box, and one footer row
+   holds the permission note (left) and the project arrows (right). */
+@media screen and (min-width: 1000px) {
+  body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] {
+    flex: 1 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); grid-template-rows: 1fr auto; column-gap: 36px;
+  }
+  body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] > .framework-project-slides { grid-column: 1 / -1; grid-row: 1; align-self: start; }
+  body[data-page-frame] #learner-projects .framework-project { grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); column-gap: 36px; align-items: start; padding: 0; }
+  body[data-page-frame] #learner-projects .framework-project-media { align-self: start; justify-self: stretch; max-width: none; width: 100%; }
+  body[data-page-frame] #learner-projects .project-label { margin: 0 0 8px; color: var(--orange-text); font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+  body[data-page-frame] #learner-projects .framework-project-copy h3 { margin: 0 0 10px; font-size: clamp(1.3rem, 3.4vh, 1.7rem); }
+  body[data-page-frame] #learner-projects .framework-project-copy p:not(.project-label) { margin: 0 0 14px; }
+  body[data-page-frame] #learner-projects .framework-project-media > img,
+  body[data-page-frame] #learner-projects .framework-project-media > a > img,
+  body[data-page-frame] #learner-projects .screenshot-gallery img:not([hidden]) {
+    display: block; width: 100%; height: clamp(220px, 46vh, 400px); max-height: none; object-fit: contain; border-radius: 14px; background: rgba(4, 22, 30, .55);
+  }
+  /* DARTY's own screenshot control sits on the picture, so it never reads as a second set of arrows. */
+  body[data-page-frame] #learner-projects .screenshot-gallery { position: relative; }
+  body[data-page-frame] #learner-projects .screenshot-gallery-controls { position: absolute; right: 10px; bottom: 10px; left: 10px; margin: 0; padding: 4px 4px 4px 12px; border-radius: 10px; background: rgba(4, 22, 30, .72); color: #f5f0e6; }
+  body[data-page-frame] #learner-projects .screenshot-gallery-controls button { min-height: 34px; padding: 4px 10px; }
+  body[data-page-frame] #learner-projects .project-note { grid-column: 1; grid-row: 2; align-self: center; margin: 0; padding: 0; font-size: .85rem; opacity: .85; }
+  body[data-page-frame] #learner-projects .framework-project-controls { grid-column: 2; grid-row: 2; justify-content: flex-end; padding-top: 16px; }
+}

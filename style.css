@@ -2615,3 +2615,6 @@ h1 {
 :root[data-theme="dark"] .theme-toggle:hover { background: #ffffff; }
 :root:not([data-theme="dark"]) body .toucan-opening-header .theme-toggle { color: #f3ece2; background: #10242d; border-color: transparent; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) body .toucan-opening-header .theme-toggle { color: #10242d; background: #f3ece2; } }
+/* Owner, 28 Oct 2026: solid moon and solid sun centre, not outlines. */
+.theme-toggle .theme-moon,
+.theme-toggle .theme-sun circle { fill: currentColor; }

@@ -155,8 +155,8 @@ try {
   const card = new Element();
   for (const [name, lines, text] of [
     ['Skids', ["When you're in a rush, have some Skids."], "When you're in a rush, have some Skids."],
-    ['Fizzy', ['Light, bright red.', 'Fizzy, extreme.'], 'Light, bright red. · Fizzy, extreme.'],
-    ['Ground Pinch', ['Designed for everyone.', '“It’s sweet, fast, cheap, and will help you destroy your enemies.”'], 'Designed for everyone. · “It’s sweet, fast, cheap, and will help you destroy your enemies.”'],
+    ['Fizzy', ['Light, bright red. Fizzy Extreme.'], 'Light, bright red. Fizzy Extreme.'],
+    ['Ground Pinch', ['It’s sweet, fast, cheap, and will help you destroy your enemies.'], 'It’s sweet, fast, cheap, and will help you destroy your enemies.'],
   ]) {
     renderDrinkInfo(card, { name, lines });
     assert.equal(card.className, 'drink-info');

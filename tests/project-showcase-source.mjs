@@ -19,8 +19,8 @@ assert.deepEqual(sectionProjects[0], { id: 'intro', name: '', type: 'intro' }, '
 assert.deepEqual(sectionProjects.slice(1), projects, 'Both carousels keep the same four project media records');
 assert.deepEqual(projects.find(project => project.id === 'drinks').drinks.map(({ name, lines }) => ({ name, lines })), [
   { name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
-  { name: 'Fizzy', lines: ['Light, bright red.', 'Fizzy, extreme.'] },
-  { name: 'Ground Pinch', lines: ['Designed for everyone.', '“It’s sweet, fast, cheap, and will help you destroy your enemies.”'] },
+  { name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
+  { name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
 ], 'The shared drink-viewer captions retain their existing words and capitalisation');
 for (let i = 0; i < projects.length; i++) {
   assert.equal(initialProject(undefined, () => (i + .5) / projects.length, null), i, 'With no fixed start, every project can start a load');

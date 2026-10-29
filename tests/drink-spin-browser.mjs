@@ -5,8 +5,8 @@ const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const frame = page => page.$eval('.drink-spin', button => Number(button.dataset.frame));
 const copy = {
   skids: { name: 'Skids', line: "When you're in a rush, have some Skids." },
-  fizzy: { name: 'Fizzy', line: 'Light, bright red. · Fizzy, extreme.' },
-  'ground-pinch': { name: 'Ground Pinch', line: 'Designed for everyone. · “It’s sweet, fast, cheap, and will help you destroy your enemies.”' },
+  fizzy: { name: 'Fizzy', line: 'Light, bright red. Fizzy Extreme.' },
+  'ground-pinch': { name: 'Ground Pinch', line: 'It’s sweet, fast, cheap, and will help you destroy your enemies.' },
 };
 
 // Delay decode independently of network completion and audit every mounted image.

@@ -155,8 +155,8 @@ for (const manual of [false, true]) {
   assert.equal(f.frame, null, 'Switching to phone mode destroys the iframe');
   assert.equal(f.title, null);
   assert(f.root.querySelector('[data-screenshot-gallery]'));
-  for (let i = 1; i <= 9; i++) {
-    assert(f.root.querySelector('[data-screenshot]').src.includes(`darty-still-0${i}.webp`));
+  for (let i = 1; i <= 12; i++) {
+    assert(f.root.querySelector('[data-screenshot]').src.includes(`darty-still-${String(i).padStart(2, '0')}.webp`));
     f.emit(f.root.querySelector('[data-screenshot-next]'), 'click');
   }
   f.media[1].matches = false;

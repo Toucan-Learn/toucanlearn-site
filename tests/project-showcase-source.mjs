@@ -47,27 +47,30 @@ const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, J
   .replace(/(['"])\.\/hero-sky\.js(?:\?[^'"]*)?\1/, JSON.stringify(skyURL));
 const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
 const darty = projects.find(project => project.id === 'darty');
-assert.equal(darty.images.length, 9);
+assert.equal(darty.images.length, 12);
 assert.equal(darty.poster, darty.images[0]);
 assert.equal(darty.titleStill, darty.images[6], 'Desktop uses the number 2 floodlit still');
 assert(!source.includes('showcase-darty-stills') && !showcaseStyles.includes('showcase-darty-still'), 'Remove the title slideshow code and styles');
 const zoom = showcaseStyles.match(/@keyframes showcase-darty-zoom\s*\{\s*from\s*\{([^}]+)\}\s*to\s*\{([^}]+)\}\s*\}/);
 assert(zoom && zoom.slice(1).every(frame => /^\s*transform:\s*scale\([\d.]+\);\s*$/.test(frame)), 'Title zoom animates only CSS transforms');
 const approvedStillHashes = [
-  'faa5316951d954e0a291949f609eb555dfb02e07089723ce20a0cc7f5e203b59',
-  '6f14a4652454b271086a6abea74c83ab5d3612a0e8ba61ac7ce7ec7546f8ecc3',
-  'd2bd13d9ca4ac685127f92adb6aaaf16b6c93d9b96a181796f57b92033c792a3',
-  'e4f7015c8bc0ea0d4e77daf26323fd63e0a5dfa3cf23b69dba308e614dde081f',
-  'a4be52d994149fa9027130a62a556053474306b141c7b8390218c91064587fe8',
-  'e9f37d49775a7868e3b4fcbf5bffaf7c33786dc19e06986c1e3e9ce1d6e366e8',
+  '96d08ea8570d230de9dcf9163b7435c18665a6b02b5f6dc34c1bd63e1fd096a4',
+  '3609c08b60f6e9b31eb9c8d9f4250f4107113b6b1201172832d6ac5a69021ba1',
+  '7c65343d723b04d6f0de9639caf5fb91f85e285a80b5dac58f30b7815113adc7',
+  '2e13434a367e149789e3febeb405df30a5af17a5eab31b3a06093540306cce44',
+  'f211a52bc68c3f03b3d913866dfedd0fe436a14c4cbb80a4f891fa84b34d17d5',
+  '66d26b266869cab40c747fa2609dca7facf0984a67ecfb8c149c6955d0d99556',
   '6c20a858e05c57a2b8216c659d4f7eaaef9ba536da5e39dcc21642d709b7c619',
-  '346b3445bdb615b01a2cb20853d140e34496e4423d042e4f91e80476d1fd7d10',
-  '0461c313fd8721a66acad3382d7b7bb473c8bc732ef2e220cf4f742dc4799e6a',
+  '550a025c051372af96a0f6192151a7c5c9f3a8f8752c201ce6110dcdbcf17496',
+  '853fe95322e9d81c69ba07161fb1de54592a364803706b42dc1c503040e44aba',
+  '77bdbc770aad5221a04f1419e76994adb0168a66ec4aa454b4bb0ad174cfdd61',
+  '91f1ebb0e6895de23e1b8661e5578f5e3bb529cb64452409f0debefd3ad61638',
+  '2bcef459980e7bd3b4530206fb7a232b2e30e010fc79acf95bba0aa8fbd6a8e7',
 ];
 for (const [i, src] of darty.images.entries()) {
   const url = new URL(`../${src}`, import.meta.url);
-  assert(url.pathname.endsWith(`/assets/projects/darty-still-0${i + 1}.webp`));
-  assert.equal(url.searchParams.get('v'), '20261029-darty-title-3', 'Replaced stills need a fresh cache token');
+  assert(url.pathname.endsWith(`/assets/projects/darty-still-${String(i + 1).padStart(2, '0')}.webp`));
+  assert.equal(url.searchParams.get('v'), '20261029-darty-title-5', 'Replaced stills need a fresh cache token');
   assert.equal(createHash('sha256').update(await readFile(url)).digest('hex'), approvedStillHashes[i], `Still ${i + 1} must match the approved day/night image byte for byte`);
 }
 await import('./drink-spin-source.mjs');

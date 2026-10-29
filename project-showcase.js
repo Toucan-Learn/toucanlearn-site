@@ -2,7 +2,7 @@ import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js
 import { initHeroSky } from './hero-sky.js?v=20261029-first-paint-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
-const dartyStills = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `assets/projects/darty-still-0${n}.webp?v=20261029-darty-title-3`);
+const dartyStills = Array.from({ length: 12 }, (_, i) => `assets/projects/darty-still-${String(i + 1).padStart(2, '0')}.webp?v=20261029-darty-title-5`);
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [

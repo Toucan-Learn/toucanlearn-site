@@ -10,7 +10,7 @@ const { dartyMatchURL } = await import(`data:text/javascript;base64,${Buffer.fro
 const matchOrigin = new URL(dartyMatchURL).origin;
 const matchRequestURL = dartyMatchURL.split('#')[0];
 const live = process.env.DARTY_LIVE === '1';
-const stillURL = n => `assets/projects/darty-still-0${n}.webp?v=20261029-darty-title-3`;
+const stillURL = n => `assets/projects/darty-still-${String(n).padStart(2, '0')}.webp?v=20261029-darty-title-5`;
 
 export async function checkDartyLive({ open, load, project, selected, views, wait, base, output, report }) {
   assert.notEqual(new URL(base).origin, matchOrigin, 'Exercise a cross-origin iframe');
@@ -308,13 +308,13 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
           await session.page.waitForSelector('[data-screenshot-next]');
           assert.equal(await session.page.$('[data-darty-play]'), null);
           assert.equal(await session.page.$('iframe'), null);
-          for (let i = 1; i <= 9; i++) {
+          for (let i = 1; i <= 12; i++) {
             assert.equal(await session.page.$eval('[data-screenshot]', img => img.getAttribute('src')), stillURL(i));
-            assert.equal(await session.page.$eval('[data-screenshot-status]', status => status.textContent), `Gameplay screenshots · ${i} of 9`);
-            assert.match(await session.page.$eval('[data-screenshot]', img => img.alt), new RegExp(`DARTY night football match.*screenshot ${i} of 9`));
+            assert.equal(await session.page.$eval('[data-screenshot-status]', status => status.textContent), `Gameplay screenshots · ${i} of 12`);
+            assert.match(await session.page.$eval('[data-screenshot]', img => img.alt), new RegExp(`DARTY night football match.*screenshot ${i} of 12`));
             await session.page.click('[data-screenshot-next]');
           }
-          assert.equal(await session.page.$eval('[data-screenshot]', img => img.getAttribute('src')), stillURL(1), 'Nine-image phone gallery wraps to the first still');
+          assert.equal(await session.page.$eval('[data-screenshot]', img => img.getAttribute('src')), stillURL(1), 'Twelve-image phone gallery wraps to the first still');
           await session.page.focus('[data-screenshot-next]');
           await session.page.keyboard.press('ArrowLeft');
           assert.equal(await selected(session.page), 'darty', 'Phone gallery retains its keyboard input');
@@ -326,5 +326,5 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     }
   }
   report.behaviour.push('DARTY title: one decorative number 2 still, shaded right-side menu, gentle zoom, static reduced motion, tab/off-screen pause, title/button/focus, playback poster reveal and accessible cross-origin mute');
-  report.behaviour.push('DARTY phones: nine-image gallery on both pages, 767/768 boundary and wide coarse-pointer coverage');
+  report.behaviour.push('DARTY phones: twelve-image gallery on both pages, 767/768 boundary and wide coarse-pointer coverage');
 }

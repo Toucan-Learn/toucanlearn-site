@@ -184,7 +184,7 @@ export function initShowcase(root) {
       const iframe = document.createElement('iframe');
       iframe.className = 'showcase-newspaper';
       iframe.title = 'Football newspaper: read the front page and articles';
-      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
       const controller = new AbortController();
       iframe.addEventListener('load', () => {
         // Events in the same-origin newspaper do not bubble to its parent.

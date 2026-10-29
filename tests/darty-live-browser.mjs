@@ -45,7 +45,7 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     assert.equal(await page.$('[data-screenshot-gallery]'), null, 'Desktop has no gallery controls');
     assert.equal(await page.$$eval('.showcase-stage img', images => images.length), 1, 'Title uses one decorative still');
     assert.deepEqual(await page.$eval('.showcase-darty-title > img', img => [img.getAttribute('src'), img.alt, img.getAttribute('aria-hidden')]), [stillURL(7), '', 'true']);
-    assert.deepEqual(await page.$$eval('.showcase-darty-heading > *', nodes => nodes.map(node => node.textContent)), ['DARTY', 'A student’s answer to FIFA', 'Press to play'], 'Title card has exactly the wordmark, subtitle and one large button');
+    assert.deepEqual(await page.$$eval('.showcase-darty-heading > *', nodes => nodes.map(node => node.textContent)), ['DARTY', 'A student’s answer to FIFA', 'CPU vs CPU · live match', 'Press to play'], 'Title card has exactly the wordmark, subtitle and one large button');
     assert.equal(await page.$$eval('[data-darty-play]', buttons => buttons.length), 1);
     assert.equal(await page.$('[data-darty-mute]'), null, 'Mute only appears during playback');
   }

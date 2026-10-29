@@ -1,4 +1,4 @@
-import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-keep-frames-1';
+import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-condensation-1';
 import { initHeroSky } from './hero-sky.js?v=20261029-match-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
@@ -9,7 +9,7 @@ const dartyStills = Array.from({ length: 12 }, (_, i) => `assets/projects/darty-
 export const projects = [
   { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-home.webp?v=20261029-match-1', sectionPoster: 'assets/projects/football-section.webp?v=20261029-match-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
   { id: 'darty', name: 'DARTY', poster: dartyStills[0], titleStill: dartyStills[6], alt: 'DARTY night football match with stylised players on a green pitch', type: 'gallery', images: dartyStills },
-  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-east-start-1', alt: 'Skids drink design', type: 'drinks', drinks: [
+  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
@@ -341,7 +341,7 @@ export function initShowcase(root) {
     } else if (project.type === 'gallery' && !stillsOnly.matches) {
       const title = document.createElement('div');
       title.className = 'showcase-darty-title';
-      title.innerHTML = '<div class="showcase-darty-heading"><strong class="showcase-darty-wordmark">DARTY</strong><p class="showcase-darty-subtitle">A student’s answer to FIFA</p><button class="showcase-match-play" type="button" data-darty-play>Press to play</button></div>';
+      title.innerHTML = '<div class="showcase-darty-heading"><strong class="showcase-darty-wordmark">DARTY</strong><p class="showcase-darty-subtitle">A student’s answer to FIFA</p><p class="showcase-darty-subtitle">CPU vs CPU · live match</p><button class="showcase-match-play" type="button" data-darty-play>Press to play</button></div>';
       const play = title.querySelector('[data-darty-play]');
       // Reuse the warmed still under the title and the loading match. There is
       // one backdrop throughout, so Play and teardown never swap photographs.

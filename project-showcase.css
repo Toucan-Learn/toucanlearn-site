@@ -94,12 +94,22 @@
   .showcase-drink-screen { top: 84px; }
   .drink-info { width: min(200px, calc(100% - 16px)); }
 }
-/* On phone, size the header to the full card text, then place the menu and drink. */
+/* Owner, 29 Oct: phones squeezed the drink into a strip under the card and menu.
+   The drink now rises to the top, the menu sits on the empty sky above it, and
+   the card takes its own row below, so neither covers a bottle. */
 @media (max-width: 760px) {
-  .showcase-stage .showcase-drinks { display: grid; grid-template-rows: auto auto minmax(0, 1fr); gap: 6px; padding-top: var(--showcase-inset); }
-  .showcase-drink-screen { position: relative; inset: auto; grid-row: 3; }
-  .showcase-drink-controls { position: relative; top: auto; left: auto; grid-row: 2; margin-inline: var(--showcase-inset); flex-direction: row; }
-  .drink-info { position: relative; top: auto; right: auto; grid-row: 1; justify-self: end; width: min(200px, calc(100% - 16px)); margin-inline: var(--showcase-inset); padding: 6px 8px; }
+  .showcase-stage .showcase-drinks { display: grid; grid-template-rows: minmax(0, 1fr) auto; }
+  .showcase-drink-screen { position: relative; inset: auto; grid-row: 1; }
+  .showcase-drink-controls { flex-direction: row; }
+  .showcase-drink-controls button { min-height: 30px; padding-block: 5px; }
+  .drink-info { position: relative; top: auto; right: auto; grid-row: 2; width: auto; margin: 0 var(--showcase-inset) var(--showcase-inset); padding: 6px 8px; }
+}
+/* The smallest phones have no sky to spare above the can: the menu keeps its own row. */
+@media (max-width: 360px) {
+  .showcase-stage .showcase-drinks { grid-template-rows: auto minmax(0, 1fr) auto; gap: 6px; padding-top: var(--showcase-inset); }
+  .showcase-drink-controls { position: relative; top: auto; left: auto; grid-row: 1; margin-inline: var(--showcase-inset); }
+  .showcase-drink-screen { grid-row: 2; }
+  .drink-info { grid-row: 3; }
 }
 .showcase-cell [hidden] { display: none !important; }
 [data-showcase][data-enhanced] .showcase-fallback { display: none !important; }

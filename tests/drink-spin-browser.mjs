@@ -77,9 +77,9 @@ export async function assertDrinkLayout(page, drink) {
     const painted = { width: image.naturalWidth * scale, height: image.naturalHeight * scale };
     painted.x = s.x + (s.width - painted.width) / 2;
     painted.y = s.y + (s.height - painted.height) / 2;
-    // A conservative central region contains the supplied bottle/can silhouettes.
-    const subject = { x: painted.x + painted.width * .32, right: painted.x + painted.width * .68,
-      y: Math.max(s.y, painted.y + painted.height * .06), bottom: Math.min(s.bottom, painted.y + painted.height * .94) };
+    // The bottle/can silhouettes, measured over the whole turn (29 Oct: x .38–.62, y .15–.84), plus a margin.
+    const subject = { x: painted.x + painted.width * .37, right: painted.x + painted.width * .63,
+      y: Math.max(s.y, painted.y + painted.height * .14), bottom: Math.min(s.bottom, painted.y + painted.height * .85) };
     const c = rect(card);
     const menu = rect(controls);
     const coversDrink = box => box.x < subject.right && box.right > subject.x && box.y < subject.bottom && box.bottom > subject.y;
@@ -89,6 +89,7 @@ export async function assertDrinkLayout(page, drink) {
       buttons: [...controls.querySelectorAll('button')].map(rect),
       menuDirection: getComputedStyle(controls).flexDirection,
       phoneMenu: matchMedia('(max-width: 760px)').matches,
+      smallPhone: matchMedia('(max-width: 360px)').matches,
       menuCoversDrink: coversDrink(menu),
       menuInDragZone: Boolean(controls.closest('.drink-spin')),
       menuButtons: [...controls.querySelectorAll('button')].map(button => {
@@ -104,7 +105,7 @@ export async function assertDrinkLayout(page, drink) {
       cardName: card.querySelector('strong').textContent, cardLine: card.querySelector('p').textContent,
       cardBackground: getComputedStyle(card).backgroundColor, cardInk: getComputedStyle(card).color,
       cardPointerEvents: getComputedStyle(card).pointerEvents,
-      cardPassesDrag: c.y + c.height / 2 < s.y || document.elementFromPoint(c.x + c.width / 2, c.y + c.height / 2)?.closest('.drink-spin') === document.querySelector('.drink-spin'),
+      cardPassesDrag: c.y + c.height / 2 < s.y || c.y >= s.bottom - 1 || document.elementFromPoint(c.x + c.width / 2, c.y + c.height / 2)?.closest('.drink-spin') === document.querySelector('.drink-spin'),
       cardFits: card.scrollWidth <= card.clientWidth + 1 && card.scrollHeight <= card.clientHeight + 1,
       cardCoversDrink: coversDrink(c),
     };
@@ -117,14 +118,19 @@ export async function assertDrinkLayout(page, drink) {
   assert.deepEqual(layout.backgrounds, Array(3).fill('rgb(31, 122, 117)'), 'Teal stays behind the poster and loading frames');
   assert.equal(layout.hintCount, 0, 'No drag hint is mounted');
   assert.equal(layout.hintText, false, 'No drag hint copy is shown');
-  assert(Math.abs(layout.screen.bottom - layout.stage.bottom) <= 1 && Math.abs(layout.screen.bottom - (layout.caption?.y ?? layout.slot.bottom)) <= 1, 'The image fills the media area up to the homepage caption or the section cell edge');
+  const mediaBottom = layout.caption?.y ?? layout.slot.bottom;
+  if (layout.phoneMenu) {
+    // 29 Oct: phones give the card its own row under the drink.
+    assert(layout.card.y >= layout.screen.bottom - 1 && layout.card.y - layout.screen.bottom <= 7 && Math.abs(layout.card.bottom + layout.inset - mediaBottom) <= 1, `The phone image runs down to the card, which closes the media area: ${JSON.stringify({ screen: layout.screen, card: layout.card, mediaBottom })}`);
+  } else assert(Math.abs(layout.screen.bottom - layout.stage.bottom) <= 1 && Math.abs(layout.screen.bottom - mediaBottom) <= 1, 'The image fills the media area up to the homepage caption or the section cell edge');
   assert(Math.abs(layout.controls.x - layout.stage.x - layout.inset) <= 1, 'The menu uses the left inset');
   assert(!layout.menuInDragZone && !layout.menuCoversDrink, `The menu stays outside the central drink region: ${JSON.stringify(layout)}`);
   assert(layout.controls.width < layout.stage.width - 2 * layout.inset - 1, 'The menu stays compact');
   if (layout.phoneMenu) {
     assert.equal(layout.menuDirection, 'row', 'Phone uses a compact horizontal menu');
     assert(layout.buttons.every(button => Math.abs(button.y - layout.buttons[0].y) <= 1), 'Phone pills share one row');
-    assert(layout.controls.y >= layout.card.bottom + 4 && layout.controls.bottom <= layout.screen.y - 4, 'The phone menu sits between the card and drink');
+    if (!layout.smallPhone) assert(Math.abs(layout.controls.y - layout.screen.y - layout.inset) <= 1, 'The phone menu sits on the sky above the drink');
+    else assert(layout.controls.bottom <= layout.screen.y - 4, 'The smallest phones keep the menu in its own row above the drink');
   } else {
     assert.equal(layout.menuDirection, 'column', 'Desktop uses a vertical menu');
     assert(Math.abs(layout.controls.y - layout.card.y) <= 1 && Math.abs(layout.controls.y - layout.stage.y - layout.inset) <= 1, 'Menu and card share the top inset');
@@ -148,7 +154,8 @@ export async function assertDrinkLayout(page, drink) {
   assert.equal(layout.cardBackground, 'rgb(240, 235, 224)', 'The card stays cream in light and dark');
   assert.equal(layout.cardInk, 'rgb(10, 39, 44)', 'Cream card text stays readable');
   assert(layout.cardFits && !layout.cardCoversDrink, `The card stays clear of the drink: ${JSON.stringify(layout)}`);
-  assert(Math.abs(layout.stage.right - layout.card.right - layout.inset) <= 1 && Math.abs(layout.card.y - layout.stage.y - layout.inset) <= 1, 'The card stays in the top-right corner');
+  if (layout.phoneMenu) assert(Math.abs(layout.stage.right - layout.card.right - layout.inset) <= 1 && Math.abs(layout.card.x - layout.stage.x - layout.inset) <= 1, 'The phone card spans the cell below the drink');
+  else assert(Math.abs(layout.stage.right - layout.card.right - layout.inset) <= 1 && Math.abs(layout.card.y - layout.stage.y - layout.inset) <= 1, 'The card stays in the top-right corner');
   assert(layout.card.bottom <= layout.stage.bottom, 'The card stays inside the image/header area');
   return layout;
 }

@@ -34,9 +34,9 @@
       status.textContent = `${index + 1} of ${slides.length}`;
       previous.disabled = next.disabled = slides.length < 2;
     };
-    const revealHash = () => {
+    const revealHash = event => {
       let target;
-      try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
+      try { target = event?.detail?.target || document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
       const selected = slides.findIndex(slide => slide === target || (target && slide.contains(target)));
       if (selected >= 0) show(selected);
     };
@@ -70,8 +70,9 @@
     viewer.addEventListener('touchcancel', () => { gesture = null; }, { passive: true });
     window.addEventListener('hashchange', revealHash);
     window.addEventListener('popstate', revealHash);
+    document.addEventListener('site:fragment', revealHash);
     document.addEventListener('framework:panelchange', event => {
-      revealHash();
+      revealHash(event);
       if (!event.detail.panel.contains(viewer)) pause(viewer);
     });
     // Also covers an owner hiding this viewer independently of the section controller.

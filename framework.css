@@ -291,7 +291,7 @@
 bdi[lang="ar"] { white-space: nowrap; }
 
 /* Arabic closing line in a tutor quote: its own line, right-aligned under the photo. */
-.quote-arabic { display: block; clear: right; margin-top: 14px; text-align: right; }
+.quote-arabic { display: block; clear: right; margin-top: .25em; text-align: right; }
 /* Our team landing, refit after the seventh profile (Amin's longer quote) made the card taller. */
 @media (min-width: 1000px) and (max-height: 820px) {
   .homepage .homepage-section.team-section { padding-top: 6px; }

@@ -80,11 +80,11 @@ async function checkGettingStarted(page, label) {
     assert(Math.abs(cell.height - reference.cell.height) <= 1 && Math.abs(cell.width - reference.cell.width) <= 1 && padding === reference.padding, `${label}: all four cells have consistent framing`);
   }
   const enquiry = await page.$eval('#getting-started > p:last-child > a', link => ({
-    label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), button: link.classList.contains('button'),
+    label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), service: link.dataset.service, button: link.classList.contains('button'),
     afterSteps: link.parentElement.previousElementSibling.classList.contains('learning-steps'),
     fits: link.scrollWidth <= link.clientWidth + 1 && link.scrollHeight <= link.clientHeight + 1,
   }));
-  assert.deepEqual(enquiry, { label: 'Tell us your child’s goal', href: 'contact.html?service=children', button: true, afterSteps: true, fits: true }, `${label}: Getting started enquiry replaces the old link with a fitting button`);
+  assert.deepEqual(enquiry, { label: 'Tell us your child’s goal', href: 'contact.html', service: 'children', button: true, afterSteps: true, fits: true }, `${label}: Getting started enquiry replaces the old link with a fitting button`);
   await page.screenshot({ path: path.join(output, `${label}-getting-started.png`) });
   report.layouts.push({ label, section: 'getting-started', cells });
   await page.click('[data-panel-link][href="#learner-projects"]');
@@ -226,7 +226,7 @@ try {
           const enquiry = m.enquiry;
           assert(enquiry?.inHeader && enquiry.button && enquiry.fits, `${label}/${id}: the shared enquiry is a fitting header button`);
           assert.equal(enquiry.label, 'Tell us what they love');
-          assert.equal(enquiry.href, 'contact.html?service=children');
+          assert.equal(enquiry.href, 'contact.html');
           assert.equal(enquiry.count, 1, 'Exactly one Projects enquiry CTA, including Intro');
           assert.equal(enquiry.cardLinks, 0, 'No per-card lesson links remain');
           const ctaBox = [enquiry.x, enquiry.documentY, enquiry.width, enquiry.height];
@@ -437,20 +437,21 @@ try {
   assert.equal(await selected(page), 'darty', 'Gallery keyboard input does not change projects');
   await project(page, 'drinks');
   await page.focus('[data-project-enquiry]');
-  assert.deepEqual(await page.$eval('[data-project-enquiry]', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href') })),
-    { label: 'Tell us what they love', href: 'contact.html?service=children' });
+  assert.deepEqual(await page.$eval('[data-project-enquiry]', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), service: link.dataset.service })),
+    { label: 'Tell us what they love', href: 'contact.html', service: 'children' });
   await page.keyboard.press('ArrowRight');
   assert.equal(await selected(page), 'drinks', 'The Projects enquiry button retains keyboard input');
   await assertImmediateProjectSwitch(page, 'next');
   assert(await page.$eval('[data-project-enquiry]', link => document.activeElement === link), 'The shared Projects enquiry keeps focus when the slide changes');
   await project(page, 'drinks');
   await page.evaluate(() => { window.sectionSpin = document.querySelector('.drink-spin'); });
-  await page.evaluate(() => { location.hash = 'getting-started'; });
+  await page.$eval('[data-panel-link][href="#getting-started"]', link => link.click());
   await page.waitForFunction(() => document.querySelector('#learner-projects').hidden);
+  assert.equal(new URL(page.url()).hash, '', 'Panel switches leave the address clean');
   assert(await page.evaluate(() => window.sectionSpin.dataset.active === 'false'), 'Hidden Projects section pauses its frame viewer');
   await page.focus('#getting-started a.button');
-  assert.deepEqual(await page.$eval('#getting-started a.button', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href') })),
-    { label: 'Tell us your child’s goal', href: 'contact.html?service=children' });
+  assert.deepEqual(await page.$eval('#getting-started a.button', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), service: link.dataset.service })),
+    { label: 'Tell us your child’s goal', href: 'contact.html', service: 'children' });
   report.behaviour.push('homepage unchanged, five-slide section, intro, separate result cells, review overrides, wrap, interaction reset, idle advance, focus, held playing key, all drink sequences, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
   await context.close();
   // Keep the intro, all four projects and separate result cells for no-JS and print.

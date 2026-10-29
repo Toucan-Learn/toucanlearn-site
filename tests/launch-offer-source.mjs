@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import vm from 'node:vm';
+import { contactMarkup, contactScript } from './helpers/contact-markup.mjs';
+import { navigationMarkup } from './helpers/navigation-markup.mjs';
 const root = new URL('../', import.meta.url);
 const source = await readFile(new URL('launch-offer.js', root), 'utf8');
 const contact = await readFile(new URL('contact.js', root), 'utf8');
@@ -90,13 +92,18 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   const text = await readFile(new URL(file, root), 'utf8');
   if (!text.includes('<header')) continue;
   pages.push(file);
-  check(`${file}: original HTML copy and layout preserved byte for byte`, () => {
+  check(`${file}: original HTML preserved except approved contact changes`, () => {
     assert.equal((text.match(/src="launch-offer\.js\?/g) || []).length, 1);
     assert.match(text, /script-src 'self'; style-src 'self'/);
     const original = execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' });
-    assert.equal(text.replace(/^  <script src="launch-offer\.js[^\n]+\n/gm, '')
-      .replace('campaigns.css?v=20261028-launch-offer-3', 'campaigns.css?v=20261028-review-teal-2')
-      .replace('contact.js?v=20261028-launch-offer-3', 'contact.js?v=20261028-quals-1'), original);
+    if (file === 'contact.html') {
+      assert.equal(contactMarkup(text), contactMarkup(original));
+      assert.doesNotMatch(text, /support-needed-hint/);
+    } else {
+      assert.equal(navigationMarkup(text.replace(/^  <script src="launch-offer\.js[^\n]+\n/gm, '')
+        .replace('campaigns.css?v=20261028-launch-offer-3', 'campaigns.css?v=20261028-review-teal-2')
+        .replace('contact.js?v=20261028-launch-offer-3', 'contact.js?v=20261028-quals-1')), navigationMarkup(original));
+    }
     if (file !== 'contact.html') assert.doesNotMatch(text, /£\s*\d/);
   });
 }
@@ -105,7 +112,7 @@ check('CSS scoped to dialog; no inline code, external hosts or page mutations', 
   assert.ok(css.startsWith(original));
   assert.doesNotMatch(css.slice(original.length), /(?:^|[\s,])(?:body|html|header|#main|\.cta|\.hero)\b|@import|url\(/m);
   assert.doesNotMatch(source, /innerHTML|\.style\b|setAttribute\(['"](?:style|on\w+)|https?:\/\/|launch-offer-slot|claim-launch-offer|launch-offer-pricing/);
-  assert.equal(contact.split('// END ENQUIRY RULES')[0], execFileSync('git', ['show', 'HEAD:contact.js'], { cwd: root, encoding: 'utf8' }).split('// END ENQUIRY RULES')[0]);
+  assert.equal(contactScript(contact), contactScript(execFileSync('git', ['show', 'HEAD:contact.js'], { cwd: root, encoding: 'utf8' })));
 });
 check('Six seconds starts after load; page copy remains untouched before and during display', () => {
   const state = load({ loaded: false }); state.tick(9000); assert.equal(state.dialog, null);
@@ -144,7 +151,8 @@ check('Exact pop-up content, accessible name/description and claim link', () => 
   assert.equal(dialog.querySelector('.launch-offer-dialog__heading').textContent, 'The next 5 new learners get their first 3 sessions free');
   assert.equal(dialog.querySelector('.launch-offer-dialog__summary').textContent, 'Book by 30 November.');
   assert.equal(dialog.querySelector('.launch-offer-dialog__terms').textContent, 'New learners only, one per family. Sessions used within 6 weeks; after that, the agreed band applies.');
-  assert.equal(dialog.querySelector('a').getAttribute('href'), 'contact.html?offer=launch');
+  assert.equal(dialog.querySelector('a').getAttribute('href'), 'contact.html');
+  assert.equal(dialog.querySelector('a').getAttribute('data-offer'), 'launch');
 });
 check('Esc, backdrop, close button and Maybe later remove the dialog and return focus', () => {
   for (const method of ['cancel', 'backdrop', 'close', 'later']) {
@@ -186,7 +194,8 @@ check('Only hidden offer attribution changes; existing service and UTM patterns 
     assert.equal(ordinary.document.getElementById('campaign-source').value, ['unknown', ''].includes(service) ? 'Direct or unknown' : service);
   }
   const state = load({ query: '?utm_source=test&utm_medium=site&utm_campaign=launch' }); state.tick(6000);
-  assert.equal(state.dialog.querySelector('a').getAttribute('href'), 'contact.html?offer=launch&utm_source=test&utm_medium=site&utm_campaign=launch');
+  assert.equal(state.dialog.querySelector('a').getAttribute('href'), 'contact.html');
+  assert.equal(state.dialog.querySelector('a').getAttribute('data-offer'), 'launch');
 });
 await mkdir(output, { recursive: true });
 await writeFile(new URL('source-report.json', output), JSON.stringify({ status: 'PASS', revision: 'popup-only', pages, checks, browser: 'Not run; Claude must rerun tests/launch-offer.mjs with BASE_URL.' }, null, 2) + '\n');

@@ -1,11 +1,17 @@
-/* Round 49: contact-only additions use the existing form tokens and controls. */
-.enquiry-form { gap: 18px; }
-.enquiry-fields { gap: 16px; }
+/* Compact enquiry controls retain the existing labels, focus and error states. */
+.enquiry-form { gap: 12px; padding: 18px 20px; border-color: var(--enquiry-line); border-radius: var(--radius-lg, 22px); background: var(--enquiry-surface); box-shadow: var(--enquiry-shadow); }
+.enquiry-fields { gap: 12px; }
+.enquiry-form .fields-two { gap: 12px 18px; align-items: start; }
+.enquiry-form .field-stack { display: grid; gap: 12px; min-width: 0; }
+.enquiry-form .field { gap: 4px; align-content: start; }
+.enquiry-form .field label, .form-choice legend { line-height: 1.4; }
+.enquiry-form .field :is(input, select) { min-height: 40px; padding: 6px 10px; line-height: 1.4; }
+.enquiry-form .field :is(input, textarea, select) { border-color: var(--field-border); background: var(--field-surface); }
 .enquiry-form .form-choice { min-inline-size: 0; padding: 0; margin: 0; border: 0; }
-.form-choice legend { margin-bottom: 8px; color: var(--heading); font-size: .92rem; font-weight: 800; }
-.radio-options { display: flex; flex-wrap: wrap; gap: 8px 16px; }
-.radio-options label { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
-.radio-options input { width: 20px; height: 20px; margin: 0; accent-color: var(--heading); }
+.form-choice legend { margin-bottom: 4px; color: var(--heading); font-size: .92rem; font-weight: 800; }
+.radio-options { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.radio-options label { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: .9rem; line-height: 1.35; cursor: pointer; }
+.radio-options input { width: 20px; height: 20px; margin: 0; accent-color: var(--field-focus); }
 .radio-options input:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
 /* Round 66 (Joshua, 18 Oct 2026: "the enquiries form is spaced out strangely"):
    hidden follow-up questions take no space until a choice reveals them. They
@@ -13,86 +19,106 @@
 .enquiry-form .conditional-field[hidden] { display: none; }
 .reply-contact-slot { display: grid; min-width: 0; }
 .reply-contact-slot > .field { grid-area: 1 / 1; align-content: start; }
-.enquiry-form .field textarea { min-height: 120px; }
+.enquiry-form .field textarea { min-height: 88px; padding: 7px 10px; line-height: 1.4; }
 .enquiry-form .field small { color: var(--ink); line-height: 1.45; }
 .field-error { display: block; min-height: 1.4em; color: var(--error-ink); font-size: .875rem; line-height: 1.4; }
+.field-error:empty { display: none; }
 .enquiry-form [aria-invalid="true"] { border-color: var(--error-ink); }
 .form-use-note { margin: 0; font-size: .875rem; }
 .enquiry-form .form-message a { color: inherit; text-decoration: underline; }
-.enquiry-form .form-message:focus { outline: 3px solid var(--orange-text); outline-offset: 3px; }
-/* Round 82 (Joshua, 18 Oct 2026: "the enquiries form is spaced out strangely. that whole webpage
-   could have a bit of a second look, a revamp" / "yes to all"): a wider page with the form on the
-   left and a "What happens next" card on the right; on phones the card follows the form. */
-.contact-main { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); column-gap: 36px; align-items: start; width: min(calc(100% - 32px), 1120px); margin-inline: auto; }
-.contact-main > .contact-hero { grid-column: 1; grid-row: 1; }
-.contact-main > .contact-form-section { grid-column: 1; grid-row: 2; }
+.enquiry-form .form-message:focus { outline: 3px solid var(--field-focus); outline-offset: 3px; }
+/* Use the back pages' outer frame and intro rhythm. Independent columns keep
+   the pricing card's height from pushing the first form fields down. */
+.contact-main {
+  --enquiry-surface: #fffaf2;
+  --enquiry-line: #d8d2c6;
+  --enquiry-shadow: 0 12px 30px rgba(11, 63, 81, .12);
+  --field-surface: #fffdf8;
+  --field-border: #82918a;
+  --field-focus: #1f7a75;
+  --field-focus-rgb: 31, 122, 117;
+  --sidebar-surface: #eee6da;
+  --submit-fill: var(--orange, #e47a2e);
+  --submit-hover: #ed8b44;
+  --submit-ink: #10242d;
+  display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr); gap: 32px; align-items: start; width: min(calc(100% - 80px), 1280px); margin-inline: auto; padding-block: clamp(24px, 4vh, 36px) clamp(20px, 3.6vh, 32px);
+}
+.contact-primary { display: grid; gap: 24px; min-width: 0; }
+.contact-hero, .contact-form-section { min-width: 0; padding: 0; }
 .contact-main .contact-width { width: 100%; }
-.contact-sidebar { grid-column: 2; grid-row: 1 / span 2; align-self: stretch; display: flex; flex-direction: column; gap: 24px; min-width: 0; padding-block: 58px 100px; }
-.contact-hero .lead { max-width: 640px; }
-.contact-offer { margin: 14px 0 0; }
-.contact-layout { margin-top: 8px; }
-.contact-next { position: sticky; top: calc(var(--sticky-header-height, 95px) + 24px); display: grid; gap: 14px; padding: 26px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); }
+.contact-hero .eyebrow { margin: 0 0 10px; }
+/* The shared framework-intro h1 scale used by children.html. */
+.contact-hero h1 { max-width: none; margin: 0 0 12px; font-size: clamp(2.35rem, 4.3vw, 3.7rem); line-height: 1.07; text-wrap: balance; }
+.contact-hero .lead { max-width: none; margin: 0; font-size: 1rem; line-height: 1.5; }
+.contact-offer { margin: 8px 0 0; line-height: 1.5; }
+.contact-form-section h2 { margin: 0; font-size: 1.25rem; line-height: 1.25; }
+.contact-sidebar { display: grid; gap: 16px; min-width: 0; }
+.contact-layout { margin-top: 12px; }
+.contact-next { display: grid; gap: 10px; padding: 18px 22px; border: 1px solid var(--line); border-radius: var(--radius-lg, 22px); background: var(--sidebar-surface); }
 .contact-next h3 { margin: 0; color: var(--heading); font-size: 1.25rem; }
-.contact-steps { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; counter-reset: contact-step; }
-.contact-steps li { position: relative; padding-left: 42px; color: var(--ink); line-height: 1.45; counter-increment: contact-step; }
-.contact-steps li::before { content: counter(contact-step); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; color: #fff; font-weight: 800; background: #1f7a75; }
+.contact-steps { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: contact-step; }
+.contact-steps li { position: relative; padding-left: 36px; color: var(--ink); line-height: 1.4; counter-increment: contact-step; }
+.contact-steps li::before { content: counter(contact-step); position: absolute; left: 0; top: 0; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; color: var(--heading); font-weight: 800; background: rgba(var(--field-focus-rgb), .12); }
 .contact-steps strong { display: block; color: var(--heading); }
 .contact-next-talk { margin: 4px 0 0; color: var(--heading); font-weight: 800; }
-.contact-next-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-.contact-email { margin: 22px 0 0; }
-/* The send button uses the homepage trial-button colours: dark teal in light mode, cream in dark. */
-.enquiry-form .button.form-submit.form-submit--trial { --trial-fill: var(--trial-light-fill); --trial-ink: var(--trial-light-ink); --trial-hover: var(--trial-light-hover); --trial-glow: var(--trial-light-glow); border-color: transparent; background: var(--trial-fill); color: var(--trial-ink); box-shadow: 0 0 0 1px var(--trial-ink), 0 10px 28px rgba(var(--trial-glow), .28); transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease; }
-.enquiry-form .button.form-submit.form-submit--trial:is(:hover, :focus-visible) { background: var(--trial-hover); box-shadow: 0 0 0 1px var(--trial-ink), 0 14px 34px rgba(var(--trial-glow), .35); transform: translateY(-2px); }
-.enquiry-form .button.form-submit.form-submit--trial:focus-visible { outline: 3px solid var(--trial-fill); outline-offset: 4px; }
+.contact-next-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.contact-next-actions .button { min-height: 40px; padding: 10px 14px; border: 1px solid var(--line); color: var(--heading); background: transparent; box-shadow: none; font-size: .9rem; }
+.contact-next-actions .button:is(:hover, :focus-visible) { background: rgba(var(--field-focus-rgb), .08); box-shadow: none; }
+.contact-email { margin: 12px 0 0; }
+.enquiry-form .form-submit { min-height: 44px; padding: 10px 18px; }
+/* Brand orange is the warm action; navy text keeps its contrast in both themes. */
+.enquiry-form .button.form-submit.form-submit--trial { border: 1px solid transparent; background: var(--submit-fill); color: var(--submit-ink); box-shadow: 0 4px 12px rgba(196, 95, 33, .16); transform: none; transition: background 180ms ease, box-shadow 180ms ease; }
+.enquiry-form .button.form-submit.form-submit--trial:is(:hover, :focus-visible) { background: var(--submit-hover); box-shadow: 0 6px 16px rgba(196, 95, 33, .2); transform: none; }
+.enquiry-form .button.form-submit.form-submit--trial:focus-visible { outline: 3px solid var(--field-focus); outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) { .enquiry-form .button.form-submit.form-submit--trial { transition: none; } .enquiry-form .button.form-submit.form-submit--trial:is(:hover, :focus-visible) { transform: none; } }
 @media (max-width: 900px) {
-  .contact-main { grid-template-columns: minmax(0, 1fr); }
-  .contact-sidebar { display: contents; }
-  .contact-main > .contact-form-section { grid-column: 1; grid-row: 3; padding-bottom: 24px; }
-  .contact-pricing { grid-column: 1; grid-row: 2; margin-block: 8px 16px; }
-  .contact-next { position: static; grid-column: 1; grid-row: 4; margin-bottom: 48px; padding: 20px; }
+  .contact-main { grid-template-columns: minmax(0, 1fr); gap: 20px; width: calc(100% - 40px); }
+}
+@media (max-width: 680px) {
+  .enquiry-form { padding: 16px; }
+  .enquiry-form .fields-two { grid-template-columns: minmax(0, 1fr); }
+  .enquiry-form .field :is(input, select) { min-height: 44px; }
+  .radio-options label { min-height: 40px; }
 }
 
 /* Pricing shares the existing cell tokens and occupies the spare right column,
    spanning the intro and form so it adds no desktop row or fixed-height scroll area. */
-.contact-pricing { flex: 0 0 auto; padding: 22px; border: 1px solid var(--line); border-radius: var(--radius-xl); color: var(--ink); background: var(--paper); }
-.contact-pricing h2 { margin: 0; color: var(--heading); font-size: 1.5rem; line-height: 1.2; }
+.contact-pricing { padding: 16px 22px; border: 1px solid var(--line); border-radius: var(--radius-lg, 22px); color: var(--ink); background: var(--sidebar-surface); }
+.contact-pricing h2 { margin: 0; color: var(--heading); font-size: 1.25rem; line-height: 1.2; }
 .pricing-intro { margin: 8px 0 0; font-size: .88rem; line-height: 1.4; }
-.pricing-bands { margin: 16px 0; }
-.pricing-bands > div { padding-block: 12px; border-top: 1px solid var(--line); }
+.pricing-bands { margin: 8px 0 10px; }
+.pricing-bands > div { padding-block: 7px; border-top: 1px solid var(--line); }
 .pricing-bands > div:last-child { padding-bottom: 0; }
-.pricing-bands dt { color: var(--heading); font-size: 1rem; font-weight: 800; line-height: 1.4; }
+.pricing-bands dt { color: var(--heading); font-size: .95rem; font-weight: 800; line-height: 1.4; }
 .pricing-bands dt span { white-space: nowrap; }
-.pricing-bands dd { margin: 5px 0 0; font-size: .92rem; line-height: 1.45; }
-.pricing-footer { margin: 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: .85rem; line-height: 1.45; }
+.pricing-bands dd { margin: 2px 0 0; font-size: .85rem; line-height: 1.32; }
+.pricing-footer { margin: 0; padding-top: 8px; border-top: 1px solid var(--line); font-size: .82rem; line-height: 1.45; }
 
 /* Owner, 28 Oct 2026: "When you click on cells in the enquiry page the cells outline red. That is
    very bad. We need a neutral or green." Focus rings use the logo teal; red stays for real errors. */
-.enquiry-form { --field-focus: #1f7a75; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .enquiry-form { --field-focus: #7fcfc3; } }
-:root[data-theme="dark"] .enquiry-form { --field-focus: #7fcfc3; }
-.enquiry-form .field :is(input, textarea, select):focus { border-color: var(--field-focus); outline-color: var(--field-focus); }
+.enquiry-form .field :is(input, textarea, select):focus { border-color: var(--field-focus); outline: 2px solid var(--field-focus); outline-offset: 2px; box-shadow: 0 0 0 5px rgba(var(--field-focus-rgb), .12); }
 .enquiry-form :is(.radio-options input, .consent input):focus-visible { outline-color: var(--field-focus); }
-.enquiry-form .field :is(input, textarea, select)[aria-invalid="true"]:focus { border-color: var(--error-ink); }
+.enquiry-form .field :is(input, textarea, select)[aria-invalid="true"] { border-color: var(--error-ink); }
 
-/* Owner, 28 Oct 2026: "there was a slot perfect for the cell there before". Pricing sits in the empty
-   space beside the intro; What happens next stays level with the form, as before. */
-@media (min-width: 901px) {
-  .contact-sidebar { display: contents; }
-  .contact-pricing { grid-column: 2; grid-row: 1; align-self: end; margin-bottom: -44px; padding: 18px 22px; }
-  .contact-next { grid-column: 2; grid-row: 2; align-self: start; margin-top: 60px; }
-  .contact-pricing h2 { font-size: 1.25rem; }
-  .pricing-bands { margin: 10px 0 12px; }
-  .pricing-bands > div { padding-block: 8px; }
-  .pricing-bands dt { font-size: .95rem; }
-  .pricing-bands dd { margin-top: 2px; font-size: .88rem; line-height: 1.35; }
-  .pricing-footer { padding-top: 10px; font-size: .82rem; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .contact-main {
+    --enquiry-surface: #26383a;
+    --enquiry-line: #4e6867;
+    --enquiry-shadow: 0 12px 30px rgba(0, 0, 0, .22);
+    --field-surface: #172a2d;
+    --field-border: #658982;
+    --field-focus: #7fcfc3;
+    --field-focus-rgb: 127, 207, 195;
+    --sidebar-surface: #17272b;
+  }
 }
-/* Two-line band descriptions (owner's copy, 28 Oct): a touch tighter, and clear of the menu bar. */
-@media (min-width: 901px) {
-  .contact-pricing { margin: 22px 0 -20px; padding: 16px 22px; }
-  .pricing-bands { margin: 8px 0 10px; }
-  .pricing-bands > div { padding-block: 7px; }
-  .pricing-bands dd { font-size: .85rem; line-height: 1.32; }
-  .pricing-footer { padding-top: 8px; }
+:root[data-theme="dark"] .contact-main {
+  --enquiry-surface: #26383a;
+  --enquiry-line: #4e6867;
+  --enquiry-shadow: 0 12px 30px rgba(0, 0, 0, .22);
+  --field-surface: #172a2d;
+  --field-border: #658982;
+  --field-focus: #7fcfc3;
+  --field-focus-rgb: 127, 207, 195;
+  --sidebar-surface: #17272b;
 }

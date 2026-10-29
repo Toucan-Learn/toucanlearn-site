@@ -2,7 +2,7 @@
 var EnquiryRules = (function () {
   var limits = {
     "Contact name": 120, "Learner": 5, "Age or school year": 40,
-    "Support requested": 1000, "Desired lesson rate": 60, "Preferred format": 9, "Town or postcode area": 80,
+    "Subject": 40, "Support requested": 1000, "Desired lesson rate": 60, "Preferred format": 9, "Town or postcode area": 80,
     "Reply method": 8, "email": 254, "phone": 40, "website": 200,
     "loaded_at": 13, "Campaign source": 120, "Traffic source": 120,
     "Traffic medium": 120, "Campaign name": 120
@@ -28,6 +28,7 @@ var EnquiryRules = (function () {
     required("Contact name", "Enter your name.");
     choice("Learner", ["child", "adult"], "Choose who the tutoring is for.");
     if (data.Learner === "child") required("Age or school year", "Enter an age or school year.");
+    choice("Subject", ["English", "Maths", "Science", "Languages", "Psychology", "Art & design", "Exam preparation", "SEN support", "Other"], "Choose a subject from the list, or leave it blank.", true);
     required("Support requested", "Briefly tell us what you would like help with.");
     choice("Preferred format", ["online", "in-person", "not-sure"], "Choose online, in person or not sure.", true);
     if (data["Preferred format"] === "in-person") required("Town or postcode area", "Enter a town or postcode area.");
@@ -74,7 +75,7 @@ var EnquiryRules = (function () {
 
   const controls = {
     "Contact name": "contact-name", "Learner": "learner-child", "Age or school year": "age-year",
-    "Support requested": "support-needed", "Desired lesson rate": "desired-lesson-rate", "Preferred format": "format-online",
+    "Subject": "subject", "Support requested": "support-needed", "Desired lesson rate": "desired-lesson-rate", "Preferred format": "format-online",
     "Town or postcode area": "location", "Reply method": "reply-email", "email": "email", "phone": "phone"
   };
   function selected(name) {
@@ -120,6 +121,14 @@ var EnquiryRules = (function () {
     formMessage.replaceChildren(message + " You can email ", email, " or call ", phone, ".");
     formMessage.classList.add("is-visible");
   }
+  // The optional subject travels inside "Support requested", so the existing form backend needs no change.
+  function withSubjectInMessage(body) {
+    const sent = new URLSearchParams(body);
+    const subject = sent.get("Subject");
+    sent.delete("Subject");
+    if (subject) sent.set("Support requested", "Subject: " + subject + "\n" + (sent.get("Support requested") || ""));
+    return sent;
+  }
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (form.getAttribute("aria-busy") === "true") return;
@@ -153,7 +162,7 @@ var EnquiryRules = (function () {
       const response = await fetch(formEndpoint, {
         method: "POST", credentials: "omit", redirect: "follow", cache: "no-store",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body, signal: requestController.signal
+        body: withSubjectInMessage(body), signal: requestController.signal
       });
       if (!response.ok || (await response.json()).ok !== true) throw new Error("Enquiry failed");
       window.location.assign("thank-you.html");

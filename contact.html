@@ -19,13 +19,14 @@
   <meta property="og:locale" content="en_GB" />
   <meta property="og:url" content="https://toucanlearn.co.uk/contact.html" />
 
-  <link rel="icon" href="assets/toucan-favicon.png" type="image/png" />
+  <link rel="icon" href="assets/toucan-favicon.png?v=20261029-round-1" type="image/png" />
   <script src="theme.js?v=20261018-dark-1"></script>
+  <script src="campaigns.js?v=20261029-attribution-2"></script>
   <link rel="stylesheet" href="style.css?v=20261028-toggle-4" />
   <link rel="stylesheet" href="campaigns.css?v=20261029-safari-wrap-1" />
-  <link rel="stylesheet" href="contact.css?v=20261028-pricing-slot-3" />
-  <script src="menu.js?v=20261028-nohash-2" defer></script>
-  <link rel="stylesheet" href="framework.css?v=20261028-land-1" />
+  <link rel="stylesheet" href="contact.css?v=20261029-inviting-2" />
+  <script src="menu.js?v=20261029-clean-url-1" defer></script>
+  <link rel="stylesheet" href="framework.css?v=20261029-arabic-gap-1" />
 </head>
 
 <body>
@@ -33,7 +34,7 @@
 
   <header>
     <div class="container nav">
-      <a class="logo logo--wordmark" href="index.html" aria-label="Toucan Learn home">
+      <a class="logo logo--wordmark" href="./" aria-label="Toucan Learn home">
         <img class="brand-toucan" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
         <span class="brand-lockup">
           <strong>Tou<span class="brand-can">can</span></strong>
@@ -43,9 +44,9 @@
       </a>
 
       <nav class="nav-links" aria-label="Primary">
-        <a href="index.html#team">Our team</a>
+        <a href="./#team">Our team</a>
         <div class="nav-item">
-          <a href="index.html#support-routes">Who we help <span class="nav-chevron" aria-hidden="true">▾</span></a>
+          <a href="./#support-routes">Who we help <span class="nav-chevron" aria-hidden="true">▾</span></a>
           <ul class="nav-dropdown">
             <li class="nav-group-label">Ages</li>
             <li><a href="children.html">Children and young people</a></li>
@@ -61,7 +62,7 @@
           </ul>
         </div>
         <div class="nav-item">
-          <a href="index.html#how-it-works">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
+          <a href="./#how-it-works">Our approach <span class="nav-chevron" aria-hidden="true">▾</span></a>
           <ul class="nav-dropdown">
             <li class="nav-group-label">How we teach</li>
             <li><a href="approach.html#steps-to-success">Getting started</a></li>
@@ -72,7 +73,7 @@
             <li><a href="approach.html#in-person-sessions">In-person sessions</a></li>
           </ul>
         </div>
-        <a href="index.html#reviews">Reviews</a>
+        <a href="./#reviews">Reviews</a>
         <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
             <path class="theme-moon" d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z" />
@@ -85,9 +86,9 @@
       <details class="mobile-menu">
         <summary><span class="menu-icon" aria-hidden="true">☰</span> Menu</summary>
         <nav aria-label="Menu">
-          <a href="index.html#team">Our team</a>
+          <a href="./#team">Our team</a>
           <div class="mobile-nav-item">
-            <a href="index.html#support-routes">Who we help</a>
+            <a href="./#support-routes">Who we help</a>
             <ul class="mobile-sub-links">
               <li class="nav-group-label">Ages</li>
               <li><a href="children.html">Children and young people</a></li>
@@ -103,7 +104,7 @@
             </ul>
           </div>
           <div class="mobile-nav-item">
-            <a href="index.html#how-it-works">Our approach</a>
+            <a href="./#how-it-works">Our approach</a>
             <ul class="mobile-sub-links">
               <li class="nav-group-label">How we teach</li>
               <li><a href="approach.html#steps-to-success">Getting started</a></li>
@@ -114,7 +115,7 @@
               <li><a href="approach.html#in-person-sessions">In-person sessions</a></li>
             </ul>
           </div>
-          <a href="index.html#reviews">Reviews</a>
+          <a href="./#reviews">Reviews</a>
           <a class="button trial-button trial-button--light-surface" href="#email-enquiry">Book a free trial</a>
         </nav>
       </details>
@@ -122,6 +123,7 @@
   </header>
 
   <main id="main" class="contact-main" tabindex="-1">
+    <div class="contact-primary">
     <section class="contact-hero">
       <div class="contact-width">
         <div class="eyebrow">Enquire about tutoring</div>
@@ -151,11 +153,13 @@
             <label for="company-website">Leave this field empty</label>
             <input id="company-website" name="website" type="text" maxlength="200" tabindex="-1" autocomplete="off" />
           </div>
+          <div class="fields-two">
           <div class="field">
             <label for="contact-name">Your name</label>
             <input id="contact-name" name="Contact name" type="text" maxlength="120" autocomplete="name" aria-describedby="contact-name-error" required />
             <span class="field-error" id="contact-name-error"></span>
           </div>
+          <div class="field-stack">
           <fieldset class="form-choice" aria-describedby="learner-child-error">
             <legend>Who is the tutoring for?</legend>
             <div class="radio-options">
@@ -169,18 +173,39 @@
             <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
             <span class="field-error" id="age-year-error"></span>
           </div>
+          </div>
+          </div>
+          <div class="fields-two">
+          <div class="field">
+            <label for="subject">Subject (optional)</label>
+            <select id="subject" name="Subject" aria-describedby="subject-error">
+              <option value="">Choose a subject</option>
+              <option value="English">English</option>
+              <option value="Maths">Maths</option>
+              <option value="Science">Science</option>
+              <option value="Languages">Languages</option>
+              <option value="Psychology">Psychology</option>
+              <option value="Art &amp; design">Art &amp; design</option>
+              <option value="Exam preparation">Exam preparation</option>
+              <option value="SEN support">SEN support</option>
+              <option value="Other">Other</option>
+            </select>
+            <span class="field-error" id="subject-error"></span>
+          </div>
           <div class="field">
             <label for="support-needed">What would you like help with?</label>
-            <textarea id="support-needed" name="Support requested" rows="4" maxlength="1000" aria-describedby="support-needed-hint support-needed-error" required></textarea>
-            <small id="support-needed-hint">The subject or goal, and what's tricky at the moment. Please keep it brief and don't include reports or medical details.</small>
+            <textarea id="support-needed" name="Support requested" rows="3" maxlength="1000" aria-describedby="support-needed-error" required></textarea>
             <span class="field-error" id="support-needed-error"></span>
           </div>
+          </div>
+          <div class="fields-two">
           <div class="field">
             <label for="desired-lesson-rate">What's your desired lesson rate?</label>
             <input id="desired-lesson-rate" name="Desired lesson rate" type="text" inputmode="text" maxlength="60" aria-describedby="desired-lesson-rate-hint desired-lesson-rate-error" />
             <small id="desired-lesson-rate-hint">Optional. A rough figure per session is fine.</small>
             <span class="field-error" id="desired-lesson-rate-error"></span>
           </div>
+          <div class="field-stack">
           <fieldset class="form-choice" aria-describedby="format-online-error">
             <legend>Online or in person? <small>(optional)</small></legend>
             <div class="radio-options">
@@ -195,6 +220,9 @@
             <input id="location" name="Town or postcode area" type="text" maxlength="80" autocomplete="address-level2" aria-describedby="location-error" disabled />
             <span class="field-error" id="location-error"></span>
           </div>
+          </div>
+          </div>
+          <div class="fields-two">
           <fieldset class="form-choice" aria-describedby="reply-email-error">
             <legend>How would you like us to reply?</legend>
             <div class="radio-options">
@@ -218,6 +246,7 @@
             <span class="field-error" id="phone-error"></span>
           </div>
           </div>
+          </div>
           <button class="button form-submit form-submit--trial" id="submit-button" type="submit">Send my enquiry <span aria-hidden="true">→</span></button>
           <p class="form-use-note">We'll only use these details to reply to you. Read our <a href="privacy.html">privacy notice</a>.</p>
           </fieldset>
@@ -228,6 +257,7 @@
         <p class="contact-email">Or email us at <a href="mailto:hello@toucanlearn.co.uk?subject=Tutoring%20enquiry%20%E2%80%94%20Toucan%20Learn">hello@toucanlearn.co.uk</a>.</p>
       </div>
     </section>
+    </div>
 
     <div class="contact-sidebar">
       <section class="contact-pricing" aria-labelledby="pricing-heading">
@@ -274,7 +304,7 @@
         <a href="privacy.html">Privacy</a>
         <a href="safeguarding.html">Safeguarding</a>
         <a href="complaints.html">Complaints</a>
-        <a href="index.html">Home</a>
+        <a href="./">Home</a>
         <a href="contact.html">Enquire</a>
         <a href="tel:+447309639095">07309 639095</a>
       </nav>
@@ -282,8 +312,7 @@
   </footer>
 
   <script src="site.js"></script>
-  <script src="launch-offer.js?v=20261028-popup-off-1"></script>
-  <script src="campaigns.js"></script>
-  <script src="contact.js?v=20261028-launch-offer-3"></script>
+  <script src="launch-offer.js?v=20261029-clean-url-1"></script>
+  <script src="contact.js?v=20261029-subject-1"></script>
 </body>
 </html>

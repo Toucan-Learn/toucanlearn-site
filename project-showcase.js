@@ -3,7 +3,7 @@ import { initHeroSky } from './hero-sky.js?v=20261029-piano-3';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
-  { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-newspaper.webp', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/index.html#football' },
+  { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-newspaper.webp', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
   { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp', alt: 'DARTY football gameplay', type: 'gallery', images: [1, 2, 3, 4].map(n => `assets/projects/darty-still-0${n}.webp`) },
   { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-spin-ready-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
@@ -378,14 +378,16 @@ export function initShowcase(root) {
     if (Math.abs(x) >= 60 && Math.abs(x) > Math.abs(y) * 1.6) show(index + (x < 0 ? 1 : -1));
   }, { passive: true });
   root.addEventListener('touchcancel', () => { gesture = null; }, { passive: true });
-  const revealHash = () => {
-    const target = document.getElementById(location.hash.slice(1));
+  const revealHash = event => {
+    let target;
+    try { target = event?.detail?.target || document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
     const selected = slides.find(slide => slide === target || (target && slide.contains(target)));
     if (selected) show(entries.findIndex(project => project.id === selected.dataset.project));
   };
   window.addEventListener('hashchange', revealHash);
   window.addEventListener('popstate', revealHash);
-  document.addEventListener('framework:panelchange', sync);
+  document.addEventListener('site:fragment', revealHash);
+  document.addEventListener('framework:panelchange', event => { revealHash(event); sync(); });
   new MutationObserver(sync).observe(document.body, { subtree: true, attributes: true, attributeFilter: ['hidden', 'inert'] });
   document.addEventListener('visibilitychange', sync);
   motion.addEventListener('change', () => {

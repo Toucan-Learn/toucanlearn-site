@@ -1,0 +1,6 @@
+/* Equal media dimensions let browser tests compare intrinsic piano ratios and
+   appearance. This external test sheet preserves the production CSP. */
+.showcase-cell { width: 560px !important; height: 338px !important; }
+@media (max-width: 600px) {
+  .showcase-cell { width: 260px !important; }
+}

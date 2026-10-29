@@ -119,12 +119,17 @@ await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.ur
 const site = fileURLToPath(new URL('../', import.meta.url));
 const before = execFileSync('git', ['show', `${process.env.PROJECT_COPY_BASE || process.env.SHOWCASE_BASE || 'd40ecf2'}:index.html`], { cwd: site, encoding: 'utf8' });
 const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const withoutShowcaseTokens = html => homeNavigationMarkup(html).replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN');
+// The team section and site-wide asset tokens carry owner-approved edits from other lanes (29 Oct: team copy, Sara's order,
+// framework/menu/favicon tokens), so these guards compare the showcase-owned markup only.
+const withoutOwnerContent = html => html
+  .replace(/<section class="homepage-section team-section"[\s\S]*?<\/section>/, '<!-- team section: owner-managed -->')
+  .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
+const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html)).replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN');
 assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the shared CSS/JS cache tokens and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
-assert.equal(homeNavigationMarkup(belowHero(after)), homeNavigationMarkup(belowHero(before)), 'Homepage content below the hero is preserved through the URL migration');
+assert.equal(withoutOwnerContent(homeNavigationMarkup(belowHero(after))), withoutOwnerContent(homeNavigationMarkup(belowHero(before))), 'Homepage content below the hero (outside the owner-managed team section) is preserved through the URL migration');
 
 const children = await readFile(new URL('../children.html', import.meta.url), 'utf8');
 assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), sectionProjects.map(project => project.id), 'The intro precedes all four matching copy cards');

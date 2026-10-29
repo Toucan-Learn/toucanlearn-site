@@ -11,12 +11,15 @@ const spinSource = await readFile(new URL('../drink-spin.js', import.meta.url), 
 const showcaseStyles = await readFile(new URL('../project-showcase.css', import.meta.url), 'utf8');
 assert(!spinSource.includes('Drag to spin') && !showcaseStyles.includes('drink-spin-hint'), 'Remove the drag hint markup and styles entirely');
 const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString('base64')}`;
-const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL));
+// Policy imports run without a DOM; browser suites exercise the real sky module.
+const skyURL = `data:text/javascript,export function initHeroSky(){throw new Error('Unexpected DOM mount in policy test')}`;
+const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL))
+  .replace(/(['"])\.\/hero-sky\.js(?:\?[^'"]*)?\1/, JSON.stringify(skyURL));
 const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
 await import('./drink-spin-source.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 assert.deepEqual(sectionProjects.map(project => project.id), ['intro', ...projects.map(project => project.id)], 'Only the children’s carousel has a fifth slide');
-assert.deepEqual(sectionProjects[0], { id: 'intro', name: '', type: 'intro' }, 'The intro keeps its HTML photo slot and adds no caption copy or live media');
+assert.deepEqual(sectionProjects[0], { id: 'intro', name: 'Intro', type: 'intro' }, 'The intro keeps its HTML photo slot and has a name in the shared header control');
 assert.deepEqual(sectionProjects.slice(1), projects, 'Both carousels keep the same four project media records');
 assert.deepEqual(projects.find(project => project.id === 'drinks').drinks.map(({ name, lines }) => ({ name, lines })), [
   { name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
@@ -146,5 +149,21 @@ assert(newspaper.includes('(window===window.top||document.hasFocus())&&r.current
 for (const id of ['piano-toggle', 'hero-keyboard', 'sky-canvas', 'flock-canvas']) {
   assert.equal([...source.matchAll(new RegExp(`id="${id}"`, 'g'))].length, 1, `The shared piano must define #${id} exactly once`);
   for (const html of [after, children]) assert(!html.includes(`id="${id}"`), `Page markup must not duplicate the shared #${id}`);
+}
+assert.match(source, /import \{ initHeroSky \} from '\.\/hero-sky\.js\?v=/, 'Resolve the shared piano dependency before navigation');
+assert(!source.includes("import('./hero-sky"), 'Switching must never wait for a lazy piano import');
+const unmount = source.slice(source.indexOf('function unmount()'), source.indexOf('function mount(project)'));
+assert(unmount.indexOf('stage.replaceChildren()') < unmount.indexOf('dispose?.()'), 'Detach outgoing canvas/iframe/media before resource cleanup');
+assert(unmount.indexOf('pianoControl.replaceChildren()') < unmount.indexOf('dispose?.()'), 'Detach the outgoing toggle before cleanup');
+const pianoMount = source.slice(source.indexOf("if (project.type === 'piano')"), source.indexOf("} else if (project.type === 'newspaper')"));
+assert(pianoMount.indexOf('stage.innerHTML = pianoMarkup') < pianoMount.indexOf('activate ='), 'Real piano markup must be synchronous, before GPU activation');
+assert(pianoMount.indexOf('pianoControl.innerHTML = pianoToggle') < pianoMount.indexOf('activate ='), 'The toggle must exist in the switch task');
+assert.match(source, /showcase-piano-control piano-world/, 'Both toggles must receive the hero palette, expanded, hover and focus styles');
+assert(!showcaseStyles.includes('#learner-projects .piano-panel-inner'), 'Projects must use the hero keyboard edge and appearance');
+const hero = await readFile(new URL('../hero-sky.js', import.meta.url), 'utf8');
+const keyboard = await readFile(new URL('../hero-keyboard.js', import.meta.url), 'utf8');
+assert.equal(hero.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], keyboard.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], 'Sky and keyboard must share one song/audio singleton');
+for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.js', 'hero-songs.js', 'hero-piano-voices.js']) {
+  assert.equal(await readFile(new URL(`../${file}`, import.meta.url), 'utf8'), execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '132dbae'}:${file}`], { cwd: site, encoding: 'utf8' }), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }
 console.log('Shared showcase checks passed: children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

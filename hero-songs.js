@@ -30,7 +30,10 @@
 // Keep its internal pickups. Move only the loop-boundary pickup to the start.
 // Transpose the whole melody down one octave; never fold independent chunks.
 // Its noteBeats follows the published ties and attack onsets at a chosen 100 BPM.
-// Maple Leaf: include the separate final Eb5 attack in bar 4 after its rest.
+// Maple Leaf: upper-staff melody, bars 1-8, including bar 4's final Eb5 attack.
+// Bar 7 crosses to the lower staff and is silent in this upper-staff excerpt.
+// Keep the published onset gaps at the existing 100 BPM practice pace; wrap
+// the opening sixteenth rest into the final gap for exactly eight 2/4 bars.
 // Both transcriptions and bar boundaries are in tests/fixtures/joplin-openings.json.
 // Sharp spellings are enharmonic MIDI names (e.g. G# = Ab, D# = Eb).
 // Provenance links above are comments; exported data has no runtime URLs.
@@ -139,8 +142,20 @@ export const songs = [
     "title": "Maple Leaf Rag",
     "composer": "Scott Joplin",
     "year": 1899,
-    "source": "Opening four bars, melody only (Mutopia-2011/11/13-23, maple.ly, top staff, bars 1-4). Tied continuations are held; the separate final D#5 attack in bar 4 is included.",
+    "source": "Opening eight bars, upper-staff melody only (Mutopia-2011/11/13-23, maple.ly, bars 1-8). Bar 7's cross-staff lower-staff notes are omitted, with their time retained as silence. Tied continuations are held; bar 4's separate final D#5 attack is retained. C-flat and F-flat are spelled B and E. Original pitches G4-G#6; keyboard shifted up one octave. Published onset gaps at the existing chosen practice tempo, quarter note = 100. The opening sixteenth rest wraps into the final gap, making the loop exactly eight bars of 2/4 (16 quarter-note beats).",
     "licence": "Public Domain",
+    "keyboardOctave": 1,
+    "tempo": 100,
+    // Quarter-note onset gaps, including ties, rests and the silent upper staff in bar 7.
+    "noteBeats": [
+      0.25, 0.25, 0.25, 0.25, 0.5, 0.25,
+      0.25, 0.25, 0.25, 1.5,
+      0.25, 0.25, 0.25, 0.25, 0.5, 0.25,
+      0.25, 0.25, 0.25, 1, 0.5,
+      0.25, 0.25, 0.5, 0.5, 0.5,
+      0.25, 0.25, 0.5, 3,
+      0.25, 0.25, 0.5, 0.25, 0.25, 0.5
+    ],
     "notes": [
       "G#4",
       "D#5",
@@ -162,7 +177,22 @@ export const songs = [
       "G4",
       "A#4",
       "D#5",
-      "D#5"
+      "D#5",
+      "G#4",
+      "B4",
+      "E5",
+      "D#5",
+      "D#5",
+      "G#4",
+      "B4",
+      "E5",
+      "D#5",
+      "G#4",
+      "B4",
+      "G#5",
+      "G#5",
+      "B5",
+      "G#6"
     ]
   },
   {

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { createRequire } from 'node:module';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { assertImmediateProjectSwitch } from './project-showcase-switch-helpers.mjs';
+import { capturePianoParity, assertPianoParity } from './project-showcase-piano-parity.mjs';
 import { activatePianoToggle, assertProjectPianoFits } from './piano-toggle-helpers.mjs';
 const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_MODULE || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/website/node_modules/puppeteer-core');
@@ -11,8 +13,9 @@ assert(base, 'Set BASE_URL to this served worktree');
 const output = process.env.PIANO_TOGGLE_OUTPUT || fileURLToPath(new URL('../../outputs/shared-showcase-20261028/piano-toggle/', import.meta.url));
 await mkdir(output, { recursive: true });
 const browser = await puppeteer.launch({ executablePath: process.env.CHROME_PATH || process.env.CHROME || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true, args: ['--no-sandbox'] });
-const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 390, height: 844, isMobile: true, hasTouch: true }];
+const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 390, height: 844, isMobile: true, hasTouch: true }, { width: 320, height: 740, isMobile: true, hasTouch: true }];
 const report = { cases: [], errors: [] };
+const homeParity = new Map();
 try {
   for (const view of views) for (const theme of ['light', 'dark', 'system-dark']) for (const route of ['index.html', 'children.html']) {
     const context = await browser.createBrowserContext();
@@ -43,9 +46,9 @@ try {
       assert(keys.some(key => key.inView && key.hit), `${label}: no usable piano keys after opening`);
       entry.close = await activatePianoToggle(page, `${label}: close`);
       assert.equal(entry.close.after.expanded, 'false');
-      await page.$eval('[data-project-prev]', button => button.click());
+      await assertImmediateProjectSwitch(page, 'prev');
       assert.equal(await page.$$eval('#piano-toggle', buttons => buttons.length), 0, `${label}: old toggle must be removed`);
-      await page.$eval('[data-project-next]', button => button.click());
+      await assertImmediateProjectSwitch(page, 'next');
       entry.remount = await activatePianoToggle(page, `${label}: remount`);
       if (route === 'children.html' && view.isMobile) {
         entry.rotations = [];
@@ -63,7 +66,7 @@ try {
           window.rotationPitch = document.querySelector('.piano-key.is-now').dataset.pitch;
           window.rotationSong = window.rotationPanel.dataset.song;
         });
-        for (const size of [{ width: 844, height: 390 }, { width: 390, height: 844 }]) {
+        for (const size of [{ width: view.height, height: view.width }, { width: view.width, height: view.height }]) {
           await page.setViewport({ ...view, ...size, isLandscape: size.width > size.height, deviceScaleFactor: 1 });
           await new Promise(resolve => setTimeout(resolve, 550));
           const bounds = await assertProjectPianoFits(page, `${label}: rotate to ${size.width}x${size.height}`);
@@ -81,6 +84,10 @@ try {
           await page.screenshot({ path: `${output}/${label}-rotation-${size.width}x${size.height}.png` });
         }
       }
+      entry.parity = await capturePianoParity(page);
+      const comparison = `${view.width}x${view.height}-${theme}`;
+      if (route === 'index.html') homeParity.set(comparison, entry.parity);
+      else assertPianoParity(homeParity.get(comparison), entry.parity, comparison);
       entry.status = 'PASS';
     } catch (error) {
       entry.status = 'FAIL';

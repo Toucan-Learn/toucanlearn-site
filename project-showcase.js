@@ -1,4 +1,5 @@
-import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-frames-360';
+import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-spin-batches-1';
+import { initHeroSky } from './hero-sky.js?v=20261029-piano-3';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
@@ -13,7 +14,7 @@ export const projects = [
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
-export const sectionProjects = [{ id: 'intro', name: '', type: 'intro' }, ...projects];
+export const sectionProjects = [{ id: 'intro', name: 'Intro', type: 'intro' }, ...projects];
 
 // Owner, 28 Oct 2026: "lets have piano as the 1st in the carousel on the frontpage for now".
 // Set to null to go back to a random project on each homepage load.
@@ -139,15 +140,37 @@ export function initShowcase(root) {
   let printing = false;
   let inView = typeof IntersectionObserver === 'undefined';
   let gesture = null;
+  let workFrame = 0;
+  let activate = null;
+  // Warm the small, project-specific stills before navigation. Never borrow an
+  // outgoing project's decoded media while an incoming view becomes ready.
+  const previews = new Map(entries.filter(project => project.poster).map(project => {
+    const img = new Image();
+    img.src = project.poster;
+    img.alt = project.alt;
+    img.className = 'showcase-preview';
+    void img.decode().catch(() => {});
+    return [project.id, img];
+  }));
   const pointers = new Set();
   const held = new Set();
   const cell = document.createElement('div');
   cell.className = 'showcase-cell';
-  cell.innerHTML = '<div class="showcase-stage"></div><div class="showcase-caption"><button type="button" data-project-prev aria-label="Previous project">←</button><span class="showcase-name" data-project-name></span><span class="showcase-piano-control"></span><span data-project-status aria-live="polite" aria-atomic="true"></span><button type="button" data-project-next aria-label="Next project">→</button></div>';
+  cell.innerHTML = '<div class="showcase-stage"></div><div class="showcase-caption"><button type="button" data-project-prev aria-label="Previous project">←</button><span class="showcase-name" data-project-name></span><span class="showcase-piano-control piano-world"></span><span data-project-status aria-live="polite" aria-atomic="true"></span><button type="button" data-project-next aria-label="Next project">→</button></div>';
   const stage = cell.querySelector('.showcase-stage');
-  const name = cell.querySelector('[data-project-name]');
-  const status = cell.querySelector('[data-project-status]');
+  const navigation = cell.querySelector('.showcase-caption');
+  const name = navigation.querySelector('[data-project-name]');
+  const status = navigation.querySelector('[data-project-status]');
   const pianoControl = cell.querySelector('.showcase-piano-control');
+  if (!automatic) {
+    // One permanent header control for all five slides; only its text changes.
+    navigation.className = 'showcase-navigation';
+    navigation.setAttribute('role', 'group');
+    navigation.setAttribute('aria-label', 'Choose a learner project');
+    root.querySelector('.section-head').append(navigation);
+    // The piano keeps its own toggle over the sky, outside the slide navigation.
+    cell.append(pianoControl);
+  }
   root.tabIndex = 0;
   root.setAttribute('role', 'region');
   root.setAttribute('aria-roledescription', 'carousel');
@@ -159,22 +182,34 @@ export function initShowcase(root) {
     enabled: () => automatic && inView && visible() && !motion.matches,
   });
   const activity = () => timer.reset();
-  const preview = project => {
-    const img = document.createElement('img');
-    img.src = project.poster;
-    img.alt = project.alt;
-    img.className = 'showcase-preview';
-    return img;
-  };
+  const preview = project => previews.get(project.id);
+  function finishWork() {
+    const start = activate;
+    activate = null;
+    start?.();
+  }
+  function afterPaint() {
+    if (workFrame) return;
+    // The first RAF is before paint. The second lets the selected project's
+    // markup/still paint before shader compilation or live-media loading.
+    workFrame = requestAnimationFrame(() => {
+      workFrame = requestAnimationFrame(() => { workFrame = 0; finishWork(); });
+    });
+  }
   function unmount() {
     generation++;
+    activate = null;
+    cancelAnimationFrame(workFrame);
+    workFrame = 0;
+    // Detach FIRST, including composited iframe/canvas layers and the open
+    // keyboard. Then cancel its listeners/reflow callbacks immediately, so
+    // detached keyboard geometry cannot scroll the newly selected project.
+    stage.replaceChildren();
+    pianoControl.replaceChildren();
     dispose?.();
     dispose = null;
     mounted = null;
     delete root.dataset.showcaseMounted;
-    // Removing the iframe discards its document, scripts and any media.
-    stage.replaceChildren();
-    pianoControl.replaceChildren();
   }
   function mount(project) {
     const token = ++generation;
@@ -183,29 +218,38 @@ export function initShowcase(root) {
     if (project.type === 'intro') return;
     stage.replaceChildren(preview(project));
     if (project.type === 'piano') {
-      import('./hero-sky.js?v=20261029-piano-3').then(({ initHeroSky }) => {
+      // Both locations get the very same DOM, CSS and five hero modules. The
+      // pixel-sky CSS background and controls are present in this switch task;
+      // no import, poster swap or outgoing media stands in for the piano.
+      stage.innerHTML = pianoMarkup;
+      pianoControl.innerHTML = pianoToggle;
+      activate = () => {
         if (token !== generation || !visible()) return;
-        stage.innerHTML = pianoMarkup;
-        pianoControl.innerHTML = pianoToggle;
         dispose = initHeroSky(cell);
-        stage.querySelector('.hero-mascot').decoding = 'async';
-      }).catch(() => {
-        if (token === generation) stage.querySelector('img')?.setAttribute('alt', 'Piano preview; reload to play');
-      });
+      };
+      afterPaint();
     } else if (project.type === 'newspaper') {
-      const iframe = document.createElement('iframe');
-      iframe.className = 'showcase-newspaper';
-      iframe.title = 'Football newspaper: read the front page and articles';
-      iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-      const controller = new AbortController();
-      iframe.addEventListener('load', () => {
-        // Events in the same-origin newspaper do not bubble to its parent.
-        const doc = iframe.contentDocument;
-        activityTypes.forEach(type => doc?.addEventListener(type, activity, { passive: true, signal: controller.signal }));
-      }, { signal: controller.signal });
-      iframe.src = project.src;
-      stage.replaceChildren(iframe);
-      dispose = () => { controller.abort(); iframe.remove(); };
+      activate = () => {
+        if (token !== generation || !visible()) return;
+        const iframe = document.createElement('iframe');
+        iframe.className = 'showcase-newspaper';
+        iframe.title = 'Football newspaper: read the front page and articles';
+        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+        const controller = new AbortController();
+        iframe.hidden = true;
+        iframe.addEventListener('load', () => {
+          if (token !== generation || !visible()) return;
+          // Events in the same-origin newspaper do not bubble to its parent.
+          const doc = iframe.contentDocument;
+          activityTypes.forEach(type => doc?.addEventListener(type, activity, { passive: true, signal: controller.signal }));
+          iframe.hidden = false;
+          preview(project).remove();
+        }, { signal: controller.signal });
+        iframe.src = project.src;
+        stage.append(iframe);
+        dispose = () => { controller.abort(); iframe.remove(); };
+      };
+      afterPaint();
     } else if (project.type === 'gallery') {
       const gallery = document.createElement('div');
       gallery.className = 'screenshot-gallery';
@@ -240,6 +284,9 @@ export function initShowcase(root) {
         controls.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.drink === drink.id)));
         renderDrinkInfo(info, drink);
         viewer = createDrinkSpin(screen, drink, { reduced: motion.matches, activity });
+        // The first spin image decodes asynchronously; its own selected poster
+        // stays underneath rather than showing an empty screen in the meantime.
+        if (drink === project.drinks[0]) screen.prepend(preview(project));
         viewer.setActive(inView && visible());
       }
       project.drinks.forEach(drink => {
@@ -277,7 +324,7 @@ export function initShowcase(root) {
   }
   function show(requestedIndex) {
     const nextIndex = (requestedIndex + entries.length) % entries.length;
-    if (cell.contains(document.activeElement) && !document.activeElement.closest('.showcase-caption')) root.focus({ preventScroll: true });
+    if (cell.contains(document.activeElement) && !navigation.contains(document.activeElement)) root.focus({ preventScroll: true });
     if (slides.some(slide => slide.dataset.project !== entries[nextIndex].id && slide.contains(document.activeElement))) root.focus({ preventScroll: true });
     unmount();
     index = nextIndex;
@@ -295,8 +342,8 @@ export function initShowcase(root) {
     timer.reset();
     sync();
   }
-  cell.querySelector('[data-project-prev]').addEventListener('click', () => show(index - 1));
-  cell.querySelector('[data-project-next]').addEventListener('click', () => show(index + 1));
+  navigation.querySelector('[data-project-prev]').addEventListener('click', () => show(index - 1));
+  navigation.querySelector('[data-project-next]').addEventListener('click', () => show(index + 1));
   activityTypes.forEach(type => root.addEventListener(type, activity, { passive: true }));
   root.addEventListener('showcase:activity', activity);
   root.addEventListener('pointerdown', event => pointers.add(event.pointerId));

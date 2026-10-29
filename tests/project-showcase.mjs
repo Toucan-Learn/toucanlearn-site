@@ -6,6 +6,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { newspaperMobileBreakpoint } from './project-showcase-source.mjs';
+import { assertImmediateProjectSwitch, assertRapidProjectSwitches } from './project-showcase-switch-helpers.mjs';
 import { activatePianoToggle } from './piano-toggle-helpers.mjs';
 import { checkDrinkSpin, assertDrinkLayout, dragOverDrink, checkDrinkMenuKeys } from './drink-spin-browser.mjs';
 const site = fileURLToPath(new URL('../', import.meta.url));
@@ -57,12 +58,44 @@ async function load(page, route) {
   await page.evaluate(() => document.fonts.ready);
 }
 async function selected(page) { return page.$eval('[data-showcase]', root => root.dataset.project); }
+async function checkGettingStarted(page, label) {
+  await page.click('[data-panel-link][href="#getting-started"]');
+  await page.waitForFunction(() => !document.querySelector('#getting-started').hidden);
+  const cells = await page.$$eval('#getting-started .picture-cell', cells => cells.map(cell => {
+    const rect = node => {
+      const r = node.getBoundingClientRect();
+      return { x: r.x, right: r.right, y: r.y, height: r.height, width: r.width };
+    };
+    const copy = cell.querySelector('.picture-cell-copy');
+    const art = cell.querySelector('.picture-cell-media');
+    return { cell: rect(cell), copy: rect(copy), art: rect(art), padding: getComputedStyle(copy).padding,
+      fits: copy.scrollWidth <= copy.clientWidth + 1 && copy.scrollHeight <= copy.clientHeight + 1 };
+  }));
+  assert.equal(cells.length, 4);
+  const reference = cells[0];
+  for (const { cell, copy, art, padding, fits } of cells) {
+    assert(fits && art.right <= copy.x + 1, `${label}: each step keeps its art left and unclipped copy right`);
+    assert(Math.abs(copy.y + copy.height / 2 - art.y - art.height / 2) <= 1, `${label}: copy is vertically centred against its art`);
+    assert(art.width / cell.width >= .37 && art.width / cell.width <= .39, `${label}: balanced art/copy split`);
+    assert(Math.abs(cell.height - reference.cell.height) <= 1 && Math.abs(cell.width - reference.cell.width) <= 1 && padding === reference.padding, `${label}: all four cells have consistent framing`);
+  }
+  const enquiry = await page.$eval('#getting-started > p:last-child > a', link => ({
+    label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), button: link.classList.contains('button'),
+    afterSteps: link.parentElement.previousElementSibling.classList.contains('learning-steps'),
+    fits: link.scrollWidth <= link.clientWidth + 1 && link.scrollHeight <= link.clientHeight + 1,
+  }));
+  assert.deepEqual(enquiry, { label: 'Tell us your child’s goal', href: 'contact.html?service=children', button: true, afterSteps: true, fits: true }, `${label}: Getting started enquiry replaces the old link with a fitting button`);
+  await page.screenshot({ path: path.join(output, `${label}-getting-started.png`) });
+  report.layouts.push({ label, section: 'getting-started', cells });
+  await page.click('[data-panel-link][href="#learner-projects"]');
+  await page.waitForFunction(() => !document.querySelector('#learner-projects').hidden);
+}
 async function project(page, id) {
   await page.$eval('[data-showcase]', root => root.focus({ preventScroll: true }));
   const count = await page.$$eval('[data-project-slide]', slides => slides.length) || ids.length;
-  for (let i = 0; i < count && await selected(page) !== id; i++) await page.$eval('[data-project-next]', button => button.click());
+  for (let i = 0; i < count && await selected(page) !== id; i++) await assertImmediateProjectSwitch(page, 'next');
   assert.equal(await selected(page), id);
-  await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
+  await page.$eval('[data-showcase]', root => (root.dataset.project === 'intro' ? root.querySelector('[data-project-slide]:not([hidden])') : root.querySelector('.showcase-cell')).scrollIntoView({ block: 'center' }));
   if (id === 'intro') await page.$eval('.project-intro-image img', img => img.decode());
   if (id === 'piano') await page.waitForSelector('#hero-keyboard[data-song]');
 }
@@ -75,21 +108,43 @@ async function metrics(page) {
     const root = document.querySelector('[data-showcase]');
     const slide = root.querySelector('[data-project-slide]:not([hidden])');
     const copy = slide?.querySelector('.framework-project-copy');
+    const column = slide?.querySelector('.project-copy-column');
     const media = slide?.querySelector('.framework-project-media');
     const rows = copy?.querySelector('.project-copy-cells');
-    const result = copy?.querySelector('.project-copy-result');
+    const result = column?.querySelector('.project-copy-result');
+    const headingStyle = node => {
+      const css = getComputedStyle(node);
+      return Object.fromEntries(['fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'marginTop', 'marginBottom'].map(name => [name, css[name]]));
+    };
     const introImage = slide?.querySelector('.project-intro-image img');
     const frame = root.closest('.framework-panels');
     const stage = root.querySelector('.showcase-stage');
+    const navigation = root.querySelector('.showcase-navigation');
+    const heading = root.querySelector('.section-head h2');
+    const enquiry = root.querySelector('[data-project-enquiry]');
     return { id: root.dataset.project, slot: rect(root.querySelector('.showcase-cell')), stage: rect(stage), media: media && rect(media), copy: copy && rect(copy),
-      copyFits: !copy || [...copy.querySelectorAll('h3, h4, p, a, .project-copy-result')].every(node => {
+      enquiry: enquiry && { ...rect(enquiry), documentY: rect(enquiry).y + scrollY, inHeader: enquiry.parentElement === heading.parentElement,
+        label: enquiry.firstChild.textContent.trim(), href: enquiry.getAttribute('href'), button: enquiry.classList.contains('button'),
+        count: root.querySelectorAll('[data-project-enquiry]').length, cardLinks: root.querySelectorAll('.framework-project-copy a').length,
+        fits: enquiry.scrollWidth <= enquiry.clientWidth + 1 && enquiry.scrollHeight <= enquiry.clientHeight + 1 },
+      navigation: navigation && { ...rect(navigation), documentY: rect(navigation).y + scrollY,
+        inHeader: navigation.parentElement === heading.parentElement, heading: rect(heading),
+        name: navigation.querySelector('[data-project-name]').textContent,
+        order: [...navigation.children].map(node => [...node.attributes].find(attr => attr.name.startsWith('data-project-'))?.name),
+        bottomBars: root.querySelectorAll('.showcase-caption').length,
+        textFits: [...navigation.children].every(node => node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1) },
+      copyFits: !copy || [...(column || copy).querySelectorAll('h3, h4, p, a')].every(node => {
         const box = node.getBoundingClientRect();
-        const card = copy.getBoundingClientRect();
+        const card = node.closest('.project-copy-result, .framework-project-copy').getBoundingClientRect();
         return box.top >= card.top - 1 && box.bottom <= card.bottom + 1 && box.left >= card.left - 1 && box.right <= card.right + 1 && node.scrollWidth <= node.clientWidth + 1;
       }),
       rows: copy?.querySelectorAll('.project-copy-cells > div').length,
       rowLabels: [...(rows?.querySelectorAll('h4') || [])].map(node => node.textContent),
-      result: result && { ...rect(result), separate: result.parentElement === copy && result.previousElementSibling === rows, background: getComputedStyle(result).backgroundColor, color: getComputedStyle(result.querySelector('p')).color, headingColor: getComputedStyle(result.querySelector('h4')).color, copyBackground: getComputedStyle(copy).backgroundColor, rowsBottom: rect(rows).bottom },
+      result: result && { ...rect(result), separate: result.parentElement === column && copy.parentElement === column && result.previousElementSibling === copy,
+        background: getComputedStyle(result).backgroundColor, color: getComputedStyle(result.querySelector('p')).color, headingColor: getComputedStyle(result.querySelector('h4')).color,
+        copyBackground: getComputedStyle(copy).backgroundColor, radius: getComputedStyle(result).borderRadius, copyRadius: getComputedStyle(copy).borderRadius,
+        headingStyle: headingStyle(result.querySelector('h4')), headingTransform: getComputedStyle(result.querySelector('h4')).textTransform, labelStyle: headingStyle(copy.querySelector('.project-label')), rowHeadingStyles: [...rows.querySelectorAll('h4')].map(headingStyle),
+        columnGap: parseFloat(getComputedStyle(column).rowGap), mediaGap: parseFloat(getComputedStyle(slide).columnGap) },
       introMedia: slide?.dataset.project === 'intro' ? slide.querySelectorAll('iframe, video, audio, canvas, .framework-project-media').length : null,
       introImage: introImage && { ...rect(introImage), count: slide.querySelectorAll('img').length, complete: introImage.complete && introImage.naturalWidth > 0, source: new URL(introImage.currentSrc).pathname },
       frame: frame && rect(frame),
@@ -138,12 +193,15 @@ try {
       await load(page, route);
       const homepage = route.startsWith('index');
       const sequence = homepage ? ids : sectionIds;
+      if (!homepage) await checkGettingStarted(page, label);
       assert.equal(await selected(page), sequence[0], `${label}: default/override start`);
       assert.equal(await page.$eval('[data-project-status]', status => status.textContent), `1 of ${sequence.length}`);
       const sizes = [];
+      let navigationBox;
+      let enquiryBox;
       for (const [position, id] of sequence.entries()) {
         await project(page, id);
-        await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
+        await page.$eval('[data-showcase]', root => (root.dataset.project === 'intro' ? root.querySelector('[data-project-slide]:not([hidden])') : root.querySelector('.showcase-cell')).scrollIntoView({ block: 'center' }));
         await wait(100);
         const m = await metrics(page);
         if (id !== 'intro') sizes.push(m.slot.height);
@@ -154,6 +212,29 @@ try {
         if (!homepage && view.width === 1440 && view.height === 750) assert(m.frame.height <= view.height - m.headerHeight, `${label}/${id}: section frame fits the laptop screen`);
         assert.equal(m.status, `${position + 1} of ${sequence.length}`, `${label}/${id}: correct carousel count`);
         assert.equal(m.heavyViews, id === 'piano' || id === 'football' ? 1 : 0, 'Only the selected heavy view is mounted; reduced motion drinks use posters');
+        if (!homepage) {
+          const nav = m.navigation;
+          assert(nav?.inHeader && nav.textFits, `${label}/${id}: slide controls fit the section header`);
+          assert.equal(nav.bottomBars, 0, 'Projects has no bottom navigation bar');
+          assert.deepEqual(nav.order, ['data-project-prev', 'data-project-name', 'data-project-status', 'data-project-next']);
+          assert.equal(nav.name, { intro: 'Intro', football: 'Sports journalism', darty: 'DARTY', drinks: 'Drink design', piano: 'Piano' }[id]);
+          const box = [nav.x, nav.documentY, nav.width, nav.height];
+          if (navigationBox) box.forEach((value, i) => assert(Math.abs(value - navigationBox[i]) <= 1, `${label}/${id}: header controls moved or resized between slides`));
+          else navigationBox = box;
+          if (view.width >= 1000) assert(Math.abs(nav.y + nav.height / 2 - nav.heading.y - nav.heading.height / 2) <= 1 && nav.x >= nav.heading.right, 'Desktop navigation sits at the top right, level with the heading');
+          else assert(nav.y >= nav.heading.bottom, 'Phone navigation sits below the heading');
+          const enquiry = m.enquiry;
+          assert(enquiry?.inHeader && enquiry.button && enquiry.fits, `${label}/${id}: the shared enquiry is a fitting header button`);
+          assert.equal(enquiry.label, 'Tell us what they love');
+          assert.equal(enquiry.href, 'contact.html?service=children');
+          assert.equal(enquiry.count, 1, 'Exactly one Projects enquiry CTA, including Intro');
+          assert.equal(enquiry.cardLinks, 0, 'No per-card lesson links remain');
+          const ctaBox = [enquiry.x, enquiry.documentY, enquiry.width, enquiry.height];
+          if (enquiryBox) ctaBox.forEach((value, i) => assert(Math.abs(value - enquiryBox[i]) <= 1, `${label}/${id}: enquiry moved or resized between slides`));
+          else enquiryBox = ctaBox;
+          if (view.width >= 1200) assert(enquiry.right <= nav.x && Math.abs(enquiry.y + enquiry.height / 2 - nav.y - nav.height / 2) <= 1, 'Desktop enquiry sits beside the slide controls');
+          else assert(enquiry.y >= nav.bottom, 'Narrow layouts stack the enquiry below the slide controls');
+        }
         if (homepage) {
           assert.equal(m.slideCount, 0, 'Homepage retains its four media projects and has no copy slides');
           const after = await heroMetrics(page);
@@ -161,26 +242,33 @@ try {
         } else if (id === 'intro') {
           assert.equal(m.slideCount, 5);
           assert.equal(m.rows, 0);
-          assert.equal(m.result, null);
+          assert.equal(m.result ?? null, null, 'The intro has no result card'); // no column on the intro, so the probe returns undefined
           assert.equal(m.introMedia, 0, 'Intro has no live showcase media');
           assert.equal(m.introImage.count, 1, 'Intro reserves exactly one image');
           assert(m.introImage.complete && m.introImage.width > 100 && m.introImage.height > 100, 'The placeholder/replacement image loads without a broken image');
           assert(m.introImage.source.endsWith('/assets/projects/intro-learning.jpg'), 'Dropping in the approved JPEG updates the reserved image slot');
-          if (view.width >= 1000) assert(m.introImage.right <= m.copy.x + 1, 'Intro photo sits beside the copy on desktop');
-          else assert(m.introImage.bottom <= m.copy.y + 1, 'Intro photo sits above the copy on phones');
+          if (view.width >= 1000) assert(m.copy.right <= m.introImage.x + 1, 'Intro copy sits left of its photo on desktop');
+          else assert(m.copy.bottom <= m.introImage.y + 1, 'Intro copy sits before its photo on phones');
           assert.equal(m.stage.height, 0, 'Intro mounts no media stage');
-          assert(m.slot.y >= Math.max(m.copy.bottom, m.introImage.bottom) - 1, 'Intro controls sit below its image and copy');
         } else {
           assert.equal(m.rows, 3);
           assert.deepEqual(m.rowLabels, ['The goal', 'Developing skills', 'Finding the link']);
-          assert(m.result?.separate && m.result.y >= m.result.rowsBottom - 1, 'Result is a separate cell below the three rows');
+          assert(m.result?.separate, 'Result and copy are sibling cards in the copy column');
+          assert(m.result.columnGap >= 12 && Math.abs(m.result.y - m.copy.bottom - m.result.columnGap) <= 1, 'Result has a clear card gap below the cream copy card');
+          assert(Math.abs(m.result.x - m.copy.x) <= 1 && Math.abs(m.result.width - m.copy.width) <= 1, 'Result and copy cards have the same width and alignment');
+          assert.equal(m.result.radius, m.result.copyRadius, 'Result and copy cards share their corner radius');
+          // Owner (29 Oct): the result heading is a capitalised label, the same size as the subject label.
+          assert.deepEqual([m.result.headingStyle.fontSize, m.result.headingStyle.fontWeight, m.result.headingStyle.letterSpacing], [m.result.labelStyle.fontSize, m.result.labelStyle.fontWeight, m.result.labelStyle.letterSpacing], 'Result heading matches the subject label (e.g. ENGLISH) in size, weight and spacing');
+          assert.equal(m.result.headingTransform, 'uppercase', 'Result heading is in capitals');
           assert.notEqual(m.result.background, m.result.copyBackground, 'Result has a distinct accent background');
           for (const color of [m.result.color, m.result.headingColor]) assert(contrast(color, m.result.background) >= 4.5, `${label}/${id}: result text contrast`);
           assert(Math.abs(m.slot.height - m.media.height) <= 1, 'Shared cell fills the media slot');
           if (view.width >= 1000) {
+            assert(Math.abs(m.copy.y - m.media.y) <= 1 && Math.abs(m.result.bottom - m.media.bottom) <= 1, 'Copy and result together align with the media top and bottom');
+            assert.equal(m.result.columnGap, m.result.mediaGap, 'Vertical card gap matches the gap beside the media');
             const share = m.media.width / (m.media.width + m.copy.width);
             assert(share >= .64 && share <= .66, `${label}: media gets 64–66% of the slide; media share ${share}`);
-          } else assert(m.media.y >= m.copy.bottom - 1, 'Phone uses ordinary single-column flow');
+          } else assert(m.media.y >= m.result.bottom - 1, 'Phone keeps copy, result and media in ordinary single-column flow');
         }
         if (id === 'football' && view.width === 1440 && view.height === 750) {
           const frameElement = await page.$('iframe');
@@ -250,11 +338,12 @@ try {
         }
       }
       assert(Math.max(...sizes) - Math.min(...sizes) <= 1, `${label}: project switch changes cell height`);
-      await page.$eval('[data-project-next]', button => button.click());
+      await assertImmediateProjectSwitch(page, 'next');
       assert.equal(await selected(page), sequence[0], `${label}: wrap returns to the first slide`);
       assert.equal(await page.$eval('[data-project-status]', status => status.textContent), `1 of ${sequence.length}`);
-      await page.$eval('[data-project-prev]', button => button.click());
+      await assertImmediateProjectSwitch(page, 'prev');
       assert.equal(await selected(page), sequence.at(-1), `${label}: previous wraps to the final project`);
+      report.behaviour.push({ label, route, rapidSwitches: await assertRapidProjectSwitches(page) });
     }
     await context.close();
   }
@@ -347,17 +436,22 @@ try {
   await page.keyboard.press('ArrowLeft');
   assert.equal(await selected(page), 'darty', 'Gallery keyboard input does not change projects');
   await project(page, 'drinks');
-  await page.focus('[data-project-slide]:not([hidden]) .framework-project-copy > a');
+  await page.focus('[data-project-enquiry]');
+  assert.deepEqual(await page.$eval('[data-project-enquiry]', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href') })),
+    { label: 'Tell us what they love', href: 'contact.html?service=children' });
   await page.keyboard.press('ArrowRight');
-  assert.equal(await selected(page), 'drinks', 'Copy links retain keyboard input');
-  await page.$eval('[data-project-next]', button => button.click());
-  assert(await page.$eval('[data-showcase]', root => document.activeElement === root), 'Hiding focused copy recovers focus to the viewer');
+  assert.equal(await selected(page), 'drinks', 'The Projects enquiry button retains keyboard input');
+  await assertImmediateProjectSwitch(page, 'next');
+  assert(await page.$eval('[data-project-enquiry]', link => document.activeElement === link), 'The shared Projects enquiry keeps focus when the slide changes');
   await project(page, 'drinks');
   await page.evaluate(() => { window.sectionSpin = document.querySelector('.drink-spin'); });
   await page.$eval('[data-panel-link][href="#getting-started"]', link => link.click());
   await page.waitForFunction(() => document.querySelector('#learner-projects').hidden);
   assert.equal(new URL(page.url()).hash, '', 'Panel switches leave the address clean');
   assert(await page.evaluate(() => window.sectionSpin.dataset.active === 'false'), 'Hidden Projects section pauses its frame viewer');
+  await page.focus('#getting-started a.button');
+  assert.deepEqual(await page.$eval('#getting-started a.button', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href') })),
+    { label: 'Tell us your child’s goal', href: 'contact.html?service=children' });
   report.behaviour.push('homepage unchanged, five-slide section, intro, separate result cells, review overrides, wrap, interaction reset, idle advance, focus, held playing key, all drink sequences, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
   await context.close();
   // Keep the intro, all four projects and separate result cells for no-JS and print.

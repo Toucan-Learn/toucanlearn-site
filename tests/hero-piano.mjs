@@ -96,26 +96,26 @@ async function highlighted(page, expected) {
       hit: hit === button, hitElement: describe(hit), focusedElement: describe(document.activeElement),
     };
   });
-  assert.equal(state.count, 1, 'Exactly one orange current key');
+  assert.equal(state.count, 1, 'Exactly one green current key');
   assert.equal(state.pitch, expected, `Correct highlighted pitch: ${JSON.stringify(state)}`);
   assert.ok(state.visible, `Highlighted key is in the keyboard and screen: ${JSON.stringify(state)}`);
   assert.ok(state.hit, `Highlighted key can actually be hit: ${JSON.stringify(state)}`);
   assert.equal(state.background, 'rgb(99, 196, 123)', 'The current white/black key is green, including pressed repetitions');
   assert.equal(state.text, '', 'No visible now/next text labels are added');
   assert.equal(state.following?.count, 1, 'Exactly one following-note cue');
-  assert.equal(state.following.pitch, state.following.expected, 'Green previews the note after the orange one');
+  assert.equal(state.following.pitch, state.following.expected, 'Violet previews the note after the green one');
   assert.ok(state.following.rendered, 'The following-note cue is on a rendered key');
   assert.equal(state.following.text, '');
   assert.ok(state.following.shadow.includes('rgb(123, 111, 214)'), 'The following note has a violet inner edge');
   if (state.following.same) {
-    assert.match(state.shadow, /0px 0px 0px 3px/, 'A repeated pitch combines orange with a clear green ring');
+    assert.match(state.shadow, /0px 0px 0px 3px/, 'A repeated pitch combines green with a clear violet ring');
   } else {
     assert.equal(state.following.background, 'rgb(210, 205, 242)', 'A distinct following note has the soft violet tint');
-    assert.match(state.following.shadow, /0px 0px 0px 2px/, 'A distinct following note has a secondary green edge');
+    assert.match(state.following.shadow, /0px 0px 0px 2px/, 'A distinct following note has a violet edge');
   }
   if (state.lettersShown) {
-    assert.equal(state.letterColour, 'rgb(10, 39, 44)', 'Computer letters remain readable on orange');
-    assert.equal(state.following.letterColour, 'rgb(10, 39, 44)', 'Computer letters remain readable on green');
+    assert.equal(state.letterColour, 'rgb(10, 39, 44)', 'Computer letters remain readable on the current green key');
+    assert.equal(state.following.letterColour, 'rgb(10, 39, 44)', 'Computer letters remain readable on the following violet key');
   }
   return state;
 }

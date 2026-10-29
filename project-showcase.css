@@ -6,6 +6,7 @@
 .showcase-stage { position: relative; min-width: 0; min-height: 0; border-radius: 14px 14px 0 0; background: #071219; }
 .showcase-stage > :is(img, iframe, .screenshot-gallery, .showcase-drinks, .piano-world) { display: block; width: 100%; height: 100%; min-width: 0; border: 0; margin: 0; }
 .showcase-stage > img { object-fit: contain; border-radius: 14px 14px 0 0; }
+.showcase-stage > .showcase-preview { position: absolute; inset: 0; }
 .showcase-stage > .showcase-newspaper { color-scheme: light dark; border-radius: 14px 14px 0 0; }
 .showcase-caption { display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--showcase-bar); padding: 0 var(--showcase-inset); border-top: 1px solid #adc4b533; border-radius: 0 0 14px 14px; background: #0b2228; font-size: 12px; line-height: 1.2; }
 .showcase-caption .showcase-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -61,6 +62,22 @@
 [data-showcase][data-enhanced] .showcase-fallback { display: none !important; }
 .hero-world .showcase-fallback { display: block; width: 100%; height: calc(var(--showcase-height) + var(--showcase-bar)); object-fit: cover; border-radius: 14px; }
 /* Keep the copy/media grid and all copy available without JS and in print. */
+#learner-projects .framework-project-viewer > .section-head { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 6px 16px; }
+#learner-projects .framework-project-viewer > .section-head h2 { grid-area: 1 / 1; margin: 0; }
+#learner-projects .framework-project-viewer > .section-head p { grid-area: 2 / 1 / auto / -1; margin: 0; }
+#learner-projects .section-head [data-project-enquiry] { grid-area: 1 / 2; white-space: nowrap; }
+#learner-projects .showcase-navigation { grid-area: 1 / 3; justify-self: end; display: grid; grid-template-columns: 32px minmax(0, 1fr) 36px 32px; align-items: center; gap: 6px; width: 300px; max-width: 100%; height: 44px; padding: 0 6px; border: 1px solid #adc4b533; border-radius: 12px; background: #0b2228; color: #f0ebe0; font: 400 12px/1.2 'Avenir Next', Avenir, ui-sans-serif, system-ui, sans-serif; }
+#learner-projects .showcase-navigation .showcase-name { min-width: 0; text-align: center; }
+#learner-projects .showcase-navigation [data-project-status] { color: #c5d5ca; font-size: 11px; white-space: nowrap; text-align: center; }
+#learner-projects .showcase-navigation button { align-self: stretch; min-width: 0; padding: 0; border: 0; border-radius: 6px; background: transparent; color: inherit; font: inherit; font-size: 18px; cursor: pointer; }
+#learner-projects .showcase-navigation button:hover { color: #efac8e; background: #103138; }
+#learner-projects .showcase-navigation button:focus-visible { outline: 2px solid #efac8e; outline-offset: -3px; }
+/* The section has no bottom navigation bar. The piano's own toggle stays with
+   its sky, with the same inherited typography as the opening's caption toggle. */
+#learner-projects .showcase-cell { grid-template-rows: minmax(0, 1fr); font-size: 16px; line-height: 1.6; }
+#learner-projects .showcase-piano-control { position: absolute; z-index: 5; top: 8px; right: 8px; font-size: 12px; line-height: 1.2; }
+/* Back-page paragraph spacing must not reach the cloned keyboard. */
+#learner-projects .piano-world :is(.piano-hint, .piano-credit) { margin: 0; }
 #learner-projects .framework-project-media > .showcase-cell { height: var(--project-media-height); }
 #learner-projects [data-showcase][data-enhanced] .framework-project-media { overflow: visible; }
 #learner-projects .showcase-stage > img,
@@ -68,52 +85,67 @@
 #learner-projects .showcase-stage .screenshot-gallery-controls { right: 8px; bottom: 8px; left: 8px; }
 /* The section keyboard opens inside its media cell so the section footer stays clear. */
 #learner-projects .showcase-stage .piano-world { overflow: clip; min-height: 0; }
-#learner-projects .showcase-cell .piano-panel { inset: auto 0 0; max-height: 100%; }
-#learner-projects .piano-panel-inner { border-radius: 14px 14px 0 0; }
+#learner-projects .showcase-cell .piano-panel { inset: auto -1px 0; max-height: 100%; }
 #learner-projects .project-note { grid-column: 1 / -1; }
-/* A separate accent cell closes each project's three teaching rows. */
-#learner-projects .project-copy-result { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #d8e7de; color: #142f3a; }
-#learner-projects .project-copy-result h4 { margin: 0 0 3px; color: #0b3f51; font-size: .85rem; line-height: 1.3; }
+/* Two separate cards fill the copy column, with the payoff anchored at its foot. */
+#learner-projects .project-copy-column { display: grid; grid-template-rows: 1fr auto; gap: 12px; min-width: 0; align-self: stretch; }
+#learner-projects .project-copy-result { margin: 0; padding: 14px; border: 1px solid #e4be7840; border-radius: var(--radius-md, 16px); background: #0a272c; color: #f5f0e6; overflow-wrap: break-word; }
+#learner-projects :is(.project-copy-cells, .project-copy-result) h4 { margin: 0 0 3px; font-size: .85rem; font-weight: 700; line-height: 1.3; letter-spacing: normal; }
+/* The newspaper's warm gold accent, on a contrasting deep teal. */
+#learner-projects .project-copy-result h4 { margin-bottom: 5px; color: #e4be78; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; } /* Owner: same capitals and size as the subject label (e.g. ENGLISH), in gold. */
 #learner-projects .project-copy-result p { margin: 0; color: inherit; }
+#learner-projects .project-copy-cells { margin-bottom: 0; }
 #learner-projects .framework-project-copy { overflow-wrap: break-word; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) #learner-projects .project-copy-result { background: #305b58; color: #f5f0e6; }
-  :root:not([data-theme="light"]) #learner-projects .project-copy-result h4 { color: #f5f0e6; }
+  :root:not([data-theme="light"]) #learner-projects .project-copy-result { background: #071f25; }
 }
-:root[data-theme="dark"] #learner-projects .project-copy-result { background: #305b58; color: #f5f0e6; }
-:root[data-theme="dark"] #learner-projects .project-copy-result h4 { color: #f5f0e6; }
-/* The intro reserves one photo beside its copy, with navigation beneath both. */
-#learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-rows: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
-#learner-projects .project-intro-image { position: relative; grid-area: 1 / 1; min-width: 0; min-height: 240px; overflow: hidden; border-radius: 16px; background: #d8e7de; }
+:root[data-theme="dark"] #learner-projects .project-copy-result { background: #071f25; }
+/* Intro follows the same copy-left, media-right order as the four projects. */
+#learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); grid-template-rows: minmax(0, 1fr); gap: 12px; align-items: stretch; }
+#learner-projects .project-intro-image { position: relative; grid-area: 1 / 2; min-width: 0; min-height: 240px; overflow: hidden; border-radius: 16px; background: #d8e7de; }
 #learner-projects .project-intro-image img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-height: none; object-fit: cover; }
-#learner-projects .framework-project--intro .framework-project-copy.subject-card { grid-area: 1 / 2; justify-content: center; padding: clamp(20px, 2vw, 28px); }
+#learner-projects .framework-project--intro .framework-project-copy.subject-card { grid-area: 1 / 1; justify-content: center; padding: clamp(16px, 1.5vw, 22px); }
 #learner-projects .framework-project--intro .framework-project-copy.subject-card h3 { max-width: 24ch; margin: 0 0 16px; font-size: clamp(1.65rem, 2.5vw, 2.25rem); line-height: 1.15; }
 #learner-projects .framework-project--intro .framework-project-copy p { max-width: 65ch; margin: 0; font-size: clamp(.95rem, 1.2vw, 1.05rem); line-height: 1.55; }
-#learner-projects [data-project="intro"] > .showcase-cell { grid-column: 1 / -1; height: auto; grid-template-rows: var(--showcase-bar); }
-#learner-projects [data-project="intro"] > .showcase-cell .showcase-stage { display: none; }
-#learner-projects [data-project="intro"] > .showcase-cell .showcase-caption { border-radius: 14px; }
+#learner-projects [data-project="intro"] > .showcase-cell { display: none; }
 @media screen and (max-width: 999px) {
-  /* Full paragraphs use natural height; the intro photo stacks above its text. */
+  /* Full paragraphs use natural height, with media after the text on phones. */
+  #learner-projects .framework-project-viewer > .section-head { grid-template-columns: minmax(0, 1fr); }
+  #learner-projects .showcase-navigation { grid-area: 3 / 1; }
+  #learner-projects .section-head [data-project-enquiry] { grid-area: 4 / 1; white-space: normal; }
   #learner-projects [data-showcase][data-enhanced] > .framework-project-slides > [data-project-slide][hidden] { display: none; }
-  #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; }
+  #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; }
   #learner-projects .project-intro-image { grid-area: auto; min-height: 0; height: clamp(160px, 45vw, 240px); }
   #learner-projects .framework-project--intro .framework-project-copy.subject-card { grid-area: auto; }
+  #learner-projects .project-copy-column { grid-template-rows: auto auto; font-size: .95rem; line-height: 1.45; }
+}
+@media screen and (min-width: 1000px) and (max-width: 1199px) {
+  /* Give the heading room on narrow desktop frames while retaining one shared CTA. */
+  #learner-projects .framework-project-viewer > .section-head { grid-template-columns: minmax(0, 1fr) auto; }
+  #learner-projects .showcase-navigation { grid-area: 1 / 2; }
+  #learner-projects .section-head [data-project-enquiry] { grid-area: 3 / 1 / auto / -1; justify-self: start; }
 }
 @media screen and (min-width: 1000px) {
   /* Use 6px of each 24px frame inset; the section still has an 18px gutter. */
   body[data-page-frame] #learner-projects { margin-inline: -6px; }
+  body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] { grid-template-rows: auto 1fr auto; gap: 10px 12px; }
+  body[data-page-frame] #learner-projects .framework-project-viewer > .section-head { grid-column: 1 / -1; grid-row: 1; margin: 0; }
+  body[data-page-frame] #learner-projects .framework-project-viewer > .section-head h2 { font-size: clamp(1.4rem, 3.2vh, 1.8rem); }
+  body[data-page-frame] #learner-projects .framework-project-viewer > .section-head p { font-size: .9rem; line-height: 1.4; }
+  body[data-page-frame] #learner-projects .framework-project-viewer[data-enhanced] > .framework-project-slides { grid-row: 2; }
+  body[data-page-frame] #learner-projects .project-note { grid-column: 1 / -1; grid-row: 3; }
   /* At 1440px this gives the iframe about 590px, above its 460px phone breakpoint. */
   body[data-page-frame] #learner-projects .framework-project { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); column-gap: 12px; }
-  body[data-page-frame] #learner-projects .framework-project:not(.framework-project--intro) .framework-project-copy { align-self: start; padding: 8px 10px; font-size: clamp(.8125rem, 1.75vh, .85rem); line-height: 1.34; }
+  body[data-page-frame] #learner-projects .project-copy-column { font-size: clamp(.8125rem, 1.75vh, .85rem); line-height: 1.34; }
+  body[data-page-frame] #learner-projects .framework-project:not(.framework-project--intro) .framework-project-copy { align-self: stretch; padding: 8px 10px; font-size: inherit; line-height: inherit; }
   body[data-page-frame] #learner-projects .project-label { margin-bottom: 3px; }
   body[data-page-frame] #learner-projects .framework-project-copy h3 { margin-bottom: 5px; font-size: clamp(1.125rem, 2.6vh, 1.35rem); }
-  body[data-page-frame] #learner-projects .project-copy-cells { gap: 0; margin-bottom: 4px; }
+  body[data-page-frame] #learner-projects .project-copy-cells { gap: 0; margin-bottom: 0; }
   body[data-page-frame] #learner-projects .project-copy-cells > div { padding-block: 3px; }
-  body[data-page-frame] #learner-projects .project-copy-cells h4 { margin-bottom: 1px; font-size: .775rem; line-height: 1.25; }
-  body[data-page-frame] #learner-projects .project-copy-result { margin-bottom: 6px; padding: 6px 8px; }
-  body[data-page-frame] #learner-projects .project-copy-result h4 { margin-bottom: 2px; font-size: .775rem; line-height: 1.25; }
-  body[data-page-frame] #learner-projects .framework-project:not(.framework-project--intro) .framework-project-copy > a { margin-top: 0; }
-  body[data-page-frame] #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+  body[data-page-frame] #learner-projects :is(.project-copy-cells, .project-copy-result) h4 { margin-bottom: 1px; font-size: .775rem; line-height: 1.25; }
+  body[data-page-frame] #learner-projects .project-copy-result h4 { margin-bottom: 4px; font-size: .65rem; line-height: 1.3; letter-spacing: .08em; }
+  body[data-page-frame] #learner-projects .project-copy-result { padding: 8px 10px; }
+  body[data-page-frame] #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); }
 }
 @media (min-width: 1550px) { [data-showcase] { --showcase-height: 540px; } }
 @media (max-width: 1050px) { [data-showcase] { --showcase-height: 400px; } }
@@ -126,8 +158,10 @@
   body[data-page-frame] #learner-projects .project-note { grid-column: 1 / -1; }
 }
 @media print {
-  .showcase-cell { display: none !important; }
+  .showcase-cell, .showcase-navigation { display: none !important; }
   [data-showcase][data-enhanced] .showcase-fallback { display: block !important; height: auto !important; position: static !important; }
+  #learner-projects .project-copy-result { background: #fff !important; color: #000; border-color: #aaa; break-inside: avoid; }
+  #learner-projects .project-copy-result h4 { color: #000; }
 }
 /* Earlier back-page image rules also reach nested art: keep the mascot's real
    proportions and let media previews fill the available stage. */
@@ -136,5 +170,5 @@ body[data-page-frame] #learner-projects .showcase-stage .screenshot-gallery img,
 body[data-page-frame] #learner-projects .showcase-drink-screen img { width: 100%; height: 100%; max-height: none; }
 body[data-page-frame] #learner-projects .showcase-drink-screen img,
 body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallback { object-fit: cover; object-position: center; }
-#learner-projects .showcase-stage .piano-world .hero-mascot { width: 51%; height: auto; max-height: none; border-radius: 0; }
+#learner-projects .showcase-stage .piano-world .hero-mascot { width: 51%; height: auto; max-height: none; border-radius: 0; object-fit: fill; }
 [data-showcase]:focus-visible { outline: 2px solid #efac8e; outline-offset: 3px; }

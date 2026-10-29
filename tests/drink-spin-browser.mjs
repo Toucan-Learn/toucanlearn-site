@@ -82,7 +82,7 @@ export async function assertDrinkLayout(page, drink) {
     const c = rect(card);
     const menu = rect(controls);
     const coversDrink = box => box.x < subject.right && box.right > subject.x && box.y < subject.bottom && box.bottom > subject.y;
-    return { screen: s, stage: rect(stage), image: rect(image), controls: rect(controls), caption: rect(caption), card: c,
+    return { screen: s, stage: rect(stage), slot: rect(stage.closest('.showcase-cell')), image: rect(image), controls: rect(controls), caption: caption && rect(caption), card: c,
       painted, fit: getComputedStyle(image).objectFit, position: getComputedStyle(image).objectPosition,
       backgrounds: [stage, screen, stage.querySelector('.showcase-drinks')].map(node => getComputedStyle(node).backgroundColor),
       buttons: [...controls.querySelectorAll('button')].map(rect),
@@ -99,7 +99,7 @@ export async function assertDrinkLayout(page, drink) {
       }),
       hintCount: document.querySelectorAll('.drink-spin-hint').length,
       hintText: stage.textContent.includes('Drag to spin'),
-      inset: parseFloat(getComputedStyle(caption).paddingLeft),
+      inset: parseFloat(getComputedStyle(stage.closest('[data-showcase]')).getPropertyValue('--showcase-inset')),
       cardName: card.querySelector('strong').textContent, cardLine: card.querySelector('p').textContent,
       cardBackground: getComputedStyle(card).backgroundColor, cardInk: getComputedStyle(card).color,
       cardPointerEvents: getComputedStyle(card).pointerEvents,
@@ -116,7 +116,7 @@ export async function assertDrinkLayout(page, drink) {
   assert.deepEqual(layout.backgrounds, Array(3).fill('rgb(31, 122, 117)'), 'Teal stays behind the poster and loading frames');
   assert.equal(layout.hintCount, 0, 'No drag hint is mounted');
   assert.equal(layout.hintText, false, 'No drag hint copy is shown');
-  assert(Math.abs(layout.screen.bottom - layout.stage.bottom) <= 1 && Math.abs(layout.screen.bottom - layout.caption.y) <= 1, 'The image fills the former switch footer');
+  assert(Math.abs(layout.screen.bottom - layout.stage.bottom) <= 1 && Math.abs(layout.screen.bottom - (layout.caption?.y ?? layout.slot.bottom)) <= 1, 'The image fills the media area up to the homepage caption or the section cell edge');
   assert(Math.abs(layout.controls.x - layout.stage.x - layout.inset) <= 1, 'The menu uses the left inset');
   assert(!layout.menuInDragZone && !layout.menuCoversDrink, `The menu stays outside the central drink region: ${JSON.stringify(layout)}`);
   assert(layout.controls.width < layout.stage.width - 2 * layout.inset - 1, 'The menu stays compact');
@@ -283,10 +283,9 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
         };
         requestAnimationFrame(sample);
       }));
-      for (let i = 1; i < coast.length; i++) for (const column of [0, 1]) {
-        const delta = (coast[i][column] - coast[i - 1][column] + count) % count;
-        assert(Math.min(delta, count - delta) <= 1, 'A fast flick never skips a source view between animation frames');
-      }
+      // Owner: a flick keeps its inertia (it may cover several views per frame) rather than being capped.
+      const travelled = coast.slice(1).reduce((sum, row, i) => { const d = (row[0] - coast[i][0] + count) % count; return sum + Math.min(d, count - d); }, 0);
+      assert(travelled > 3, 'A fast flick coasts on instead of snapping back');
       await wait(5000);
       const settled = await frame(page);
       await wait(1100);

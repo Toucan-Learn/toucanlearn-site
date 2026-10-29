@@ -11,14 +11,17 @@ const showcaseStyles = await readFile(new URL('../project-showcase.css', import.
 assert(!spinSource.includes('Drag to spin') && !showcaseStyles.includes('drink-spin-hint'), 'Remove the drag hint markup and styles entirely');
 const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString('base64')}`;
 const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL));
-const { projects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
+const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
 await import('./drink-spin-source.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
+assert.deepEqual(sectionProjects.map(project => project.id), ['intro', ...projects.map(project => project.id)], 'Only the children’s carousel has a fifth slide');
+assert.deepEqual(sectionProjects[0], { id: 'intro', name: '', type: 'intro' }, 'The intro keeps its HTML photo slot and adds no caption copy or live media');
+assert.deepEqual(sectionProjects.slice(1), projects, 'Both carousels keep the same four project media records');
 assert.deepEqual(projects.find(project => project.id === 'drinks').drinks.map(({ name, lines }) => ({ name, lines })), [
   { name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
   { name: 'Fizzy', lines: ['Light, bright red.', 'Fizzy, extreme.'] },
   { name: 'Ground Pinch', lines: ['Designed for everyone.'] },
-], 'The drink cards retain the exact approved words and capitalisation');
+], 'The shared drink-viewer captions retain their existing words and capitalisation');
 for (let i = 0; i < projects.length; i++) {
   assert.equal(initialProject(undefined, () => (i + .5) / projects.length, null), i, 'With no fixed start, every project can start a load');
   assert.equal(initialProject(projects[i].id, () => 0), i, 'Review override is deterministic');
@@ -110,17 +113,31 @@ for (const page of ['index.html', 'children.html']) {
 await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.url)), 'Retire the alternate piano implementation');
 
 const site = fileURLToPath(new URL('../', import.meta.url));
-const before = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || 'd9d653b'}:index.html`], { cwd: site, encoding: 'utf8' });
+const before = execFileSync('git', ['show', `${process.env.PROJECT_COPY_BASE || process.env.SHOWCASE_BASE || 'd40ecf2'}:index.html`], { cwd: site, encoding: 'utf8' });
 const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const withoutShowcaseTokens = html => html.replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN');
+assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the shared CSS/JS cache tokens');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
 assert.equal(belowHero(after), belowHero(before), 'Everything below the homepage hero stays untouched');
 
 const children = await readFile(new URL('../children.html', import.meta.url), 'utf8');
-assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), projects.map(project => project.id), 'Every data record has its matching copy card');
+assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), sectionProjects.map(project => project.id), 'The intro precedes all four matching copy cards');
+assert(!/data-project="intro"|Learning is easier when you enjoy it\./.test(after), 'The homepage has no intro slide');
+for (const asset of ['css', 'js']) {
+  const token = html => html.match(new RegExp(`project-showcase\\.${asset}\\?v=([^"']+)`))?.[1];
+  assert(token(children) && token(children) === token(after), `${asset}: both pages share the refreshed cache token`);
+  assert.notEqual(token(after), token(before), `${asset}: bump the changed asset’s cache token`);
+}
 
 const newspaperHTML = await readFile(new URL('../projects/football-journalism/index.html', import.meta.url), 'utf8');
+const newspaperStylesheet = newspaperHTML.match(/href="(\.\/assets\/[^"?]+\.css)/)[1];
+const newspaperStyles = await readFile(new URL(`../projects/football-journalism/${newspaperStylesheet}`, import.meta.url), 'utf8');
+const mobileLayouts = [...newspaperStyles.matchAll(/@media\s*\(width\s*<=\s*(\d+)px\)\{([^@]*)/g)]
+  .filter(([, , rules]) => /\.news-front,\.news-two,\.news-related\{grid-template-columns:minmax\(0,1fr\)/.test(rules));
+assert.equal(mobileLayouts.length, 1, 'Identify the active build’s single-column front-page breakpoint');
+export const newspaperMobileBreakpoint = Number(mobileLayouts[0][1]);
 const newspaperScript = newspaperHTML.match(/src="(\.\/assets\/[^"?]+\.js)/)[1];
 const newspaper = await readFile(new URL(`../projects/football-journalism/${newspaperScript}`, import.meta.url), 'utf8');
 assert(newspaper.includes('(window===window.top||document.hasFocus())&&r.current?.focus'), 'The embedded newspaper must not take initial focus and block idle rotation');
@@ -129,4 +146,4 @@ for (const id of ['piano-toggle', 'hero-keyboard', 'sky-canvas', 'flock-canvas']
   assert.equal([...source.matchAll(new RegExp(`id="${id}"`, 'g'))].length, 1, `The shared piano must define #${id} exactly once`);
   for (const html of [after, children]) assert(!html.includes(`id="${id}"`), `Page markup must not duplicate the shared #${id}`);
 }
-console.log('Shared showcase checks passed: random starts, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');
+console.log('Shared showcase checks passed: children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

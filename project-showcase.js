@@ -12,6 +12,9 @@ export const projects = [
   { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-preview.png', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
+// Only the children's manual carousel includes the text-led introduction.
+export const sectionProjects = [{ id: 'intro', name: '', type: 'intro' }, ...projects];
+
 // Owner, 28 Oct 2026: "lets have piano as the 1st in the carousel on the frontpage for now".
 // Set to null to go back to a random project on each homepage load.
 export const homepageStart = 'piano';
@@ -123,10 +126,11 @@ const activityTypes = ['pointerdown', 'pointermove', 'pointerup', 'pointercancel
 export function initShowcase(root) {
   if (root.hasAttribute('data-showcase-ready')) return;
   const automatic = root.dataset.showcaseMode === 'auto';
+  const entries = automatic ? projects : sectionProjects;
   const slides = [...root.querySelectorAll('[data-project-slide]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const requested = new URLSearchParams(location.search).get('project');
-  let index = automatic ? initialProject(requested) : Math.max(0, projects.findIndex(project => project.id === requested));
+  let index = automatic ? initialProject(requested) : Math.max(0, entries.findIndex(project => project.id === requested));
   // The homepage counts from wherever it opened, so its first project reads "1 of 4".
   const countFrom = automatic ? index : 0;
   let generation = 0;
@@ -176,6 +180,7 @@ export function initShowcase(root) {
     const token = ++generation;
     mounted = project.id;
     root.dataset.showcaseMounted = project.id;
+    if (project.type === 'intro') return;
     stage.replaceChildren(preview(project));
     if (project.type === 'piano') {
       import('./hero-sky.js?v=20261029-piano-3').then(({ initHeroSky }) => {
@@ -259,33 +264,34 @@ export function initShowcase(root) {
     if (!visible()) {
       if (dispose?.setActive) dispose.setActive(false);
       else if (mounted) unmount();
-      if (!mounted) stage.replaceChildren(preview(projects[index]));
+      if (!mounted && entries[index].poster) stage.replaceChildren(preview(entries[index]));
       pointers.clear();
       held.clear();
       timer.pause();
       return;
     }
-    if (mounted !== projects[index].id) mount(projects[index]);
+    if (mounted !== entries[index].id) mount(entries[index]);
     dispose?.setActive?.(inView);
     if (automatic && inView && !motion.matches) timer.resume();
     else timer.pause();
   }
   function show(requestedIndex) {
-    const nextIndex = (requestedIndex + projects.length) % projects.length;
+    const nextIndex = (requestedIndex + entries.length) % entries.length;
     if (cell.contains(document.activeElement) && !document.activeElement.closest('.showcase-caption')) root.focus({ preventScroll: true });
-    if (slides.some(slide => slide.dataset.project !== projects[nextIndex].id && slide.contains(document.activeElement))) root.focus({ preventScroll: true });
+    if (slides.some(slide => slide.dataset.project !== entries[nextIndex].id && slide.contains(document.activeElement))) root.focus({ preventScroll: true });
     unmount();
     index = nextIndex;
-    root.dataset.project = projects[index].id;
+    root.dataset.project = entries[index].id;
     slides.forEach(slide => {
-      const inactive = slide.dataset.project !== projects[index].id;
+      const inactive = slide.dataset.project !== entries[index].id;
       slide.hidden = inactive;
       slide.inert = inactive;
     });
-    const slot = automatic ? root : slides.find(slide => slide.dataset.project === projects[index].id).querySelector('.framework-project-media');
+    const selected = slides.find(slide => slide.dataset.project === entries[index].id);
+    const slot = automatic ? root : selected.querySelector('.framework-project-media') || selected;
     slot.append(cell);
-    name.textContent = projects[index].name;
-    status.textContent = `${(index - countFrom + projects.length) % projects.length + 1} of ${projects.length}`;
+    name.textContent = entries[index].name;
+    status.textContent = `${(index - countFrom + entries.length) % entries.length + 1} of ${entries.length}`;
     timer.reset();
     sync();
   }
@@ -303,7 +309,7 @@ export function initShowcase(root) {
   window.addEventListener('blur', () => { pointers.clear(); held.clear(); });
   root.addEventListener('keydown', event => {
     if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey || event.target.closest(interactive)) return;
-    const destination = { ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: projects.length - 1 }[event.key];
+    const destination = { ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: entries.length - 1 }[event.key];
     if (destination === undefined) return;
     event.preventDefault();
     show(destination);
@@ -324,7 +330,7 @@ export function initShowcase(root) {
   const revealHash = () => {
     const target = document.getElementById(location.hash.slice(1));
     const selected = slides.find(slide => slide === target || (target && slide.contains(target)));
-    if (selected) show(projects.findIndex(project => project.id === selected.dataset.project));
+    if (selected) show(entries.findIndex(project => project.id === selected.dataset.project));
   };
   window.addEventListener('hashchange', revealHash);
   window.addEventListener('popstate', revealHash);

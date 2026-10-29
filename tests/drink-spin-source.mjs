@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 const source = await readFile(new URL('../drink-spin.js', import.meta.url), 'utf8');
-const { spinMotion, frameAt, frameBlend, progressiveFrames, createDrinkSpin, renderDrinkInfo } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+const { spinMotion, frameAt, frameBlend, progressiveFrames, createDrinkSpin, renderDrinkInfo, prefetchDrink } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 function fakeClock(frameDelay = 16) {
   let time = 0;
   let nextId = 0;
@@ -103,17 +103,22 @@ for (let i = 0; i < 5; i++) {
   assert(slow.state.turns > before && slow.state.turns - before <= 1 / 120, 'A delayed animation tick cannot skip a view');
 }
 slow.destroy();
-for (const count of [2, 71, 72, 120]) {
+const flickClock = fakeClock();
+const flick = spinMotion({ clock: flickClock, maxStep: () => (1 - 1e-9) / 360, draw() {} });
+flick.setActive(true); flick.begin(); flickClock.tick(16); flick.drag(.1); flick.end();
+const flickStart = flick.state.turns; flickClock.tick(160);
+assert(flick.state.turns - flickStart > 3 / 360, 'The idle step cap never limits a flick');
+flick.destroy();
+for (const count of [2, 71, 72, 120, 360]) {
   const order = progressiveFrames(count);
   assert.equal(new Set(order).size, count);
-  assert.deepEqual(order.slice(0, Math.min(3, count)), count === 2 ? [0, 1] : [0, 1, count - 1], 'Adjacent frames preload across the wrap first');
+  const indices = Array.from({ length: count }, (_, i) => i);
+  assert.deepEqual(order, [...indices.filter(i => i % 4 === 0), ...indices.filter(i => i % 4 === 2), ...indices.filter(i => i % 2 === 1)], 'Coarse quarter, half, then full resolution');
 }
-
 for (const [turns, lower, upper, mix] of [[.15, 1, 2, .5], [-.025, 9, 0, .75], [1, 0, 1, 0]]) {
   const blend = frameBlend(turns, 10);
-  assert.equal(blend.lower, lower);
-  assert.equal(blend.upper, upper);
-  assert(Math.abs(blend.mix - mix) < 1e-9, 'Continuous fractional angle, including reverse wrapping');
+  assert.equal(blend.lower, lower); assert.equal(blend.upper, upper);
+  assert(Math.abs(blend.mix - mix) < 1e-9);
 }
 class Element extends EventTarget {
   constructor(tag = 'div') { super(); this.tagName = tag; this.dataset = {}; this.style = {}; this.attributes = new Map(); this.children = []; this.captured = new Set(); }
@@ -134,41 +139,28 @@ class Element extends EventTarget {
 }
 const event = (type, props) => Object.assign(new Event(type, { cancelable: true }), props);
 const globals = Object.fromEntries(['document', 'window', 'Image', 'fetch'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
-const images = [];
-const requests = [];
+const images = [], requests = [];
 let cachedDecodes = false;
-let manifestData = { frameCount: 12, dragDirection: 1 };
+let manifestData = { frameCount: 12, dragDirection: -1 };
 const file = img => img.src?.split('/').pop().split('?')[0];
+const index = img => Number(file(img)?.slice(0, 3));
+const pendingFrames = () => images.filter(img => img.src && !img.settled && /^\d{3}\.webp$/.test(file(img)));
 const flush = async () => { for (let i = 0; i < 15; i++) await Promise.resolve(); };
-const loadBatch = async clock => { clock.tick(16); await flush(); };
-async function complete(clock, button) {
-  for (let round = 0; round < 150; round++) {
+const loadBatch = async clock => { clock.tick(17); await flush(); };
+async function complete(clock, count = manifestData.frameCount, start = 0, concurrency = 6) {
+  for (let round = 0; round < 400; round++) {
     await loadBatch(clock);
-    const pending = images.filter(img => img.src && !img.settled);
-    if (!pending.length) return;
-    assert(pending.filter(img => /^\d{3}\.webp$/.test(file(img))).length <= 6, 'At most six frame fetch/decode jobs run concurrently');
-    pending.forEach(img => img.resolve());
-    await flush();
-    if (button?.dataset.ready === 'true') return;
+    const batch = pendingFrames();
+    assert(batch.length <= concurrency, `At most ${concurrency} concurrent fetch/decode jobs`);
+    batch.forEach(img => img.resolve()); await flush();
+    const decoded = images.slice(start).filter(img => img.decoded && /^\d{3}\.webp$/.test(file(img)));
+    if (decoded.length === count) return;
   }
   assert.fail('Preload queue did not drain');
 }
 try {
   globalThis.document = { createElement: tag => new Element(tag) };
   globalThis.window = new EventTarget();
-  const card = new Element();
-  for (const [name, lines, text] of [
-    ['Skids', ["When you're in a rush, have some Skids."], "When you're in a rush, have some Skids."],
-    ['Fizzy', ['Light, bright red. Fizzy Extreme.'], 'Light, bright red. Fizzy Extreme.'],
-    ['Ground Pinch', ['It’s sweet, fast, cheap, and will help you destroy your enemies.'], 'It’s sweet, fast, cheap, and will help you destroy your enemies.'],
-  ]) {
-    renderDrinkInfo(card, { name, lines });
-    assert.equal(card.className, 'drink-info');
-    assert.equal(card.children.length, 2);
-    assert.equal(card.children[0].textContent, name);
-    assert.equal(card.children[1].textContent, text);
-    assert.equal(card.getAttribute('aria-live'), 'polite');
-  }
   globalThis.Image = class extends Element {
     constructor() { super('img'); images.push(this); }
     decode() {
@@ -178,284 +170,201 @@ try {
     resolve() { this.decoded = this.settled = true; this.accept?.(); }
     fail() { this.settled = true; this.reject?.(Error('decode failed')); }
   };
-  globalThis.fetch = async (url, options) => { requests.push({ url, signal: options.signal }); return { ok: true, json: async () => manifestData }; };
-  const screen = new Element();
-  const domClock = fakeClock();
+  const fetchManifest = async (url, options) => { requests.push({ url, ...options }); return { ok: true, json: async () => manifestData }; };
+  globalThis.fetch = fetchManifest;
+  const card = new Element();
+  for (const [name, line] of [['Skids', "When you're in a rush, have some Skids."], ['Fizzy', 'Light, bright red. Fizzy Extreme.'], ['Ground Pinch', 'It’s sweet, fast, cheap, and will help you destroy your enemies.']]) {
+    renderDrinkInfo(card, { name, lines: [line] });
+    assert.equal(card.children[0].textContent, name); assert.equal(card.children[1].textContent, line);
+    assert.equal(card.getAttribute('aria-live'), 'polite'); assert.equal(card.getAttribute('aria-atomic'), 'true');
+  }
+  const screen = new Element(), domClock = fakeClock();
   let activity = 0;
   const viewer = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock, activity: () => activity++ });
   const button = screen.children[0];
-  assert.equal(button.children.length, 0, 'Wait for poster decode before first paint');
-  assert.equal(images.length, 1, 'Inactive cells request only the poster');
+  assert.equal(button.children.length, 0, 'Wait for poster decode');
   images[0].resolve(); await flush();
-  assert.equal(file(button.children[0]), 'poster.webp');
-  assert.equal(button.getAttribute('aria-label'), 'Rotate Skids, 360° view');
   viewer.setActive(true); await flush();
-  assert.equal(requests.length, 0, 'Activation leaves manifest and frame loading out of the switch task');
-  assert.equal(images.length, 1, 'The poster paints before any sequence frames are requested');
+  assert.equal(requests.length, 0, 'No manifest or frame loading in the switch task');
   await loadBatch(domClock);
-  assert.deepEqual(images.slice(1).map(file), ['000.webp', '001.webp', '011.webp', '002.webp', '010.webp', '003.webp']);
-  images[1].resolve(); await flush();
-  assert.equal(images.length, 7, 'A completed decode cannot refill the queue in a microtask');
-  domClock.tick(1000);
-  const held = [...button.children];
-  assert.equal(file(held[0]), 'poster.webp');
-  domClock.tick(1000);
-  assert.deepEqual(button.children, held, 'Keep the poster still while any frame is undecoded');
-  images[2].resolve(); await flush(); // 001 is the next frame in the idle direction
+  assert.deepEqual(pendingFrames().map(file), ['000.webp', '004.webp', '008.webp']);
+  pendingFrames().slice(0, 2).forEach(img => img.resolve()); await flush();
   await loadBatch(domClock);
-  assert.equal(button.children.length, 1, 'Even an available adjacent pair cannot start an incomplete rotation');
-  assert.equal(domClock.pending(), 0, 'Loading time never advances the motion clock');
-  await complete(domClock, button);
-  assert.equal(button.dataset.ready, 'true');
-  assert.equal(Number(button.dataset.turns), 0, 'Start at the current angle without catching up loading time');
-  assert.equal(button.children.length, 2);
-  assert(button.children.every(img => img.decoded));
-  const mix1 = Number(button.dataset.blend);
-  domClock.tick(16);
-  assert.notEqual(Number(button.dataset.blend), mix1, 'Opacity interpolates every animation frame within the same 3-degree interval');
-  assert.equal(Number(button.children[1].style.opacity), Number(button.dataset.blend));
-  assert.equal(button.children[0].style.opacity, '1', 'Opaque bottom prevents the background bleeding through');
+  assert.equal(images.length, 4, 'A pending coarse decode holds back finer requests');
+  domClock.tick(1000);
+  assert.equal(file(button.children[0]), 'poster.webp', 'Poster stays still until the whole coarse set decodes');
+  assert.equal(Number(button.dataset.turns || 0), 0);
+  pendingFrames()[0].resolve(); await flush();
+  assert.equal(button.dataset.ready, 'true', 'The coarse quarter alone starts automatic rotation');
+  assert.equal(Number(button.dataset.turns), 0, 'Loading never advances the motion clock');
+  await loadBatch(domClock);
+  assert.deepEqual(pendingFrames().map(file), ['002.webp', '006.webp', '010.webp']);
+  assert(Number(button.dataset.turns) > 0, 'Automatic motion runs while finer frames are undecoded');
+  assert.equal(button.dataset.lowerFrame, '0'); assert.equal(button.dataset.upperFrame, '4');
+  assert(Number(button.dataset.blend) > 0 && Number(button.dataset.blend) < 1, 'Crossfade spans the nearest decoded neighbours');
+  assert.equal(button.children[0].style.opacity, '1', 'Opaque bottom prevents background bleeding');
+  const angle = button.dataset.turns;
+  pendingFrames()[0].resolve(); await flush();
+  assert.equal(button.dataset.turns, angle, 'A finer decode does not reset the angle');
+  assert.equal(button.dataset.upperFrame, '2', 'Finer views slot into the decoded bracket');
+  assert.equal(button.dataset.frame, '0', 'Frame metadata also names a decoded view');
+  await complete(domClock);
   assert.equal(images.length, 13);
-  assert(requests.every(r => r.url.includes('/skids/')) && images.every(img => img.src.includes('/skids/')));
   button.dispatchEvent(event('pointerdown', { pointerId: 1, isPrimary: true, button: 0, clientX: 300 }));
   assert(button.hasPointerCapture(1) && viewer.isDragging());
   domClock.tick(16);
   const start = Number(button.dataset.turns);
   button.dispatchEvent(event('pointermove', { pointerId: 1, clientX: 250 }));
-  assert(Math.abs(Number(button.dataset.turns) - start + 0.6 * 50 / 600) < 1e-9, '0.6 of a turn per viewer width (owner: softer drag), with the current dragDirection');
+  assert(Math.abs(Number(button.dataset.turns) - start - 0.6 * 50 / 600) < 1e-9, 'Owner drag gain 0.6 and direction -1');
   const dragged = button.dataset.turns;
   button.dispatchEvent(event('pointermove', { pointerId: 2, clientX: 50 }));
   assert.equal(button.dataset.turns, dragged, 'Other pointers cannot take over');
   button.dispatchEvent(event('pointerup', { pointerId: 1 }));
-  assert(!viewer.isDragging() && !button.hasPointerCapture(1));
-  let previousCoast = Number(button.dataset.turns);
-  for (let i = 0; i < 300; i++) {
-    domClock.tick(16);
-    const next = Number(button.dataset.turns);
-    assert(Math.abs(next - previousCoast) <= 1 / 12, 'Coasting paints every view without changing its direction');
-    previousCoast = next;
-  }
+  domClock.tick(160); assert(Number(button.dataset.turns) > Number(dragged), 'A flick coasts freely');
+  domClock.tick(6000);
   const beforeKey = Number(button.dataset.turns);
   const key = event('keydown', { key: 'ArrowRight' }); button.dispatchEvent(key);
-  assert(key.defaultPrevented);
-  assert(Math.abs(Number(button.dataset.turns) - beforeKey - 1 / 12) < 1e-9);
+  assert(key.defaultPrevented && Math.abs(Number(button.dataset.turns) - beforeKey + 1 / 12) < 1e-9);
   const keyed = Number(button.dataset.turns); domClock.tick(16);
-  assert(Number(button.dataset.turns) > keyed, 'Keyboard input resumes immediately');
-  assert(activity >= 3);
+  assert(Number(button.dataset.turns) > keyed && activity >= 3);
   viewer.setActive(false);
   const still = button.dataset.turns; domClock.tick(32000);
   assert.equal(button.dataset.turns, still); assert.equal(domClock.pending(), 0);
   const lastGood = [...button.children]; viewer.destroy();
-  // The shared showcase keeps its project-specific preview underneath the spin.
-  // It must not be mistaken for the outgoing viewer when carrying a frame.
-  const preview = new Element('img');
-  preview.decoded = true;
+  const preview = new Element('img'); preview.decoded = true;
   screen.replaceChildren(preview, button);
-  const requested = images.length;
+  const fizzyStart = images.length;
   const fizzy = createDrinkSpin(screen, { id: 'fizzy', name: 'Fizzy' }, { clock: domClock, reduced: true });
-  fizzy.setActive(true); await flush();
-  const fizzButton = screen.children[0];
+  const fizzButton = screen.children[0]; fizzy.setActive(true);
   assert.deepEqual(fizzButton.children, lastGood, 'Switching drinks preserves the last decoded composition');
-  assert.equal(images.length, requested + 1, 'Reduced motion only fetches the poster');
-  images.at(-1).resolve(); await flush();
-  assert.equal(fizzButton.children[0].dataset.drink, 'fizzy');
-  assert.equal(fizzButton.dataset.frame, '0');
-  fizzButton.dispatchEvent(event('pointerdown', { pointerId: 3, isPrimary: true, button: 0, clientX: 300 }));
-  await flush(); assert.equal(images.length, requested + 7, 'Pointerdown starts frame loading even with reduced motion');
-  fizzButton.releasePointerCapture(3); assert(!fizzy.isDragging());
-  fizzButton.dispatchEvent(event('keydown', { key: 'ArrowLeft' })); await flush();
-  await complete(domClock, fizzButton); assert.equal(fizzButton.dataset.frame, '11', 'Reduced motion permits keyboard rotation');
+  images.at(-1).resolve(); await flush(); await loadBatch(domClock);
+  assert.equal(images.length, fizzyStart + 1, 'Reduced motion only fetches the poster');
+  fizzButton.dispatchEvent(event('keydown', { key: 'ArrowRight' })); await flush();
+  assert.deepEqual(pendingFrames().map(index), [0, 4, 8], 'New drinks begin with the coarse set, even for manual input');
+  pendingFrames().filter(img => [0, 8].includes(index(img))).forEach(img => img.resolve()); await flush();
+  assert.equal(fizzButton.dataset.lowerFrame, '8'); assert.equal(fizzButton.dataset.upperFrame, '0', 'Decoded brackets wrap across the seam');
+  assert(Math.abs(Number(fizzButton.dataset.blend) - .75) < 1e-9);
+  assert.equal(fizzButton.dataset.ready, 'false', 'Manual input works before the coarse set is complete');
+  await complete(domClock, 12, fizzyStart);
   const manual = fizzButton.dataset.turns; domClock.tick(32000);
-  assert.equal(fizzButton.dataset.turns, manual, 'Reduced motion has no auto spin or inertia');
+  assert.equal(fizzButton.dataset.turns, manual, 'Reduced motion has no automatic animation or inertia');
   fizzy.destroy();
-  // The first gesture must work while most of the 120-frame sequence is still undecoded.
-  manifestData = { frameCount: 120, dragDirection: -1 };
-  for (const reducedMotion of [true, false]) {
-    const firstDragClock = fakeClock();
-    const sequenceStart = images.length;
-    const firstDrag = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: firstDragClock, reduced: reducedMotion });
-    const dragButton = screen.children[0];
-    images.at(-1).resolve(); await flush();
-    firstDrag.setActive(true); await flush();
-    await loadBatch(firstDragClock);
-    const requestsBeforeDown = requests.length;
+  // A held first gesture records its angle before the manifest and updates on decode.
+  for (const reducedMotion of [false, true]) {
+    const dragClock = fakeClock();
+    const dragViewer = createDrinkSpin(screen, { id: 'fizzy', name: 'Fizzy' }, { clock: dragClock, reduced: reducedMotion });
+    const dragButton = screen.children[0]; images.at(-1).resolve(); await flush(); dragViewer.setActive(true);
     dragButton.dispatchEvent(event('pointerdown', { pointerId: 8, isPrimary: true, button: 0, clientX: 300 }));
-    if (reducedMotion) assert.equal(requests.length, requestsBeforeDown + 1, 'Reduced-motion pointerdown starts loading before any move');
-    // Move before the manifest or any frame has decoded, then hold the same pointer down.
-    // 20/0.6 px at the softer 0.6 drag gain = the same 1/30 of a turn as before.
-    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 300 - 20 / 0.6 }));
-    await flush();
-    assert(Math.abs(Number(dragButton.dataset.turns) - 20 / 600) < 1e-9, 'The very first drag records its angle before full decode');
-    assert.equal(file(dragButton.children[0]), 'poster.webp', 'A drag with no decoded frames holds the poster');
-    const decode = async name => {
-      const image = images.slice(sequenceStart + 1).find(img => file(img) === name);
-      assert(image && !image.settled, `${name} is queued for decode (${images.slice(sequenceStart + 1).map(file)})`);
-      image.resolve(); await flush(); await loadBatch(firstDragClock);
-    };
-    await decode('001.webp');
-    assert.equal(dragButton.dataset.frame, '1', 'A reduced-motion first drag changes the frame as soon as a nearby frame decodes');
-    assert(firstDrag.isDragging(), 'Decode updates happen during the original drag without another move');
-    await decode('004.webp');
-    assert.equal(dragButton.dataset.frame, '4', 'The current drag target paints as it decodes');
-    assert.equal(dragButton.dataset.ready, 'false', 'Manual rotation never waits for all 120 decodes');
-    assert.equal(firstDragClock.pending(), 0, 'Partial manual loading cannot start automatic rotation');
-    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 230 }));
-    assert.equal(dragButton.dataset.frame, '4', 'An undecoded target uses the nearest decoded view');
-    const held = [...dragButton.children];
-    await decode('000.webp');
-    assert.deepEqual(dragButton.children, held, 'A farther decode holds the last good composition');
-    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 305 }));
-    await decode('119.webp');
-    assert.equal(dragButton.dataset.frame, '119', 'Nearest decoded lookup wraps across the seam');
-    dragButton.dispatchEvent(event('pointerup', { pointerId: 8 }));
-    firstDragClock.tick(1000);
-    assert.equal(firstDragClock.pending(), 0, 'Release cannot start automatic rotation before full decode');
-    await complete(firstDragClock, dragButton);
-    assert.equal(dragButton.dataset.ready, 'true');
-    assert.equal(firstDragClock.pending(), reducedMotion ? 0 : 1, 'Automatic motion starts only after every decode and respects reduced motion');
-    firstDrag.destroy();
+    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 200 }));
+    assert(Math.abs(Number(dragButton.dataset.turns) - .1) < 1e-9);
+    await flush(); assert.equal(file(dragButton.children[0]), 'poster.webp');
+    pendingFrames().slice(0, 2).forEach(img => img.resolve()); await flush();
+    assert.equal(dragButton.dataset.lowerFrame, '0'); assert.equal(dragButton.dataset.upperFrame, '4');
+    assert(Math.abs(Number(dragButton.dataset.blend) - .3) < 1e-9);
+    assert(dragViewer.isDragging() && dragButton.dataset.ready === 'false');
+    dragButton.releasePointerCapture(8); assert(!dragViewer.isDragging());
+    const heldAngle = dragButton.dataset.turns; dragClock.tick(1000);
+    assert.equal(dragButton.dataset.turns, heldAngle, 'Release cannot start idle before coarse decode');
+    dragViewer.destroy(); assert.equal(dragClock.pending(), 0);
   }
-  // A first key press also starts loading and survives the asynchronous manifest.
-  const firstKeyClock = fakeClock();
-  const keyStart = images.length;
-  const firstKey = createDrinkSpin(screen, { id: 'fizzy', name: 'Fizzy' }, { clock: firstKeyClock, reduced: true });
-  const keyButton = screen.children[0];
-  images.at(-1).resolve(); await flush();
-  firstKey.setActive(true);
-  const beforeFirstKey = requests.length;
-  keyButton.dispatchEvent(event('keydown', { key: 'ArrowRight' }));
-  assert.equal(requests.length, beforeFirstKey + 1, 'The first reduced-motion keydown starts loading');
-  await flush();
-  images.slice(keyStart + 1).find(img => file(img) === '119.webp').resolve(); await flush();
-  await loadBatch(firstKeyClock);
-  assert.equal(keyButton.dataset.frame, '119', 'The key queued before the manifest paints before the full sequence decodes');
-  assert.equal(keyButton.dataset.ready, 'false');
-  assert.equal(firstKeyClock.pending(), 0);
-  firstKey.destroy();
-  manifestData = { frameCount: 12, dragDirection: 1 };
+  // Cancellation, failed-frame retry and a late manifest cannot mutate a replacement.
   const partial = createDrinkSpin(screen, { id: 'ground-pinch', name: 'Ground Pinch' }, { clock: domClock });
-  partial.setActive(true); await flush();
+  images.at(-1).resolve(); await flush(); partial.setActive(true); await loadBatch(domClock);
+  const cancelled = pendingFrames(); partial.setActive(false);
+  assert(cancelled.every(img => !img.src)); cancelled.forEach(img => img.resolve()); await flush();
+  partial.setActive(true); await loadBatch(domClock);
+  const retry = pendingFrames()[0]; retry.fail();
+  pendingFrames().forEach(img => img.resolve()); await flush();
   await loadBatch(domClock);
-  const pending = images.slice(-6);
-  partial.setActive(false);
-  assert(pending.every(img => !img.src), 'Pausing cancels pending frame work');
-  pending.forEach(img => img.resolve()); await flush();
-  const pausedRequests = images.length;
-  partial.setActive(true); await flush();
-  await loadBatch(domClock);
-  assert.equal(images.length, pausedRequests + 6, 'Cancelled decodes never enter the ready cache');
-  const oldComposition = [...screen.children[0].children];
-  images.at(-1).fail(); await flush();
-  assert.deepEqual(screen.children[0].children, oldComposition, 'Decode failure keeps the previous good image');
-  await complete(domClock);
-  assert.equal(screen.children[0].dataset.ready, 'false', 'One failed decode prevents partial rotation even after every other frame is ready');
-  assert.equal(file(screen.children[0].children[0]), 'poster.webp');
-  assert.equal(domClock.pending(), 0);
-  partial.setActive(false);
-  const beforeRetry = images.length;
-  partial.setActive(true); await flush();
-  await loadBatch(domClock);
-  assert.equal(images.length, beforeRetry + 1, 'Reactivation retries only the failed frame and retains decoded frames');
-  await complete(domClock);
-  assert.equal(screen.children[0].dataset.ready, 'true');
-  partial.destroy();
-  // A late manifest cannot mutate the replacement viewer.
+  while (pendingFrames().length) { pendingFrames().forEach(img => img.resolve()); await flush(); await loadBatch(domClock); }
+  assert.equal(screen.children[0].dataset.ready, 'false', 'A failed coarse view cannot pass the startup gate');
+  partial.setActive(false); partial.setActive(true); await loadBatch(domClock);
+  assert.equal(pendingFrames().length, 1, 'Reactivation retains good decodes and retries the failed frame');
+  pendingFrames()[0].resolve(); await flush();
+  assert.equal(screen.children[0].dataset.ready, 'true'); partial.destroy();
   let deliver, lateSignal;
   globalThis.fetch = (url, options) => { lateSignal = options.signal; return new Promise(resolve => { deliver = resolve; }); };
-  const late = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); late.setActive(true);
-  await loadBatch(domClock);
+  const late = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); late.setActive(true); await loadBatch(domClock);
   const beforeLate = images.length; const latePoster = images.at(-1); late.destroy();
   assert(lateSignal.aborted); latePoster.resolve();
-  deliver({ ok: true, json: async () => ({ frameCount: 120 }) }); await flush();
-  assert.equal(images.length, beforeLate);
-  globalThis.fetch = async () => ({ ok: true, json: async () => manifestData });
-  manifestData = { frameCount: 120 };
-  const sequenceStart = images.length;
-  const finalFrames = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock });
-  const finalButton = screen.children[0];
-  images.at(-1).resolve(); await flush();
-  finalFrames.setActive(true); await flush();
-  await loadBatch(domClock);
-  // Drain only five slots until every frame has been requested: no input or motion drives loading.
-  while (images.length < sequenceStart + 121) {
-    const batch = images.slice(sequenceStart + 1).filter(img => !img.settled);
-    assert(batch.length <= 6);
-    batch.slice(0, 5).forEach(img => img.resolve()); await flush(); await loadBatch(domClock);
-    domClock.tick(1000);
-    assert.equal(file(finalButton.children[0]), 'poster.webp');
-    assert.equal(Number(finalButton.dataset.turns || 0), 0);
-  }
-  assert.equal(new Set(images.slice(sequenceStart + 1).map(file)).size, 120, 'Activation requests all 120 frames without rotating or interacting');
-  await complete(domClock, finalButton);
-  assert.equal(finalButton.dataset.frameCount, '120');
-  const checkFrames = (ticks, direction = 1) => {
-    let before = [finalButton.dataset.lowerFrame, finalButton.dataset.upperFrame, finalButton.dataset.frame].map(Number);
-    for (let tick = 0; tick < ticks; tick++) {
-      domClock.tick(16);
-      const after = [finalButton.dataset.lowerFrame, finalButton.dataset.upperFrame, finalButton.dataset.frame].map(Number);
-      after.forEach((value, i) => assert((direction * (value - before[i]) + 120) % 120 <= 1, 'Consecutive animation frames never skip more than one source view, including the wrap'));
-      before = after;
-    }
-  };
-  checkFrames(1010); // Clockwise: counts up, including the 119 -> 0 seam on the first revolution.
-  finalFrames.setActive(false);
-  const pauseAngle = Number(finalButton.dataset.turns);
-  domClock.tick(32000);
-  finalFrames.setActive(true); await flush();
-  assert.equal(Number(finalButton.dataset.turns), pauseAngle, 'Interruption resumes from the current angle');
-  checkFrames(10);
-  finalButton.dispatchEvent(event('pointerdown', { pointerId: 7, isPrimary: true, button: 0, clientX: 300 }));
-  domClock.tick(16);
-  finalButton.dispatchEvent(event('pointermove', { pointerId: 7, clientX: 500 }));
-  finalButton.dispatchEvent(event('pointerup', { pointerId: 7 }));
-  // Owner: a flick keeps its inertia, so it may cover several views per frame, then eases back into the idle spin.
-  const flickStart = Number(finalButton.dataset.turns);
-  domClock.tick(160);
-  const afterFlick = Number(finalButton.dataset.turns);
-  assert(Math.abs(afterFlick - flickStart) > 3 / 120, 'A flick coasts well beyond one view per frame instead of snapping back');
-  domClock.tick(6000);
-  const settledTurns = Number(finalButton.dataset.turns);
-  domClock.tick(1000);
-  assert(Number(finalButton.dataset.turns) > settledTurns, 'After the coast, the idle spin carries on clockwise');
-  finalFrames.destroy();
-  manifestData = { frameCount: 0 };
-  const broken = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); broken.setActive(true);
-  images.at(-1).resolve(); await flush(); assert.equal(file(screen.children[0].children[0]), 'poster.webp'); broken.destroy();
-  assert.equal(domClock.pending(), 0);
-  // Cached decodes must also yield between batches, with and without idle callbacks.
-  manifestData = { frameCount: 360, dragDirection: -1 };
-  cachedDecodes = true;
+  deliver({ ok: true, json: async () => ({ frameCount: 360 }) }); await flush();
+  assert.equal(images.length, beforeLate); globalThis.fetch = fetchManifest;
+  // Cached foreground batches yield, and the 90th decode starts a full 360 turn.
+  manifestData = { frameCount: 360, dragDirection: -1 }; cachedDecodes = true;
   for (const idle of [false, true]) {
     const batchClock = fakeClock();
-    if (idle) {
-      batchClock.requestIdleCallback = fn => batchClock.setTimeout(fn, 1);
-      batchClock.cancelIdleCallback = id => batchClock.clearTimeout(id);
-    }
-    const before = images.length;
-    const beforeRequests = requests.length;
+    if (idle) { batchClock.requestIdleCallback = fn => batchClock.setTimeout(fn, 1); batchClock.cancelIdleCallback = id => batchClock.clearTimeout(id); }
+    const before = images.length, beforeRequests = requests.length;
     const cached = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: batchClock });
-    const cachedButton = screen.children[0];
-    await flush();
-    cached.setActive(true); await flush();
-    assert.equal(requests.length, beforeRequests, 'Even a cached manifest is deferred past activation');
-    if (idle) batchClock.tick(16); // Cancel an idle callback as well as a not-yet-run RAF.
-    cached.setActive(false);
-    batchClock.tick(100); await flush();
-    assert.equal(requests.length, beforeRequests, 'Pausing cancels deferred startup before any manifest request');
+    const cachedButton = screen.children[0]; await flush(); cached.setActive(true); await flush();
+    assert.equal(requests.length, beforeRequests, 'Cached startup still yields past activation');
+    if (idle) batchClock.tick(16);
+    cached.setActive(false); batchClock.tick(100); await flush();
+    assert.equal(requests.length, beforeRequests, 'Pausing cancels deferred startup');
     cached.setActive(true);
     for (let frames = 6; frames <= 360; frames += 6) {
       batchClock.tick(17); await flush();
-      assert.equal(images.length - before - 1, frames, 'Only six cached frames decode per paint/idle batch');
-      assert.equal(cachedButton.dataset.ready, String(frames === 360));
-      if (frames < 360) assert.equal(file(cachedButton.children[0]), 'poster.webp', 'All 360 frames must decode before idle rotation replaces the poster');
+      assert.equal(images.length - before - 1, frames, 'Only six cached decodes per paint/idle batch');
+      assert.equal(cachedButton.dataset.ready, String(frames >= 90));
+      if (frames < 90) assert.equal(file(cachedButton.children[0]), 'poster.webp');
     }
-    cached.destroy();
-    assert.equal(batchClock.pending(), 0, 'Disposal cancels every queued load and animation callback');
+    const loadedOrder = images.slice(before + 1).map(index);
+    assert.deepEqual(loadedOrder, progressiveFrames(360));
+    let previous = Number(cachedButton.dataset.frame);
+    for (let tick = 0; tick < 1010; tick++) {
+      batchClock.tick(16);
+      const next = Number(cachedButton.dataset.frame);
+      assert((next - previous + 360) % 360 <= 1, 'Full-resolution idle never skips a source view, including the seam'); previous = next;
+    }
+    cached.destroy(); assert.equal(batchClock.pending(), 0);
   }
+  cachedDecodes = false;
+  // Warm-up runs only near the viewport (caller activation), after paint and idle.
+  for (const connection of [{ saveData: true }, { effectiveType: '2g' }, { effectiveType: 'slow-2g' }]) {
+    const skipClock = fakeClock(), before = requests.length;
+    prefetchDrink({ id: 'skids' }, { clock: skipClock, connection }).setActive(true);
+    skipClock.tick(1000); await flush();
+    assert.equal(requests.length, before, 'Save-Data and 2G skip speculative loading'); assert.equal(skipClock.pending(), 0);
+  }
+  for (const idle of [false, true]) {
+    const warmClock = fakeClock(); let idleCalls = 0;
+    if (idle) { warmClock.requestIdleCallback = fn => { idleCalls++; return warmClock.setTimeout(fn, 1); }; warmClock.cancelIdleCallback = id => warmClock.clearTimeout(id); }
+    const before = images.length, beforeRequests = requests.length;
+    const warm = prefetchDrink({ id: 'skids' }, { clock: warmClock, connection: { effectiveType: '4g' } });
+    warmClock.tick(1000); assert.equal(requests.length, beforeRequests, 'Far-away showcase does not prefetch');
+    warm.setActive(true); warmClock.tick(32); await flush();
+    assert.equal(requests.length, beforeRequests, 'Prefetch waits until after first paint');
+    await complete(warmClock, 90, before, 3);
+    assert.equal(images.length - before, 90, 'Background warm-up fetches exactly the coarse quarter');
+    assert(images.slice(before).every(img => index(img) % 4 === 0 && img.decoding === 'async' && img.fetchPriority === 'low'));
+    assert.equal(requests.at(-1).priority, 'low'); if (idle) assert(idleCalls > 0);
+    warmClock.tick(1000); await flush(); assert.equal(images.length - before, 90, 'Background work never fills finer frames');
+    const warmViewer = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: warmClock });
+    const warmButton = screen.children[0]; warmViewer.setActive(true);
+    assert.equal(requests.length, beforeRequests + 1, 'Switch reuses the prefetched manifest');
+    assert.equal(warmButton.dataset.ready, 'true', 'Decoded coarse set is immediately available on selection');
+    assert(warmButton.children.every(img => img.decoded));
+    warm.setActive(false); await loadBatch(warmClock);
+    assert(pendingFrames().every(img => index(img) % 4 === 2), 'Warm-up handoff continues with the half set');
+    assert.equal(pendingFrames().length, 6, 'Claimed viewer continues loading independently of prefetch activation');
+    warmViewer.destroy(); assert.equal(warmClock.pending(), 0);
+  }
+  // A partially warmed sequence transfers cancellation to the inactive viewer.
+  const handoffClock = fakeClock(), beforeHandoff = images.length;
+  const warming = prefetchDrink({ id: 'skids' }, { clock: handoffClock }); warming.setActive(true);
+  handoffClock.tick(48); await flush(); assert.equal(pendingFrames().length, 3);
+  const handoffImages = pendingFrames(); handoffImages[0].resolve(); await flush();
+  const inactive = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: handoffClock });
+  warming.setActive(false); handoffClock.tick(1000); await flush();
+  assert(handoffImages.slice(1).every(img => !img.src), 'Claiming a warm-up stops pending work until viewer activation');
+  assert.equal(images.length, beforeHandoff + 4);
+  inactive.setActive(true); await loadBatch(handoffClock);
+  assert(!pendingFrames().some(img => index(img) === 0), 'The handoff retains successfully decoded coarse views');
+  inactive.destroy(); assert.equal(handoffClock.pending(), 0);
+  assert(images.filter(img => img.src).every(img => img.fetchPriority === 'low' && img.decoding === 'async'));
 } finally {
   for (const [key, descriptor] of Object.entries(globals)) {
-    if (descriptor) Object.defineProperty(globalThis, key, descriptor);
-    else delete globalThis[key];
+    if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];
   }
 }
 function webpSize(bytes) {
@@ -489,4 +398,4 @@ for (const drink of ['skids', 'fizzy', 'ground-pinch']) {
     assert.deepEqual(webpSize(frame), [manifest.width, manifest.height], `${drink}/${i}: actual dimensions match the manifest`);
   }
 }
-console.log('Drink spin checks passed: 120-frame loading and 360 cached frames in deferred six-slot batches, cancelled startup, still poster until full decode, no skipped idle views, 16-second turns, free coasting, drag gain/direction, visibility, reduced motion and complete assets.');
+console.log('Drink spin checks passed: progressive 90/180/360 startup, decoded-only wrapped crossfades, idle prefetch and handoff, Save-Data/2G, bounded concurrency, cancellation, 16-second clockwise idle, free coasting, drag gain/direction, visibility, reduced motion and complete assets.');

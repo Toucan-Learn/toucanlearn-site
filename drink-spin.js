@@ -97,8 +97,146 @@ export function spinMotion({ draw, clock = globalThis, reduced = false, automati
 }
 
 export function progressiveFrames(count) {
-  // Decode adjacent views first in both directions, including the 119 -> 000 seam.
-  return [...new Set(Array.from({ length: count }, (_, i) => [i, (count - i) % count]).flat())];
+  const indices = Array.from({ length: count }, (_, i) => i);
+  return [4, 2, 1].flatMap(step => indices.filter(i => i % step === 0 && (step === 4 || i % (step * 2) !== 0)));
+}
+
+function drinkImage(drink, file) {
+  const image = new Image();
+  image.alt = '';
+  image.draggable = false;
+  image.width = 1200;
+  image.height = 900;
+  image.dataset.drink = drink.id;
+  image.decoding = 'async';
+  image.fetchPriority = 'low';
+  image.src = `assets/projects/drinks/${drink.id}/${file}?v=${assetVersion}`;
+  return image;
+}
+
+// Both foreground loading and the optional warm-up use the same decoded nodes.
+// Only the current warm-up is retained; selecting it transfers ownership to its viewer.
+const warmSequences = new Map();
+function createFrameSequence(drink, clock) {
+  const loaded = new Map(), pending = new Map(), failed = new Set();
+  let manifest = null, order = [], coarse = [];
+  let request = null, frame = null, task = null;
+  let enabled = false, coarseOnly = false, concurrency = 6, notify = () => {};
+  const idle = typeof clock.requestIdleCallback === 'function';
+  const ready = () => manifest && coarse.every(i => loaded.has(i));
+  const finished = () => manifest && (coarseOnly ? coarse : order).every(i => loaded.has(i) || failed.has(i));
+  function cancelScheduled() {
+    if (frame !== null) clock.cancelAnimationFrame(frame);
+    if (task !== null) {
+      if (idle) clock.cancelIdleCallback(task);
+      else clock.clearTimeout(task);
+    }
+    frame = task = null;
+  }
+  function schedule() {
+    if (!enabled || frame !== null || task !== null || request || pending.size >= concurrency || finished()) return;
+    // Yield between even cached batches, keeping work out of project-switch tasks.
+    frame = clock.requestAnimationFrame(() => {
+      frame = null;
+      const run = () => { task = null; void prepare(); };
+      task = idle ? clock.requestIdleCallback(run, { timeout: 100 }) : clock.setTimeout(run, 0);
+    });
+  }
+  function pump() {
+    if (!enabled || !manifest) return;
+    // Complete each resolution before starting the next, including pending decodes.
+    const stage = [coarse, order.filter(i => i % 4 === 2), order.filter(i => i % 2 === 1)]
+      .slice(0, coarseOnly ? 1 : 3).find(group => group.some(i => !loaded.has(i) && !failed.has(i)));
+    for (const i of stage || []) {
+      if (pending.size >= concurrency) break;
+      if (loaded.has(i) || pending.has(i) || failed.has(i)) continue;
+      const image = drinkImage(drink, `${String(i).padStart(3, '0')}.webp`);
+      pending.set(i, image);
+      image.decode().then(() => {
+        if (pending.get(i) !== image) return;
+        pending.delete(i);
+        image.dataset.decoded = 'true';
+        loaded.set(i, image);
+        notify();
+        schedule();
+      }).catch(() => {
+        if (pending.get(i) !== image) return;
+        pending.delete(i);
+        failed.add(i);
+        schedule();
+      });
+    }
+  }
+  async function prepare() {
+    if (!enabled) return;
+    if (manifest) { pump(); return; }
+    if (request) return;
+    const controller = new AbortController();
+    request = controller;
+    try {
+      const response = await fetch(`assets/projects/drinks/${drink.id}/manifest.json?v=${assetVersion}`, { signal: controller.signal, priority: 'low' });
+      if (!response.ok) throw new Error('Unavailable frame manifest');
+      const data = await response.json();
+      if (!Number.isInteger(data.frameCount) || data.frameCount < 2 || data.frameCount > 1000 || ![-1, 1].includes(data.dragDirection ?? -1)) throw new Error('Invalid frame manifest');
+      if (controller.signal.aborted) return;
+      manifest = data;
+      order = progressiveFrames(data.frameCount);
+      coarse = order.filter(i => i % 4 === 0);
+      notify();
+      pump();
+    } catch { /* A missing render leaves the poster and selector usable. */ }
+    finally { if (request === controller) request = null; }
+  }
+  return {
+    loaded,
+    get manifest() { return manifest; },
+    ready,
+    start(options = {}) {
+      enabled = true;
+      coarseOnly = options.coarseOnly ?? false;
+      concurrency = options.concurrency ?? 6;
+      notify = options.notify ?? (() => {});
+      failed.clear();
+      schedule();
+    },
+    prepare,
+    stop() {
+      enabled = false;
+      cancelScheduled();
+      request?.abort(); request = null;
+      for (const image of pending.values()) image.removeAttribute('src');
+      pending.clear();
+    },
+  };
+}
+
+export function prefetchDrink(drink, { clock = globalThis, connection = globalThis.navigator?.connection } = {}) {
+  let entry = null, frame = null, active = false;
+  const constrained = () => connection?.saveData || ['slow-2g', '2g'].includes(connection?.effectiveType);
+  return {
+    setActive(value) {
+      value = value && !constrained();
+      if (active === value || entry?.claimed) return;
+      active = value;
+      if (!active) {
+        if (frame !== null) clock.cancelAnimationFrame(frame);
+        frame = null;
+        entry?.sequence.stop();
+        return;
+      }
+      // Two RAFs guarantee a first paint before the sequence's idle callback.
+      frame = clock.requestAnimationFrame(() => {
+        frame = clock.requestAnimationFrame(() => {
+          frame = null;
+          if (!entry) {
+            entry = warmSequences.get(drink.id) || { sequence: createFrameSequence(drink, clock), claimed: false };
+            warmSequences.set(drink.id, entry);
+          }
+          if (!entry.claimed) entry.sequence.start({ coarseOnly: true, concurrency: 3 });
+        });
+      });
+    },
+  };
 }
 
 export function renderDrinkInfo(card, drink) {
@@ -114,7 +252,6 @@ export function renderDrinkInfo(card, drink) {
 
 // One instance owns one drink. Disposal cancels its manifest and preload queue.
 export function createDrinkSpin(screen, drink, { reduced = false, activity = () => {}, clock = globalThis } = {}) {
-  const base = `assets/projects/drinks/${drink.id}/`;
   const button = document.createElement('button');
   button.type = 'button';
   button.className = 'drink-spin';
@@ -128,30 +265,19 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   const previous = [...screen.children].find(child => child.className === 'drink-spin');
   if (previous) button.append(...previous.children);
   screen.replaceChildren(button);
-  const url = file => `${base}${file}?v=${assetVersion}`;
-  function newImage(file) {
-    const image = new Image();
-    image.alt = '';
-    image.draggable = false;
-    image.width = 1200;
-    image.height = 900;
-    image.dataset.drink = drink.id;
-    image.src = url(file);
-    return image;
-  }
-  const poster = newImage('poster.webp');
+  const poster = drinkImage(drink, 'poster.webp');
   let posterReady = false;
   let painted = false;
   const events = new AbortController();
-  const loaded = new Map();
-  const pending = new Map();
-  const failed = new Set();
-  let manifestRequest = null;
-  let loadFrame = null;
-  let loadTask = null;
-  const idleLoads = typeof clock.requestIdleCallback === 'function';
-  let manifest = null;
-  let order = [];
+  const warm = warmSequences.get(drink.id);
+  const entry = warm && !warm.claimed ? warm : { sequence: createFrameSequence(drink, clock) };
+  entry.claimed = true;
+  warmSequences.set(drink.id, entry);
+  const sequence = entry.sequence;
+  // Transfer decoded views, then let viewer visibility/reduced motion own any work.
+  sequence.stop();
+  const loaded = sequence.loaded;
+  let manifest = sequence.manifest;
   let active = false;
   let disposed = false;
   let interacted = false;
@@ -160,18 +286,20 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   let turns = 0;
   let queuedSteps = 0;
   const allowed = () => active && (!reduced || interacted) && !disposed;
-  const ready = () => manifest && loaded.size === manifest.frameCount;
-  // Manual input is active immediately; only automatic motion waits for every decode.
+  const ready = sequence.ready;
+  // Manual input is active immediately; automatic motion waits for the coarse quarter.
   const motion = spinMotion({ reduced, clock, automatic: false,
     maxStep: () => manifest ? (1 - 1e-9) / manifest.frameCount : 0,
     draw(value) { turns = value; draw(); } });
   function refreshFrames() {
     if (disposed) return;
-    if (ready()) {
-      cancelScheduledLoads();
-      button.dataset.ready = 'true';
-      motion.setAutomatic(true);
+    manifest = sequence.manifest;
+    if (manifest) {
+      button.dataset.frameCount = String(manifest.frameCount);
+      if (queuedSteps) { motion.step(queuedSteps * (manifest.dragDirection ?? -1) / manifest.frameCount); queuedSteps = 0; }
     }
+    button.dataset.ready = String(Boolean(ready()));
+    motion.setAutomatic(Boolean(ready()));
     draw();
   }
   function showPoster() {
@@ -191,24 +319,19 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   function draw() {
     button.dataset.turns = String(turns);
     if (!manifest || (reduced && !interacted) || (!interacted && !ready())) return;
-    let { lower, upper, mix } = frameBlend(turns, manifest.frameCount);
-    let first = loaded.get(lower);
-    let second = loaded.get(upper);
-    if (!first || (mix > 0 && !second)) {
-      scheduleLoads();
-      // A manual target can outrun decoding. Paint its nearest decoded view across
-      // the wrap; with none available, leave the poster or last good paint intact.
-      const position = wrap(turns) * manifest.frameCount;
-      let nearest = Infinity;
-      for (const [index, image] of loaded) {
-        const gap = Math.abs(index - position);
-        const distance = Math.min(gap, manifest.frameCount - gap);
-        if (distance < nearest) { nearest = distance; lower = index; first = image; }
-      }
-      if (!first) return;
-      second = null;
-      mix = 0;
+    // Bracket the angle with decoded views, across the seam as well as gaps.
+    // Finer views replace these neighbours as they decode without changing turns.
+    const position = wrap(turns) * manifest.frameCount;
+    let lower, upper, first, second, behind = Infinity, ahead = Infinity;
+    for (const [index, image] of loaded) {
+      const back = (position - index + manifest.frameCount) % manifest.frameCount;
+      const forward = (index - position + manifest.frameCount) % manifest.frameCount;
+      if (back < behind) { behind = back; lower = index; first = image; }
+      if (forward < ahead) { ahead = forward; upper = index; second = image; }
     }
+    if (!first) return; // Hold the decoded poster/previous drink until a view exists.
+    let mix = first === second ? 0 : behind / (behind + ahead);
+    if (first === second) second = null;
     first.style.opacity = '1';
     if (second) second.style.opacity = String(mix);
     // Mount the decoded nodes themselves: assigning a new src could flash during decode.
@@ -216,79 +339,22 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       button.replaceChildren(...(second ? [first, second] : [first]));
     }
     painted = true;
-    button.dataset.frame = String(second ? frameAt(turns, manifest.frameCount) : lower);
+    button.dataset.frame = String(second && mix >= 0.5 ? upper : lower);
     button.dataset.lowerFrame = String(lower);
     button.dataset.upperFrame = String(second ? upper : lower);
     button.dataset.blend = String(second ? mix : 0);
   }
-  function cancelScheduledLoads() {
-    if (loadFrame !== null) clock.cancelAnimationFrame(loadFrame);
-    if (loadTask !== null) {
-      if (idleLoads) clock.cancelIdleCallback(loadTask);
-      else clock.clearTimeout(loadTask);
-    }
-    loadFrame = loadTask = null;
-  }
-  function cancelLoads() {
-    cancelScheduledLoads();
-    manifestRequest?.abort();
-    manifestRequest = null;
-    for (const frame of pending.values()) frame.removeAttribute('src');
-    pending.clear();
-  }
   function scheduleLoads() {
-    if (!allowed() || loadFrame !== null || loadTask !== null || pending.size >= 6 || ready()) return;
-    // Let the selected poster paint before starting or refilling a decode batch.
-    // Even cached decodes must yield instead of draining all 360 in microtasks.
-    loadFrame = clock.requestAnimationFrame(() => {
-      loadFrame = null;
-      const run = () => { loadTask = null; void prepare(); };
-      loadTask = idleLoads ? clock.requestIdleCallback(run, { timeout: 100 }) : clock.setTimeout(run, 0);
-    });
-  }
-  function pump() {
-    if (!allowed() || !manifest) return;
-    cancelScheduledLoads();
-    const { lower, upper } = frameBlend(turns, manifest.frameCount);
-    for (const i of new Set([lower, upper, ...order])) {
-      if (pending.size >= 6) break;
-      if (loaded.has(i) || pending.has(i) || failed.has(i)) continue;
-      const frame = newImage(`${String(i).padStart(3, '0')}.webp`);
-      pending.set(i, frame);
-      frame.decode().then(() => {
-        if (disposed || pending.get(i) !== frame) return;
-        pending.delete(i);
-        frame.dataset.decoded = 'true';
-        loaded.set(i, frame);
-        refreshFrames();
-        scheduleLoads();
-      }).catch(() => {
-        if (disposed || pending.get(i) !== frame) return;
-        pending.delete(i);
-        failed.add(i);
-        scheduleLoads();
-      });
-    }
-  }
-  async function prepare() {
     if (!allowed()) return;
-    if (manifest) { pump(); refreshFrames(); return; }
-    if (manifestRequest) return;
-    const request = new AbortController();
-    manifestRequest = request;
-    try {
-      const response = await fetch(url('manifest.json'), { signal: request.signal });
-      if (!response.ok) throw new Error('Unavailable frame manifest');
-      const data = await response.json();
-      if (!Number.isInteger(data.frameCount) || data.frameCount < 2 || data.frameCount > 1000 || ![-1, 1].includes(data.dragDirection ?? -1)) throw new Error('Invalid frame manifest');
-      if (disposed || request.signal.aborted) return;
-      manifest = data;
-      button.dataset.frameCount = String(data.frameCount);
-      order = progressiveFrames(data.frameCount);
-      if (queuedSteps) { motion.step(queuedSteps * (data.dragDirection ?? -1) / data.frameCount); queuedSteps = 0; }
-      pump();
-    } catch { /* A missing render leaves a usable poster and drink selector. */ }
-    finally { if (manifestRequest === request) manifestRequest = null; }
+    sequence.start({ notify: refreshFrames });
+    refreshFrames();
+  }
+  function cancelLoads() { sequence.stop(); }
+  function prepare() {
+    if (!allowed()) return;
+    sequence.start({ notify: refreshFrames });
+    refreshFrames();
+    return sequence.prepare();
   }
   function interact() {
     interacted = true;
@@ -344,7 +410,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       active = value;
       button.dataset.active = String(active);
       motion.setActive(active);
-      if (active) { failed.clear(); scheduleLoads(); }
+      if (active) scheduleLoads();
       else cancelLoads();
     },
     setReduced(value) {
@@ -368,6 +434,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       cancelLoads();
       if (!posterReady) poster.removeAttribute('src');
       loaded.clear();
+      if (warmSequences.get(drink.id) === entry) warmSequences.delete(drink.id);
     },
   };
 }

@@ -194,8 +194,9 @@ export const songs = [
     "title": "Runaway (piano riff)",
     "composer": "Kanye West",
     "year": 2010,
-    "source": "Owner-specified 16-note riff, 28 October 2026: three E6 hits then E5; three D#6 then D#5; three C#6 then C#5; A5, A5, G#5, E6. The long opening run of E6 is cut to three hits. Keyboard shifted up one octave to retain the original register.",
+    "source": "Owner-specified 16-note riff, 28 October 2026: three E6 hits then E5; three D#6 then D#5; three C#6 then C#5; A5, A5, G#5, E6. The long opening run of E6 is cut to three hits. Keyboard shifted up one octave to retain the original register. Owner, 29 October 2026: tempo 85 BPM (the default 100 was too fast); classic piano voice.",
     "keyboardOctave": 1,
+    "tempo": 85,
     "licence": "Short credited quotation (16-note piano riff)",
     "notes": [
       "E6",
@@ -221,14 +222,14 @@ export const songs = [
     "title": "No One Noticed (verse excerpt)",
     "composer": "The Marías",
     "year": 2024,
-    "source": "Vocal tab supplied by Joshua, 26 October 2026 at 22:26, amended by ear: repeated descent pairs are G4 F#4 C4, then G4 F#4 B3, including their subsequent repeated notes. Bars 1-16 at 98 BPM; tied continuations are not new attacks.",
+    "source": "Vocal tab supplied by Joshua, 26 October 2026 at 22:26, amended by ear: repeated descent pairs are G4 F#4 C4, then G4 F#4 B3, including their subsequent repeated notes. Bars 1-16 at 98 BPM; tied continuations are not new attacks. Owner, 29 October 2026: long holds between phrases shortened to 2 beats.",
     "licence": "User-supplied excerpt; no licence asserted",
     "tempo": 98,
     // Onset gaps from outputs/website-plan-20261026/piano-verse/no-one-noticed-score.json.
     // Last gap includes the written ending up to totalBeats=62.5, then loops.
-    "noteBeats": [1, 1, 6, 1, 1, 6, 1, 1, 1, 5, 1, 1, 1, 5, 1, 1, 1.5,
+    "noteBeats": [1, 1, 2, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1, 1.5,
       0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 1, 1, 1.5,
-      0.5, 0.5, 0.5, 0.5, 0.5, 2, 1, 1, 1, 5, 1, 1, 1, 3.5],
+      0.5, 0.5, 0.5, 0.5, 0.5, 2, 1, 1, 1, 2, 1, 1, 1, 2],
     "notes": [
       "G4",
       "F#4",

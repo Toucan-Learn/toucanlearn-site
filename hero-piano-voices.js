@@ -29,7 +29,7 @@ const PRESETS = {
   'no-one-noticed': { peak: .18, attack: .035, dry: .78, wet: .52, room: 3.6, ratio: 2, trim: 1, filterBound: 1 },
 };
 export function voicePresetFor(songId) {
-  return songId === 'runaway' || songId === 'no-one-noticed' ? songId : 'classic';
+  return songId === 'no-one-noticed' ? songId : 'classic'; // Runaway uses the classic piano (owner).
 }
 
 function random(seed) {

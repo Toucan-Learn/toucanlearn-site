@@ -19,7 +19,7 @@ const output = process.env.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/C
 const base = process.env.BASE_URL || 'http://127.0.0.1:4205';
 const pianoPage = process.env.PIANO_PAGE || 'index.html';
 const phoneIds = ['runaway', 'no-one-noticed'];
-const instrumentSources = preset => preset === 'runaway' ? 8 : preset === 'no-one-noticed' ? 5 : 4;
+const instrumentSources = preset => ({ classic: 4, 'no-one-noticed': 5 })[preset];
 const desktop = { width: 1440, height: 750, deviceScaleFactor: 1 };
 const phone = { width: 390, height: 844, deviceScaleFactor: 1, isMobile: true, hasTouch: true };
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -55,7 +55,7 @@ async function openPiano(page, id, colour, viewport, reduced = false) {
   const choices = await page.evaluate(() => window.pianoUnderTest.availableSongs().map(song => song.id));
   assert.deepEqual(choices, viewport.width <= 600 && viewport.height > viewport.width ? phoneIds : songs.map(song => song.id));
   assert.equal(await page.evaluate(() => window.pianoUnderTest.currentVoicePreset()),
-    await page.evaluate(() => ['runaway', 'no-one-noticed'].includes(window.pianoUnderTest.currentSong().id) ? window.pianoUnderTest.currentSong().id : 'classic'), 'The voice follows the selected song');
+    await page.evaluate(() => window.pianoUnderTest.currentSong().id === 'no-one-noticed' ? 'no-one-noticed' : 'classic'), 'The voice follows the selected song');
   assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle', 'No cue runs on load/open');
   assert.equal(await page.$eval('.piano-tempo-bar', bar => bar.value), 0);
 }
@@ -253,7 +253,7 @@ async function cycleSongs(page, viewport) {
     assert.ok((await page.$eval('.piano-credit', credit => credit.textContent)).includes(expected.composer));
     assert.equal((await counts(page)).attacks, before.attacks, 'Next song is silent');
     assert.equal((await counts(page)).waves, before.waves, 'Next song does not emit a wave');
-    assert.equal((await counts(page)).preset, ['runaway', 'no-one-noticed'].includes(expectedId) ? expectedId : 'classic', 'Song cycling selects its instrument');
+    assert.equal((await counts(page)).preset, expectedId === 'no-one-noticed' ? expectedId : 'classic', 'Song cycling selects its instrument');
     assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle', 'Song cycling resets the cue');
     assert.equal(await page.$eval('.piano-tempo-bar', bar => bar.value), 0);
     assert.equal((await page.evaluate(() => window.pianoUnderTest.noteTiming())).bpm, expected.tempo || 100);
@@ -365,7 +365,7 @@ async function tempoCue(page, viewport, colour, song, reduced = false) {
 
   const traces = [];
   // Entertainer: pickup sixteenths, eighths and a tie across the bar line.
-  // No One Noticed: two quarter notes, then its six-beat hold/rest.
+  // No One Noticed: two quarter notes, then its shortened two-beat hold/rest.
   const cueAttacks = song.id === 'entertainer' ? 8 : song.id === 'no-one-noticed' ? 3 : 1;
   for (let i = 0; i < cueAttacks; i++) {
     await page.evaluate(() => {
@@ -437,7 +437,7 @@ async function tempoCue(page, viewport, colour, song, reduced = false) {
     traces.push(trace);
   }
   if (song.id === 'no-one-noticed') {
-    assert.equal(traces[2][0].duration, 6 * 60000 / 98, 'The saved hold/rest is respected');
+    assert.equal(traces[2][0].duration, 2 * 60000 / 98, 'The owner-shortened two-beat hold/rest is respected');
   }
   if (song.id === 'entertainer') {
     assert.equal(traces[0][0].duration, 150, 'The pickup is a sixteenth note at 100 BPM');

@@ -6,7 +6,7 @@ import { assertRenderedVoiceLevels } from './helpers/piano-voice-levels.mjs';
 const source = await readFile(new URL('../hero-piano-voices.js', import.meta.url), 'utf8');
 const { createPianoSynth, voicePresetFor } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
 for (const id of ['entertainer', 'maple-leaf-rag', 'gymnopedie-1']) assert.equal(voicePresetFor(id), 'classic');
-assert.equal(voicePresetFor('runaway'), 'runaway');
+assert.equal(voicePresetFor('runaway'), 'classic');
 assert.equal(voicePresetFor('no-one-noticed'), 'no-one-noticed');
 const results = [];
 // Receipts from Claude's first actual OfflineAudioContext renders. The new

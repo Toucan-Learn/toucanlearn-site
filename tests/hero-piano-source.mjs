@@ -85,6 +85,7 @@ assert.deepEqual(Array.from(seed.api.currentSong().notes), [
   'E6', 'E6', 'E6', 'E5', 'D#6', 'D#6', 'D#6', 'D#5',
   'C#6', 'C#6', 'C#6', 'C#5', 'A5', 'A5', 'G#5', 'E6',
 ], 'Runaway exactly matches the owner-supplied 16 attacks');
+assert.equal(seed.api.currentSong().tempo, 85, 'Runaway plays at the owner tempo, slower than the 100 BPM default');
 const songResults = [];
 const html = await readFile(new URL('project-showcase.js', root), 'utf8');
 const keyboard = await readFile(new URL('hero-keyboard.js', root), 'utf8');
@@ -113,7 +114,8 @@ const noticed = seed.songs.find(song => song.id === 'no-one-noticed');
 assert.equal(noticed.tempo, rhythm.tempo);
 assert.deepEqual(Array.from(noticed.notes), rhythm.attacks.map(([note]) => note));
 assert.deepEqual(Array.from(noticed.noteBeats), rhythm.attacks.map(([, beat], i) =>
-  (rhythm.attacks[i + 1]?.[1] ?? rhythm.totalBeats) - beat), 'Onset gaps include the saved rests, ties and loop ending');
+  Math.min(2, (rhythm.attacks[i + 1]?.[1] ?? rhythm.totalBeats) - beat)),
+  'Score onset gaps, including rests, ties and loop ending, with long holds capped at two beats');
 const positions = [...html.matchAll(/data-note="([A-G]#?\d)"/g)].map(match => match[1]);
 const mapped = [...keyboard.matchAll(/\['[^']+', '([A-G]#?\d)'\]/g)].map(match => match[1]);
 assert.equal(new Set(positions).size, 37);
@@ -129,7 +131,7 @@ for (const id of ['runaway', 'no-one-noticed']) {
 for (const song of seed.songs) {
   const { api, clock } = await load(song.id);
   assert.equal(api.currentSong().id, song.id);
-  assert.equal(api.currentVoicePreset(), ['runaway', 'no-one-noticed'].includes(song.id) ? song.id : 'classic');
+  assert.equal(api.currentVoicePreset(), song.id === 'no-one-noticed' ? song.id : 'classic');
   assert.equal(api.availableSongs().length, 5);
   assert.equal(clock.contexts, 0, 'No autoplay');
   assert.equal(api.noteTiming().phase, 'idle', 'No cue starts on load');
@@ -147,7 +149,7 @@ for (const song of seed.songs) {
       clock.now += 300;
       const before = clock.attacks;
       api.playNextNote();
-      assert.equal(clock.attacks - before, song.id === 'runaway' ? 8 : song.id === 'no-one-noticed' ? 5 : 4, 'Exactly one complete instrument voice per note');
+      assert.equal(clock.attacks - before, song.id === 'no-one-noticed' ? 5 : 4, 'Exactly one complete instrument voice per note');
     }
     assert.equal(api.peekNextNote(), song.notes[0], 'Wrap only after the final note');
   }
@@ -210,7 +212,7 @@ for (const portrait of [false, true]) {
     cycle.api.nextSong();
     seen.push(cycle.api.currentSong().id);
     assert.equal(cycle.api.currentSong().id, expected, 'Next song follows the available list');
-    assert.equal(cycle.api.currentVoicePreset(), ['runaway', 'no-one-noticed'].includes(expected) ? expected : 'classic');
+    assert.equal(cycle.api.currentVoicePreset(), expected === 'no-one-noticed' ? expected : 'classic');
     assert.equal(cycle.api.peekNextNote(), cycle.api.currentSong().notes[0], 'A new song starts at its first attack');
     assert.equal(notifications, before + 1, 'A selection updates the highlight once');
     assert.equal(cycle.api.noteWavePosition(), .5, 'A new song resets the tempo origin');
@@ -232,7 +234,7 @@ for (const portrait of [false, true]) {
   for (let i = 0; i < count * 2; i++) {
     const id = live.api.currentSong().id;
     live.api.playNextNote();
-    assert.equal(live.api.currentVoicePreset(), ['runaway', 'no-one-noticed'].includes(id) ? id : 'classic');
+    assert.equal(live.api.currentVoicePreset(), id === 'no-one-noticed' ? id : 'classic');
     const old = live.audio.nodes.filter(node => node.kind !== 'destination' && !node.disconnected);
     assert.ok(old.length > 0);
     const starts = live.clock.attacks;
@@ -246,7 +248,7 @@ const voiceResize = await load('entertainer');
 voiceResize.api.playNextNote();
 const replacedNodes = voiceResize.audio.nodes.filter(node => node.kind !== 'destination');
 voiceResize.resize(true);
-assert.ok(['runaway', 'no-one-noticed'].includes(voiceResize.api.currentVoicePreset()));
+assert.equal(voiceResize.api.currentVoicePreset(), voiceResize.api.currentSong().id === 'no-one-noticed' ? 'no-one-noticed' : 'classic');
 assert.ok(replacedNodes.every(node => node.disconnected), 'Phone restriction also releases the replaced song graph');
 
 const tempo = await load('runaway');

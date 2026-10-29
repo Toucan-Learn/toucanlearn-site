@@ -123,7 +123,7 @@ for (const view of views) for (let cycle = 0; cycle < 3; cycle++) {
   assert.equal(root.querySelector('#piano-toggle').attributes.get('aria-expanded'), 'true', `${view.route}/${view.phone ? 'phone' : 'desktop'}: click opens and viewport scroll does not immediately close the piano`);
   assert.equal(root.querySelector('#hero-keyboard').inert, false);
   key('keydown', 'z');
-  assert.equal(attacks - before, 8, 'Exactly one complete Runaway instrument voice after repeated remounts');
+  assert.equal(attacks - before, 4, 'Exactly one complete classic piano voice for Runaway after repeated remounts');
   assert(destroy.isPlaying(), 'Held keyboard input is visible to the idle policy');
   assert(frames.size > 0 && timers.size > 0, 'Sky/tempo and key feedback have work to cancel');
   if (view.route === 'children.html') {

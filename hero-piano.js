@@ -1,5 +1,5 @@
-import { songs } from './hero-songs.js?v=20261029-phrases-1';
-import { createPianoSynth, voicePresetFor } from './hero-piano-voices.js?v=20261029-voices-2';
+import { songs } from './hero-songs.js?v=20261029-phrases-2';
+import { createPianoSynth, voicePresetFor } from './hero-piano-voices.js?v=20261029-voices-3';
 
 // One fresh choice per page load, independent of the sky. The query parameter
 // is a listening/test override; unknown ids use the same random selection.
@@ -61,8 +61,8 @@ export function noteWavePosition() { return wavePosition; }
 
 export function peekNextNote(offset = 0) { return song.notes[(nextNote + offset) % song.notes.length]; }
 
-// Round 87 (Joshua: "just change the keyboard if this song comes up"): a song can move
-// the keyboard up an octave so its high notes have keys (Runaway's high E6).
+// A song can move the keyboard up an octave so its high notes have keys.
+// Runaway now uses the unshifted keyboard for its owner-lowered register.
 export function songKeyboardOctave() { return Number.isInteger(song.keyboardOctave) ? song.keyboardOctave : 0; }
 
 export function onSongAdvance(listener) {

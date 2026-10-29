@@ -2393,7 +2393,7 @@ body.team-page {
   .team-section .team-grid { grid-template-columns: minmax(0, 1fr); }
   .team-section .team-promise,
   .team-section .team-founder { padding: 24px; }
-  .team-section .team-promise { font-size: 1.2rem; }
+  .team-section .team-promise { font-size: 1.2rem; text-wrap: wrap; } /* Safari's pretty wrapping leaves a wide ragged gap on phones. */
 }
 
 /* Round 64 (Joshua, 18 Oct 2026): "every cta should have that pixel art, a new

@@ -1,0 +1,164 @@
+/* Illustrated cells, 28 Oct 2026. Loaded only by the four learning back pages.
+   Media has no intrinsic height on desktop: the unchanged copy sizes each card,
+   so equalise() can still measure a natural minimum without a feedback loop. */
+body.cell-art-page .framework-panels .picture-cell,
+body.cell-art-page #send-support .send-points > .picture-cell,
+body.cell-art-page #english-for-work .adult-topics--work > .picture-cell {
+  display: grid;
+  grid-template-columns: 44% minmax(0, 1fr);
+  grid-template-rows: auto;
+  gap: 0;
+  min-width: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+body.cell-art-page .framework-panels .picture-cell-media {
+  position: relative;
+  min-width: 0;
+  min-height: 130px;
+  border-radius: 15px 0 0 15px;
+  background: #f0e9db;
+}
+body.cell-art-page .framework-panels .picture-cell-media > img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  float: none;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  margin: 0;
+  border-radius: inherit;
+  object-fit: contain;
+}
+body.cell-art-page .framework-panels :is(#our-lessons, #send-support, #english-for-work) .picture-cell-media > img {
+  width: 100%; height: 100%; margin: 0; grid-area: auto;
+}
+body.cell-art-page .framework-panels .picture-cell-copy {
+  min-width: 0;
+  align-self: center;
+  padding: 14px;
+}
+body.cell-art-page .framework-panels .picture-cell-copy > :first-child { margin-top: 0; }
+body.cell-art-page .framework-panels .picture-cell-copy > :last-child { margin-bottom: 0; }
+body.cell-art-page .steps-panel .learning-steps > li::before { display: none; }
+body.cell-art-page .steps-panel .learning-steps h3::before {
+  content: counter(learning-step, decimal-leading-zero);
+  display: inline;
+  margin: 0 7px 0 0;
+  color: var(--orange-text);
+  font-size: .8rem;
+  font-variant-numeric: tabular-nums;
+}
+body.cell-art-page .steps-panel .learning-steps h3 { font-size: 1.075rem; line-height: 1.25; margin-bottom: 8px; }
+body.cell-art-page .steps-panel .learning-steps p { margin: 0; line-height: 1.4; }
+body.cell-art-page #send-support .send-points .picture-cell-copy > :is(h3, p),
+body.cell-art-page #english-for-work .adult-topics--work .picture-cell-copy > :is(h3, p) { grid-area: auto; }
+body.cell-art-page #send-support .send-points h3 { margin-bottom: 7px; }
+body.cell-art-page #english-for-work .adult-topics--work h3 { margin-bottom: 7px; font-size: 1.075rem; }
+body.cell-art-page #english-for-work .adult-topics--work p { line-height: 1.4; }
+body.cell-art-page #english-for-work .adult-topics--work > article {
+  --heading: #0b3f51; --ink: #142f3a; --ink-rgb: 20, 47, 58;
+  --line: rgba(11, 63, 81, .22); --orange-text: #b74716;
+  background: #f3eee4; color: var(--ink); border-color: transparent;
+}
+
+/* Give single-section pictures a real column rather than a small float. */
+body.cell-art-page #weekly-reports .section-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 36%;
+  column-gap: 20px;
+  align-items: center;
+}
+body.cell-art-page #weekly-reports .section-head > .framework-panel-art {
+  grid-column: 2; grid-row: 1 / span 2;
+  float: none; width: 100%; height: clamp(120px, 18vh, 160px); margin: 0;
+  object-fit: contain; background: #f0e9db;
+}
+body.cell-art-page #weekly-reports .section-head > :is(h2, p) { grid-column: 1; }
+body.cell-art-page #weekly-reports .report-parts { align-items: start; grid-auto-rows: auto; }
+body.cell-art-page #our-lessons .lesson-example-head { grid-template-columns: minmax(0, 1fr) 34%; gap: 18px; margin-bottom: 12px; }
+body.cell-art-page #our-lessons .lesson-example-head img { width: 100%; height: 125px; object-fit: contain; background: #f0e9db; }
+body.cell-art-page #qualifications .qualification-cards > article { padding: 0; border: 0; border-radius: 16px; background: #f3eee4; color: #142f3a; --heading: #0b3f51; --line: rgba(11, 63, 81, .22); }
+body.cell-art-page #qualifications .qualification-art { height: clamp(160px, 25vh, 225px); margin: 0; border-radius: 16px 16px 0 0; background: #f0e9db; }
+body.cell-art-page #qualifications .qualification-cards > article > :is(h3, p, a) { margin: 12px 16px 0; }
+body.cell-art-page #qualifications .qualification-cards > article > a { margin-top: auto; padding-block: 10px 14px; }
+
+@media screen and (min-width: 1000px) {
+  /* Use the v2 frame's existing space; don't stretch cells during natural measurement. */
+  body.cell-art-page[data-page-frame] .framework-panels { padding: 20px 24px; }
+  body.cell-art-page[data-page-frame] .framework-panels .picture-cell { display: grid; padding: 0; gap: 0; }
+  body.cell-art-page[data-page-frame] .framework-panels .section-head { margin-bottom: 14px; }
+  body.cell-art-page[data-page-frame] .framework-panels .section-head h2 { font-size: clamp(1.5rem, 3.8vh, 2rem); }
+  body.cell-art-page[data-page-frame] .framework-panels :is(.learning-steps, .adult-topics--work, .send-points) { gap: 12px; margin-block: 12px; }
+  body.cell-art-page[data-page-frame] .steps-panel .learning-steps { flex: 1 0 auto; align-content: center; grid-auto-rows: 1fr; }
+  body.cell-art-page[data-page-frame] .steps-panel .learning-steps p { font-size: clamp(.9rem, 1.95vh, 1rem); }
+  body.cell-art-page[data-page-frame] .steps-panel .picture-cell-copy { align-self: end; padding: 12px; }
+  body.cell-art-page[data-page-frame] .framework-panels.is-measuring .learning-steps { flex: none; }
+  body.cell-art-page[data-page-frame] #our-lessons .lesson-stage-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+  body.cell-art-page[data-page-frame] #our-lessons .lesson-stage-grid > .picture-cell { grid-template-columns: minmax(0, 1fr); padding: 0; gap: 0; }
+  body.cell-art-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-media { min-height: 0; height: clamp(95px, 16vh, 144px); border-radius: 15px 15px 0 0; }
+  body.cell-art-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-copy { padding: 12px; align-self: start; }
+  body.cell-art-page[data-page-frame] #our-lessons .lesson-stage-grid h4 { display: block; font-size: 1rem; margin-bottom: 6px; }
+  body.cell-art-page[data-page-frame] #our-lessons .lesson-stage-grid h4::before { margin-right: 7px; }
+  body.cell-art-page[data-page-frame] #our-lessons .lesson-stage-grid p { font-size: .95rem; line-height: 1.4; }
+  body.cell-art-page[data-page-frame] #weekly-reports .report-parts { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-block: 10px; }
+  body.cell-art-page[data-page-frame] #weekly-reports .report-parts > li { padding: 12px 14px; font-size: .9rem; line-height: 1.4; }
+  body.cell-art-page[data-page-frame] #weekly-reports .report-parts strong { font-size: 1rem; line-height: 1.3; }
+  body.cell-art-page[data-page-frame] #weekly-reports .report-example { font-size: .85rem; line-height: 1.4; }
+  body.cell-art-page[data-page-frame] #weekly-reports .report-purpose { margin-top: 0; padding-top: 6px; }
+  body.cell-art-page[data-page-frame] #where-we-teach .teaching-formats { flex: 1 0 auto; }
+  body.cell-art-page[data-page-frame] #where-we-teach .teaching-format-photo { height: clamp(165px, 25vh, 225px); }
+  body.cell-art-page[data-page-frame] #where-we-teach .teaching-format-body { flex: 0 0 auto; padding: 14px 16px; }
+  body.cell-art-page[data-page-frame] #where-we-teach .teaching-format p { margin-bottom: 8px; font-size: .95rem; line-height: 1.4; }
+  body.cell-art-page[data-page-frame] #where-we-teach .teaching-format-link { margin-top: 2px; }
+  body.cell-art-page[data-page-frame] #send-support .send-points,
+  body.cell-art-page[data-page-frame] #english-for-work .adult-topics--work { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; }
+  body.cell-art-page[data-page-frame] #send-support .picture-cell-media,
+  body.cell-art-page[data-page-frame] #english-for-work .picture-cell-media { min-height: 138px; }
+  /* Text-only cards use natural rows and compact padding rather than inflated tracks. */
+  body.cell-art-page[data-page-frame] .framework-panels :is(.learning-subject-grid:not(.send-points), .learning-languages, .ielts-tutors, .ielts-methods) { grid-auto-rows: auto; align-items: start; gap: 12px; }
+  body.cell-art-page[data-page-frame] .framework-panels .subject-card:not(.picture-cell) { padding: 14px; }
+  body.cell-art-page[data-page-frame] #qualifications .ielts-section-head h2 { font-size: clamp(1.5rem, 3.5vh, 1.9rem); }
+  body.cell-art-page[data-page-frame] #qualifications .ielts-art { width: 230px; }
+  body.cell-art-page[data-page-frame] #qualifications :is(.ielts-tutors, .ielts-methods) { margin-block: 12px; }
+}
+@media screen and (min-width: 1000px) and (max-width: 1320px) {
+  body.cell-art-page[data-page-frame] #main { grid-template-columns: 260px minmax(0, 1fr); column-gap: 24px; }
+}
+@media screen and (min-width: 1100px) {
+  /* Four short adult goals fit best in one row, with a broad picture band. */
+  body.cell-art-page[data-page-frame] #english-for-work .adult-topics--work { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  body.cell-art-page[data-page-frame] #english-for-work .adult-topics--work > .picture-cell { grid-template-columns: minmax(0, 1fr); }
+  body.cell-art-page[data-page-frame] #english-for-work .picture-cell-media { min-height: 0; height: clamp(100px, 16vh, 144px); border-radius: 15px 15px 0 0; }
+  body.cell-art-page[data-page-frame] #english-for-work .picture-cell-copy { align-self: start; padding: 12px; }
+  body.cell-art-page[data-page-frame] #english-for-work .adult-topics--work h3 { font-size: 1rem; line-height: 1.25; margin-bottom: 6px; }
+  body.cell-art-page[data-page-frame] #english-for-work .adult-topics--work p { font-size: .9rem; }
+}
+@media (max-width: 759px) {
+  body.cell-art-page .framework-panels { padding: 16px; }
+  body.cell-art-page .framework-panels :is(.learning-steps, .send-points, .adult-topics--work) { grid-template-columns: minmax(0, 1fr); grid-auto-rows: auto; gap: 16px; }
+  body.cell-art-page .framework-panels .picture-cell,
+  body.cell-art-page #send-support .send-points > .picture-cell,
+  body.cell-art-page #english-for-work .adult-topics--work > .picture-cell { grid-template-columns: minmax(0, 1fr); }
+  body.cell-art-page .framework-panels .picture-cell-media { min-height: 0; aspect-ratio: 8 / 5; border-radius: 15px 15px 0 0; }
+  body.cell-art-page .framework-panels .picture-cell-copy { padding: 16px; }
+  body.cell-art-page #our-lessons .lesson-example-head,
+  body.cell-art-page #weekly-reports .section-head { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  body.cell-art-page #our-lessons .lesson-example-head img,
+  body.cell-art-page #weekly-reports .section-head > .framework-panel-art { grid-column: 1; grid-row: 1; width: 100%; height: auto; aspect-ratio: 8 / 5; }
+  body.cell-art-page #weekly-reports .section-head > :is(h2, p) { grid-column: 1; margin: 0; }
+  body.cell-art-page #qualifications .qualification-art { height: auto; aspect-ratio: 8 / 5; }
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.cell-art-page #english-for-work .adult-topics--work > article,
+  :root:not([data-theme="light"]) body.cell-art-page #qualifications .qualification-cards > article { --heading: #f5f0e6; --ink: #f5f0e6; --line: rgba(245, 240, 230, .25); --orange-text: #ffb486; background: #204653; color: var(--ink); }
+}
+:root[data-theme="dark"] body.cell-art-page #english-for-work .adult-topics--work > article,
+:root[data-theme="dark"] body.cell-art-page #qualifications .qualification-cards > article { --heading: #f5f0e6; --ink: #f5f0e6; --line: rgba(245, 240, 230, .25); --orange-text: #ffb486; background: #204653; color: var(--ink); }
+@media print {
+  body.cell-art-page .framework-panels .picture-cell { break-inside: avoid; }
+  body.cell-art-page .framework-panels .picture-cell-media { min-height: 130px; }
+}

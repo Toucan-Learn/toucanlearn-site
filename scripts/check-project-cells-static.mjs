@@ -27,7 +27,7 @@ for (const [index, slide] of slides.entries()) {
 for (const quote of ['light, bright red', 'Fizzy, extreme.', 'designed for everyone', "When you're in a rush, have some Skids."]) {
   assert(section.includes(`“${quote}”`), `Changed learner quote: ${quote}`);
 }
-assert(slides[0].includes('Leeds: a case for 13th') && slides[0].includes('statistics'), 'Missing journalism examples');
+assert(slides[0].includes('Leeds: a case for 13th') && slides[0].includes('evidence'), 'Missing journalism examples');
 assert(slides[1].includes('written request') && slides[1].includes('video showcase is planned'), 'Missing DARTY process or next step');
 assert(slides[2].includes('data-project-media-slot="drink-design"') && slides[2].includes('3D renders'), 'Missing drink media slot or next step');
 assert(!/<iframe\b|<video\b/.test(section), 'Live media must be mounted only when selected');

@@ -62,8 +62,8 @@
     const sync = (scroll = true) => {
       const target = hashTarget();
       const panel = target && panels.find(candidate => candidate === target || candidate.contains(target));
-      // A fragment elsewhere on the page should retain ordinary browser navigation.
-      show(panel || defaultPanel, target, { scroll: scroll && !!panel });
+      // A cleaned URL or a restored page must retain its in-page selection.
+      show(panel || current || defaultPanel, panel ? target : null, { scroll: scroll && !!panel });
     };
     // Initialize completely before enabling the CSS that hides the controls/panels.
     sync(!!location.hash);
@@ -80,8 +80,8 @@
       const panel = target && panels.find(candidate => candidate === target || candidate.contains(target));
       if (!panel) return;
       event.preventDefault();
-      if (location.hash !== url.hash) history.pushState(null, '', url.hash);
       show(panel, target, { focus: links.includes(anchor), scroll: true });
+      if (window.matchMedia('(min-width: 1000px)').matches) window.scrollTo({ top: 0, behavior: 'instant' });
     });
     window.addEventListener('hashchange', () => sync());
     window.addEventListener('popstate', () => sync());

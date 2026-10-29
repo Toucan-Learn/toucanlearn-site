@@ -14,6 +14,8 @@ Only the new `showcase/` entry and `vite.showcase.config.ts` apply the neutral m
 
 After refreshing the compiled build, run `node scripts/patch-newspaper-focus.mjs` in this checkout. The small guard prevents the embedded opening from taking focus and blocking the homepage’s idle rotation; articles still receive heading focus when the reader is using the newspaper.
 
+Then run `node scripts/patch-newspaper-navigation.mjs` to preserve incoming article links while keeping article navigation and the address bar clean.
+
 The build uses relative assets and its own strict CSP. It preserves this README and previous generated assets. The build runs `scripts/check-showcase-static.mjs`, which rejects names, inline code and assets outside this folder. It does not publish anything. The parent slide retains `assets/projects/football-newspaper.webp` for JavaScript-disabled browsing and print; refresh that image separately if its front-page content changes.
 
 For Claude’s browser checks, serve this checkout with `python3 -m http.server 4206 --bind 127.0.0.1`, then run `BASE_URL=http://127.0.0.1:4206 bash scripts/check-shared-showcase.sh` in another terminal. Screenshots and reports go to `../outputs/shared-showcase-20261028/`. The suite checks both shared cells, article routes, all viewport/theme pairs, media cleanup, the real piano’s input/audio, print and JavaScript-disabled previews.

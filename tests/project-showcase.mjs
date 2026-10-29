@@ -354,8 +354,9 @@ try {
   assert(await page.$eval('[data-showcase]', root => document.activeElement === root), 'Hiding focused copy recovers focus to the viewer');
   await project(page, 'drinks');
   await page.evaluate(() => { window.sectionSpin = document.querySelector('.drink-spin'); });
-  await page.evaluate(() => { location.hash = 'getting-started'; });
+  await page.$eval('[data-panel-link][href="#getting-started"]', link => link.click());
   await page.waitForFunction(() => document.querySelector('#learner-projects').hidden);
+  assert.equal(new URL(page.url()).hash, '', 'Panel switches leave the address clean');
   assert(await page.evaluate(() => window.sectionSpin.dataset.active === 'false'), 'Hidden Projects section pauses its frame viewer');
   report.behaviour.push('homepage unchanged, five-slide section, intro, separate result cells, review overrides, wrap, interaction reset, idle advance, focus, held playing key, all drink sequences, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
   await context.close();

@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { contactMarkup, contactScript } from './helpers/contact-markup.mjs';
 assert.ok(process.env.BASE_URL, 'Set BASE_URL to the server serving website-codex-offer.');
 const base = new URL(process.env.BASE_URL.replace(/\/?$/, '/'));
 const root = new URL('../', import.meta.url);
@@ -18,6 +19,14 @@ const baselineRef = process.env.BASELINE_REF || 'HEAD';
 const head = execFileSync('git', ['rev-parse', baselineRef], { cwd: root, encoding: 'utf8' }).trim();
 const originalAssets = new Map([...pages, 'campaigns.css', 'contact.js'].map(file => [file,
   execFileSync('git', ['show', `${baselineRef}:${file}`], { cwd: root, encoding: 'utf8' })]));
+// The approved contact layout and Subject field are the pop-up baseline.
+// Keep checking its copy, controls and behaviour hooks against the original.
+const currentContact = await readFile(new URL('contact.html', root), 'utf8');
+assert.equal(contactMarkup(currentContact), contactMarkup(originalAssets.get('contact.html')));
+originalAssets.set('contact.html', currentContact);
+const currentContactScript = await readFile(new URL('contact.js', root), 'utf8');
+assert.equal(contactScript(currentContactScript), contactScript(originalAssets.get('contact.js')));
+originalAssets.set('contact.js', currentContactScript);
 const report = { revision: 'popup-only', baseline: `Original site checkout HEAD ${head}, served locally by interception`, cases: [], failures: [], errors: [], csp: [] };
 const viewports = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 390, height: 844 }];
 const storageKey = 'toucan-launch-offer-last-shown';
@@ -95,7 +104,10 @@ async function snapshot(page) {
       layout.push({ tag: element.tagName, id: element.id || '', className: element.getAttribute('class') || '', x: r.x, y: r.y, width: r.width, height: r.height });
     }
     return { text, layout, scrollWidth: document.documentElement.scrollWidth, scrollHeight: document.documentElement.scrollHeight, width: innerWidth, height: innerHeight,
-      links: [...document.querySelectorAll('a[href]')].filter(a => !a.closest('.launch-offer-dialog')).map(a => a.getAttribute('href')),
+      links: [...document.querySelectorAll('a[href]')].filter(a => !a.closest('.launch-offer-dialog')).map(a => ({
+        href: a.getAttribute('href').replace(/^index\.html(?=#|$)/, './').replace(/^contact\.html\?service=[^&]+$/, 'contact.html'),
+        service: a.dataset.service || new URL(a.href).searchParams.get('service')
+      })),
       oldUI: !!document.querySelector('.launch-offer-slot, .launch-offer-pricing, .launch-offer-claim, .launch-offer-banner, #claim-launch-offer') };
   });
 }
@@ -159,7 +171,7 @@ try {
         let popup;
         if (eligible) {
           await page.bringToFront(); popup = await popupFits(page);
-          assert.equal(popup.href, 'contact.html?offer=launch');
+          assert.equal(popup.href, 'contact.html');
           await page.keyboard.press('Escape'); await page.locator('dialog.launch-offer-dialog').waitFor({ state: 'hidden' });
           unchanged(await snapshot(page), during.baseline, 'After closing pop-up');
         } else assert.equal(await page.locator('dialog.launch-offer-dialog').count(), 0, 'Excluded page never receives a dialog');
@@ -243,8 +255,8 @@ try {
     const { context, page } = await setup();
     try {
       await open(page, 'index.html?utm_source=test&utm_medium=site&utm_campaign=launch'); await elapsed(page, 6000);
-      await page.locator('.launch-offer-dialog__claim').click(); await page.waitForURL('**/contact.html?**');
-      assert.equal(new URL(page.url()).searchParams.get('offer'), 'launch');
+      await page.locator('.launch-offer-dialog__claim').click(); await page.waitForURL('**/contact.html');
+      assert.equal(new URL(page.url()).search, '');
       assert.equal(await page.locator('#campaign-source').inputValue(), 'launch-offer');
       for (const [id, expected] of [['traffic-source', 'test'], ['traffic-medium', 'site'], ['campaign-name', 'launch']]) assert.equal(await page.locator(`#${id}`).inputValue(), expected);
       assert.equal(await page.locator('.launch-offer-dialog, .launch-offer-pricing, .launch-offer-claim, #claim-launch-offer').count(), 0);

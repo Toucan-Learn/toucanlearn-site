@@ -92,19 +92,18 @@
       ring.style.height = `${height}px`;
       status.textContent = `${modulo(position) + 1} of ${count}`;
     }
-    function turn(delta, updateAddress = true) {
+    function turn(delta) {
       const focusedCard = cards.find(card => card.contains(document.activeElement));
       if (focusedCard) deck.focus({preventScroll:true});
       position += delta;
       render();
-      if (updateAddress) history.replaceState(null, '', `#${cards[modulo(position)].id}`);
       if (focusedCard) cards[modulo(position)].focus({preventScroll:true});
     }
-    function revealHash() {
+    function revealHash(event) {
       let target;
-      try { target = document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
+      try { target = event?.detail?.target || document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
       const selected = cards.findIndex(card => card === target || card.contains(target));
-      if (selected >= 0) turn(relative(selected), false);
+      if (selected >= 0) turn(relative(selected));
     }
     previous.addEventListener('click', () => turn(-1));
     next.addEventListener('click', () => turn(1));
@@ -149,6 +148,7 @@
     stage.addEventListener('touchcancel', () => { gesture = null; }, {passive:true});
     addEventListener('hashchange', revealHash);
     addEventListener('popstate', revealHash);
+    document.addEventListener('site:fragment', revealHash);
     motion.addEventListener('change', render);
     desktop.addEventListener('change', render);
     deck.classList.add('team-deck-enhanced', 'team-deck-instant');

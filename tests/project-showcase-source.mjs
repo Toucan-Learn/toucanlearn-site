@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 import '../scripts/check-project-cells-static.mjs';
 const source = await readFile(new URL('../project-showcase.js', import.meta.url), 'utf8');
 assert(source.includes("iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox')"), 'The newspaper clip must open in a new tab');
@@ -115,12 +116,12 @@ await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.ur
 const site = fileURLToPath(new URL('../', import.meta.url));
 const before = execFileSync('git', ['show', `${process.env.PROJECT_COPY_BASE || process.env.SHOWCASE_BASE || 'd40ecf2'}:index.html`], { cwd: site, encoding: 'utf8' });
 const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
-const withoutShowcaseTokens = html => html.replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN');
-assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the shared CSS/JS cache tokens');
+const withoutShowcaseTokens = html => homeNavigationMarkup(html).replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN');
+assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the shared CSS/JS cache tokens and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
-assert.equal(belowHero(after), belowHero(before), 'Everything below the homepage hero stays untouched');
+assert.equal(homeNavigationMarkup(belowHero(after)), homeNavigationMarkup(belowHero(before)), 'Homepage content below the hero is preserved through the URL migration');
 
 const children = await readFile(new URL('../children.html', import.meta.url), 'utf8');
 assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), sectionProjects.map(project => project.id), 'The intro precedes all four matching copy cards');

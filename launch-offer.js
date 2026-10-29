@@ -58,14 +58,8 @@
     const summary = element('p', 'launch-offer-dialog__summary', `Book by ${closes}.`);
     summary.id = 'launch-offer-summary';
     const claim = element('a', 'button launch-offer-dialog__claim', 'Claim a free spot');
-    claim.setAttribute('href', 'contact.html?offer=launch');
-    // Carry the existing campaign attribution through this dynamically created link too.
-    const params = new URLSearchParams(window.location.search);
-    const target = new URL(claim.getAttribute('href'), window.location.href);
-    ['utm_source', 'utm_medium', 'utm_campaign'].forEach(key => {
-      if (params.get(key)) target.searchParams.set(key, params.get(key).slice(0, 120));
-    });
-    claim.setAttribute('href', 'contact.html' + target.search);
+    claim.setAttribute('href', 'contact.html');
+    claim.setAttribute('data-offer', 'launch');
     const later = element('button', 'launch-offer-dialog__later', 'Maybe later');
     later.type = 'button';
     const actions = element('div', 'launch-offer-dialog__actions');

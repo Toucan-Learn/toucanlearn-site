@@ -208,7 +208,7 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       });
       assert(Math.abs(keyDelta - dir / count) < 1e-9, 'Right arrow rotates exactly one frame with no timing race');
       const afterKey = await turns(page); await wait(80);
-      assert(await turns(page) > afterKey, 'Idle spin resumes immediately after a key press');
+      assert(await turns(page) < afterKey, 'Idle spin resumes immediately after a key press');
       const samples = await page.evaluate(() => new Promise(resolve => {
         const rows = [];
         const sample = () => {
@@ -297,7 +297,7 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
         await page.mouse.move(x, y); await page.mouse.down(); await wait(160); await page.mouse.up();
       }
       const afterStill = await turns(page); await wait(80);
-      assert(await turns(page) > afterStill, 'A still release resumes immediately');
+      assert(await turns(page) < afterStill, 'A still release resumes immediately');
       // Keep a decoded Skids composition while every Fizzy decode is held.
       await assertDrinkLayout(page, 'skids');
       await page.evaluate(() => { window.spinDecodeHold = 'fizzy'; });

@@ -6,6 +6,7 @@
 .showcase-stage { position: relative; min-width: 0; min-height: 0; border-radius: 14px 14px 0 0; background: #071219; }
 .showcase-stage > :is(img, iframe, .screenshot-gallery, .showcase-drinks, .piano-world) { display: block; width: 100%; height: 100%; min-width: 0; border: 0; margin: 0; }
 .showcase-stage > img { object-fit: contain; border-radius: 14px 14px 0 0; }
+.showcase-stage > .showcase-preview { position: absolute; inset: 0; }
 .showcase-stage > .showcase-newspaper { color-scheme: light dark; border-radius: 14px 14px 0 0; }
 .showcase-caption { display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--showcase-bar); padding: 0 var(--showcase-inset); border-top: 1px solid #adc4b533; border-radius: 0 0 14px 14px; background: #0b2228; font-size: 12px; line-height: 1.2; }
 .showcase-caption .showcase-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -67,8 +68,7 @@
 #learner-projects .showcase-stage .screenshot-gallery-controls { right: 8px; bottom: 8px; left: 8px; }
 /* The section keyboard opens inside its media cell so the section footer stays clear. */
 #learner-projects .showcase-stage .piano-world { overflow: clip; min-height: 0; }
-#learner-projects .showcase-cell .piano-panel { inset: auto 0 0; max-height: 100%; }
-#learner-projects .piano-panel-inner { border-radius: 14px 14px 0 0; }
+#learner-projects .showcase-cell .piano-panel { inset: auto -1px 0; max-height: 100%; }
 #learner-projects .project-note { grid-column: 1 / -1; }
 /* A separate accent cell closes each project's three teaching rows. */
 #learner-projects .project-copy-result { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #d8e7de; color: #142f3a; }
@@ -135,5 +135,5 @@ body[data-page-frame] #learner-projects .showcase-stage .screenshot-gallery img,
 body[data-page-frame] #learner-projects .showcase-drink-screen img { width: 100%; height: 100%; max-height: none; }
 body[data-page-frame] #learner-projects .showcase-drink-screen img,
 body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallback { object-fit: cover; object-position: center; }
-#learner-projects .showcase-stage .piano-world .hero-mascot { width: 51%; height: auto; max-height: none; border-radius: 0; }
+#learner-projects .showcase-stage .piano-world .hero-mascot { width: 51%; height: auto; max-height: none; border-radius: 0; object-fit: fill; }
 [data-showcase]:focus-visible { outline: 2px solid #efac8e; outline-offset: 3px; }

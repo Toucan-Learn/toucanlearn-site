@@ -6,6 +6,7 @@ import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { newspaperMobileBreakpoint } from './project-showcase-source.mjs';
+import { assertImmediateProjectSwitch, assertRapidProjectSwitches } from './project-showcase-switch-helpers.mjs';
 import { activatePianoToggle } from './piano-toggle-helpers.mjs';
 import { checkDrinkSpin, assertDrinkLayout, dragOverDrink, checkDrinkMenuKeys } from './drink-spin-browser.mjs';
 const site = fileURLToPath(new URL('../', import.meta.url));
@@ -60,7 +61,7 @@ async function selected(page) { return page.$eval('[data-showcase]', root => roo
 async function project(page, id) {
   await page.$eval('[data-showcase]', root => root.focus({ preventScroll: true }));
   const count = await page.$$eval('[data-project-slide]', slides => slides.length) || ids.length;
-  for (let i = 0; i < count && await selected(page) !== id; i++) await page.$eval('[data-project-next]', button => button.click());
+  for (let i = 0; i < count && await selected(page) !== id; i++) await assertImmediateProjectSwitch(page, 'next');
   assert.equal(await selected(page), id);
   await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
   if (id === 'intro') await page.$eval('.project-intro-image img', img => img.decode());
@@ -250,11 +251,12 @@ try {
         }
       }
       assert(Math.max(...sizes) - Math.min(...sizes) <= 1, `${label}: project switch changes cell height`);
-      await page.$eval('[data-project-next]', button => button.click());
+      await assertImmediateProjectSwitch(page, 'next');
       assert.equal(await selected(page), sequence[0], `${label}: wrap returns to the first slide`);
       assert.equal(await page.$eval('[data-project-status]', status => status.textContent), `1 of ${sequence.length}`);
-      await page.$eval('[data-project-prev]', button => button.click());
+      await assertImmediateProjectSwitch(page, 'prev');
       assert.equal(await selected(page), sequence.at(-1), `${label}: previous wraps to the final project`);
+      report.behaviour.push({ label, route, rapidSwitches: await assertRapidProjectSwitches(page) });
     }
     await context.close();
   }
@@ -350,7 +352,7 @@ try {
   await page.focus('[data-project-slide]:not([hidden]) .framework-project-copy > a');
   await page.keyboard.press('ArrowRight');
   assert.equal(await selected(page), 'drinks', 'Copy links retain keyboard input');
-  await page.$eval('[data-project-next]', button => button.click());
+  await assertImmediateProjectSwitch(page, 'next');
   assert(await page.$eval('[data-showcase]', root => document.activeElement === root), 'Hiding focused copy recovers focus to the viewer');
   await project(page, 'drinks');
   await page.evaluate(() => { window.sectionSpin = document.querySelector('.drink-spin'); });

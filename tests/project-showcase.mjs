@@ -143,7 +143,7 @@ async function metrics(page) {
       result: result && { ...rect(result), separate: result.parentElement === column && copy.parentElement === column && result.previousElementSibling === copy,
         background: getComputedStyle(result).backgroundColor, color: getComputedStyle(result.querySelector('p')).color, headingColor: getComputedStyle(result.querySelector('h4')).color,
         copyBackground: getComputedStyle(copy).backgroundColor, radius: getComputedStyle(result).borderRadius, copyRadius: getComputedStyle(copy).borderRadius,
-        headingStyle: headingStyle(result.querySelector('h4')), rowHeadingStyles: [...rows.querySelectorAll('h4')].map(headingStyle),
+        headingStyle: headingStyle(result.querySelector('h4')), headingTransform: getComputedStyle(result.querySelector('h4')).textTransform, labelStyle: headingStyle(copy.querySelector('.project-label')), rowHeadingStyles: [...rows.querySelectorAll('h4')].map(headingStyle),
         columnGap: parseFloat(getComputedStyle(column).rowGap), mediaGap: parseFloat(getComputedStyle(slide).columnGap) },
       introMedia: slide?.dataset.project === 'intro' ? slide.querySelectorAll('iframe, video, audio, canvas, .framework-project-media').length : null,
       introImage: introImage && { ...rect(introImage), count: slide.querySelectorAll('img').length, complete: introImage.complete && introImage.naturalWidth > 0, source: new URL(introImage.currentSrc).pathname },
@@ -257,7 +257,9 @@ try {
           assert(m.result.columnGap >= 12 && Math.abs(m.result.y - m.copy.bottom - m.result.columnGap) <= 1, 'Result has a clear card gap below the cream copy card');
           assert(Math.abs(m.result.x - m.copy.x) <= 1 && Math.abs(m.result.width - m.copy.width) <= 1, 'Result and copy cards have the same width and alignment');
           assert.equal(m.result.radius, m.result.copyRadius, 'Result and copy cards share their corner radius');
-          for (const style of m.result.rowHeadingStyles) assert.deepEqual(m.result.headingStyle, style, 'Result heading matches all three copy headings in size, weight and spacing');
+          // Owner (29 Oct): the result heading is a capitalised label, the same size as the subject label.
+          assert.deepEqual([m.result.headingStyle.fontSize, m.result.headingStyle.fontWeight, m.result.headingStyle.letterSpacing], [m.result.labelStyle.fontSize, m.result.labelStyle.fontWeight, m.result.labelStyle.letterSpacing], 'Result heading matches the subject label (e.g. ENGLISH) in size, weight and spacing');
+          assert.equal(m.result.headingTransform, 'uppercase', 'Result heading is in capitals');
           assert.notEqual(m.result.background, m.result.copyBackground, 'Result has a distinct accent background');
           for (const color of [m.result.color, m.result.headingColor]) assert(contrast(color, m.result.background) >= 4.5, `${label}/${id}: result text contrast`);
           assert(Math.abs(m.slot.height - m.media.height) <= 1, 'Shared cell fills the media slot');

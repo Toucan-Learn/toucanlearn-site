@@ -92,7 +92,7 @@
 #learner-projects .project-copy-result { margin: 0; padding: 14px; border: 1px solid #e4be7840; border-radius: var(--radius-md, 16px); background: #0a272c; color: #f5f0e6; overflow-wrap: break-word; }
 #learner-projects :is(.project-copy-cells, .project-copy-result) h4 { margin: 0 0 3px; font-size: .85rem; font-weight: 700; line-height: 1.3; letter-spacing: normal; }
 /* The newspaper's warm gold accent, on a contrasting deep teal. */
-#learner-projects .project-copy-result h4 { color: #e4be78; }
+#learner-projects .project-copy-result h4 { margin-bottom: 5px; color: #e4be78; font-size: .78rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; } /* Owner: same capitals and size as the subject label (e.g. ENGLISH), in gold. */
 #learner-projects .project-copy-result p { margin: 0; color: inherit; }
 #learner-projects .project-copy-cells { margin-bottom: 0; }
 #learner-projects .framework-project-copy { overflow-wrap: break-word; }
@@ -143,6 +143,7 @@
   body[data-page-frame] #learner-projects .project-copy-cells { gap: 0; margin-bottom: 0; }
   body[data-page-frame] #learner-projects .project-copy-cells > div { padding-block: 3px; }
   body[data-page-frame] #learner-projects :is(.project-copy-cells, .project-copy-result) h4 { margin-bottom: 1px; font-size: .775rem; line-height: 1.25; }
+  body[data-page-frame] #learner-projects .project-copy-result h4 { margin-bottom: 4px; font-size: .65rem; line-height: 1.3; letter-spacing: .08em; }
   body[data-page-frame] #learner-projects .project-copy-result { padding: 8px 10px; }
   body[data-page-frame] #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); }
 }

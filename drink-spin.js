@@ -9,7 +9,7 @@ export function frameBlend(turns, count) {
 const assetVersion = '20261029-smooth-1';
 
 export function spinMotion({ draw, clock = globalThis, reduced = false }) {
-  const revolution = -16000; // Negative: the idle turn runs the other way round (owner's call).
+  const revolution = 16000; // Owner's chosen idle direction (positive turns).
   const decay = 600; // ms; a flick eases back to the idle spin, independent of display refresh rate.
   let turns = 0;
   let velocity = 0;

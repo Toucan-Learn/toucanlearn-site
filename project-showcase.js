@@ -1,4 +1,4 @@
-import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-smooth-1';
+import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-dir-1';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [

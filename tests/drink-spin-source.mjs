@@ -32,7 +32,7 @@ const clock = fakeClock();
 const motion = spinMotion({ clock, draw() {} });
 motion.setActive(true);
 clock.tick(16000);
-assert(Math.abs(motion.state.turns + 1) < 1e-9, 'Exactly one revolution in 16 seconds, turning the other way round');
+assert(Math.abs(motion.state.turns - 1) < 1e-9, 'Exactly one revolution in 16 seconds');
 const atHold = motion.state.turns;
 motion.begin();
 clock.tick(22000);
@@ -50,21 +50,21 @@ assert(motion.state.turns > released, 'A flick continues in the drag direction')
 clock.tick(4740);
 const late = motion.state.turns;
 clock.tick(100);
-assert(motion.state.turns < late, 'A flick against the usual direction swings round into it, never stopping');
+assert(motion.state.turns > late, 'A flick with the usual direction eases back into it, never stopping');
 assert.equal(motion.state.velocity, 0, 'The flick has eased into the idle spin');
 const settled = motion.state.turns;
 clock.tick(1600);
-assert(Math.abs(motion.state.turns - settled + .1) < .002, 'Carries straight on at the slow idle speed, with no six-second pause');
+assert(Math.abs(motion.state.turns - settled - .1) < .002, 'Carries straight on at the slow idle speed, with no six-second pause');
 motion.step(-1 / 72);
 const keyed = motion.state.turns;
 clock.tick(16);
-assert(motion.state.turns < keyed, 'Keyboard rotation resumes on the next animation frame');
+assert(motion.state.turns > keyed, 'Keyboard rotation resumes on the next animation frame');
 motion.begin();
 clock.tick(500);
 motion.end();
 const stillRelease = motion.state.turns;
 clock.tick(16);
-assert(motion.state.turns < stillRelease, 'A still release resumes immediately');
+assert(motion.state.turns > stillRelease, 'A still release resumes immediately');
 for (const reason of ['hidden', 'off-screen', 'other project']) {
   motion.setActive(false);
   const paused = motion.state.turns;
@@ -73,7 +73,7 @@ for (const reason of ['hidden', 'off-screen', 'other project']) {
   assert.equal(clock.pending(), 0, `${reason}: no animation or idle work`);
   motion.setActive(true);
   clock.tick(1616);
-  assert(motion.state.turns < paused && paused - motion.state.turns < .102, `${reason}: no catch-up jump`);
+  assert(motion.state.turns > paused && motion.state.turns - paused < .102, `${reason}: no catch-up jump`);
 }
 motion.begin();
 motion.drag(.05);
@@ -180,7 +180,7 @@ try {
   assert.equal(file(held[0]), '000.webp');
   domClock.tick(32);
   assert.deepEqual(button.children, held, 'Hold the last composition while an adjacent frame is undecoded');
-  images[3].resolve(); await flush();
+  images[2].resolve(); await flush(); // 001 is the next frame in the idle direction
   assert.equal(button.children.length, 2);
   assert(button.children.every(img => img.decoded));
   const mix1 = Number(button.dataset.blend);
@@ -207,7 +207,7 @@ try {
   assert(key.defaultPrevented);
   assert(Math.abs(Number(button.dataset.turns) - beforeKey - 1 / 12) < 1e-9);
   const keyed = Number(button.dataset.turns); domClock.tick(16);
-  assert(Number(button.dataset.turns) < keyed, 'Keyboard input resumes immediately');
+  assert(Number(button.dataset.turns) > keyed, 'Keyboard input resumes immediately');
   assert(activity >= 3);
   viewer.setActive(false);
   const still = button.dataset.turns; domClock.tick(32000);

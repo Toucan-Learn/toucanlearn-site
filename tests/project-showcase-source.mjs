@@ -132,6 +132,12 @@ for (const asset of ['css', 'js']) {
 }
 
 const newspaperHTML = await readFile(new URL('../projects/football-journalism/index.html', import.meta.url), 'utf8');
+const newspaperStylesheet = newspaperHTML.match(/href="(\.\/assets\/[^"?]+\.css)/)[1];
+const newspaperStyles = await readFile(new URL(`../projects/football-journalism/${newspaperStylesheet}`, import.meta.url), 'utf8');
+const mobileLayouts = [...newspaperStyles.matchAll(/@media\s*\(width\s*<=\s*(\d+)px\)\{([^@]*)/g)]
+  .filter(([, , rules]) => /\.news-front,\.news-two,\.news-related\{grid-template-columns:minmax\(0,1fr\)/.test(rules));
+assert.equal(mobileLayouts.length, 1, 'Identify the active build’s single-column front-page breakpoint');
+export const newspaperMobileBreakpoint = Number(mobileLayouts[0][1]);
 const newspaperScript = newspaperHTML.match(/src="(\.\/assets\/[^"?]+\.js)/)[1];
 const newspaper = await readFile(new URL(`../projects/football-journalism/${newspaperScript}`, import.meta.url), 'utf8');
 assert(newspaper.includes('(window===window.top||document.hasFocus())&&r.current?.focus'), 'The embedded newspaper must not take initial focus and block idle rotation');

@@ -99,13 +99,19 @@
   #learner-projects .framework-project--intro .framework-project-copy.subject-card { grid-area: auto; }
 }
 @media screen and (min-width: 1000px) {
-  /* Longer copy gets half the card width instead of being squeezed into 40%. */
-  body[data-page-frame] #learner-projects .framework-project { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
-  body[data-page-frame] #learner-projects .framework-project-copy { font-size: clamp(.8125rem, 1.8vh, .875rem); line-height: 1.38; }
-  body[data-page-frame] #learner-projects .project-copy-cells { margin-bottom: 6px; }
-  body[data-page-frame] #learner-projects .project-copy-cells > div { padding-block: 4px; }
-  body[data-page-frame] #learner-projects .project-copy-result { padding: 8px 10px; }
-  body[data-page-frame] #learner-projects .project-copy-result h4 { font-size: .8rem; }
+  /* Use 6px of each 24px frame inset; the section still has an 18px gutter. */
+  body[data-page-frame] #learner-projects { margin-inline: -6px; }
+  /* At 1440px this gives the iframe about 590px, above its 460px phone breakpoint. */
+  body[data-page-frame] #learner-projects .framework-project { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); column-gap: 12px; }
+  body[data-page-frame] #learner-projects .framework-project:not(.framework-project--intro) .framework-project-copy { align-self: start; padding: 8px 10px; font-size: clamp(.8125rem, 1.75vh, .85rem); line-height: 1.34; }
+  body[data-page-frame] #learner-projects .project-label { margin-bottom: 3px; }
+  body[data-page-frame] #learner-projects .framework-project-copy h3 { margin-bottom: 5px; font-size: clamp(1.125rem, 2.6vh, 1.35rem); }
+  body[data-page-frame] #learner-projects .project-copy-cells { gap: 0; margin-bottom: 4px; }
+  body[data-page-frame] #learner-projects .project-copy-cells > div { padding-block: 3px; }
+  body[data-page-frame] #learner-projects .project-copy-cells h4 { margin-bottom: 1px; font-size: .775rem; line-height: 1.25; }
+  body[data-page-frame] #learner-projects .project-copy-result { margin-bottom: 6px; padding: 6px 8px; }
+  body[data-page-frame] #learner-projects .project-copy-result h4 { margin-bottom: 2px; font-size: .775rem; line-height: 1.25; }
+  body[data-page-frame] #learner-projects .framework-project:not(.framework-project--intro) .framework-project-copy > a { margin-top: 0; }
   body[data-page-frame] #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
 }
 @media (min-width: 1550px) { [data-showcase] { --showcase-height: 540px; } }

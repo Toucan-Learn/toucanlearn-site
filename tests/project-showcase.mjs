@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import './project-showcase-source.mjs';
+import { newspaperMobileBreakpoint } from './project-showcase-source.mjs';
 import { activatePianoToggle } from './piano-toggle-helpers.mjs';
 import { checkDrinkSpin, assertDrinkLayout, dragOverDrink, checkDrinkMenuKeys } from './drink-spin-browser.mjs';
 const site = fileURLToPath(new URL('../', import.meta.url));
@@ -179,13 +179,38 @@ try {
           assert(Math.abs(m.slot.height - m.media.height) <= 1, 'Shared cell fills the media slot');
           if (view.width >= 1000) {
             const share = m.media.width / (m.media.width + m.copy.width);
-            assert(share >= .49 && share <= .51, `${label}: full paragraphs get half the card width; media share ${share}`);
+            assert(share >= .64 && share <= .66, `${label}: media gets 64–66% of the slide; media share ${share}`);
           } else assert(m.media.y >= m.copy.bottom - 1, 'Phone uses ordinary single-column flow');
         }
-        if (id === 'football' && view.width === 1440 && view.height === 750 && theme === 'light') {
+        if (id === 'football' && view.width === 1440 && view.height === 750) {
           const frameElement = await page.$('iframe');
           const frame = await frameElement.contentFrame();
           await frame.waitForSelector('.news-story-link');
+          if (!homepage) {
+            const newspaperLayout = await frame.evaluate(breakpoint => {
+              const rect = node => {
+                const box = node.getBoundingClientRect();
+                return { x: box.x, right: box.right, top: box.top, bottom: box.bottom, width: box.width };
+              };
+              const lead = document.querySelector('.news-front > .news-lead');
+              const side = document.querySelector('.news-front > .news-side-stories');
+              const sideStories = [...side.querySelectorAll('.news-story')];
+              return {
+                viewportWidth: innerWidth, breakpoint,
+                phoneLayout: matchMedia(`(width <= ${breakpoint}px)`).matches,
+                mastheadDirection: getComputedStyle(document.querySelector('.news-masthead')).flexDirection,
+                lead: rect(lead), side: rect(side),
+                sideStories: sideStories.length,
+                visibleSideStories: sideStories.filter(story => rect(story).top < innerHeight && rect(story).bottom > 0).length,
+              };
+            }, newspaperMobileBreakpoint);
+            const iframeWidth = await frameElement.evaluate(iframe => iframe.getBoundingClientRect().width);
+            report.layouts.push({ label, route, iframeWidth, newspaperLayout });
+            assert(newspaperLayout.viewportWidth > newspaperMobileBreakpoint && !newspaperLayout.phoneLayout, `${label}: iframe must be wider than ${newspaperMobileBreakpoint}px`);
+            assert.equal(newspaperLayout.mastheadDirection, 'row', 'Desktop masthead keeps its horizontal layout');
+            assert(newspaperLayout.side.x >= newspaperLayout.lead.right - 1, 'Small side stories sit beside the lead story');
+            assert(newspaperLayout.sideStories >= 2 && newspaperLayout.visibleSideStories >= 1, 'The front page shows its lead and small side stories');
+          }
           assert(await page.evaluate(() => document.activeElement !== document.querySelector('iframe')), 'Opening the newspaper must not take focus');
           await frame.click('.news-story-link');
           await frame.waitForSelector('.news-reader');

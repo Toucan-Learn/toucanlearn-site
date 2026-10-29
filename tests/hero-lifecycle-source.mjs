@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { createContext, SourceTextModule } from 'node:vm';
+import { createAudioHarness } from './helpers/piano-audio.mjs';
 const sourceRoot = new URL('../', import.meta.url);
 let attacks = 0;
 let audioState;
@@ -48,18 +49,8 @@ class Observer {
 }
 class Image extends Element { complete = false; }
 class DetailEvent extends Event { constructor(type, options = {}) { super(type); this.detail = options.detail; } }
-const parameter = () => ({ setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {}, cancelScheduledValues() {} });
-const audioNode = () => Object.assign({ connect() {}, disconnect() {}, start() { attacks++; }, stop() {} }, Object.fromEntries(['frequency', 'gain', 'Q', 'pan', 'threshold', 'knee', 'ratio', 'attack', 'release'].map(name => [name, parameter()])));
-class AudioContext {
-  constructor() { this.state = 'running'; this.currentTime = 0; this.destination = audioNode(); audioState = this; }
-  createGain = audioNode;
-  createOscillator = audioNode;
-  createBiquadFilter = audioNode;
-  createStereoPanner = audioNode;
-  createDynamicsCompressor = audioNode;
-  suspend() { this.state = 'suspended'; return Promise.resolve(); }
-  resume() { this.state = 'running'; return Promise.resolve(); }
-}
+const harness = createAudioHarness({ onStart: () => attacks++ });
+class AudioContext extends harness.AudioContext { constructor() { super(); audioState = this; } }
 const media = new Map();
 const document = new Element();
 document.body = new Element();
@@ -84,7 +75,7 @@ async function moduleFor(name) {
   return modules.get(name);
 }
 // Preload to ensure shared dependency callbacks resolve to one module object.
-for (const name of ['hero-sky.js', 'hero-keyboard.js', 'hero-piano.js', 'hero-songs.js', 'hero-sky-shaders.js', 'sky-framing.js']) await moduleFor(name);
+for (const name of ['hero-sky.js', 'hero-keyboard.js', 'hero-piano.js', 'hero-songs.js', 'hero-piano-voices.js', 'hero-sky-shaders.js', 'sky-framing.js']) await moduleFor(name);
 const sky = await moduleFor('hero-sky.js');
 await sky.link(moduleFor);
 await sky.evaluate();
@@ -132,7 +123,7 @@ for (const view of views) for (let cycle = 0; cycle < 3; cycle++) {
   assert.equal(root.querySelector('#piano-toggle').attributes.get('aria-expanded'), 'true', `${view.route}/${view.phone ? 'phone' : 'desktop'}: click opens and viewport scroll does not immediately close the piano`);
   assert.equal(root.querySelector('#hero-keyboard').inert, false);
   key('keydown', 'z');
-  assert.equal(attacks - before, 4, 'Exactly one real piano voice after repeated remounts');
+  assert.equal(attacks - before, 8, 'Exactly one complete Runaway instrument voice after repeated remounts');
   assert(destroy.isPlaying(), 'Held keyboard input is visible to the idle policy');
   assert(frames.size > 0 && timers.size > 0, 'Sky/tempo and key feedback have work to cancel');
   if (view.route === 'children.html') {

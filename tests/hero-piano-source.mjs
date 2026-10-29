@@ -2,40 +2,35 @@
 import assert from 'node:assert/strict';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { createContext, SourceTextModule } from 'node:vm';
+import { createAudioHarness } from './helpers/piano-audio.mjs';
 
 const root = new URL('../', import.meta.url);
-const sources = Object.fromEntries(await Promise.all(['hero-piano.js', 'hero-songs.js'].map(async name =>
+const sources = Object.fromEntries(await Promise.all(['hero-piano.js', 'hero-songs.js', 'hero-piano-voices.js'].map(async name =>
   [name, await readFile(new URL(name, root), 'utf8')])));
 
 async function load(id, portrait = false) {
   const clock = { now: 1000, contexts: 0, attacks: 0 };
   const changeListeners = new Set();
   const media = { matches: portrait, addEventListener: (_, fn) => changeListeners.add(fn) };
-  const parameter = () => ({ setValueAtTime() {}, linearRampToValueAtTime() {}, exponentialRampToValueAtTime() {}, cancelScheduledValues() {} });
-  const node = () => Object.assign({ connect() {}, disconnect() {}, start() { clock.attacks++; }, stop() {} },
-    Object.fromEntries(['frequency', 'gain', 'Q', 'pan', 'threshold', 'knee', 'ratio', 'attack', 'release'].map(name => [name, parameter()])));
-  class AudioContext {
-    constructor() { clock.contexts++; this.currentTime = 0; this.state = 'running'; this.destination = node(); }
-    createGain = node;
-    createOscillator = node;
-    createBiquadFilter = node;
-    createStereoPanner = node;
-    createDynamicsCompressor = node;
-  }
+  const harness = createAudioHarness({ onStart: () => clock.attacks++ });
+  const { AudioContext } = harness;
   const context = createContext({ URLSearchParams, location: { search: `?song=${id}` },
     matchMedia: () => media, performance: { now: () => clock.now }, AudioContext });
   const songModule = new SourceTextModule(sources['hero-songs.js'], { context });
   const piano = new SourceTextModule(sources['hero-piano.js'], { context });
-  await piano.link(() => songModule);
+  const voices = new SourceTextModule(sources['hero-piano-voices.js'], { context });
+  await piano.link(path => path.includes('hero-songs') ? songModule : voices);
   await piano.evaluate();
-  return { api: piano.namespace, clock, songs: songModule.namespace.songs,
+  return { api: piano.namespace, clock, songs: songModule.namespace.songs, audio: harness.metrics,
     resize(value) { media.matches = value; for (const fn of changeListeners) fn(); } };
 }
 
 const seed = await load('runaway');
 const fixtures = JSON.parse(await readFile(new URL('tests/fixtures/joplin-openings.json', root), 'utf8'));
-assert.deepEqual(fixtures.entertainer.bars.map(bar => bar.number), [5, 6, 7, 8], 'Entertainer defaults to exactly the opening four-bar phrase');
-assert.equal(seed.songs.find(song => song.id === 'entertainer').notes.length, 18);
+assert.deepEqual(fixtures.entertainer.bars.map(bar => bar.number), Array.from({ length: 16 }, (_, i) => i + 5),
+  'Entertainer includes the complete first A strain through the first-ending cadence');
+const entertainer = seed.songs.find(song => song.id === 'entertainer');
+assert.equal(entertainer.notes.length, 77, 'Full strain plus its boundary pickup, with ties counted once');
 for (const [id, reference] of Object.entries(fixtures)) {
   const sourceNotes = [...(reference.pickup || []), ...reference.bars.flatMap(bar => bar.attacks)];
   if (reference.pickup) {
@@ -44,7 +39,48 @@ for (const [id, reference] of Object.entries(fixtures)) {
   }
   const expected = sourceNotes.map(note => note.slice(0, -1) + (Number(note.at(-1)) + reference.transposeSemitones / 12));
   assert.deepEqual(Array.from(seed.songs.find(song => song.id === id).notes), expected, `${id}: matches the bar-by-bar public-domain transcription`);
+  if (reference.pickupBeats) {
+    const onsets = [0, reference.pickupBeats[0], ...reference.bars.flatMap((bar, i) => {
+      assert.equal(bar.attacks.length, bar.onsets.length, `Bar ${bar.number}: one onset per new attack`);
+      assert.ok(bar.onsets.every((beat, j) => beat >= 0 && beat < 2 && (j === 0 || beat > bar.onsets[j - 1])));
+      return bar.onsets.map(beat => .5 + i * 2 + beat);
+    })];
+    onsets.splice(-2); // The boundary pickup already starts this loop.
+    const gaps = onsets.map((beat, i) => (onsets[i + 1] ?? reference.totalBeats) - beat);
+    assert.deepEqual(Array.from(entertainer.noteBeats), gaps, 'Every duration follows the score onsets, including cross-bar ties');
+    assert.equal(entertainer.noteBeats.length, entertainer.notes.length);
+    assert.equal(entertainer.noteBeats.reduce((a, b) => a + b), 32, 'The loop is exactly sixteen 2/4 bars');
+    assert.equal(entertainer.tempo, reference.tempo);
+    assert.equal(entertainer.tempo, 100, 'A moderate practice tempo for the published Not fast indication');
+    assert.ok(gaps.every(gap => gap > 0));
+  }
 }
+assert.deepEqual(Array.from(entertainer.notes.slice(0, 18)), [
+  'D3', 'D#3', 'E3', 'C4', 'E3', 'C4', 'E3', 'C4', 'C5', 'D5', 'D#5', 'E5', 'C5', 'D5', 'E5', 'B4', 'D5', 'C5',
+], 'The previously approved opening remains intact; the C4 to C5 leap is not folded');
+assert.equal(entertainer.notes.at(-1), 'C5', 'The full strain finishes on its resolving cadence');
+assert.equal(entertainer.noteBeats.at(-1), 1.5, 'The cadence holds until the loop-boundary pickup');
+const pickupTimes = [];
+let beat = 0;
+for (let i = 0; i < entertainer.notes.length; i++) {
+  if (entertainer.notes[i] === 'D3') {
+    assert.equal(entertainer.notes[i + 1], 'D#3');
+    pickupTimes.push(beat);
+  }
+  beat += entertainer.noteBeats[i];
+}
+assert.deepEqual(pickupTimes, [0, 8, 16], 'The boundary pickup occurs once at the start; published internal pickups are retained');
+const gymnopedie = seed.songs.find(song => song.id === 'gymnopedie-1');
+assert.deepEqual(Array.from(gymnopedie.notes), [
+  'F#4', 'A4', 'G4', 'F#4', 'C#4', 'B3', 'C#4', 'D4', 'A3', 'F#3', 'F#3', 'F#3', 'F#3', 'F#3',
+], 'Gymnopedie stops at the first phrase ending, before the bar-13 melody restart');
+assert.equal(gymnopedie.notes.length, 14);
+assert.equal(gymnopedie.noteBeats, undefined, 'Retain the existing effective duration map: one practice beat per attack');
+assert.equal(gymnopedie.tempo, undefined, 'Retain its existing practice tempo rather than adding an unsupported timing map');
+const pitchMidi = note => (Number(note.at(-1)) + 1) * 12
+  + { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[note[0]] + Number(note.includes('#'));
+assert.deepEqual([Math.min(...entertainer.notes.map(pitchMidi)), Math.max(...entertainer.notes.map(pitchMidi))], [50, 76], 'The complete Entertainer strain fits D3-E5');
+assert.deepEqual([Math.min(...gymnopedie.notes.map(pitchMidi)), Math.max(...gymnopedie.notes.map(pitchMidi))], [54, 69], 'The shortened Gymnopedie fits F#3-A4');
 assert.deepEqual(Array.from(seed.api.currentSong().notes), [
   'E6', 'E6', 'E6', 'E5', 'D#6', 'D#6', 'D#6', 'D#5',
   'C#6', 'C#6', 'C#6', 'C#5', 'A5', 'A5', 'G#5', 'E6',
@@ -93,6 +129,7 @@ for (const id of ['runaway', 'no-one-noticed']) {
 for (const song of seed.songs) {
   const { api, clock } = await load(song.id);
   assert.equal(api.currentSong().id, song.id);
+  assert.equal(api.currentVoicePreset(), ['runaway', 'no-one-noticed'].includes(song.id) ? song.id : 'classic');
   assert.equal(api.availableSongs().length, 5);
   assert.equal(clock.contexts, 0, 'No autoplay');
   assert.equal(api.noteTiming().phase, 'idle', 'No cue starts on load');
@@ -110,7 +147,7 @@ for (const song of seed.songs) {
       clock.now += 300;
       const before = clock.attacks;
       api.playNextNote();
-      assert.equal(clock.attacks - before, 4, 'Exactly one voice per note');
+      assert.equal(clock.attacks - before, song.id === 'runaway' ? 8 : song.id === 'no-one-noticed' ? 5 : 4, 'Exactly one complete instrument voice per note');
     }
     assert.equal(api.peekNextNote(), song.notes[0], 'Wrap only after the final note');
   }
@@ -121,7 +158,8 @@ for (const song of seed.songs) {
   const beforeInvalid = clock.attacks;
   assert.equal(api.playNote('invalid'), false);
   assert.equal(clock.attacks, beforeInvalid);
-  songResults.push({ id: song.id, notes: song.notes.length, loops: 3, octave: api.songKeyboardOctave() });
+  songResults.push({ id: song.id, notes: song.notes.length, loops: 3, octave: api.songKeyboardOctave(),
+    minMidi: Math.min(...song.notes.map(pitchMidi)), maxMidi: Math.max(...song.notes.map(pitchMidi)) });
 }
 
 for (const song of seed.songs) {
@@ -172,6 +210,7 @@ for (const portrait of [false, true]) {
     cycle.api.nextSong();
     seen.push(cycle.api.currentSong().id);
     assert.equal(cycle.api.currentSong().id, expected, 'Next song follows the available list');
+    assert.equal(cycle.api.currentVoicePreset(), ['runaway', 'no-one-noticed'].includes(expected) ? expected : 'classic');
     assert.equal(cycle.api.peekNextNote(), cycle.api.currentSong().notes[0], 'A new song starts at its first attack');
     assert.equal(notifications, before + 1, 'A selection updates the highlight once');
     assert.equal(cycle.api.noteWavePosition(), .5, 'A new song resets the tempo origin');
@@ -184,6 +223,31 @@ for (const portrait of [false, true]) {
   assert.equal(cycle.clock.contexts, 0, 'Song selection never creates audio');
   assert.equal(cycle.clock.attacks, 0, 'Song selection never starts a note');
 }
+
+// Exercise real song selection with live simulated graphs, including both
+// phone presets and replacement of a now-unavailable desktop selection.
+for (const portrait of [false, true]) {
+  const live = await load('runaway', portrait);
+  const count = live.api.availableSongs().length;
+  for (let i = 0; i < count * 2; i++) {
+    const id = live.api.currentSong().id;
+    live.api.playNextNote();
+    assert.equal(live.api.currentVoicePreset(), ['runaway', 'no-one-noticed'].includes(id) ? id : 'classic');
+    const old = live.audio.nodes.filter(node => node.kind !== 'destination' && !node.disconnected);
+    assert.ok(old.length > 0);
+    const starts = live.clock.attacks;
+    live.api.nextSong();
+    assert.equal(live.clock.attacks, starts, 'Changing a voice is silent');
+    assert.ok(old.every(node => node.disconnected), 'Next song releases the complete prior graph');
+    assert.ok(old.filter(node => node.kind === 'convolver').every(node => node.buffer === null));
+  }
+}
+const voiceResize = await load('entertainer');
+voiceResize.api.playNextNote();
+const replacedNodes = voiceResize.audio.nodes.filter(node => node.kind !== 'destination');
+voiceResize.resize(true);
+assert.ok(['runaway', 'no-one-noticed'].includes(voiceResize.api.currentVoicePreset()));
+assert.ok(replacedNodes.every(node => node.disconnected), 'Phone restriction also releases the replaced song graph');
 
 const tempo = await load('runaway');
 const strike = interval => { tempo.clock.now += interval; tempo.api.playNote('E6'); return tempo.api.noteWavePosition(); };

@@ -62,7 +62,7 @@ export function noteWavePosition() { return wavePosition; }
 export function peekNextNote(offset = 0) { return song.notes[(nextNote + offset) % song.notes.length]; }
 
 // A song can move the keyboard up an octave so its high notes have keys.
-// Runaway now uses the unshifted keyboard for its owner-lowered register.
+// Runaway uses this for its high E6 riff.
 export function songKeyboardOctave() { return Number.isInteger(song.keyboardOctave) ? song.keyboardOctave : 0; }
 
 export function onSongAdvance(listener) {

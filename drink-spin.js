@@ -108,22 +108,31 @@ function drinkImage(drink, file) {
   image.width = 1200;
   image.height = 900;
   image.dataset.drink = drink.id;
-  image.decoding = 'async';
+  // Firefox drops decoded views it is not painting; sync redecodes on paint
+  // instead of showing nothing (owner, 29 Oct: drinks vanished on flicks).
+  image.decoding = 'sync';
   image.fetchPriority = 'low';
   image.src = `assets/projects/drinks/${drink.id}/${file}?v=${assetVersion}`;
   return image;
 }
 
 // Both foreground loading and the optional warm-up use the same decoded nodes.
-// Only the current warm-up is retained; selecting it transfers ownership to its viewer.
-const warmSequences = new Map();
+// Each drink keeps its sequence for the visit, so returning to it is instant.
+// Keyed by clock: a page has one; isolated tests each bring their own.
+const sequenceCaches = new WeakMap();
+function sequencesFor(clock) {
+  if (!sequenceCaches.has(clock)) sequenceCaches.set(clock, new Map());
+  return sequenceCaches.get(clock);
+}
 function createFrameSequence(drink, clock) {
   const loaded = new Map(), pending = new Map(), failed = new Set();
   let manifest = null, order = [], coarse = [];
   let request = null, frame = null, task = null;
   let enabled = false, coarseOnly = false, concurrency = 6, notify = () => {};
   const idle = typeof clock.requestIdleCallback === 'function';
-  const ready = () => manifest && coarse.every(i => loaded.has(i));
+  // Turning starts once the first two seconds of views have decoded; the rest
+  // load ahead of the idle spin (owner, 29 Oct: drinks sat frozen on load).
+  const ready = () => manifest && coarse.slice(0, 12).every(i => loaded.has(i));
   const finished = () => manifest && (coarseOnly ? coarse : order).every(i => loaded.has(i) || failed.has(i));
   function cancelScheduled() {
     if (frame !== null) clock.cancelAnimationFrame(frame);
@@ -229,8 +238,8 @@ export function prefetchDrink(drink, { clock = globalThis, connection = globalTh
         frame = clock.requestAnimationFrame(() => {
           frame = null;
           if (!entry) {
-            entry = warmSequences.get(drink.id) || { sequence: createFrameSequence(drink, clock), claimed: false };
-            warmSequences.set(drink.id, entry);
+            entry = sequencesFor(clock).get(drink.id) || { sequence: createFrameSequence(drink, clock), claimed: false };
+            sequencesFor(clock).set(drink.id, entry);
           }
           if (!entry.claimed) entry.sequence.start({ coarseOnly: true, concurrency: 3 });
         });
@@ -269,10 +278,9 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   let posterReady = false;
   let painted = false;
   const events = new AbortController();
-  const warm = warmSequences.get(drink.id);
-  const entry = warm && !warm.claimed ? warm : { sequence: createFrameSequence(drink, clock) };
+  const entry = sequencesFor(clock).get(drink.id) || { sequence: createFrameSequence(drink, clock) };
   entry.claimed = true;
-  warmSequences.set(drink.id, entry);
+  sequencesFor(clock).set(drink.id, entry);
   const sequence = entry.sequence;
   // Transfer decoded views, then let viewer visibility/reduced motion own any work.
   sequence.stop();
@@ -433,8 +441,6 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       events.abort();
       cancelLoads();
       if (!posterReady) poster.removeAttribute('src');
-      loaded.clear();
-      if (warmSequences.get(drink.id) === entry) warmSequences.delete(drink.id);
     },
   };
 }

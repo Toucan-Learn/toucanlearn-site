@@ -227,7 +227,7 @@ async function checkDrinkPrefetch({ open, views, base, report }) {
         assert.equal(requested.length, 90); assert(peak <= 3, 'At most three background network jobs');
         const decoded = await page.evaluate(() => ({ peak: window.prefetchPeak, frames: window.prefetchDecodes }));
         assert(decoded.peak <= 3, 'At most three background fetch/decode jobs');
-        assert(decoded.frames.every(frame => Number(frame.src.match(/(\d{3})\.webp/)[1]) % 4 === 0 && frame.priority === 'low' && frame.decoding === 'async'));
+        assert(decoded.frames.every(frame => Number(frame.src.match(/(\d{3})\.webp/)[1]) % 4 === 0 && frame.priority === 'low' && frame.decoding === 'sync'));
       }
       const switched = await assertImmediateProjectSwitch(page);
       assert.equal(switched.expected, 'drinks');
@@ -263,8 +263,9 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       assert.equal([...requested].filter(url => /\/skids\/\d{3}\.webp$/.test(url)).length, count, 'The selected sequence loads completely');
       await page.waitForFunction(() => window.spinStartupRows.length === 90);
       const startup = await page.evaluate(() => ({ rows: window.spinStartupRows, early: window.spinPrematureRotation }));
-      assert.deepEqual(startup.early, [], 'The poster remains still until the coarse set has decoded, including a delayed coarse frame');
-      assert(startup.rows.every(row => row[4] === Math.ceil(count / 4)), 'Every coarse frame is decoded before the first rotation');
+      assert.deepEqual(startup.early, [], 'The poster remains still until the first two seconds of coarse views have decoded');
+      // Owner, 29 Oct: drinks sat frozen until all 90 coarse views decoded. The first 12 (two seconds) start the turn.
+      assert(startup.rows.every(row => row[4] >= Math.min(12, Math.ceil(count / 4))), 'The first two seconds of coarse views decode before the first rotation');
       assert(startup.rows[0][3] < count, 'Rotation starts before the finer frames decode');
       for (let i = 1; i < startup.rows.length; i++) {
         assert(startup.rows[i][5] >= startup.rows[i - 1][5] && startup.rows[i][5] - startup.rows[i - 1][5] <= 1 / count, 'Idle step cap holds through progressive refinement');
@@ -424,5 +425,5 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
     assert.equal(await turns(page), manual, 'Reduced motion has no inertia or automatic animation while finer views decode');
     assert(requested.every(url => url.includes('/skids/')));
   } finally { await context.close(); }
-  report.behaviour.push('360 viewer: coarse quarter starts rotation before refinement, poster until coarse decode (including delayed coarse frame), decoded neighbours crossfade throughout refinement, idle step cap; mouse/touch direction and capture, coast to idle, immediate resume, visibility pause, reduced motion, decoded crossfades and drink switches, layout/menu checks');
+  report.behaviour.push('360 viewer: first two seconds of coarse views start rotation before refinement, poster until then, decoded neighbours crossfade throughout refinement, idle step cap; mouse/touch direction and capture, coast to idle, immediate resume, visibility pause, reduced motion, decoded crossfades and drink switches, layout/menu checks');
 }

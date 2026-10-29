@@ -284,12 +284,14 @@ try {
   assert.equal(screen.children[0].dataset.ready, 'true'); partial.destroy();
   let deliver, lateSignal;
   globalThis.fetch = (url, options) => { lateSignal = options.signal; return new Promise(resolve => { deliver = resolve; }); };
-  const late = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); late.setActive(true); await loadBatch(domClock);
+  // A fresh clock: drinks already seen on domClock keep their decoded sequence for the visit.
+  const lateClock = fakeClock();
+  const late = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: lateClock }); late.setActive(true); await loadBatch(lateClock);
   const beforeLate = images.length; const latePoster = images.at(-1); late.destroy();
   assert(lateSignal.aborted); latePoster.resolve();
   deliver({ ok: true, json: async () => ({ frameCount: 360 }) }); await flush();
   assert.equal(images.length, beforeLate); globalThis.fetch = fetchManifest;
-  // Cached foreground batches yield, and the 90th decode starts a full 360 turn.
+  // Cached foreground batches yield, and the 12th decode starts a full 360 turn.
   manifestData = { frameCount: 360, dragDirection: -1 }; cachedDecodes = true;
   for (const idle of [false, true]) {
     const batchClock = fakeClock();
@@ -305,8 +307,8 @@ try {
     for (let frames = 6; frames <= 360; frames += 6) {
       batchClock.tick(17); await flush();
       assert.equal(images.length - before - 1, frames, 'Only six cached decodes per paint/idle batch');
-      assert.equal(cachedButton.dataset.ready, String(frames >= 90));
-      if (frames < 90) assert.equal(file(cachedButton.children[0]), 'poster.webp');
+      assert.equal(cachedButton.dataset.ready, String(frames >= 12), 'The turn starts once the first two seconds of views decode');
+      if (frames < 12) assert.equal(file(cachedButton.children[0]), 'poster.webp');
     }
     const loadedOrder = images.slice(before + 1).map(index);
     assert.deepEqual(loadedOrder, progressiveFrames(360));
@@ -336,7 +338,7 @@ try {
     assert.equal(requests.length, beforeRequests, 'Prefetch waits until after first paint');
     await complete(warmClock, 90, before, 3);
     assert.equal(images.length - before, 90, 'Background warm-up fetches exactly the coarse quarter');
-    assert(images.slice(before).every(img => index(img) % 4 === 0 && img.decoding === 'async' && img.fetchPriority === 'low'));
+    assert(images.slice(before).every(img => index(img) % 4 === 0 && img.decoding === 'sync' && img.fetchPriority === 'low'));
     assert.equal(requests.at(-1).priority, 'low'); if (idle) assert(idleCalls > 0);
     warmClock.tick(1000); await flush(); assert.equal(images.length - before, 90, 'Background work never fills finer frames');
     const warmViewer = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: warmClock });
@@ -361,7 +363,7 @@ try {
   inactive.setActive(true); await loadBatch(handoffClock);
   assert(!pendingFrames().some(img => index(img) === 0), 'The handoff retains successfully decoded coarse views');
   inactive.destroy(); assert.equal(handoffClock.pending(), 0);
-  assert(images.filter(img => img.src).every(img => img.fetchPriority === 'low' && img.decoding === 'async'));
+  assert(images.filter(img => img.src).every(img => img.fetchPriority === 'low' && img.decoding === 'sync'));
 } finally {
   for (const [key, descriptor] of Object.entries(globals)) {
     if (descriptor) Object.defineProperty(globalThis, key, descriptor); else delete globalThis[key];

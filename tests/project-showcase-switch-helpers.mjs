@@ -17,19 +17,22 @@ export async function assertImmediateProjectSwitch(page, direction = 'next') {
       const stage = root.querySelector('.showcase-stage');
       const live = stage.querySelector('.showcase-live');
       const poster = stage.querySelector('.showcase-preview');
-      const revealed = live?.hasAttribute('data-showcase-revealed') || false;
+      // The newspaper loads once and stays parked under the stage when not selected.
+      const layer = root.querySelector('.showcase-newspaper-layer');
+      const newspaperShown = layer?.hasAttribute('data-showcase-revealed') || false;
+      const revealed = expected === 'football' ? newspaperShown : live?.hasAttribute('data-showcase-revealed') || false;
       const background = getComputedStyle(stage).backgroundColor;
       const selectedMedia = expected === 'piano' ? (visible(live) ? stage.querySelector('.world-art') : poster)
         : expected === 'intro' ? root.querySelector('[data-project="intro"] .project-intro-image img')
         : expected === 'drinks' ? stage.querySelector('.showcase-drink-screen img')
         : expected === 'darty' ? stage.querySelector('[data-screenshot], .showcase-preview') : stage.querySelector('img, iframe:not([hidden])');
       samples.push({ phase, project: root.dataset.project, stale: outgoing.filter(node => node.isConnected).map(node => node.id || node.className || node.tagName),
-        outgoingVisible: outgoing.some(node => node.isConnected && visible(node)), incomingVisible: Boolean(visible(selectedMedia)),
+        outgoingVisible: outgoing.some(node => node.isConnected && visible(node)) || (expected !== 'football' && newspaperShown), incomingVisible: Boolean(visible(selectedMedia)),
         toggle: expected !== 'piano' || Boolean(root.querySelector('#piano-toggle')), url: location.href,
         guarded: !['football', 'piano'].includes(expected) || Boolean(poster && visible(poster)
           && background === (expected === 'piano' ? 'rgb(7, 18, 25)' : 'rgb(11, 17, 25)')
           && (!live || revealed || getComputedStyle(live).opacity === '0')),
-        revealed, ready: !revealed || (expected === 'football' ? Boolean(live.contentDocument?.querySelector('#root > *'))
+        revealed, ready: !revealed || (expected === 'football' ? Boolean(layer.querySelector('iframe')?.contentDocument?.querySelector('#root > *'))
           : Boolean(stage.querySelector('#hero-keyboard[data-song]') && stage.querySelector('#sky-fallback')?.width === stage.querySelector('#sky-canvas')?.width)) });
     };
     const observer = new MutationObserver(() => sample('mutation'));
@@ -58,7 +61,7 @@ export async function assertImmediateProjectSwitch(page, direction = 'next') {
   }
   assert(result.duration < 50, `${label}: switch blocked rendering for ${result.duration.toFixed(1)}ms`);
   if (['football', 'piano'].includes(result.expected)) {
-    await page.waitForFunction(() => document.querySelector('.showcase-stage > .showcase-live[data-showcase-revealed]'));
+    await page.waitForFunction(() => document.querySelector('.showcase-stage > .showcase-live[data-showcase-revealed], .showcase-newspaper-layer[data-showcase-revealed]'));
   }
   return result;
 }
@@ -81,7 +84,7 @@ export async function assertRapidProjectSwitches(page) {
     const expected = root.dataset.project;
     for (let i = 0; i < 4; i++) await new Promise(resolve => requestAnimationFrame(resolve));
     return { trace, expected, actual: root.dataset.project,
-      skyCount: root.querySelectorAll('#sky-canvas').length, iframeCount: root.querySelectorAll('iframe').length,
+      skyCount: root.querySelectorAll('#sky-canvas').length, newspaperShown: root.querySelectorAll('.showcase-newspaper-layer[data-showcase-revealed]').length,
       pianoReady: Boolean(root.querySelector('#hero-keyboard[data-song]')) };
   });
   for (const step of result.trace) {
@@ -91,7 +94,8 @@ export async function assertRapidProjectSwitches(page) {
   }
   assert.equal(result.actual, result.expected, 'Cancelled mounts cannot change the final selection');
   assert.equal(result.skyCount, Number(result.expected === 'piano'));
-  assert.equal(result.iframeCount, Number(result.expected === 'football'));
+  // A parked newspaper may stay loaded; it is shown only for the football slide.
+  assert(result.newspaperShown <= Number(result.expected === 'football'));
   assert.equal(result.pianoReady, result.expected === 'piano', 'Only the final piano mount may activate');
   return result;
 }

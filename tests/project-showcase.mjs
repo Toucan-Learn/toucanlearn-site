@@ -154,7 +154,7 @@ async function metrics(page) {
       slideCount: root.querySelectorAll('[data-project-slide]').length,
       horizontalOverflow: document.documentElement.scrollWidth - innerWidth,
       inactiveInert: [...root.querySelectorAll('[data-project-slide][hidden]')].every(slide => slide.inert),
-      heavyViews: root.querySelectorAll('iframe, video, #sky-canvas').length,
+      heavyViews: root.querySelectorAll('.showcase-stage iframe, video, #sky-canvas, .showcase-newspaper-layer[data-showcase-revealed] iframe').length,
     };
   });
 }
@@ -410,7 +410,7 @@ try {
   assert(await page.evaluate(() => !window.oldSky.isConnected && window.showcaseAudio.every(audio => audio.state !== 'running')), 'Piano sky detached and audio suspended');
   await page.evaluate(() => { window.oldFrame = document.querySelector('iframe'); });
   await project(page, 'darty');
-  assert(await page.evaluate(() => !window.oldFrame.isConnected), 'Old iframe discarded');
+  assert(await page.evaluate(() => { const layer = window.oldFrame.closest('.showcase-newspaper-layer'); return window.oldFrame.isConnected && layer.inert && !layer.hasAttribute('data-showcase-revealed'); }), 'The loaded newspaper stays parked, hidden and inert');
   await project(page, 'drinks');
   await page.evaluate(() => {
     window.backgroundSpin = document.querySelector('.drink-spin');

@@ -11,7 +11,20 @@
 .showcase-stage > .showcase-live[data-showcase-revealed] { opacity: 1; }
 [data-showcase][data-project="piano"] .showcase-stage { background: #071219; }
 [data-showcase][data-project="football"] .showcase-stage { background: #0b1119; }
-.showcase-stage > .showcase-newspaper { color-scheme: dark; background: #0b1119; border-radius: 14px 14px 0 0; }
+/* Posters are 1:1 captures: crop rather than rescale if the stage differs slightly. */
+[data-showcase][data-project="football"] .showcase-stage > .showcase-preview { object-fit: cover; object-position: top center; }
+[data-showcase][data-project="piano"] .showcase-stage > .showcase-preview { object-fit: cover; object-position: center; }
+/* The loaded newspaper parks under the stage, in the same grid cell, and comes forward when selected. */
+.showcase-cell > .showcase-stage { grid-row: 1; grid-column: 1; z-index: 1; }
+.showcase-newspaper-layer { grid-row: 1; grid-column: 1; position: relative; z-index: 0; min-width: 0; min-height: 0; overflow: hidden; border-radius: 14px 14px 0 0; background: #0b1119; }
+.showcase-newspaper-layer[data-showcase-revealed] { z-index: 2; }
+.showcase-newspaper-layer > iframe { display: block; width: 100%; height: 100%; border: 0; }
+/* Children's page: parked in the football slot, over the cell that visits it. */
+#learner-projects .framework-project-media:has(> .showcase-newspaper-layer) { position: relative; }
+#learner-projects .framework-project-media > .showcase-newspaper-layer { position: absolute; top: 0; left: 0; width: 100%; height: var(--project-media-height); }
+@media screen and (min-width: 1000px) { body[data-page-frame] #learner-projects .framework-project-media > .showcase-newspaper-layer { inset: 0; height: 100%; } }
+@media print { .showcase-newspaper-layer { display: none; } }
+.showcase-newspaper-layer > .showcase-newspaper { color-scheme: dark; background: #0b1119; }
 .showcase-stage > .showcase-match { border-radius: 14px 14px 0 0; }
 .showcase-caption { display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--showcase-bar); padding: 0 var(--showcase-inset); border-top: 1px solid #adc4b533; border-radius: 0 0 14px 14px; background: #0b2228; font-size: 12px; line-height: 1.2; }
 .showcase-caption .showcase-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

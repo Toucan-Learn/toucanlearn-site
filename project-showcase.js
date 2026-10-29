@@ -168,6 +168,8 @@ export function initShowcase(root) {
   const previews = new Map(entries.filter(project => project.poster).map(project => {
     const img = new Image();
     if (project.titleStill) { img.decoding = 'async'; img.width = 1600; img.height = 900; }
+    // Small posters decode with their paint, so a re-shown one never blinks blank.
+    else img.decoding = 'sync';
     img.alt = project.alt;
     img.className = 'showcase-preview';
     warmPreview(project, img);
@@ -183,6 +185,48 @@ export function initShowcase(root) {
   const name = navigation.querySelector('[data-project-name]');
   const status = navigation.querySelector('[data-project-status]');
   const pianoControl = cell.querySelector('.showcase-piano-control');
+  // The newspaper loads once and then stays, parked under the stage. Showing a
+  // loaded page never swaps from a screenshot, so its text cannot shift (owner,
+  // 29 Oct: the text "wobbles or jumps slightly as it settles"). Moving an
+  // iframe reloads it, so it lives where it never moves: the homepage cell,
+  // or the football slide that the children's cell visits.
+  const newspaperLayer = document.createElement('div');
+  newspaperLayer.className = 'showcase-newspaper-layer';
+  newspaperLayer.inert = true;
+  const footballSlide = slides.find(slide => slide.dataset.project === 'football');
+  (!automatic && footballSlide?.querySelector('.framework-project-media') || cell).append(newspaperLayer);
+  const newspaper = { iframe: null, ready: false, onReady: null };
+  function loadNewspaper() {
+    if (newspaper.iframe) return;
+    const iframe = document.createElement('iframe');
+    iframe.className = 'showcase-newspaper';
+    iframe.title = 'Football newspaper: read the front page and articles';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
+    iframe.addEventListener('load', () => {
+      // Events in the same-origin newspaper do not bubble to its parent.
+      const doc = iframe.contentDocument;
+      activityTypes.forEach(type => doc?.addEventListener(type, activity, { passive: true }));
+      // React can commit after the document's load event. Wait for its
+      // content as well as the blocking stylesheet.
+      const ready = () => {
+        if (newspaper.ready || !doc?.querySelector('#root > *')) return;
+        contentObserver.disconnect();
+        newspaper.ready = true;
+        newspaper.onReady?.();
+      };
+      const contentObserver = new MutationObserver(ready);
+      contentObserver.observe(doc.body, { childList: true, subtree: true });
+      ready();
+    });
+    iframe.src = projects.find(project => project.type === 'newspaper').src;
+    newspaperLayer.append(iframe);
+    newspaper.iframe = iframe;
+  }
+  function hideNewspaper() {
+    newspaper.onReady = null;
+    newspaperLayer.inert = true;
+    delete newspaperLayer.dataset.showcaseRevealed;
+  }
   if (!automatic) {
     // One permanent header control for all five slides; only its text changes.
     navigation.className = 'showcase-navigation';
@@ -198,7 +242,15 @@ export function initShowcase(root) {
   if (!root.hasAttribute('aria-label')) root.setAttribute('aria-label', 'Learner projects');
   const visible = () => !printing && !document.hidden && !root.closest('[hidden], [inert]');
   const drinkPrefetch = prefetchDrink(projects.find(project => project.id === 'drinks').drinks[0]);
-  const syncPrefetch = () => drinkPrefetch.setActive(nearView && visible() && !motion.matches);
+  let newspaperWarm = 0;
+  const syncPrefetch = () => {
+    drinkPrefetch.setActive(nearView && visible() && !motion.matches);
+    // Laptops load the newspaper in the background shortly after the showcase
+    // nears view, so even the first switch shows the live page. Phones wait.
+    const warm = nearView && visible() && !stillsOnly.matches && !newspaper.iframe;
+    if (warm && !newspaperWarm) newspaperWarm = setTimeout(() => { newspaperWarm = 0; if (nearView && visible()) loadNewspaper(); }, 2000);
+    else if (!warm && newspaperWarm) { clearTimeout(newspaperWarm); newspaperWarm = 0; }
+  };
   const timer = idleAdvance({
     advance: () => show(index + 1),
     blocked: () => root.contains(document.activeElement) || pointers.size > 0 || held.size > 0 || Boolean(dispose?.isPlaying?.()) || Boolean(dispose?.isDragging?.()),
@@ -213,6 +265,7 @@ export function initShowcase(root) {
     revealFrame = requestAnimationFrame(() => {
       revealFrame = 0;
       if (token !== generation || !visible() || !live.isConnected) return;
+      live.inert = false;
       live.dataset.showcaseRevealed = '';
     });
   }
@@ -268,35 +321,23 @@ export function initShowcase(root) {
       };
       afterPaint();
     } else if (project.type === 'newspaper') {
-      activate = () => {
+      const show = () => {
         if (token !== generation || !visible()) return;
-        const iframe = document.createElement('iframe');
-        iframe.className = 'showcase-newspaper showcase-live';
-        iframe.title = 'Football newspaper: read the front page and articles';
-        iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
-        const controller = new AbortController();
-        let contentObserver;
-        iframe.addEventListener('load', () => {
-          if (token !== generation || !visible()) return;
-          // Events in the same-origin newspaper do not bubble to its parent.
-          const doc = iframe.contentDocument;
-          activityTypes.forEach(type => doc?.addEventListener(type, activity, { passive: true, signal: controller.signal }));
-          // React can commit after the document's load event. Wait for its
-          // content as well as the blocking stylesheet, then a paint frame.
-          const ready = () => {
-            if (!doc?.querySelector('#root > *')) return;
-            contentObserver?.disconnect();
-            reveal(iframe, token);
-          };
-          contentObserver = new MutationObserver(ready);
-          contentObserver.observe(doc.body, { childList: true, subtree: true });
-          ready();
-        }, { signal: controller.signal });
-        iframe.src = project.src;
-        stage.append(iframe);
-        dispose = () => { controller.abort(); contentObserver?.disconnect(); iframe.remove(); };
+        newspaperLayer.inert = false;
+        newspaperLayer.dataset.showcaseRevealed = '';
       };
-      afterPaint();
+      dispose = hideNewspaper;
+      if (newspaper.ready) show();
+      else {
+        // First visit before the background load finished: its poster covers
+        // the wait, then the parked page comes forward after a paint frame.
+        activate = () => {
+          if (token !== generation || !visible()) return;
+          newspaper.onReady = () => reveal(newspaperLayer, token);
+          loadNewspaper();
+        };
+        afterPaint();
+      }
     } else if (project.type === 'gallery' && !stillsOnly.matches) {
       const title = document.createElement('div');
       title.className = 'showcase-darty-title';
@@ -463,7 +504,8 @@ export function initShowcase(root) {
     });
     const selected = slides.find(slide => slide.dataset.project === entries[index].id);
     const slot = automatic ? root : selected.querySelector('.framework-project-media') || selected;
-    slot.append(cell);
+    // Re-appending moves the node, which would reload the parked newspaper.
+    if (cell.parentNode !== slot) slot.append(cell);
     name.textContent = entries[index].name;
     status.textContent = `${(index - countFrom + entries.length) % entries.length + 1} of ${entries.length}`;
     timer.reset();

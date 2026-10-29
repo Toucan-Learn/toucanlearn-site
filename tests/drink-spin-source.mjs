@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, readdir } from 'node:fs/promises';
 const source = await readFile(new URL('../drink-spin.js', import.meta.url), 'utf8');
 const { spinMotion, frameAt, frameBlend, progressiveFrames, createDrinkSpin, renderDrinkInfo } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
-function fakeClock() {
+function fakeClock(frameDelay = 16) {
   let time = 0;
   let nextId = 0;
   const tasks = new Map();
@@ -11,7 +11,7 @@ function fakeClock() {
     Date: { now: () => time },
     setTimeout(fn, ms) { const id = ++nextId; tasks.set(id, { at: time + ms, fn }); return id; },
     clearTimeout(id) { tasks.delete(id); },
-    requestAnimationFrame(fn) { return clock.setTimeout(() => fn(time), 16); },
+    requestAnimationFrame(fn) { return clock.setTimeout(() => fn(time), frameDelay); },
     cancelAnimationFrame(id) { tasks.delete(id); },
     tick(ms) {
       const end = time + ms;
@@ -94,6 +94,15 @@ const manual = reduced.state.turns;
 reducedClock.tick(32000);
 assert.equal(reduced.state.turns, manual, 'Reduced motion permits manual rotation without inertia or auto rotation');
 assert.equal(frameAt(-1 / 72, 72), 71, 'Frame wrapping is seamless in reverse');
+const slowClock = fakeClock(1000);
+const slow = spinMotion({ clock: slowClock, maxStep: () => (1 - 1e-9) / 120, draw() {} });
+slow.setActive(true);
+for (let i = 0; i < 5; i++) {
+  const before = slow.state.turns;
+  slowClock.tick(1000);
+  assert(slow.state.turns > before && slow.state.turns - before <= 1 / 120, 'A delayed animation tick cannot skip a view');
+}
+slow.destroy();
 for (const count of [2, 71, 72, 120]) {
   const order = progressiveFrames(count);
   assert.equal(new Set(order).size, count);
@@ -134,6 +143,7 @@ async function complete() {
   for (let round = 0; round < 150; round++) {
     const pending = images.filter(img => img.src && !img.settled);
     if (!pending.length) return;
+    assert(pending.filter(img => /^\d{3}\.webp$/.test(file(img))).length <= 6, 'At most six frame fetch/decode jobs run concurrently');
     pending.forEach(img => img.resolve());
     await flush();
   }
@@ -173,14 +183,19 @@ try {
   assert.equal(file(button.children[0]), 'poster.webp');
   assert.equal(button.getAttribute('aria-label'), 'Rotate Skids, 360° view');
   viewer.setActive(true); await flush();
-  assert.deepEqual(images.slice(1).map(file), ['000.webp', '001.webp', '011.webp']);
+  assert.deepEqual(images.slice(1).map(file), ['000.webp', '001.webp', '011.webp', '002.webp', '010.webp', '003.webp']);
   images[1].resolve(); await flush();
-  domClock.tick(16);
+  domClock.tick(1000);
   const held = [...button.children];
-  assert.equal(file(held[0]), '000.webp');
-  domClock.tick(32);
-  assert.deepEqual(button.children, held, 'Hold the last composition while an adjacent frame is undecoded');
+  assert.equal(file(held[0]), 'poster.webp');
+  domClock.tick(1000);
+  assert.deepEqual(button.children, held, 'Keep the poster still while any frame is undecoded');
   images[2].resolve(); await flush(); // 001 is the next frame in the idle direction
+  assert.equal(button.children.length, 1, 'Even an available adjacent pair cannot start an incomplete rotation');
+  assert.equal(domClock.pending(), 0, 'Loading time never advances the motion clock');
+  await complete();
+  assert.equal(button.dataset.ready, 'true');
+  assert.equal(Number(button.dataset.turns), 0, 'Start at the current angle without catching up loading time');
   assert.equal(button.children.length, 2);
   assert(button.children.every(img => img.decoded));
   const mix1 = Number(button.dataset.blend);
@@ -188,7 +203,6 @@ try {
   assert.notEqual(Number(button.dataset.blend), mix1, 'Opacity interpolates every animation frame within the same 3-degree interval');
   assert.equal(Number(button.children[1].style.opacity), Number(button.dataset.blend));
   assert.equal(button.children[0].style.opacity, '1', 'Opaque bottom prevents the background bleeding through');
-  await complete();
   assert.equal(images.length, 13);
   assert(requests.every(r => r.url.includes('/skids/')) && images.every(img => img.src.includes('/skids/')));
   button.dispatchEvent(event('pointerdown', { pointerId: 1, isPrimary: true, button: 0, clientX: 300 }));
@@ -202,6 +216,13 @@ try {
   assert.equal(button.dataset.turns, dragged, 'Other pointers cannot take over');
   button.dispatchEvent(event('pointerup', { pointerId: 1 }));
   assert(!viewer.isDragging() && !button.hasPointerCapture(1));
+  let previousCoast = Number(button.dataset.turns);
+  for (let i = 0; i < 300; i++) {
+    domClock.tick(16);
+    const next = Number(button.dataset.turns);
+    assert(Math.abs(next - previousCoast) <= 1 / 12, 'Coasting paints every view without changing its direction');
+    previousCoast = next;
+  }
   const beforeKey = Number(button.dataset.turns);
   const key = event('keydown', { key: 'ArrowRight' }); button.dispatchEvent(key);
   assert(key.defaultPrevented);
@@ -232,16 +253,26 @@ try {
   fizzy.destroy();
   const partial = createDrinkSpin(screen, { id: 'ground-pinch', name: 'Ground Pinch' }, { clock: domClock });
   partial.setActive(true); await flush();
-  const pending = images.slice(-3);
+  const pending = images.slice(-6);
   partial.setActive(false);
   assert(pending.every(img => !img.src), 'Pausing cancels pending frame work');
   pending.forEach(img => img.resolve()); await flush();
   const pausedRequests = images.length;
   partial.setActive(true); await flush();
-  assert.equal(images.length, pausedRequests + 3, 'Cancelled decodes never enter the ready cache');
+  assert.equal(images.length, pausedRequests + 6, 'Cancelled decodes never enter the ready cache');
   const oldComposition = [...screen.children[0].children];
   images.at(-1).fail(); await flush();
   assert.deepEqual(screen.children[0].children, oldComposition, 'Decode failure keeps the previous good image');
+  await complete();
+  assert.equal(screen.children[0].dataset.ready, 'false', 'One failed decode prevents partial rotation even after every other frame is ready');
+  assert.equal(file(screen.children[0].children[0]), 'poster.webp');
+  assert.equal(domClock.pending(), 0);
+  partial.setActive(false);
+  const beforeRetry = images.length;
+  partial.setActive(true); await flush();
+  assert.equal(images.length, beforeRetry + 1, 'Reactivation retries only the failed frame and retains decoded frames');
+  await complete();
+  assert.equal(screen.children[0].dataset.ready, 'true');
   partial.destroy();
   // A late manifest cannot mutate the replacement viewer.
   let deliver, lateSignal;
@@ -253,8 +284,45 @@ try {
   assert.equal(images.length, beforeLate);
   globalThis.fetch = async () => ({ ok: true, json: async () => manifestData });
   manifestData = { frameCount: 120 };
-  const finalFrames = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); finalFrames.setActive(true); await flush();
-  assert.equal(screen.children[0].dataset.frameCount, '120'); finalFrames.destroy();
+  const sequenceStart = images.length;
+  const finalFrames = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock });
+  const finalButton = screen.children[0];
+  images.at(-1).resolve(); await flush();
+  finalFrames.setActive(true); await flush();
+  // Drain only five slots until every frame has been requested: no input or motion drives loading.
+  while (images.length < sequenceStart + 121) {
+    const batch = images.slice(sequenceStart + 1).filter(img => !img.settled);
+    assert(batch.length <= 6);
+    batch.slice(0, 5).forEach(img => img.resolve()); await flush();
+    domClock.tick(1000);
+    assert.equal(file(finalButton.children[0]), 'poster.webp');
+    assert.equal(Number(finalButton.dataset.turns || 0), 0);
+  }
+  assert.equal(new Set(images.slice(sequenceStart + 1).map(file)).size, 120, 'Activation requests all 120 frames without rotating or interacting');
+  await complete();
+  assert.equal(finalButton.dataset.frameCount, '120');
+  const checkFrames = (ticks, direction = 1) => {
+    let before = [finalButton.dataset.lowerFrame, finalButton.dataset.upperFrame, finalButton.dataset.frame].map(Number);
+    for (let tick = 0; tick < ticks; tick++) {
+      domClock.tick(16);
+      const after = [finalButton.dataset.lowerFrame, finalButton.dataset.upperFrame, finalButton.dataset.frame].map(Number);
+      after.forEach((value, i) => assert((direction * (value - before[i]) + 120) % 120 <= 1, 'Consecutive animation frames never skip more than one source view, including the wrap'));
+      before = after;
+    }
+  };
+  checkFrames(1010); // Includes the 119 -> 0 seam on the very first revolution.
+  finalFrames.setActive(false);
+  const pauseAngle = Number(finalButton.dataset.turns);
+  domClock.tick(32000);
+  finalFrames.setActive(true); await flush();
+  assert.equal(Number(finalButton.dataset.turns), pauseAngle, 'Interruption resumes from the current angle');
+  checkFrames(10);
+  finalButton.dispatchEvent(event('pointerdown', { pointerId: 7, isPrimary: true, button: 0, clientX: 300 }));
+  domClock.tick(16);
+  finalButton.dispatchEvent(event('pointermove', { pointerId: 7, clientX: 500 }));
+  finalButton.dispatchEvent(event('pointerup', { pointerId: 7 }));
+  checkFrames(60, -1); // Fast reverse flick is continuous too.
+  finalFrames.destroy();
   manifestData = { frameCount: 0 };
   const broken = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); broken.setActive(true);
   images.at(-1).resolve(); await flush(); assert.equal(file(screen.children[0].children[0]), 'poster.webp'); broken.destroy();
@@ -284,7 +352,7 @@ for (const drink of ['skids', 'fizzy', 'ground-pinch']) {
   const directory = new URL(`../assets/projects/drinks/${drink}/`, import.meta.url);
   const manifest = JSON.parse(await readFile(new URL('manifest.json', directory), 'utf8'));
   assert(Number.isInteger(manifest.frameCount) && manifest.frameCount >= 2);
-  assert.deepEqual([manifest.width, manifest.height], [1200, 900], `${drink}: wide 4:3 framing`);
+  assert([1200, 1600].includes(manifest.width) && manifest.width * 3 === manifest.height * 4, `${drink}: 4:3 framing for current assets or the new 1600×1200 export`);
   const files = await readdir(directory);
   assert.equal(files.filter(file => /^\d{3}\.webp$/.test(file)).length, manifest.frameCount, `${drink}: manifest matches the complete turn`);
   const poster = await readFile(new URL('poster.webp', directory));
@@ -296,4 +364,4 @@ for (const drink of ['skids', 'fizzy', 'ground-pinch']) {
     assert.deepEqual(webpSize(frame), [manifest.width, manifest.height], `${drink}/${i}: actual dimensions match the manifest`);
   }
 }
-console.log('Drink spin checks passed: 16-second turns, inertia, immediate resume, decoded adjacent-frame interpolation and drink-switch holds, visibility, pointer capture/direction, keys, reduced motion, progressive visible-only loading, exact card copy and complete 1200×900 assets.');
+console.log('Drink spin checks passed: all 120 frames requested on activation in six slots, still poster until full decode, no skipped animation views, 16-second turns, coast/immediate resume, crossfade/decode guards, direction, visibility, reduced motion and complete assets.');

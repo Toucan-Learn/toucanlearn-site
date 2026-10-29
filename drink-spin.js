@@ -6,9 +6,9 @@ export function frameBlend(turns, count) {
   const lower = Math.floor(position);
   return { lower, upper: (lower + 1) % count, mix: position - lower };
 }
-const assetVersion = '20261029-drag-1';
+const assetVersion = '20261029-spin-ready-1';
 
-export function spinMotion({ draw, clock = globalThis, reduced = false }) {
+export function spinMotion({ draw, clock = globalThis, reduced = false, maxStep = () => Infinity }) {
   const revolution = 16000; // Owner's chosen idle direction (positive turns).
   const decay = 600; // ms; a flick eases back to the idle spin, independent of display refresh rate.
   let turns = 0;
@@ -37,16 +37,20 @@ export function spinMotion({ draw, clock = globalThis, reduced = false }) {
     const time = now();
     const elapsed = time - last;
     last = time;
+    let delta;
     if (coasting) {
       // Ease towards the idle speed, never to a stop: a backwards flick swings round into the usual direction.
       const base = 1 / revolution;
       const friction = Math.exp(-elapsed / decay);
-      turns += base * elapsed + (velocity - base) * decay * (1 - friction);
+      delta = base * elapsed + (velocity - base) * decay * (1 - friction);
       velocity = base + (velocity - base) * friction;
       if (Math.abs(velocity - base) < 0.000002) { coasting = false; velocity = 0; }
     } else {
-      turns += elapsed / revolution;
+      delta = elapsed / revolution;
     }
+    // A slow display tick or fast coast must still paint each intervening view.
+    const limit = maxStep();
+    turns += Math.max(-limit, Math.min(limit, delta));
     draw(turns);
     frame = clock.requestAnimationFrame(tick);
   }
@@ -116,6 +120,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   button.setAttribute('aria-label', `Rotate ${drink.name}, 360° view`);
   button.dataset.frame = '0';
   button.dataset.active = 'false';
+  button.dataset.ready = 'false';
   // Carry the last decoded pair across drink switches until the new poster is ready.
   const previous = screen.children[0];
   if (previous) button.append(...previous.children);
@@ -149,7 +154,17 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   let turns = 0;
   let queuedSteps = 0;
   const allowed = () => active && (!reduced || interacted) && !disposed;
-  const motion = spinMotion({ reduced, clock, draw(value) { turns = value; draw(); } });
+  const ready = () => manifest && loaded.size === manifest.frameCount;
+  const motion = spinMotion({ reduced, clock,
+    maxStep: () => manifest ? (1 - 1e-9) / manifest.frameCount : 0,
+    draw(value) { turns = value; draw(); } });
+  function startWhenReady() {
+    if (!ready() || disposed) return;
+    button.dataset.ready = 'true';
+    draw();
+    motion.setActive(active);
+    if (active && pointer !== null && !motion.state.dragging) motion.begin();
+  }
   function showPoster() {
     if (!posterReady || disposed) return;
     poster.style.opacity = '1';
@@ -166,7 +181,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   }).catch(() => { /* Keep the previous decoded drink on a failed poster. */ });
   function draw() {
     button.dataset.turns = String(turns);
-    if ((reduced && !interacted) || !manifest) return;
+    if ((reduced && !interacted) || !ready()) return;
     const { lower, upper, mix } = frameBlend(turns, manifest.frameCount);
     const first = loaded.get(lower);
     const second = loaded.get(upper);
@@ -194,7 +209,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
     if (!allowed() || !manifest) return;
     const { lower, upper } = frameBlend(turns, manifest.frameCount);
     for (const i of new Set([lower, upper, ...order])) {
-      if (pending.size >= 3) break;
+      if (pending.size >= 6) break;
       if (loaded.has(i) || pending.has(i) || failed.has(i)) continue;
       const frame = newImage(`${String(i).padStart(3, '0')}.webp`);
       pending.set(i, frame);
@@ -203,7 +218,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
         pending.delete(i);
         frame.dataset.decoded = 'true';
         loaded.set(i, frame);
-        draw();
+        startWhenReady();
         pump();
       }).catch(() => {
         if (disposed || pending.get(i) !== frame) return;
@@ -215,7 +230,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   }
   async function prepare() {
     if (!allowed()) return;
-    if (manifest) { pump(); return; }
+    if (manifest) { startWhenReady(); pump(); return; }
     if (manifestRequest) return;
     const request = new AbortController();
     manifestRequest = request;
@@ -285,8 +300,8 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       if (!value) finish(true);
       active = value;
       button.dataset.active = String(active);
-      motion.setActive(active);
-      if (active) void prepare();
+      motion.setActive(Boolean(active && ready()));
+      if (active) { failed.clear(); void prepare(); }
       else cancelLoads();
     },
     setReduced(value) {

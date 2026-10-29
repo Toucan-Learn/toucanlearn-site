@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
+import { createHash } from 'node:crypto';
 import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 import '../scripts/check-project-cells-static.mjs';
 const source = await readFile(new URL('../project-showcase.js', import.meta.url), 'utf8');
@@ -11,9 +12,36 @@ const spinSource = await readFile(new URL('../drink-spin.js', import.meta.url), 
 const showcaseStyles = await readFile(new URL('../project-showcase.css', import.meta.url), 'utf8');
 assert(!spinSource.includes('Drag to spin') && !showcaseStyles.includes('drink-spin-hint'), 'Remove the drag hint markup and styles entirely');
 const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString('base64')}`;
+const matchSource = await readFile(new URL('../darty-match.js', import.meta.url), 'utf8');
+const matchModule = `data:text/javascript;base64,${Buffer.from(matchSource).toString('base64')}`;
+const { dartyMatchURL } = await import(matchModule);
+assert.equal(Buffer.byteLength(dartyMatchURL), 64517, 'Preserve the complete owner-approved match URL');
+assert.equal(createHash('sha256').update(dartyMatchURL).digest('hex'), '7374d72541033e56e4317ad704214bb53478a4dd0c346b712a16e87283f5c468', 'Match URL must be verbatim from outputs/darty-embed/match-url.txt');
+const matchURL = new URL(dartyMatchURL);
+assert.equal(matchURL.origin, 'https://joshtoucanlearn.github.io');
+assert.equal(matchURL.pathname, '/darty/match-engine/match.html');
+assert.deepEqual(matchURL.searchParams.getAll('autoplay'), ['1'], 'DARTY requires exactly one autoplay=1');
+for (const [key, value] of Object.entries({ simulationSeed: '1713525629', weather: 'overcast', matchMinutes: '6', clean: '1', director: 'showcase', commentary: '0' })) assert.equal(matchURL.searchParams.get(key), value);
+assert.match(source, /matchMedia\('\(max-width: 767px\), \(pointer: coarse\) and \(hover: none\)'\)/, 'Phones and touch-only devices keep stills');
+assert.match(source, /const interactive = '[^']*iframe/, 'The iframe keeps its own input');
+const liveMatch = source.split("project.type === 'gallery' && !stillsOnly.matches")[1].split("else if (project.type === 'gallery')")[0];
+assert(liveMatch.includes("play.addEventListener('click'"));
+const beforeClick = liveMatch.split("play.addEventListener('click'")[0];
+assert(!beforeClick.includes("createElement('iframe')") && !beforeClick.includes('dartyMatchURL'), 'No match is created or requested before Play');
+assert.match(liveMatch, /frame\.src = dartyMatchURL/);
+assert.match(liveMatch, /setAttribute\('sandbox', 'allow-scripts allow-same-origin'\)/);
+assert.match(liveMatch, /setAttribute\('allow', 'autoplay; fullscreen'\)/);
+assert.match(liveMatch, /frame\.loading = 'eager'/);
+assert.match(liveMatch, /frame\.title = 'DARTY CPU vs CPU football match'/);
+assert.match(liveMatch, /dispose = \(\) => stop\(false\)/, 'Unmount cleanup must not restore outgoing media');
+assert(liveMatch.indexOf('if (!restore) return;') < liveMatch.indexOf('stage.replaceChildren(preview(project), play)'), 'Only visibility teardown restores the poster');
+assert.match(liveMatch, /dispose\.setActive = active => \{ if \(!active\) stop\(\); \}/);
+assert.match(liveMatch, /dispose\.isPlaying = \(\) => Boolean\(frame\)/);
+assert.match(source, /stillsOnly\.addEventListener\('change', \(\) => \{\s*if \(entries\[index\]\.type !== 'gallery'\) return;/, 'Breakpoint changes use the current carousel entries, including the children-only intro');
 // Policy imports run without a DOM; browser suites exercise the real sky module.
 const skyURL = `data:text/javascript,export function initHeroSky(){throw new Error('Unexpected DOM mount in policy test')}`;
 const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL))
+  .replace(/(['"])\.\/darty-match\.js(?:\?[^'"]*)?\1/, JSON.stringify(matchModule))
   .replace(/(['"])\.\/hero-sky\.js(?:\?[^'"]*)?\1/, JSON.stringify(skyURL));
 const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
 await import('./drink-spin-source.mjs');
@@ -110,7 +138,9 @@ for (const page of ['index.html', 'children.html']) {
   const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
   assert.match(html, /project-showcase\.js[^"']*["'] type="module"/);
   assert.match(html, /project-showcase\.css/);
-  assert.match(html, /frame-src 'self'/);
+  const csp = html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)[1];
+  assert.equal(csp.split(';').map(directive => directive.trim()).find(directive => directive.startsWith('frame-src ')), "frame-src 'self' https://joshtoucanlearn.github.io", `${page}: allow only this additional frame origin`);
+  assert.equal(csp.split('https://joshtoucanlearn.github.io').length - 1, 1, `${page}: the game origin belongs only in frame-src`);
   assert(!/\sstyle=|\son\w+=|<style\b|<script\b(?![^>]*\bsrc=)/i.test(html), `${page}: no inline code`);
   assert(!/unsafe-inline|unsafe-eval|projects\/piano/.test(html));
 }
@@ -124,8 +154,10 @@ const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const withoutOwnerContent = html => html
   .replace(/<section class="homepage-section team-section"[\s\S]*?<\/section>/, '<!-- team section: owner-managed -->')
   .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
-const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html)).replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN');
-assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the shared CSS/JS cache tokens and clean home links');
+const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html))
+  .replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN')
+  .replace("frame-src 'self' https://joshtoucanlearn.github.io;", "frame-src 'self';");
+assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the showcase tokens, DARTY frame origin and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
@@ -169,6 +201,6 @@ const hero = await readFile(new URL('../hero-sky.js', import.meta.url), 'utf8');
 const keyboard = await readFile(new URL('../hero-keyboard.js', import.meta.url), 'utf8');
 assert.equal(hero.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], keyboard.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], 'Sky and keyboard must share one song/audio singleton');
 for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.js', 'hero-songs.js', 'hero-piano-voices.js']) {
-  assert.equal(await readFile(new URL(`../${file}`, import.meta.url), 'utf8'), execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '132dbae'}:${file}`], { cwd: site, encoding: 'utf8' }), `${file}: preserve the existing hero and owner-confirmed music settings`);
+  assert.equal(await readFile(new URL(`../${file}`, import.meta.url), 'utf8'), execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '16f98d3'}:${file}`], { cwd: site, encoding: 'utf8' }), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }
-console.log('Shared showcase checks passed: children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');
+console.log('Shared showcase checks passed: exact DARTY URL/hash/single autoplay, click-only iframe, phone gate, teardown, children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

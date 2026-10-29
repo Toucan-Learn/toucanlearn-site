@@ -9,6 +9,7 @@ import { newspaperMobileBreakpoint } from './project-showcase-source.mjs';
 import { assertImmediateProjectSwitch, assertRapidProjectSwitches } from './project-showcase-switch-helpers.mjs';
 import { activatePianoToggle } from './piano-toggle-helpers.mjs';
 import { checkDrinkSpin, assertDrinkLayout, dragOverDrink, checkDrinkMenuKeys } from './drink-spin-browser.mjs';
+import { checkDartyLive } from './darty-live-browser.mjs';
 const site = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_MODULE || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/website/node_modules/puppeteer-core');
@@ -308,10 +309,15 @@ try {
           await frame.waitForSelector('.news-front');
         }
         if (id === 'darty') {
-          const beforeImage = await page.$eval('[data-screenshot]', img => img.src);
-          await page.click('[data-screenshot-next]');
-          assert.notEqual(await page.$eval('[data-screenshot]', img => img.src), beforeImage);
-          assert.equal(await selected(page), 'darty', 'Gallery controls leave the project selected');
+          if (view.width <= 767 || view.hasTouch) {
+            const beforeImage = await page.$eval('[data-screenshot]', img => img.src);
+            await page.click('[data-screenshot-next]');
+            assert.notEqual(await page.$eval('[data-screenshot]', img => img.src), beforeImage);
+          } else {
+            assert.equal(await page.$$eval('[data-darty-play]', buttons => buttons.length), 1);
+            assert.equal(await page.$('.showcase-match'), null, 'Desktop match waits for Play');
+          }
+          assert.equal(await selected(page), 'darty', 'DARTY controls leave the project selected');
         }
         if (id === 'drinks') for (const drink of ['skids', 'fizzy', 'ground-pinch']) {
           await page.click(`[data-drink="${drink}"]`);
@@ -348,6 +354,7 @@ try {
     await context.close();
   }
   await checkDrinkSpin({ open, views, base, output, report });
+  await checkDartyLive({ open, load, project, selected, views, wait, base, output, report });
   // Homepage opens on the piano for now (owner, 28 Oct), whatever the RNG says.
   for (let i = 0; i < ids.length; i++) {
     const { context, page } = await open(views[0], 'system-dark', true, { random: (i + .5) / ids.length });
@@ -432,9 +439,9 @@ try {
     await page.keyboard.press(key);
     assert.equal(await selected(page), id, `Manual keyboard navigation: ${key}`);
   }
-  await page.focus('[data-screenshot-next]');
+  await page.focus('[data-darty-play]');
   await page.keyboard.press('ArrowLeft');
-  assert.equal(await selected(page), 'darty', 'Gallery keyboard input does not change projects');
+  assert.equal(await selected(page), 'darty', 'Play button keyboard input does not change projects');
   await project(page, 'drinks');
   await page.focus('[data-project-enquiry]');
   assert.deepEqual(await page.$eval('[data-project-enquiry]', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), service: link.dataset.service })),

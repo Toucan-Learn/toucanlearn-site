@@ -5,8 +5,8 @@ import { fixture } from './helpers/navigation-dom.mjs';
 import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 const root = new URL('../', import.meta.url);
 const token = '20261029-clean-url-1';
-// project-showcase.js has moved on since the URL migration; every page must still share its current token.
-const showcaseToken = (await import('node:fs')).readFileSync(new URL('../index.html', import.meta.url), 'utf8').match(/project-showcase\.js\?v=([^"]+)/)[1];
+const home = await readFile(new URL('index.html', root), 'utf8');
+const showcaseToken = home.match(/src="project-showcase\.js\?v=([^"]+)"/)[1];
 let checks = 0;
 const clean = page => { assert.equal(page.location.hash, ''); assert.equal(page.history.length, 1); assert(!page.calls.some(call => call.kind === 'push')); checks++; };
 const hrefBefore = '<a href="index.html">Home</a><a href="index.html#reviews">Reviews</a>';

@@ -283,10 +283,9 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
         };
         requestAnimationFrame(sample);
       }));
-      for (let i = 1; i < coast.length; i++) for (const column of [0, 1]) {
-        const delta = (coast[i][column] - coast[i - 1][column] + count) % count;
-        assert(Math.min(delta, count - delta) <= 1, 'A fast flick never skips a source view between animation frames');
-      }
+      // Owner: a flick keeps its inertia (it may cover several views per frame) rather than being capped.
+      const travelled = coast.slice(1).reduce((sum, row, i) => { const d = (row[0] - coast[i][0] + count) % count; return sum + Math.min(d, count - d); }, 0);
+      assert(travelled > 3, 'A fast flick coasts on instead of snapping back');
       await wait(5000);
       const settled = await frame(page);
       await wait(1100);

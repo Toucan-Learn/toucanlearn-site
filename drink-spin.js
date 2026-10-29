@@ -48,8 +48,8 @@ export function spinMotion({ draw, clock = globalThis, reduced = false, automati
     } else {
       delta = elapsed / revolution;
     }
-    // A slow display tick or fast coast must still paint each intervening view.
-    const limit = maxStep();
+    // The slow idle spin never skips a view on a late display tick; a flick coasts freely (owner: keep the inertia).
+    const limit = coasting ? Infinity : maxStep();
     turns += Math.max(-limit, Math.min(limit, delta));
     draw(turns);
     frame = clock.requestAnimationFrame(tick);
@@ -296,7 +296,8 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
     x = event.clientX;
     if (delta) interact();
     // The supplied clockwise sequence moves the front label to the left.
-    motion.drag(delta / Math.max(1, button.getBoundingClientRect().width) * (manifest?.dragDirection ?? -1));
+    // 0.6: a full-width drag turns the drink about 0.6 of a revolution (owner: drag was a touch too powerful).
+    motion.drag(0.6 * delta / Math.max(1, button.getBoundingClientRect().width) * (manifest?.dragDirection ?? -1));
     activity();
   });
   on(button, 'pointerup', event => { if (event.pointerId === pointer) finish(); });

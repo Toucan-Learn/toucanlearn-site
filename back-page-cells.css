@@ -152,6 +152,15 @@ body.cell-art-page #qualifications .qualification-cards > article > a { margin-t
   body.cell-art-page #weekly-reports .section-head > :is(h2, p) { grid-column: 1; margin: 0; }
   body.cell-art-page #qualifications .qualification-art { height: auto; aspect-ratio: 8 / 5; }
 }
+/* Children: keep each explanation centred beside its illustration, including
+   narrow phones. Equal rows and shared padding give all four steps one frame. */
+body.cell-art-page #getting-started .learning-steps { grid-auto-rows: 1fr; }
+body.cell-art-page #getting-started .picture-cell { grid-template-columns: 38% minmax(0, 1fr); }
+body.cell-art-page #getting-started .picture-cell-media { min-height: 130px; aspect-ratio: auto; border-radius: 15px 0 0 15px; }
+body.cell-art-page #getting-started .picture-cell-copy { align-self: center; padding: 14px; }
+@media (max-width: 759px) {
+  body.cell-art-page #getting-started .picture-cell-copy { padding: 12px; }
+}
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) body.cell-art-page #english-for-work .adult-topics--work > article,
   :root:not([data-theme="light"]) body.cell-art-page #qualifications .qualification-cards > article { --heading: #f5f0e6; --ink: #f5f0e6; --line: rgba(245, 240, 230, .25); --orange-text: #ffb486; background: #204653; color: var(--ink); }

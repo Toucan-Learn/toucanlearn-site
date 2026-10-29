@@ -210,7 +210,7 @@ try {
   domClock.tick(16);
   const start = Number(button.dataset.turns);
   button.dispatchEvent(event('pointermove', { pointerId: 1, clientX: 250 }));
-  assert(Math.abs(Number(button.dataset.turns) - start + 50 / 600) < 1e-9, 'One turn per viewer width, with the current dragDirection');
+  assert(Math.abs(Number(button.dataset.turns) - start + 0.6 * 50 / 600) < 1e-9, '0.6 of a turn per viewer width (owner: softer drag), with the current dragDirection');
   const dragged = button.dataset.turns;
   button.dispatchEvent(event('pointermove', { pointerId: 2, clientX: 50 }));
   assert.equal(button.dataset.turns, dragged, 'Other pointers cannot take over');
@@ -264,7 +264,8 @@ try {
     dragButton.dispatchEvent(event('pointerdown', { pointerId: 8, isPrimary: true, button: 0, clientX: 300 }));
     if (reducedMotion) assert.equal(requests.length, requestsBeforeDown + 1, 'Reduced-motion pointerdown starts loading before any move');
     // Move before the manifest or any frame has decoded, then hold the same pointer down.
-    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 280 }));
+    // 20/0.6 px at the softer 0.6 drag gain = the same 1/30 of a turn as before.
+    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 300 - 20 / 0.6 }));
     await flush();
     assert(Math.abs(Number(dragButton.dataset.turns) - 20 / 600) < 1e-9, 'The very first drag records its angle before full decode');
     assert.equal(file(dragButton.children[0]), 'poster.webp', 'A drag with no decoded frames holds the poster');
@@ -383,7 +384,15 @@ try {
   domClock.tick(16);
   finalButton.dispatchEvent(event('pointermove', { pointerId: 7, clientX: 500 }));
   finalButton.dispatchEvent(event('pointerup', { pointerId: 7 }));
-  checkFrames(60, -1); // A fast flick is continuous too.
+  // Owner: a flick keeps its inertia, so it may cover several views per frame, then eases back into the idle spin.
+  const flickStart = Number(finalButton.dataset.turns);
+  domClock.tick(160);
+  const afterFlick = Number(finalButton.dataset.turns);
+  assert(Math.abs(afterFlick - flickStart) > 3 / 120, 'A flick coasts well beyond one view per frame instead of snapping back');
+  domClock.tick(6000);
+  const settledTurns = Number(finalButton.dataset.turns);
+  domClock.tick(1000);
+  assert(Number(finalButton.dataset.turns) > settledTurns, 'After the coast, the idle spin carries on clockwise');
   finalFrames.destroy();
   manifestData = { frameCount: 0 };
   const broken = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); broken.setActive(true);

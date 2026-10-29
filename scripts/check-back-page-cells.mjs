@@ -10,15 +10,36 @@ import { fileURLToPath } from 'node:url';
 
 const site = fileURLToPath(new URL('../', import.meta.url));
 const before = process.env.CELLS_BASE || '951cb4a'; // The clean worktree supplied for this task (CELLS_BASE: the merged site it now sits on), never a moving HEAD.
+const copyBefore = '770f23d'; // Approved merged copy before the owner's 29 Oct Approach notes.
 const files = ['approach.html', 'children.html', 'adults.html', 'subjects.html'];
-const original = file => execFileSync('git', ['show', `${before}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
+const original = (file, revision = before) => execFileSync('git', ['show', `${revision}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 const words = html => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 const csp = html => html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)?.[0];
+function approvedCopy(file) {
+  let copy = words(original(file, copyBefore));
+  if (file !== 'approach.html') return copy;
+  const changes = [
+    ['From the first session onwards ', ''],
+    ['Inside a lesson ', ''],
+    ['Your free first session is a live diagnostic: we get to know you and how best to support you.', 'A free diagnostic session helps us get to know you.'],
+    ['We use the diagnostic report to choose the skills to practise and a pace that suits the learner.', 'Choose skills to practise and a pace that suits you.'],
+    ['Sessions can combine focused skill-building, exam preparation and meaningful longer-term projects.', 'Combine skill-building, exam preparation and meaningful projects.'],
+    ['Your tutor writes a weekly lesson report, and our founder reads it. We review what is working and adjust the learner’s plan.', 'Your tutor reports each week, helping us review and adjust your plan. Book a free first session'],
+    ['Talk about the week. Typing the answers can double as writing practice.', 'Catch up on the week, with typing as writing practice.'],
+    ['choose a Functional Skills practice task. Weekly reports', 'choose a Functional Skills practice task. Find your lesson rhythm Weekly reports'],
+    ["we adjust the plan each week. Online and in person", "we adjust the plan each week. Start with a free session Online and in person"],
+  ];
+  for (const [from, to] of changes) {
+    assert.equal(copy.split(from).length - 1, 1, `Approved Approach copy: ${from}`);
+    copy = copy.replace(from, to);
+  }
+  return copy;
+}
 
 for (const file of files) {
   const html = await readFile(path.join(site, file), 'utf8');
-  const prior = original(file);
-  assert.equal(words(html), words(prior), `${file}: every word of copy must stay unchanged`);
+  const prior = original(file, copyBefore);
+  assert.equal(words(html), approvedCopy(file), `${file}: copy must match the approved wording`);
   assert.equal(csp(html), csp(prior), `${file}: CSP must stay unchanged`);
   assert.match(html, /back-page-cells\.css/);
   assert.doesNotMatch(html, /\sstyle\s*=|<script\b(?![^>]*\bsrc=)[^>]*>\s*\S/i, `${file}: no inline styles/scripts`);
@@ -31,6 +52,17 @@ for (const file of files) {
     const header = html.match(/id="getting-started"[\s\S]*?<div class="section-head">([\s\S]*?)<\/div>/)?.[1];
     assert.ok(header, 'Children: missing Getting started header');
     assert.doesNotMatch(header, /<img\b/);
+  }
+  if (file === 'approach.html') {
+    const where = source => source.match(/<section id="where-we-teach"[\s\S]*?<\/section>/)?.[0];
+    assert.equal(where(html), where(original(file, copyBefore)), 'Where we teach: preserve the entire section exactly');
+    const panels = ['steps-to-success', 'our-lessons', 'weekly-reports'];
+    for (const id of panels) {
+      const panel = html.match(new RegExp(`<section id="${id}"[\\s\\S]*?<\\/section>`))?.[0];
+      assert.equal((panel?.match(/class="approach-panel-cta"/g) || []).length, 1, `${id}: one shared panel CTA`);
+      assert.match(panel, /class="button" href="contact"/, `${id}: existing button style and clean contact URL`);
+      assert.match(panel, /class="approach-swash"/, `${id}: sky subheader`);
+    }
   }
 }
 const prompts = JSON.parse(await readFile(path.join(site, 'scripts/step-art-prompts.json'), 'utf8'));
@@ -59,7 +91,7 @@ async function browserChecks() {
   const output = path.resolve(site, '../outputs/final-pass-20261028/codex-cells');
   const require = createRequire(import.meta.url);
   const puppeteer = require(process.env.PUPPETEER_MODULE || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/website/node_modules/puppeteer-core');
-  const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 1440, height: 900 }, { width: 390, height: 844, isMobile: true, hasTouch: true }];
+  const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 1440, height: 900 }, { width: 390, height: 844, isMobile: true, hasTouch: true }, { width: 320, height: 740, isMobile: true, hasTouch: true }];
   const themes = ['light', 'dark', 'system-dark'];
   const report = { baselineCommit: before, pictureArea: 'Visible img element box, intersected with its card; cream picture panel included.', baseline: [], layouts: [], failures: [] };
   const check = (condition, message) => { if (!condition) report.failures.push(message); };

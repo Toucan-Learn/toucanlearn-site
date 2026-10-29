@@ -171,3 +171,112 @@ body.cell-art-page #getting-started .picture-cell-copy { align-self: center; pad
   body.cell-art-page .framework-panels .picture-cell { break-inside: avoid; }
   body.cell-art-page .framework-panels .picture-cell-media { min-height: 130px; }
 }
+
+/* Approach: shared sky subheaders and compact, evenly aligned teaching cards.
+   All selectors stay inside the three requested panels. */
+body.cell-art-page.approach-page .framework-panels :is(#steps-to-success, #our-lessons, #weekly-reports) .approach-swash {
+  padding: 12px 16px;
+  border-radius: 14px;
+  color: #fff8ea;
+  background: linear-gradient(120deg, #361329ed, #49234bc9 55%, #103f4de6),
+    #361329 url("assets/loading-pixel-sky.png") center / cover;
+  box-shadow: inset 0 0 0 1px #e9bcd33d;
+}
+body.cell-art-page.approach-page #steps-to-success .picture-cell {
+  --heading: #153e38;
+  --ink: #193c36;
+  --orange-text: #914021;
+  color: var(--ink);
+  background: #d6e4d7;
+}
+body.cell-art-page.approach-page #steps-to-success .picture-cell-media {
+  margin: 10px 0 10px 10px;
+  border-radius: 12px;
+}
+body.cell-art-page.approach-page #steps-to-success .picture-cell-copy { align-self: center; }
+body.cell-art-page.approach-page .approach-panel-cta { margin-top: 16px; }
+body.cell-art-page.approach-page .approach-panel-cta .button {
+  max-width: 100%;
+  min-height: 44px;
+  text-align: center;
+  line-height: 1.3;
+}
+body.cell-art-page.approach-page #weekly-reports #reports-heading {
+  font-size: clamp(2.25rem, 5.8vh, 3rem);
+  line-height: 1.08;
+}
+body.cell-art-page.approach-page #weekly-reports .report-parts {
+  align-items: stretch;
+  grid-auto-rows: 1fr;
+}
+body.cell-art-page.approach-page #weekly-reports .report-parts > li {
+  display: grid;
+  grid-template-rows: minmax(2.6em, auto) minmax(4.2em, auto) 1fr;
+  row-gap: 8px;
+}
+body.cell-art-page.approach-page #weekly-reports .report-parts strong {
+  margin: 0;
+  color: #4c1130;
+}
+body.cell-art-page.approach-page #weekly-reports .report-example { margin-top: 0; }
+@supports (grid-template-rows: subgrid) {
+  body.cell-art-page.approach-page #weekly-reports .report-parts { grid-auto-rows: auto; }
+  body.cell-art-page.approach-page #weekly-reports .report-parts > li {
+    grid-row: span 3;
+    grid-template-rows: subgrid;
+  }
+}
+@media screen and (min-width: 1000px) {
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons:not([hidden]) {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto 1fr auto;
+    gap: 12px 16px;
+  }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons > .section-head { grid-column: 1 / -1; margin: 0; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons > .approach-lesson-page { grid-column: 1 / -1; grid-row: 2; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons #a-session { display: flex; flex-direction: column; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid { flex: 1 0 auto; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid > .picture-cell {
+    grid-template-rows: minmax(clamp(95px, 16vh, 144px), 1fr) auto;
+  }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-media { height: auto; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .framework-page-controls {
+    grid-column: 2; grid-row: 3; align-self: center; margin: 0; padding: 0; gap: 12px;
+  }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons > .approach-panel-cta { grid-column: 1; grid-row: 3; margin: 0; }
+  body.cell-art-page.approach-page[data-page-frame] #steps-to-success .learning-steps { align-content: stretch; }
+  body.cell-art-page.approach-page[data-page-frame] #steps-to-success > .approach-panel-cta { margin-top: auto; padding-top: 4px; }
+  body.cell-art-page.approach-page[data-page-frame] .framework-panels .approach-swash { margin-block: 0 10px; }
+  body.cell-art-page.approach-page[data-page-frame] #weekly-reports .section-head { grid-template-columns: minmax(0, 1fr) 26%; gap: 12px 20px; }
+  body.cell-art-page.approach-page[data-page-frame] #weekly-reports .section-head > .framework-panel-art { height: 120px; }
+  body.cell-art-page.approach-page[data-page-frame] #weekly-reports .report-intro { margin: 0; }
+  body.cell-art-page.approach-page[data-page-frame] #weekly-reports .report-parts { flex: 1 0 auto; }
+  body.cell-art-page.approach-page[data-page-frame] #weekly-reports .report-purpose { margin-top: 0; padding-top: 4px; }
+  body.cell-art-page.approach-page[data-page-frame] #weekly-reports .approach-panel-cta { margin-top: 10px; }
+  /* Natural measurement must not inherit the stretched grid's spare height. */
+  body.cell-art-page.approach-page[data-page-frame] .framework-panels.is-measuring #our-lessons .lesson-stage-grid,
+  body.cell-art-page.approach-page[data-page-frame] .framework-panels.is-measuring #weekly-reports .report-parts { flex: none; }
+}
+@media (max-width: 759px) {
+  body.cell-art-page.approach-page #steps-to-success .picture-cell-media { margin: 10px 10px 0; }
+  body.cell-art-page.approach-page .approach-panel-cta .button { width: 100%; }
+}
+@media (max-width: 560px) {
+  /* In one column, equal outer rows keep all four report cards the same size. */
+  body.cell-art-page.approach-page #weekly-reports .report-parts { grid-auto-rows: 1fr; }
+  body.cell-art-page.approach-page #weekly-reports .report-parts > li {
+    grid-row: auto;
+    grid-template-rows: minmax(3.6em, auto) minmax(4.5em, auto) 1fr;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.cell-art-page.approach-page #steps-to-success .picture-cell {
+    --heading: #f5f0e6; --ink: #f5f0e6; --orange-text: #ffb486; background: #294e46;
+  }
+  :root:not([data-theme="light"]) body.cell-art-page.approach-page #weekly-reports .report-parts strong { color: #f1bfd8; }
+}
+:root[data-theme="dark"] body.cell-art-page.approach-page #steps-to-success .picture-cell {
+  --heading: #f5f0e6; --ink: #f5f0e6; --orange-text: #ffb486; background: #294e46;
+}
+:root[data-theme="dark"] body.cell-art-page.approach-page #weekly-reports .report-parts strong { color: #f1bfd8; }

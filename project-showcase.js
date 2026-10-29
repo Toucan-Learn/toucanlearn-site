@@ -1,5 +1,6 @@
 import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-spin-batches-1';
 import { initHeroSky } from './hero-sky.js?v=20261029-piano-3';
+import { dartyMatchURL } from './darty-match.js?v=20261029-darty-card-1';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
@@ -130,6 +131,7 @@ export function initShowcase(root) {
   const entries = automatic ? projects : sectionProjects;
   const slides = [...root.querySelectorAll('[data-project-slide]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
+  const stillsOnly = matchMedia('(max-width: 767px), (pointer: coarse) and (hover: none)');
   const requested = new URLSearchParams(location.search).get('project');
   let index = automatic ? initialProject(requested) : Math.max(0, entries.findIndex(project => project.id === requested));
   // The homepage counts from wherever it opened, so its first project reads "1 of 4".
@@ -250,6 +252,46 @@ export function initShowcase(root) {
         dispose = () => { controller.abort(); iframe.remove(); };
       };
       afterPaint();
+    } else if (project.type === 'gallery' && !stillsOnly.matches) {
+      const play = document.createElement('button');
+      play.type = 'button';
+      play.className = 'showcase-match-play';
+      play.dataset.dartyPlay = '';
+      play.setAttribute('aria-label', 'Play DARTY CPU vs CPU match');
+      play.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M7 3v18l15-9z" fill="currentColor"/></svg><span>Play</span>';
+      let frame = null;
+      const stop = (restore = true) => {
+        if (!frame) return;
+        const focused = document.activeElement === frame;
+        frame.remove();
+        frame = null;
+        if (!restore) return;
+        stage.replaceChildren(preview(project), play);
+        if (focused && visible() && inView) play.focus({ preventScroll: true });
+      };
+      play.addEventListener('click', () => {
+        if (token !== generation || frame || !inView || !visible() || stillsOnly.matches) return;
+        const focused = document.activeElement === play;
+        frame = document.createElement('iframe');
+        frame.className = 'showcase-match';
+        frame.title = 'DARTY CPU vs CPU football match';
+        frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+        frame.setAttribute('allow', 'autoplay; fullscreen');
+        frame.loading = 'eager';
+        frame.src = dartyMatchURL;
+        stage.replaceChildren(frame);
+        // The keyup/pointerup can land inside the cross-origin document.
+        held.clear();
+        pointers.clear();
+        if (focused) frame.focus({ preventScroll: true });
+        activity();
+      });
+      stage.append(play);
+      // unmount() already detached the media; cleanup must not reattach it.
+      dispose = () => stop(false);
+      dispose.setActive = active => { if (!active) stop(); };
+      // Cross-origin input cannot bubble here. Keep the card for the match.
+      dispose.isPlaying = () => Boolean(frame);
     } else if (project.type === 'gallery') {
       const gallery = document.createElement('div');
       gallery.className = 'screenshot-gallery';
@@ -389,6 +431,13 @@ export function initShowcase(root) {
   motion.addEventListener('change', () => {
     if (dispose?.setReduced) dispose.setReduced(motion.matches);
     else unmount();
+    timer.reset();
+    sync();
+  });
+  stillsOnly.addEventListener('change', () => {
+    if (entries[index].type !== 'gallery') return;
+    if (stage.contains(document.activeElement)) root.focus({ preventScroll: true });
+    unmount();
     timer.reset();
     sync();
   });

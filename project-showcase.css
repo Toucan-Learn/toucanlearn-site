@@ -8,12 +8,15 @@
 .showcase-stage > img { object-fit: contain; border-radius: 14px 14px 0 0; }
 .showcase-stage > .showcase-preview { position: absolute; inset: 0; }
 .showcase-stage > .showcase-newspaper { color-scheme: light dark; border-radius: 14px 14px 0 0; }
+.showcase-stage > .showcase-match { border-radius: 14px 14px 0 0; }
 .showcase-caption { display: flex; align-items: center; gap: 8px; min-width: 0; height: var(--showcase-bar); padding: 0 var(--showcase-inset); border-top: 1px solid #adc4b533; border-radius: 0 0 14px 14px; background: #0b2228; font-size: 12px; line-height: 1.2; }
 .showcase-caption .showcase-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .showcase-cell button { min-width: 0; border: 0; color: #f0ebe0; background: transparent; font: inherit; cursor: pointer; }
 .showcase-caption > button { flex: 0 0 32px; align-self: stretch; padding: 0; font-size: 18px; }
 .showcase-caption button:hover, .showcase-stage .screenshot-gallery-controls button:hover { color: #efac8e; background: #103138; }
 .showcase-cell button:focus-visible { outline: 2px solid #efac8e; outline-offset: -3px; }
+.showcase-cell .showcase-match-play { position: absolute; top: 50%; left: 50%; display: flex; align-items: center; gap: 10px; transform: translate(-50%, -50%); min-height: 56px; padding: 12px 24px; border: 2px solid #f0ebe0; border-radius: 999px; color: #f0ebe0; background: #0b2228; font-size: 18px; box-shadow: 0 4px 20px #0008; }
+.showcase-cell .showcase-match-play:hover { color: #efac8e; background: #103138; }
 .showcase-caption [data-project-status] { min-width: 0; color: #c5d5ca; font-size: 11px; font-weight: 400; white-space: nowrap; }
 .showcase-cell .piano-toggle { display: flex; align-items: center; justify-content: center; gap: 6px; width: auto; min-height: 36px; padding: 0 8px; border: 0; border-radius: 4px; font-size: 12px; }
 .showcase-cell .piano-toggle svg { width: 18px; }

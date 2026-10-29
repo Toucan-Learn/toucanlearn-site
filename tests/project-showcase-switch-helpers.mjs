@@ -17,7 +17,7 @@ export async function assertImmediateProjectSwitch(page, direction = 'next') {
       const selectedMedia = expected === 'piano' ? stage.querySelector('.world-art')
         : expected === 'intro' ? root.querySelector('[data-project="intro"] .project-intro-image img')
         : expected === 'drinks' ? stage.querySelector('.showcase-drink-screen img')
-        : expected === 'darty' ? stage.querySelector('[data-screenshot]') : stage.querySelector('img, iframe:not([hidden])');
+        : expected === 'darty' ? stage.querySelector('[data-screenshot], .showcase-preview') : stage.querySelector('img, iframe:not([hidden])');
       samples.push({ phase, project: root.dataset.project, stale: outgoing.filter(node => node.isConnected).map(node => node.id || node.className || node.tagName),
         outgoingVisible: outgoing.some(node => node.isConnected && visible(node)), incomingVisible: Boolean(visible(selectedMedia)),
         toggle: expected !== 'piano' || Boolean(root.querySelector('#piano-toggle')), url: location.href });

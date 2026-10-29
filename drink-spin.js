@@ -1,10 +1,15 @@
 // Turns, rather than frame numbers, keep motion independent of the render count.
 const wrap = value => ((value % 1) + 1) % 1;
 export const frameAt = (turns, count) => Math.round(wrap(turns) * count) % count;
+export function frameBlend(turns, count) {
+  const position = wrap(turns) * count;
+  const lower = Math.floor(position);
+  return { lower, upper: (lower + 1) % count, mix: position - lower };
+}
+const assetVersion = '20261029-smooth-1';
 
 export function spinMotion({ draw, clock = globalThis, reduced = false }) {
   const revolution = -16000; // Negative: the idle turn runs the other way round (owner's call).
-  const idle = 6000;
   const decay = 600; // ms; a flick eases back to the idle spin, independent of display refresh rate.
   let turns = 0;
   let velocity = 0;
@@ -12,24 +17,19 @@ export function spinMotion({ draw, clock = globalThis, reduced = false }) {
   let dragging = false;
   let active = false;
   let frame = null;
-  let wake = null;
   let last = 0;
   let moved = 0;
-  let resumeAt = 0;
-  let pausedAt = clock.Date.now();
   let destroyed = false;
   const now = () => clock.Date.now();
   const stop = () => {
     if (frame !== null) clock.cancelAnimationFrame(frame);
-    if (wake !== null) clock.clearTimeout(wake);
-    frame = wake = null;
+    frame = null;
   };
   function schedule() {
     stop();
     if (!active || destroyed || dragging || reduced) return;
     last = now();
-    if (coasting || now() >= resumeAt) frame = clock.requestAnimationFrame(tick);
-    else wake = clock.setTimeout(schedule, resumeAt - now());
+    frame = clock.requestAnimationFrame(tick);
   }
   function tick() {
     frame = null;
@@ -43,19 +43,16 @@ export function spinMotion({ draw, clock = globalThis, reduced = false }) {
       const friction = Math.exp(-elapsed / decay);
       turns += base * elapsed + (velocity - base) * decay * (1 - friction);
       velocity = base + (velocity - base) * friction;
-      if (Math.abs(velocity - base) < 0.000002) { coasting = false; velocity = 0; resumeAt = time; }
-    } else if (time >= resumeAt) {
-      turns += Math.min(elapsed, time - resumeAt) / revolution;
+      if (Math.abs(velocity - base) < 0.000002) { coasting = false; velocity = 0; }
+    } else {
+      turns += elapsed / revolution;
     }
     draw(turns);
-    if (!coasting && time < resumeAt) schedule();
-    else frame = clock.requestAnimationFrame(tick);
+    frame = clock.requestAnimationFrame(tick);
   }
   function interact() {
     velocity = 0;
     coasting = false;
-    if (!active) pausedAt = now();
-    resumeAt = now() + idle;
     schedule();
   }
   return {
@@ -63,8 +60,8 @@ export function spinMotion({ draw, clock = globalThis, reduced = false }) {
     setActive(value) {
       if (destroyed || value === active) return;
       active = value;
-      if (active) { resumeAt += now() - pausedAt; schedule(); }
-      else { pausedAt = now(); dragging = false; velocity = 0; coasting = false; stop(); }
+      if (active) schedule();
+      else { dragging = false; velocity = 0; coasting = false; stop(); }
     },
     setReduced(value) { reduced = value; interact(); },
     begin() {
@@ -79,7 +76,6 @@ export function spinMotion({ draw, clock = globalThis, reduced = false }) {
       turns += deltaTurns;
       velocity = reduced ? 0 : Math.max(-0.003, Math.min(0.003, deltaTurns / Math.max(16, time - moved)));
       moved = time;
-      resumeAt = time + idle;
       draw(turns);
     },
     end(cancelled = false) {
@@ -88,7 +84,6 @@ export function spinMotion({ draw, clock = globalThis, reduced = false }) {
       // Holding still before release must not revive an old flick.
       if (cancelled || now() - moved > 100) velocity = 0;
       coasting = velocity !== 0;
-      resumeAt = now() + idle;
       schedule();
     },
     step(deltaTurns) { if (destroyed) return; interact(); turns += deltaTurns; draw(turns); },
@@ -97,8 +92,8 @@ export function spinMotion({ draw, clock = globalThis, reduced = false }) {
 }
 
 export function progressiveFrames(count) {
-  const indices = Array.from({ length: count }, (_, i) => i);
-  return [...indices.filter(i => i % 4 === 0), ...indices.filter(i => i % 4 !== 0)];
+  // Decode adjacent views first in both directions, including the 119 -> 000 seam.
+  return [...new Set(Array.from({ length: count }, (_, i) => [i, (count - i) % count]).flat())];
 }
 
 export function renderDrinkInfo(card, drink) {
@@ -121,14 +116,24 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   button.setAttribute('aria-label', `Rotate ${drink.name}, 360° view`);
   button.dataset.frame = '0';
   button.dataset.active = 'false';
-  const image = document.createElement('img');
-  image.src = `${base}poster.webp`;
-  image.alt = '';
-  image.draggable = false;
-  image.width = 1200;
-  image.height = 900;
-  button.append(image);
+  // Carry the last decoded pair across drink switches until the new poster is ready.
+  const previous = screen.children[0];
+  if (previous) button.append(...previous.children);
   screen.replaceChildren(button);
+  const url = file => `${base}${file}?v=${assetVersion}`;
+  function newImage(file) {
+    const image = new Image();
+    image.alt = '';
+    image.draggable = false;
+    image.width = 1200;
+    image.height = 900;
+    image.dataset.drink = drink.id;
+    image.src = url(file);
+    return image;
+  }
+  const poster = newImage('poster.webp');
+  let posterReady = false;
+  let painted = false;
   const events = new AbortController();
   const loaded = new Map();
   const pending = new Map();
@@ -145,49 +150,67 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   let queuedSteps = 0;
   const allowed = () => active && (!reduced || interacted) && !disposed;
   const motion = spinMotion({ reduced, clock, draw(value) { turns = value; draw(); } });
+  function showPoster() {
+    if (!posterReady || disposed) return;
+    poster.style.opacity = '1';
+    button.replaceChildren(poster);
+    button.dataset.frame = '0';
+    button.dataset.lowerFrame = button.dataset.upperFrame = '0';
+    button.dataset.blend = '0';
+  }
+  poster.decode().then(() => {
+    if (disposed) return;
+    posterReady = true;
+    poster.dataset.decoded = 'true';
+    if (!painted) showPoster();
+  }).catch(() => { /* Keep the previous decoded drink on a failed poster. */ });
   function draw() {
-    if ((reduced && !interacted) || !manifest || !loaded.size) return;
-    const target = frameAt(turns, manifest.frameCount);
-    // A sparse first pass remains usable while the intermediate frames arrive.
-    const distance = i => Math.min((i - target + manifest.frameCount) % manifest.frameCount, (target - i + manifest.frameCount) % manifest.frameCount);
-    const nearest = loaded.has(target) ? target : [...loaded.keys()].sort((a, b) => distance(a) - distance(b))[0];
-    const src = loaded.get(nearest).src;
-    if (image.getAttribute('src') !== src) image.src = src;
-    button.dataset.frame = String(nearest);
+    button.dataset.turns = String(turns);
+    if ((reduced && !interacted) || !manifest) return;
+    const { lower, upper, mix } = frameBlend(turns, manifest.frameCount);
+    const first = loaded.get(lower);
+    const second = loaded.get(upper);
+    // Hold the exact last good composition until BOTH adjacent images have decoded.
+    if (!first || (mix > 0 && !second)) { pump(); return; }
+    first.style.opacity = '1';
+    if (second) second.style.opacity = String(mix);
+    // Mount the decoded nodes themselves: assigning a new src could flash during decode.
+    if (button.children[0] !== first || button.children[1] !== second) {
+      button.replaceChildren(...(second ? [first, second] : [first]));
+    }
+    painted = true;
+    button.dataset.frame = String(frameAt(turns, manifest.frameCount));
+    button.dataset.lowerFrame = String(lower);
+    button.dataset.upperFrame = String(second ? upper : lower);
+    button.dataset.blend = String(second ? mix : 0);
   }
   function cancelLoads() {
     manifestRequest?.abort();
     manifestRequest = null;
-    for (const frame of pending.values()) {
-      frame.onload = frame.onerror = null;
-      frame.removeAttribute('src');
-    }
+    for (const frame of pending.values()) frame.removeAttribute('src');
     pending.clear();
   }
   function pump() {
     if (!allowed() || !manifest) return;
-    // Finish the every-fourth-frame pass before requesting the fill pass.
-    const coarse = order.filter(i => i % 4 === 0);
-    const pass = coarse.some(i => !loaded.has(i) && !failed.has(i)) ? coarse : order;
-    for (const i of pass) {
+    const { lower, upper } = frameBlend(turns, manifest.frameCount);
+    for (const i of new Set([lower, upper, ...order])) {
       if (pending.size >= 3) break;
       if (loaded.has(i) || pending.has(i) || failed.has(i)) continue;
-      const frame = new Image();
+      const frame = newImage(`${String(i).padStart(3, '0')}.webp`);
       pending.set(i, frame);
-      frame.onload = () => {
+      frame.decode().then(() => {
         if (disposed || pending.get(i) !== frame) return;
         pending.delete(i);
+        frame.dataset.decoded = 'true';
         loaded.set(i, frame);
         draw();
         pump();
-      };
-      frame.onerror = () => {
+      }).catch(() => {
         if (disposed || pending.get(i) !== frame) return;
         pending.delete(i);
         failed.add(i);
-        pump(); // Keep the poster/nearest good frame on partial render failure.
-      };
-      frame.src = `${base}${String(i).padStart(3, '0')}.webp`;
+        pump();
+      });
     }
   }
   async function prepare() {
@@ -197,7 +220,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
     const request = new AbortController();
     manifestRequest = request;
     try {
-      const response = await fetch(`${base}manifest.json`, { signal: request.signal });
+      const response = await fetch(url('manifest.json'), { signal: request.signal });
       if (!response.ok) throw new Error('Unavailable frame manifest');
       const data = await response.json();
       if (!Number.isInteger(data.frameCount) || data.frameCount < 2 || data.frameCount > 1000 || ![-1, 1].includes(data.dragDirection ?? -1)) throw new Error('Invalid frame manifest');
@@ -257,7 +280,6 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
     else { queuedSteps += direction; motion.step(0); }
   });
   return {
-    pauseAuto() { motion.step(0); },
     setActive(value) {
       if (disposed || value === active) return;
       if (!value) finish(true);
@@ -272,8 +294,8 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       motion.setReduced(value);
       if (reduced && !interacted) {
         motion.step(-motion.state.turns);
-        image.src = `${base}poster.webp`;
-        button.dataset.frame = '0';
+        painted = false;
+        showPoster();
       }
       if (allowed()) void prepare();
       else cancelLoads();
@@ -286,6 +308,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       motion.destroy();
       events.abort();
       cancelLoads();
+      if (!posterReady) poster.removeAttribute('src');
       loaded.clear();
     },
   };

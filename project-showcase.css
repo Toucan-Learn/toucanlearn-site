@@ -36,7 +36,7 @@
 .showcase-drink-screen img { display: block; max-height: none; object-fit: cover; object-position: center; border-radius: 0; pointer-events: none; user-select: none; }
 .showcase-cell .drink-spin { display: block; padding: 0; border-radius: 14px 14px 0 0; cursor: grab; touch-action: pan-y; user-select: none; }
 .showcase-cell .drink-spin[data-dragging] { cursor: grabbing; }
-.showcase-drink-controls { position: absolute; top: var(--showcase-inset); left: var(--showcase-inset); display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: max-content; max-width: calc(100% - 16px); }
+.showcase-drink-controls { position: absolute; z-index: 1; top: var(--showcase-inset); left: var(--showcase-inset); display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: max-content; max-width: calc(100% - 16px); }
 .showcase-drink-controls button { min-height: 32px; padding: 6px 10px; border: 1px solid var(--blue, #0b3f51); border-radius: 999px; color: var(--hero-night, #0a272c); background: var(--hero-cream, #f0ebe0); font-size: 12px; line-height: 1.25; white-space: nowrap; }
 .showcase-drink-controls button[aria-pressed="true"] { color: var(--hero-cream, #f0ebe0); background: var(--hero-night, #0a272c); }
 .showcase-drink-controls button:hover { box-shadow: inset 0 0 0 1px var(--hero-night, #0a272c); }

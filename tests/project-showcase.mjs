@@ -154,6 +154,7 @@ try {
           await page.click(`[data-drink="${drink}"]`);
           assert.equal(await page.$eval(`[data-drink="${drink}"]`, button => button.getAttribute('aria-pressed')), 'true');
           assert.equal(await page.$('video'), null);
+          await page.waitForFunction(drink => document.querySelector('.drink-spin img')?.src.includes(`${drink}/poster.webp`), {}, drink);
           assert((await page.$eval('.showcase-drink-screen img', img => img.src)).includes(`${drink}/poster.webp`));
           assert.equal(await page.$eval('.drink-spin', button => button.dataset.frame), '0');
           const drinkLayout = await assertDrinkLayout(page, drink);
@@ -240,7 +241,7 @@ try {
   await page.evaluate(() => document.activeElement.blur());
   await wait(1700);
   assert.equal(await selected(page), 'drinks', 'Reduced motion prevents automatic advance');
-  assert((await page.$eval('.drink-spin img', img => img.src)).endsWith('/poster.webp'), 'Changing to reduced motion restores the poster before manual input');
+  assert(new URL(await page.$eval('.drink-spin img', img => img.src)).pathname.endsWith('/poster.webp'), 'Changing to reduced motion restores the poster before manual input');
   await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
   await load(page, 'children.html?project=drinks#learner-projects');
   await page.evaluate(() => document.activeElement.blur());

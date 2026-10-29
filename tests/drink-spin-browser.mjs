@@ -6,7 +6,7 @@ const frame = page => page.$eval('.drink-spin', button => Number(button.dataset.
 const copy = {
   skids: { name: 'Skids', line: "When you're in a rush, have some Skids." },
   fizzy: { name: 'Fizzy', line: 'Light, bright red. · Fizzy, extreme.' },
-  'ground-pinch': { name: 'Ground Pinch', line: 'Designed for everyone.' },
+  'ground-pinch': { name: 'Ground Pinch', line: 'Designed for everyone. · “It’s sweet, fast, cheap, and will help you destroy your enemies.”' },
 };
 
 // Delay decode independently of network completion and audit every mounted image.
@@ -17,6 +17,9 @@ async function auditDecodedImages(page) {
     window.spinDecodeErrors = [];
     window.spinDecodeWaiters = [];
     window.spinDecodeHold = null;
+    window.spinStartupRows = [];
+    window.spinPrematureRotation = [];
+    window.spinFrameDecodes = new Set();
     window.releaseSpinDecodes = () => {
       window.spinDecodeHold = null;
       window.spinDecodeWaiters.splice(0).forEach(resolve => resolve());
@@ -25,14 +28,27 @@ async function auditDecodedImages(page) {
       await nativeDecode.call(this);
       if (this.src.includes(`/drinks/${window.spinDecodeHold}/`)) {
         await new Promise(resolve => window.spinDecodeWaiters.push(resolve));
-      } else await new Promise(resolve => setTimeout(resolve, 80));
+      } else await new Promise(resolve => setTimeout(resolve, /\/skids\/060\.webp/.test(this.src) ? 1200 : 80));
       decoded.add(this);
+      if (/\/skids\/\d{3}\.webp/.test(this.src)) window.spinFrameDecodes.add(new URL(this.src).pathname);
     };
     const check = () => document.querySelectorAll('.drink-spin img').forEach(img => {
       if (!decoded.has(img) || !img.complete || !img.naturalWidth) window.spinDecodeErrors.push(img.src);
     });
     new MutationObserver(check).observe(document, { childList: true, subtree: true, attributes: true, attributeFilter: ['src'] });
-    const tick = () => { check(); requestAnimationFrame(tick); };
+    const tick = () => {
+      check();
+      const b = document.querySelector('.drink-spin');
+      if (b?.dataset.active === 'true' && b.querySelector('img')?.dataset.drink === 'skids') {
+        if (b.dataset.ready !== 'true' && (Number(b.dataset.turns || 0) !== 0 || !b.querySelector('img').src.includes('/poster.webp'))) {
+          window.spinPrematureRotation.push(b.dataset.turns);
+        }
+        if (b.dataset.ready === 'true' && window.spinStartupRows.length < 90) {
+          window.spinStartupRows.push([Number(b.dataset.lowerFrame), Number(b.dataset.upperFrame), Number(b.dataset.blend), window.spinFrameDecodes.size]);
+        }
+      }
+      requestAnimationFrame(tick);
+    };
     requestAnimationFrame(tick);
   });
 }
@@ -195,6 +211,13 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       const deadline = Date.now() + 15000;
       while ([...requested].filter(url => /\/skids\/\d{3}\.webp$/.test(url)).length < count && Date.now() < deadline) await wait(50);
       assert.equal([...requested].filter(url => /\/skids\/\d{3}\.webp$/.test(url)).length, count, 'The selected sequence loads completely');
+      await page.waitForFunction(() => window.spinStartupRows.length === 90);
+      const startup = await page.evaluate(() => ({ rows: window.spinStartupRows, early: window.spinPrematureRotation }));
+      assert.deepEqual(startup.early, [], 'The poster remains still until every frame has decoded, including a delayed middle frame');
+      assert(startup.rows.every(row => row[3] === count), 'All 120 frames are requested and decoded on activation before the first rotation');
+      for (let i = 1; i < startup.rows.length; i++) for (const column of [0, 1]) {
+        assert((startup.rows[i][column] - startup.rows[i - 1][column] + count) % count <= 1, 'No frame skips greater than one on consecutive animation frames from the first rotation');
+      }
       await page.waitForNetworkIdle({ idleTime: 100 });
       await assertDrinkLayout(page, 'skids');
       assert([...requested].every(url => url.includes('/skids/')), 'Only Skids is requested before a drink switch');
@@ -208,7 +231,7 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       });
       assert(Math.abs(keyDelta - dir / count) < 1e-9, 'Right arrow rotates exactly one frame with no timing race');
       const afterKey = await turns(page); await wait(80);
-      assert(await turns(page) < afterKey, 'Idle spin resumes immediately after a key press');
+      assert(await turns(page) > afterKey, 'Idle spin resumes immediately after a key press');
       const samples = await page.evaluate(() => new Promise(resolve => {
         const rows = [];
         const sample = () => {
@@ -220,6 +243,9 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       }));
       assert(samples.some((row, i) => i && row[0] === samples[i - 1][0] && row[1] === samples[i - 1][1] && row[2] !== samples[i - 1][2]), 'Adjacent stills crossfade on animation frames between the 7.5 fps source steps');
       assert(samples.some(row => row[2] > .05 && row[2] < .95), 'Intermediate opacity is actually painted');
+      for (let i = 1; i < samples.length; i++) for (const column of [0, 1]) {
+        assert((Number(samples[i][column]) - Number(samples[i - 1][column]) + count) % count <= 1, 'Idle crossfades never skip a source frame');
+      }
       assert.equal(await page.$eval('[data-showcase]', root => root.dataset.project), 'drinks', 'Viewer keys do not navigate the showcase');
       const box = await button.boundingBox();
       const x = box.x + box.width / 2;
@@ -248,6 +274,19 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       else await page.mouse.up();
       await wait(100);
       assert.notEqual(await frame(page), dragged, 'Flick inertia continues after release');
+      const coast = await page.evaluate(() => new Promise(resolve => {
+        const rows = [];
+        const sample = () => {
+          const b = document.querySelector('.drink-spin');
+          rows.push([Number(b.dataset.lowerFrame), Number(b.dataset.upperFrame)]);
+          if (rows.length === 60) resolve(rows); else requestAnimationFrame(sample);
+        };
+        requestAnimationFrame(sample);
+      }));
+      for (let i = 1; i < coast.length; i++) for (const column of [0, 1]) {
+        const delta = (coast[i][column] - coast[i - 1][column] + count) % count;
+        assert(Math.min(delta, count - delta) <= 1, 'A fast flick never skips a source view between animation frames');
+      }
       await wait(5000);
       const settled = await frame(page);
       await wait(1100);
@@ -288,6 +327,7 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
         });
         assert.equal(reset, '0', 'Every drink switch resets to the front');
       }
+      await page.waitForSelector('.drink-spin[data-ready="true"]');
       // A still pointer release must resume on the next tick, too.
       if (client) {
         await client.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x, y }] });
@@ -297,7 +337,7 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
         await page.mouse.move(x, y); await page.mouse.down(); await wait(160); await page.mouse.up();
       }
       const afterStill = await turns(page); await wait(80);
-      assert(await turns(page) < afterStill, 'A still release resumes immediately');
+      assert(await turns(page) > afterStill, 'A still release resumes immediately');
       // Keep a decoded Skids composition while every Fizzy decode is held.
       await assertDrinkLayout(page, 'skids');
       await page.evaluate(() => { window.spinDecodeHold = 'fizzy'; });
@@ -333,5 +373,5 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
     assert.equal(await frame(page), manual, 'Reduced motion has no inertia or automatic animation');
     assert(requested.every(url => url.includes('/skids/')));
   } finally { await context.close(); }
-  report.behaviour.push('360 viewer: mouse/touch drag direction and capture, keyboard, inertia settle, off-screen/tab pause, visible-only loading, front resets, reduced motion; edge-to-edge cover, no hint, compact left desktop menu aligned with the card, phone row above the drink, keyboard menu selection and no central overlap on both routes; exact 16-second speed, immediate release/key resume, continuous crossfades and decode-gated drink switches; speed checked with a test clock');
+  report.behaviour.push('360 viewer: all 120 frames requested on activation, still poster until every decode (including delayed middle frame), consecutive animation frames skip no more than one view from first rotation; mouse/touch direction and capture, coast to idle, immediate resume, visibility pause, reduced motion, decoded crossfades and drink switches, layout/menu checks');
 }

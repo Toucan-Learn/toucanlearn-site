@@ -32,7 +32,7 @@ const clock = fakeClock();
 const motion = spinMotion({ clock, draw() {} });
 motion.setActive(true);
 clock.tick(16000);
-assert(Math.abs(motion.state.turns + 1) < 1e-9, 'Exactly one revolution in 16 seconds, turning the other way round');
+assert(Math.abs(motion.state.turns - 1) < 1e-9, 'Exactly one revolution in 16 seconds (clockwise)');
 const atHold = motion.state.turns;
 motion.begin();
 clock.tick(22000);
@@ -50,21 +50,21 @@ assert(motion.state.turns > released, 'A flick continues in the drag direction')
 clock.tick(4740);
 const late = motion.state.turns;
 clock.tick(100);
-assert(motion.state.turns < late, 'A flick against the usual direction swings round into it, never stopping');
+assert(motion.state.turns > late, 'A flick with the usual direction eases back into it, never stopping');
 assert.equal(motion.state.velocity, 0, 'The flick has eased into the idle spin');
 const settled = motion.state.turns;
 clock.tick(1600);
-assert(Math.abs(motion.state.turns - settled + .1) < .002, 'Carries straight on at the slow idle speed, with no six-second pause');
+assert(Math.abs(motion.state.turns - settled - .1) < .002, 'Carries straight on at the slow idle speed, with no six-second pause');
 motion.step(-1 / 72);
 const keyed = motion.state.turns;
 clock.tick(16);
-assert(motion.state.turns < keyed, 'Keyboard rotation resumes on the next animation frame');
+assert(motion.state.turns > keyed, 'Keyboard rotation resumes on the next animation frame');
 motion.begin();
 clock.tick(500);
 motion.end();
 const stillRelease = motion.state.turns;
 clock.tick(16);
-assert(motion.state.turns < stillRelease, 'A still release resumes immediately');
+assert(motion.state.turns > stillRelease, 'A still release resumes immediately');
 for (const reason of ['hidden', 'off-screen', 'other project']) {
   motion.setActive(false);
   const paused = motion.state.turns;
@@ -73,7 +73,7 @@ for (const reason of ['hidden', 'off-screen', 'other project']) {
   assert.equal(clock.pending(), 0, `${reason}: no animation or idle work`);
   motion.setActive(true);
   clock.tick(1616);
-  assert(motion.state.turns < paused && paused - motion.state.turns < .102, `${reason}: no catch-up jump`);
+  assert(motion.state.turns > paused && motion.state.turns - paused < .102, `${reason}: no catch-up jump`);
 }
 motion.begin();
 motion.drag(.05);
@@ -100,7 +100,7 @@ slow.setActive(true);
 for (let i = 0; i < 5; i++) {
   const before = slow.state.turns;
   slowClock.tick(1000);
-  assert(slow.state.turns < before && before - slow.state.turns <= 1 / 120, 'A delayed animation tick cannot skip a view');
+  assert(slow.state.turns > before && slow.state.turns - before <= 1 / 120, 'A delayed animation tick cannot skip a view');
 }
 slow.destroy();
 for (const count of [2, 71, 72, 120]) {
@@ -228,7 +228,7 @@ try {
   assert(key.defaultPrevented);
   assert(Math.abs(Number(button.dataset.turns) - beforeKey - 1 / 12) < 1e-9);
   const keyed = Number(button.dataset.turns); domClock.tick(16);
-  assert(Number(button.dataset.turns) < keyed, 'Keyboard input resumes immediately');
+  assert(Number(button.dataset.turns) > keyed, 'Keyboard input resumes immediately');
   assert(activity >= 3);
   viewer.setActive(false);
   const still = button.dataset.turns; domClock.tick(32000);
@@ -244,13 +244,75 @@ try {
   assert.equal(fizzButton.children[0].dataset.drink, 'fizzy');
   assert.equal(fizzButton.dataset.frame, '0');
   fizzButton.dispatchEvent(event('pointerdown', { pointerId: 3, isPrimary: true, button: 0, clientX: 300 }));
-  await flush(); assert.equal(images.length, requested + 1);
+  await flush(); assert.equal(images.length, requested + 7, 'Pointerdown starts frame loading even with reduced motion');
   fizzButton.releasePointerCapture(3); assert(!fizzy.isDragging());
   fizzButton.dispatchEvent(event('keydown', { key: 'ArrowLeft' })); await flush();
-  await complete(); assert.equal(fizzButton.dataset.frame, '11', 'Keys queued before the manifest are preserved');
+  await complete(); assert.equal(fizzButton.dataset.frame, '11', 'Reduced motion permits keyboard rotation');
   const manual = fizzButton.dataset.turns; domClock.tick(32000);
   assert.equal(fizzButton.dataset.turns, manual, 'Reduced motion has no auto spin or inertia');
   fizzy.destroy();
+  // The first gesture must work while most of the 120-frame sequence is still undecoded.
+  manifestData = { frameCount: 120, dragDirection: -1 };
+  for (const reducedMotion of [true, false]) {
+    const firstDragClock = fakeClock();
+    const sequenceStart = images.length;
+    const firstDrag = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: firstDragClock, reduced: reducedMotion });
+    const dragButton = screen.children[0];
+    images.at(-1).resolve(); await flush();
+    firstDrag.setActive(true); await flush();
+    const requestsBeforeDown = requests.length;
+    dragButton.dispatchEvent(event('pointerdown', { pointerId: 8, isPrimary: true, button: 0, clientX: 300 }));
+    if (reducedMotion) assert.equal(requests.length, requestsBeforeDown + 1, 'Reduced-motion pointerdown starts loading before any move');
+    // Move before the manifest or any frame has decoded, then hold the same pointer down.
+    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 280 }));
+    await flush();
+    assert(Math.abs(Number(dragButton.dataset.turns) - 20 / 600) < 1e-9, 'The very first drag records its angle before full decode');
+    assert.equal(file(dragButton.children[0]), 'poster.webp', 'A drag with no decoded frames holds the poster');
+    const decode = async name => {
+      const image = images.slice(sequenceStart + 1).find(img => file(img) === name);
+      assert(image && !image.settled, `${name} is queued for decode (${images.slice(sequenceStart + 1).map(file)})`);
+      image.resolve(); await flush();
+    };
+    await decode('001.webp');
+    assert.equal(dragButton.dataset.frame, '1', 'A reduced-motion first drag changes the frame as soon as a nearby frame decodes');
+    assert(firstDrag.isDragging(), 'Decode updates happen during the original drag without another move');
+    await decode('004.webp');
+    assert.equal(dragButton.dataset.frame, '4', 'The current drag target paints as it decodes');
+    assert.equal(dragButton.dataset.ready, 'false', 'Manual rotation never waits for all 120 decodes');
+    assert.equal(firstDragClock.pending(), 0, 'Partial manual loading cannot start automatic rotation');
+    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 230 }));
+    assert.equal(dragButton.dataset.frame, '4', 'An undecoded target uses the nearest decoded view');
+    const held = [...dragButton.children];
+    await decode('000.webp');
+    assert.deepEqual(dragButton.children, held, 'A farther decode holds the last good composition');
+    dragButton.dispatchEvent(event('pointermove', { pointerId: 8, clientX: 305 }));
+    await decode('119.webp');
+    assert.equal(dragButton.dataset.frame, '119', 'Nearest decoded lookup wraps across the seam');
+    dragButton.dispatchEvent(event('pointerup', { pointerId: 8 }));
+    firstDragClock.tick(1000);
+    assert.equal(firstDragClock.pending(), 0, 'Release cannot start automatic rotation before full decode');
+    await complete();
+    assert.equal(dragButton.dataset.ready, 'true');
+    assert.equal(firstDragClock.pending(), reducedMotion ? 0 : 1, 'Automatic motion starts only after every decode and respects reduced motion');
+    firstDrag.destroy();
+  }
+  // A first key press also starts loading and survives the asynchronous manifest.
+  const firstKeyClock = fakeClock();
+  const keyStart = images.length;
+  const firstKey = createDrinkSpin(screen, { id: 'fizzy', name: 'Fizzy' }, { clock: firstKeyClock, reduced: true });
+  const keyButton = screen.children[0];
+  images.at(-1).resolve(); await flush();
+  firstKey.setActive(true);
+  const beforeFirstKey = requests.length;
+  keyButton.dispatchEvent(event('keydown', { key: 'ArrowRight' }));
+  assert.equal(requests.length, beforeFirstKey + 1, 'The first reduced-motion keydown starts loading');
+  await flush();
+  images.slice(keyStart + 1).find(img => file(img) === '119.webp').resolve(); await flush();
+  assert.equal(keyButton.dataset.frame, '119', 'The key queued before the manifest paints before the full sequence decodes');
+  assert.equal(keyButton.dataset.ready, 'false');
+  assert.equal(firstKeyClock.pending(), 0);
+  firstKey.destroy();
+  manifestData = { frameCount: 12, dragDirection: 1 };
   const partial = createDrinkSpin(screen, { id: 'ground-pinch', name: 'Ground Pinch' }, { clock: domClock });
   partial.setActive(true); await flush();
   const pending = images.slice(-6);
@@ -310,13 +372,13 @@ try {
       before = after;
     }
   };
-  checkFrames(1010, -1); // Counter-clockwise: counts down, including the 0 -> 119 seam on the first revolution.
+  checkFrames(1010); // Clockwise: counts up, including the 119 -> 0 seam on the first revolution.
   finalFrames.setActive(false);
   const pauseAngle = Number(finalButton.dataset.turns);
   domClock.tick(32000);
   finalFrames.setActive(true); await flush();
   assert.equal(Number(finalButton.dataset.turns), pauseAngle, 'Interruption resumes from the current angle');
-  checkFrames(10, -1);
+  checkFrames(10);
   finalButton.dispatchEvent(event('pointerdown', { pointerId: 7, isPrimary: true, button: 0, clientX: 300 }));
   domClock.tick(16);
   finalButton.dispatchEvent(event('pointermove', { pointerId: 7, clientX: 500 }));

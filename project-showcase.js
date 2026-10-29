@@ -171,7 +171,7 @@ export function initShowcase(root) {
     root.dataset.showcaseMounted = project.id;
     stage.replaceChildren(preview(project));
     if (project.type === 'piano') {
-      import('./hero-sky.js?v=20261028-shared-2').then(({ initHeroSky }) => {
+      import('./hero-sky.js?v=20261029-voices-2').then(({ initHeroSky }) => {
         if (token !== generation || !visible()) return;
         stage.innerHTML = pianoMarkup;
         pianoControl.innerHTML = pianoToggle;

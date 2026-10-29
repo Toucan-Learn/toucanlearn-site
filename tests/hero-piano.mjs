@@ -19,6 +19,7 @@ const output = process.env.PIANO_OUTPUT || '/Users/joshuagordonjones/Documents/C
 const base = process.env.BASE_URL || 'http://127.0.0.1:4205';
 const pianoPage = process.env.PIANO_PAGE || 'index.html';
 const phoneIds = ['runaway', 'no-one-noticed'];
+const instrumentSources = preset => preset === 'runaway' ? 8 : preset === 'no-one-noticed' ? 5 : 4;
 const desktop = { width: 1440, height: 750, deviceScaleFactor: 1 };
 const phone = { width: 390, height: 844, deviceScaleFactor: 1, isMobile: true, hasTouch: true };
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -53,6 +54,8 @@ async function openPiano(page, id, colour, viewport, reduced = false) {
   assert.equal(await page.evaluate(() => window.pianoAudio.contexts), 0, 'No audio on opening');
   const choices = await page.evaluate(() => window.pianoUnderTest.availableSongs().map(song => song.id));
   assert.deepEqual(choices, viewport.width <= 600 && viewport.height > viewport.width ? phoneIds : songs.map(song => song.id));
+  assert.equal(await page.evaluate(() => window.pianoUnderTest.currentVoicePreset()),
+    await page.evaluate(() => ['runaway', 'no-one-noticed'].includes(window.pianoUnderTest.currentSong().id) ? window.pianoUnderTest.currentSong().id : 'classic'), 'The voice follows the selected song');
   assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle', 'No cue runs on load/open');
   assert.equal(await page.$eval('.piano-tempo-bar', bar => bar.value), 0);
 }
@@ -121,6 +124,7 @@ async function counts(page) {
   return page.evaluate(() => ({
     advances: window.pianoAdvances.length, attacks: window.pianoAudio.attacks,
     waves: window.pianoWaves.length, next: window.pianoUnderTest.peekNextNote(),
+    preset: window.pianoUnderTest.currentVoicePreset(),
   }));
 }
 
@@ -146,7 +150,7 @@ async function step(page, expected, following, kind, calm = false) {
   const after = await counts(page);
   assert.equal(after.next, following, `${kind}: next note follows once`);
   assert.equal(after.advances, before.advances + 1, `${kind}: one advancement, including repeated notes`);
-  assert.equal(after.attacks, before.attacks + 4, `${kind}: one sounded note, no double activation`);
+  assert.equal(after.attacks, before.attacks + instrumentSources(before.preset), `${kind}: one complete instrument voice, no double activation`);
   assert.equal(after.waves, before.waves + (calm ? 0 : 1), `${kind}: respects motion setting`);
   await highlighted(page, following);
 }
@@ -249,6 +253,7 @@ async function cycleSongs(page, viewport) {
     assert.ok((await page.$eval('.piano-credit', credit => credit.textContent)).includes(expected.composer));
     assert.equal((await counts(page)).attacks, before.attacks, 'Next song is silent');
     assert.equal((await counts(page)).waves, before.waves, 'Next song does not emit a wave');
+    assert.equal((await counts(page)).preset, ['runaway', 'no-one-noticed'].includes(expectedId) ? expectedId : 'classic', 'Song cycling selects its instrument');
     assert.equal(await page.$eval('.piano-tempo', cue => cue.dataset.phase), 'idle', 'Song cycling resets the cue');
     assert.equal(await page.$eval('.piano-tempo-bar', bar => bar.value), 0);
     assert.equal((await page.evaluate(() => window.pianoUnderTest.noteTiming())).bpm, expected.tempo || 100);
@@ -359,9 +364,10 @@ async function tempoCue(page, viewport, colour, song, reduced = false) {
   assert.equal(layout.label, `${song.noteBeats ? '' : 'Practice '}♩ = ${song.tempo || 100}`);
 
   const traces = [];
-  // No One Noticed starts with two quarter notes, then a six-beat hold/rest.
-  // Its third attack proves this is a note-duration cue, not just a metronome.
-  for (let i = 0; i < (song.id === 'no-one-noticed' ? 3 : 1); i++) {
+  // Entertainer: pickup sixteenths, eighths and a tie across the bar line.
+  // No One Noticed: two quarter notes, then its six-beat hold/rest.
+  const cueAttacks = song.id === 'entertainer' ? 8 : song.id === 'no-one-noticed' ? 3 : 1;
+  for (let i = 0; i < cueAttacks; i++) {
     await page.evaluate(() => {
       window.pianoTempoTrace = [];
       const cue = document.querySelector('.piano-tempo');
@@ -409,6 +415,7 @@ async function tempoCue(page, viewport, colour, song, reduced = false) {
     const landing = trace.find(sample => sample.phase === 'landing');
     const end = trace.find(sample => sample.phase === 'waiting');
     assert.ok(start && landing && end, `Cue fills, lands once and stops: ${JSON.stringify(trace)}`);
+    assert.equal(start.duration, (song.noteBeats?.[i] || 1) * 60000 / (song.tempo || 100), 'The bar uses the current attack duration');
     assert.ok(start.attack && start.value < .05, `Each correct attack starts the bar from empty: ${JSON.stringify(trace)}`);
     assert.ok(trace.every(sample => sample.started === start.started), 'Every sample belongs to this attack');
     assert.ok(landing.at >= landing.due && landing.at - landing.due < 120, 'Landing follows the note clock within one rendering interval');
@@ -431,6 +438,11 @@ async function tempoCue(page, viewport, colour, song, reduced = false) {
   }
   if (song.id === 'no-one-noticed') {
     assert.equal(traces[2][0].duration, 6 * 60000 / 98, 'The saved hold/rest is respected');
+  }
+  if (song.id === 'entertainer') {
+    assert.equal(traces[0][0].duration, 150, 'The pickup is a sixteenth note at 100 BPM');
+    assert.equal(traces[3][0].duration, 300, 'The eighth note lasts twice as long');
+    assert.equal(traces[7][0].duration, 900, 'The cross-bar tie is one held attack');
   }
 
   // A wrong/free note may sound and make a wave, but cannot restart the cue.
@@ -479,6 +491,12 @@ try {
         const start = oscillator.start.bind(oscillator);
         oscillator.start = (...args) => { window.pianoAudio.attacks++; return start(...args); };
         return oscillator;
+      }
+      createBufferSource() {
+        const source = super.createBufferSource();
+        const start = source.start.bind(source);
+        source.start = (...args) => { window.pianoAudio.attacks++; return start(...args); };
+        return source;
       }
     };
   });

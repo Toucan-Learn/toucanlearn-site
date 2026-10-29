@@ -9,7 +9,7 @@
       "D4",
       "D#4"
     ],
-    "loop": "Opening four-bar phrase (bars 5-8). Place the two-note pickup before bar 5, omitting its duplicate at the end of bar 8. Tied continuations are not new attacks. Preserve the final resolving C and transpose the whole melody together.",
+    "loop": "Full first A strain, printed bars 5-20, one pass with its first ending. Keep internal connecting pickups in bars 8 and 12. Move only the boundary pickup D4 D#4 from the end of bar 20 to the start of each loop, after the final resolving C6 hold. No introduction, second-strain transition or automatic repeat expansion.",
     "bars": [
       {
         "number": 5,
@@ -21,6 +21,14 @@
           "C5",
           "E4",
           "C5"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.75,
+          1,
+          1.5,
+          1.75
         ]
       },
       {
@@ -30,6 +38,11 @@
           "C6",
           "D6",
           "D#6"
+        ],
+        "onsets": [
+          1.25,
+          1.5,
+          1.75
         ]
       },
       {
@@ -42,6 +55,14 @@
           "E6",
           "B5",
           "D6"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.5
         ]
       },
       {
@@ -51,9 +72,235 @@
           "C6",
           "D4",
           "D#4"
+        ],
+        "onsets": [
+          0,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 9,
+        "lilypond": "e16 c'8 e,16 c'8 e,16 c' ~",
+        "attacks": [
+          "E4",
+          "C5",
+          "E4",
+          "C5",
+          "E4",
+          "C5"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.75,
+          1,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 10,
+        "lilypond": "c4 ~ c8 <a' c, a>16 <g c, g>",
+        "attacks": [
+          "A5",
+          "G5"
+        ],
+        "onsets": [
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 11,
+        "lilypond": "<fis c fis,>16 <a a,> <c c,> <e e,> ~ <e e,> <d d,> <c c,> <a a,>",
+        "attacks": [
+          "F#5",
+          "A5",
+          "C6",
+          "E6",
+          "D6",
+          "C6",
+          "A5"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 12,
+        "lilypond": "<d f,! d>4 ~ <d f, d>8 d,,16([ dis)]",
+        "attacks": [
+          "D6",
+          "D4",
+          "D#4"
+        ],
+        "onsets": [
+          0,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 13,
+        "lilypond": "e16 c'8 e,16 c'8 e,16 c' ~",
+        "attacks": [
+          "E4",
+          "C5",
+          "E4",
+          "C5",
+          "E4",
+          "C5"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.75,
+          1,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 14,
+        "lilypond": "c4 ~ c16 <c' e, c> <d f, d> <dis fis, dis>",
+        "attacks": [
+          "C6",
+          "D6",
+          "D#6"
+        ],
+        "onsets": [
+          1.25,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 15,
+        "lilypond": "<e g, e> <c e, c> <d f, d> <e g, e> ~ <e g, e> <b d, b> <d f, d>8",
+        "attacks": [
+          "E6",
+          "C6",
+          "D6",
+          "E6",
+          "B5",
+          "D6"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.5
+        ]
+      },
+      {
+        "number": 16,
+        "lilypond": "<c e, c>4 ~ <c e, c>8 <c c,>16 <d d,>",
+        "attacks": [
+          "C6",
+          "C6",
+          "D6"
+        ],
+        "onsets": [
+          0,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 17,
+        "lilypond": "<e e,> <c c,> <d d,> <e e,> ~ <e e,> <c c,> <d d,> <c c,>",
+        "attacks": [
+          "E6",
+          "C6",
+          "D6",
+          "E6",
+          "C6",
+          "D6",
+          "C6"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 18,
+        "lilypond": "<e e,> <c c,> <d d,> <e e,> ~ <e e,> <c c,> <d d,> <c c,>",
+        "attacks": [
+          "E6",
+          "C6",
+          "D6",
+          "E6",
+          "C6",
+          "D6",
+          "C6"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 19,
+        "lilypond": "<e g, e> <c e, c> <d f, d> <e g, e> ~ <e g, e> <b d, b> <d f, d>8",
+        "attacks": [
+          "E6",
+          "C6",
+          "D6",
+          "E6",
+          "B5",
+          "D6"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.5
+        ]
+      },
+      {
+        "number": 20,
+        "lilypond": "<c e, c>4 ~ <c e, c>8 d,,16( dis)",
+        "attacks": [
+          "C6",
+          "D4",
+          "D#4"
+        ],
+        "onsets": [
+          0,
+          1.5,
+          1.75
         ]
       }
-    ]
+    ],
+    "tempo": 100,
+    "tempoSource": "Practice choice of quarter note = 100 for the published Not fast indication; not a metronome mark asserted by the 1902 edition.",
+    "pickupBeats": [
+      0.25,
+      0.25
+    ],
+    "totalBeats": 32
   },
   "maple-leaf-rag": {
     "source": "https://raw.githubusercontent.com/MutopiaProject/MutopiaProject/master/ftp/JoplinS/maple/maple.ly",

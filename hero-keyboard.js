@@ -1,4 +1,4 @@
-import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition, noteTiming, pauseNoteTiming } from './hero-piano.js?v=20261028-shared-1';
+import { playNote, peekNextNote, advance, onSongAdvance, songKeyboardOctave, currentSong, nextSong, noteWavePosition, noteTiming, pauseNoteTiming } from './hero-piano.js?v=20261029-voices-2';
 
 // Round 76 (Joshua, 19 Oct 2026: "is it possible for us to be able to play the
 // whole piano with keyboard?"): two manuals, so every key from C3 to C6 has its

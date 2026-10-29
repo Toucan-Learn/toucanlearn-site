@@ -1,10 +1,10 @@
-import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-coast-1';
+import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-smooth-1';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
   { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-newspaper.webp', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/index.html#football' },
   { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp', alt: 'DARTY football gameplay', type: 'gallery', images: [1, 2, 3, 4].map(n => `assets/projects/darty-still-0${n}.webp`) },
-  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp', alt: 'Skids drink design', type: 'drinks', drinks: [
+  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-smooth-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red.', 'Fizzy, extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['Designed for everyone.'] },
@@ -230,12 +230,11 @@ export function initShowcase(root) {
       controls.setAttribute('role', 'group');
       controls.setAttribute('aria-label', 'Drink designs');
       let viewer = null;
-      function select(drink, pauseAuto = false) {
+      function select(drink) {
         viewer?.destroy();
         controls.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.drink === drink.id)));
         renderDrinkInfo(info, drink);
         viewer = createDrinkSpin(screen, drink, { reduced: motion.matches, activity });
-        if (pauseAuto) viewer.pauseAuto();
         viewer.setActive(inView && visible());
       }
       project.drinks.forEach(drink => {
@@ -243,10 +242,11 @@ export function initShowcase(root) {
         button.type = 'button';
         button.textContent = drink.name;
         button.dataset.drink = drink.id;
-        button.addEventListener('click', () => select(drink, true));
+        button.addEventListener('click', () => select(drink));
         controls.append(button);
       });
-      drinks.append(screen, info, controls);
+      // Controls lead the DOM: [data-drink] must find the button before frame metadata.
+      drinks.append(controls, screen, info);
       stage.replaceChildren(drinks);
       select(project.drinks[0]);
       dispose = () => viewer?.destroy();

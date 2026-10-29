@@ -140,6 +140,7 @@ try {
   let activity = 0;
   const viewer = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock, activity: () => activity++ });
   const button = screen.children[0];
+  assert.equal(button.children.length, 1, 'The drag zone contains only the image, with no hint');
   assert.equal(button.children[0].src, 'assets/projects/drinks/skids/poster.webp', 'Poster is the first paint');
   assert.equal(button.getAttribute('aria-label'), 'Rotate Skids, 360° view');
   assert.equal(images.length, 0, 'Inactive cells request no frames');

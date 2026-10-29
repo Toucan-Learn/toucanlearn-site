@@ -116,18 +116,13 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   button.setAttribute('aria-label', `Rotate ${drink.name}, 360° view`);
   button.dataset.frame = '0';
   button.dataset.active = 'false';
-  if (screen.dataset.spinInteracted !== undefined) button.dataset.interacted = '';
   const image = document.createElement('img');
   image.src = `${base}poster.webp`;
   image.alt = '';
   image.draggable = false;
   image.width = 1200;
   image.height = 900;
-  const hint = document.createElement('span');
-  hint.className = 'drink-spin-hint';
-  hint.textContent = 'Drag to spin';
-  hint.setAttribute('aria-hidden', 'true');
-  button.append(image, hint);
+  button.append(image);
   screen.replaceChildren(button);
   const events = new AbortController();
   const loaded = new Map();
@@ -212,8 +207,6 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   }
   function interact(rotate = true) {
     interacted ||= rotate;
-    screen.dataset.spinInteracted = '';
-    button.dataset.interacted = '';
     activity();
     void prepare();
   }

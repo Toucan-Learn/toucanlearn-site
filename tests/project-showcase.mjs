@@ -7,13 +7,13 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import './project-showcase-source.mjs';
 import { activatePianoToggle } from './piano-toggle-helpers.mjs';
-import { checkDrinkSpin, assertDrinkLayout, dragOverDrink } from './drink-spin-browser.mjs';
+import { checkDrinkSpin, assertDrinkLayout, dragOverDrink, checkDrinkMenuKeys } from './drink-spin-browser.mjs';
 const site = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_MODULE || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/website/node_modules/puppeteer-core');
 const base = process.env.BASE_URL || process.env.SHOWCASE_URL || 'http://127.0.0.1:4206';
 const output = process.env.SHOWCASE_SCREENSHOTS || path.resolve(site, '../outputs/drink-spin-20261028/showcase');
-const originalHome = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || '12f497c'}:index.html`], { cwd: site, encoding: 'utf8' });
+const originalHome = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || 'd9d653b'}:index.html`], { cwd: site, encoding: 'utf8' });
 const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 390, height: 844, isMobile: true, hasTouch: true }];
 const ids = ['football', 'darty', 'drinks', 'piano'];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
@@ -159,7 +159,10 @@ try {
           const drinkLayout = await assertDrinkLayout(page, drink);
           report.layouts.push({ label, route, drink, ...drinkLayout });
           await page.screenshot({ path: path.join(output, `${label}-${route.startsWith('index') ? 'home' : 'projects'}-${drink}-card.png`) });
-          if (drink === 'skids') await dragOverDrink(page, view);
+          if (drink === 'skids') {
+            await dragOverDrink(page, view);
+            if (view.width === 1440 && theme === 'light') await checkDrinkMenuKeys(page);
+          }
         }
         if (id === 'piano') {
           report.pianoToggles.push(await activatePianoToggle(page, `${label}/${route}`));

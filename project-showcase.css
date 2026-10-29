@@ -11,7 +11,7 @@
 .showcase-caption .showcase-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .showcase-cell button { min-width: 0; border: 0; color: #f0ebe0; background: transparent; font: inherit; cursor: pointer; }
 .showcase-caption > button { flex: 0 0 32px; align-self: stretch; padding: 0; font-size: 18px; }
-.showcase-caption button:hover, .showcase-drink-controls button:hover, .showcase-stage .screenshot-gallery-controls button:hover { color: #efac8e; background: #103138; }
+.showcase-caption button:hover, .showcase-stage .screenshot-gallery-controls button:hover { color: #efac8e; background: #103138; }
 .showcase-cell button:focus-visible { outline: 2px solid #efac8e; outline-offset: -3px; }
 .showcase-caption [data-project-status] { min-width: 0; color: #c5d5ca; font-size: 11px; font-weight: 400; white-space: nowrap; }
 .showcase-cell .piano-toggle { display: flex; align-items: center; justify-content: center; gap: 6px; width: auto; min-height: 36px; padding: 0 8px; border: 0; border-radius: 4px; font-size: 12px; }
@@ -30,18 +30,17 @@
 .showcase-drink-screen { background: var(--drink-backdrop); }
 [data-showcase][data-project="drinks"] .showcase-stage > img,
 [data-project="drinks"] .showcase-fallback { object-fit: cover; object-position: center; background: var(--drink-backdrop, #1f7a75); }
-.showcase-stage .showcase-drinks { --drink-controls-height: 42px; position: relative; overflow: hidden; border-radius: 14px 14px 0 0; container-type: inline-size; }
-.showcase-drink-screen { position: absolute; inset: 0 0 var(--drink-controls-height); }
+.showcase-stage .showcase-drinks { position: relative; overflow: hidden; border-radius: 14px 14px 0 0; container-type: inline-size; }
+.showcase-drink-screen { position: absolute; inset: 0; }
 .showcase-drink-screen .drink-spin, .showcase-drink-screen img { position: absolute; inset: 0; width: 100%; height: 100%; }
 .showcase-drink-screen img { display: block; max-height: none; object-fit: cover; object-position: center; border-radius: 0; pointer-events: none; user-select: none; }
 .showcase-cell .drink-spin { display: block; padding: 0; border-radius: 14px 14px 0 0; cursor: grab; touch-action: pan-y; user-select: none; }
 .showcase-cell .drink-spin[data-dragging] { cursor: grabbing; }
-.drink-spin-hint { position: absolute; right: var(--showcase-inset); bottom: 8px; padding: 3px 7px; border-radius: 6px; color: #f0ebe0; background: #04161eb3; font-size: 11px; pointer-events: none; transition: opacity .4s; }
-.drink-spin[data-interacted] .drink-spin-hint { opacity: 0; }
-@media (prefers-reduced-motion: reduce) { .drink-spin-hint { transition: none; } }
-.showcase-drink-controls { position: absolute; right: 0; bottom: 0; left: 0; display: flex; align-items: stretch; justify-content: center; gap: 4px; height: var(--drink-controls-height); padding: 4px var(--showcase-inset); background: #0b2228; }
-.showcase-drink-controls button { flex: 1; min-height: 34px; padding: 4px 6px; border-radius: 6px; font-size: 12px; white-space: nowrap; }
-.showcase-drink-controls button[aria-pressed="true"] { color: #071c23; background: #efac8e; }
+.showcase-drink-controls { position: absolute; top: var(--showcase-inset); left: var(--showcase-inset); display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: max-content; max-width: calc(100% - 16px); }
+.showcase-drink-controls button { min-height: 32px; padding: 6px 10px; border: 1px solid var(--blue, #0b3f51); border-radius: 999px; color: var(--hero-night, #0a272c); background: var(--hero-cream, #f0ebe0); font-size: 12px; line-height: 1.25; white-space: nowrap; }
+.showcase-drink-controls button[aria-pressed="true"] { color: var(--hero-cream, #f0ebe0); background: var(--hero-night, #0a272c); }
+.showcase-drink-controls button:hover { box-shadow: inset 0 0 0 1px var(--hero-night, #0a272c); }
+.showcase-drink-controls button:focus-visible { outline: 2px solid var(--hero-cream, #f0ebe0); outline-offset: 2px; box-shadow: 0 0 0 4px var(--hero-night, #0a272c); }
 .drink-info { position: absolute; top: var(--showcase-inset); right: var(--showcase-inset); width: min(168px, 28cqw); margin: 0; padding: 8px 10px; border: 1px solid var(--blue, #0b3f51); border-radius: 10px; color: var(--hero-night, #0a272c); background: var(--hero-cream, #f0ebe0); font-size: 11px; line-height: 1.35; pointer-events: none; }
 .drink-info strong { display: block; color: inherit; font-size: 12px; line-height: 1.25; }
 .showcase-cell .drink-info p { margin: 4px 0 0; color: inherit; font-size: inherit; line-height: inherit; }
@@ -49,6 +48,12 @@
    without changing the media slot's height when switching designs. */
 @container (max-width: 520px) {
   .showcase-drink-screen { top: 84px; }
+  .drink-info { width: min(200px, calc(100% - 16px)); }
+}
+/* On phone, leave the compact menu below the card and above the drag zone. */
+@media (max-width: 760px) {
+  .showcase-drink-screen { top: 122px; }
+  .showcase-drink-controls { top: 84px; flex-direction: row; }
   .drink-info { width: min(200px, calc(100% - 16px)); }
 }
 .showcase-cell [hidden] { display: none !important; }

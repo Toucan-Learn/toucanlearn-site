@@ -6,6 +6,8 @@ import { fileURLToPath } from 'node:url';
 import '../scripts/check-project-cells-static.mjs';
 const source = await readFile(new URL('../project-showcase.js', import.meta.url), 'utf8');
 const spinSource = await readFile(new URL('../drink-spin.js', import.meta.url), 'utf8');
+const showcaseStyles = await readFile(new URL('../project-showcase.css', import.meta.url), 'utf8');
+assert(!spinSource.includes('Drag to spin') && !showcaseStyles.includes('drink-spin-hint'), 'Remove the drag hint markup and styles entirely');
 const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString('base64')}`;
 const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL));
 const { projects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
@@ -107,7 +109,7 @@ for (const page of ['index.html', 'children.html']) {
 await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.url)), 'Retire the alternate piano implementation');
 
 const site = fileURLToPath(new URL('../', import.meta.url));
-const before = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || '12f497c'}:index.html`], { cwd: site, encoding: 'utf8' });
+const before = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || 'd9d653b'}:index.html`], { cwd: site, encoding: 'utf8' });
 const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');

@@ -3,7 +3,7 @@ const wrap = value => ((value % 1) + 1) % 1;
 export const frameAt = (turns, count) => Math.round(wrap(turns) * count) % count;
 
 export function spinMotion({ draw, clock = globalThis, reduced = false }) {
-  const revolution = 16000;
+  const revolution = -16000; // Negative: the idle turn runs the other way round (owner's call).
   const idle = 6000;
   const decay = 240; // ms; exponential friction is independent of display refresh rate.
   let turns = 0;

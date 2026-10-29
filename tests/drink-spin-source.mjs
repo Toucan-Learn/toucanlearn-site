@@ -32,7 +32,7 @@ const clock = fakeClock();
 const motion = spinMotion({ clock, draw() {} });
 motion.setActive(true);
 clock.tick(16000);
-assert(Math.abs(motion.state.turns - 1) < 1e-9, 'Exactly one revolution in 16 seconds');
+assert(Math.abs(motion.state.turns + 1) < 1e-9, 'Exactly one revolution in 16 seconds, turning the other way round');
 const atHold = motion.state.turns;
 motion.begin();
 clock.tick(22000);
@@ -53,7 +53,7 @@ const settled = motion.state.turns;
 clock.tick(3199);
 assert.equal(motion.state.turns, settled, 'Auto rotation waits six seconds after release');
 clock.tick(1601);
-assert(Math.abs(motion.state.turns - settled - .1) < .002, 'Resumes at the slow speed after six seconds');
+assert(Math.abs(motion.state.turns - settled + .1) < .002, 'Resumes at the slow speed after six seconds');
 motion.step(-1 / 72);
 const keyed = motion.state.turns;
 clock.tick(5999);
@@ -66,7 +66,7 @@ for (const reason of ['hidden', 'off-screen', 'other project']) {
   assert.equal(clock.pending(), 0, `${reason}: no animation or idle work`);
   motion.setActive(true);
   clock.tick(1616);
-  assert(motion.state.turns > paused && motion.state.turns - paused < .102, `${reason}: no catch-up jump`);
+  assert(motion.state.turns < paused && paused - motion.state.turns < .102, `${reason}: no catch-up jump`);
 }
 motion.begin();
 motion.drag(.05);

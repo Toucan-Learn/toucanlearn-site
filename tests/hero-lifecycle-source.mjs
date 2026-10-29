@@ -47,7 +47,11 @@ class Observer {
   observe() { observers.add(this); }
   disconnect() { observers.delete(this); }
 }
-class Image extends Element { complete = false; }
+const images = [];
+class Image extends Element {
+  complete = false;
+  constructor() { super(); images.push(this); }
+}
 class DetailEvent extends Event { constructor(type, options = {}) { super(type); this.detail = options.detail; } }
 const harness = createAudioHarness({ onStart: () => attacks++ });
 class AudioContext extends harness.AudioContext { constructor() { super(); audioState = this; } }
@@ -157,4 +161,28 @@ for (const view of views) for (let cycle = 0; cycle < 3; cycle++) {
   key('keydown', 'x');
   assert.equal(attacks, stopped, 'Detached sky and document keyboard listeners cannot play');
 }
-console.log('Piano lifecycle checks passed: both routes at desktop/phone geometry, three mounts each, toggle/scroll stability, deferred frame reflow, one voice per input and complete teardown.');
+// Even without WebGL, reveal only after the image-backed fallback draws at a
+// real size. Loading before layout and the first 300x150 draw are not readiness.
+const receiptRoot = world(views[0]);
+let receipts = 0;
+const imageIndex = images.length;
+const destroyReceipt = sky.namespace.initHeroSky(receiptRoot, { onFirstFrame: () => receipts++ });
+assert.equal(receipts, 0, 'The default-sized initial canvas is not ready');
+const resizeReceipt = [...observers][0];
+resizeReceipt.callback([{ contentRect: { width: 700, height: 100 } }]);
+assert.equal(receipts, 0, 'Layout without a loaded sky image is not ready');
+resizeReceipt.callback([{ contentRect: { width: 0, height: 0 } }]);
+const receiptImage = images[imageIndex];
+receiptImage.complete = true;
+receiptImage.naturalWidth = 800;
+receiptImage.naturalHeight = 450;
+receiptImage.onload();
+assert.equal(receipts, 0, 'Image loading without visible layout is not ready');
+resizeReceipt.callback([{ contentRect: { width: 700, height: 100 } }]);
+assert.equal(receipts, 1, 'The first sized, image-backed canvas draw signals readiness');
+receiptImage.onload();
+assert.equal(receipts, 1, 'Later draws never restart the reveal');
+destroyReceipt();
+assert.equal(observers.size, 0);
+assert.equal(frames.size, 0);
+console.log('Piano lifecycle checks passed: first sized/image-backed draw, both routes at desktop/phone geometry, three mounts each, toggle/scroll stability, deferred frame reflow, one voice per input and complete teardown.');

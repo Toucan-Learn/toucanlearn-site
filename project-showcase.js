@@ -1,5 +1,5 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-spin-progressive-1';
-import { initHeroSky } from './hero-sky.js?v=20261029-piano-3';
+import { initHeroSky } from './hero-sky.js?v=20261029-first-paint-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-card-1';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
@@ -144,6 +144,7 @@ export function initShowcase(root) {
   let nearView = inView;
   let gesture = null;
   let workFrame = 0;
+  let revealFrame = 0;
   let activate = null;
   // Warm the small, project-specific stills before navigation. Never borrow an
   // outgoing project's decoded media while an incoming view becomes ready.
@@ -188,6 +189,16 @@ export function initShowcase(root) {
   });
   const activity = () => timer.reset();
   const preview = project => previews.get(project.id);
+  function reveal(live, token) {
+    // Keep the decoded incoming poster underneath throughout the fade. Opacity
+    // leaves the live view laid out, so its first paint uses the real cell size.
+    if (token !== generation || !live.isConnected) return;
+    revealFrame = requestAnimationFrame(() => {
+      revealFrame = 0;
+      if (token !== generation || !visible() || !live.isConnected) return;
+      live.dataset.showcaseRevealed = '';
+    });
+  }
   function finishWork() {
     const start = activate;
     activate = null;
@@ -206,6 +217,8 @@ export function initShowcase(root) {
     activate = null;
     cancelAnimationFrame(workFrame);
     workFrame = 0;
+    cancelAnimationFrame(revealFrame);
+    revealFrame = 0;
     // Detach FIRST, including composited iframe/canvas layers and the open
     // keyboard. Then cancel its listeners/reflow callbacks immediately, so
     // detached keyboard geometry cannot scroll the newly selected project.
@@ -223,36 +236,48 @@ export function initShowcase(root) {
     if (project.type === 'intro') return;
     stage.replaceChildren(preview(project));
     if (project.type === 'piano') {
-      // Both locations get the very same DOM, CSS and five hero modules. The
-      // pixel-sky CSS background and controls are present in this switch task;
-      // no import, poster swap or outgoing media stands in for the piano.
-      stage.innerHTML = pianoMarkup;
+      // Mount the exact shared piano synchronously, but keep its own poster
+      // painted until the renderer has drawn at the final canvas dimensions.
+      stage.insertAdjacentHTML('beforeend', pianoMarkup);
+      const live = stage.querySelector('.piano-world');
+      live.classList.add('showcase-live');
       pianoControl.innerHTML = pianoToggle;
       activate = () => {
         if (token !== generation || !visible()) return;
-        dispose = initHeroSky(cell);
+        const mascot = live.querySelector('.hero-mascot').decode().catch(() => {});
+        dispose = initHeroSky(cell, { onFirstFrame: () => {
+          void mascot.then(() => { if (token === generation) reveal(live, token); });
+        } });
       };
       afterPaint();
     } else if (project.type === 'newspaper') {
       activate = () => {
         if (token !== generation || !visible()) return;
         const iframe = document.createElement('iframe');
-        iframe.className = 'showcase-newspaper';
+        iframe.className = 'showcase-newspaper showcase-live';
         iframe.title = 'Football newspaper: read the front page and articles';
         iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
         const controller = new AbortController();
-        iframe.hidden = true;
+        let contentObserver;
         iframe.addEventListener('load', () => {
           if (token !== generation || !visible()) return;
           // Events in the same-origin newspaper do not bubble to its parent.
           const doc = iframe.contentDocument;
           activityTypes.forEach(type => doc?.addEventListener(type, activity, { passive: true, signal: controller.signal }));
-          iframe.hidden = false;
-          preview(project).remove();
+          // React can commit after the document's load event. Wait for its
+          // content as well as the blocking stylesheet, then a paint frame.
+          const ready = () => {
+            if (!doc?.querySelector('#root > *')) return;
+            contentObserver?.disconnect();
+            reveal(iframe, token);
+          };
+          contentObserver = new MutationObserver(ready);
+          contentObserver.observe(doc.body, { childList: true, subtree: true });
+          ready();
         }, { signal: controller.signal });
         iframe.src = project.src;
         stage.append(iframe);
-        dispose = () => { controller.abort(); iframe.remove(); };
+        dispose = () => { controller.abort(); contentObserver?.disconnect(); iframe.remove(); };
       };
       afterPaint();
     } else if (project.type === 'gallery' && !stillsOnly.matches) {

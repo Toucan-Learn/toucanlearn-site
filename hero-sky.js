@@ -4,10 +4,11 @@ import { initHeroKeyboard } from './hero-keyboard.js?v=20261029-piano-3';
 import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
 
 // Each showcase mounts the same world and disposes it before changing project.
-export function initHeroSky(root) {
+export function initHeroSky(root, { onFirstFrame } = {}) {
 const controller = new AbortController();
 const listen = (target, type, callback, options = {}) => target?.addEventListener(type, callback, { ...options, signal: controller.signal });
 let disposed = false;
+let sized = false, firstFrame = false;
 const art = root.querySelector('.world-art');
 const sky = root.querySelector('#sky-canvas');
 const flockCanvas = root.querySelector('#flock-canvas');
@@ -283,6 +284,11 @@ function draw() {
   pixelRipples.expire(time);
   renderer?.draw(time);
   drawFlock();
+  // Showcase readiness only: report a fully sized draw with the sky image ready.
+  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth) {
+    firstFrame = true;
+    onFirstFrame?.();
+  }
 }
 
 function animate(now) {
@@ -333,6 +339,7 @@ listen(sky, 'webglcontextrestored', () => { renderer = createSky(); draw(); });
 const resize = new ResizeObserver(entries => {
   if (disposed) return;
   const rect = entries[0].contentRect;
+  sized = rect.width > 0 && rect.height > 0;
   width = Math.max(1, rect.width);
   height = Math.max(1, rect.height);
   const framing = getSkyFrame(width, height);

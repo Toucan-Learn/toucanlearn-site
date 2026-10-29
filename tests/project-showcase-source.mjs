@@ -193,7 +193,7 @@ const unmount = source.slice(source.indexOf('function unmount()'), source.indexO
 assert(unmount.indexOf('stage.replaceChildren()') < unmount.indexOf('dispose?.()'), 'Detach outgoing canvas/iframe/media before resource cleanup');
 assert(unmount.indexOf('pianoControl.replaceChildren()') < unmount.indexOf('dispose?.()'), 'Detach the outgoing toggle before cleanup');
 const pianoMount = source.slice(source.indexOf("if (project.type === 'piano')"), source.indexOf("} else if (project.type === 'newspaper')"));
-assert(pianoMount.indexOf('stage.innerHTML = pianoMarkup') < pianoMount.indexOf('activate ='), 'Real piano markup must be synchronous, before GPU activation');
+assert(pianoMount.includes("stage.insertAdjacentHTML('beforeend', pianoMarkup)") && pianoMount.indexOf("stage.insertAdjacentHTML('beforeend', pianoMarkup)") < pianoMount.indexOf('activate ='), 'Real piano markup must be synchronous, before GPU activation, with the incoming poster retained');
 assert(pianoMount.indexOf('pianoControl.innerHTML = pianoToggle') < pianoMount.indexOf('activate ='), 'The toggle must exist in the switch task');
 assert.match(source, /showcase-piano-control piano-world/, 'Both toggles must receive the hero palette, expanded, hover and focus styles');
 assert(!showcaseStyles.includes('#learner-projects .piano-panel-inner'), 'Projects must use the hero keyboard edge and appearance');
@@ -201,6 +201,14 @@ const hero = await readFile(new URL('../hero-sky.js', import.meta.url), 'utf8');
 const keyboard = await readFile(new URL('../hero-keyboard.js', import.meta.url), 'utf8');
 assert.equal(hero.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], keyboard.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], 'Sky and keyboard must share one song/audio singleton');
 for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.js', 'hero-songs.js', 'hero-piano-voices.js']) {
-  assert.equal(await readFile(new URL(`../${file}`, import.meta.url), 'utf8'), execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '16f98d3'}:${file}`], { cwd: site, encoding: 'utf8' }), `${file}: preserve the existing hero and owner-confirmed music settings`);
+  let current = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+  // Only the first-frame receipt is new; the shared renderer and exact piano
+  // appearance/music/input remain byte-for-byte identical to the approved hero.
+  if (file === 'hero-sky.js') current = current
+    .replace('initHeroSky(root, { onFirstFrame } = {})', 'initHeroSky(root)')
+    .replace('let sized = false, firstFrame = false;\n', '')
+    .replace('  // Showcase readiness only: report a fully sized draw with the sky image ready.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
+    .replace('  sized = rect.width > 0 && rect.height > 0;\n', '');
+  assert.equal(current, execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '16f98d3'}:${file}`], { cwd: site, encoding: 'utf8' }), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }
 console.log('Shared showcase checks passed: exact DARTY URL/hash/single autoplay, click-only iframe, phone gate, teardown, children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

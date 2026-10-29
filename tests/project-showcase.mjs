@@ -108,9 +108,14 @@ async function metrics(page) {
     const root = document.querySelector('[data-showcase]');
     const slide = root.querySelector('[data-project-slide]:not([hidden])');
     const copy = slide?.querySelector('.framework-project-copy');
+    const column = slide?.querySelector('.project-copy-column');
     const media = slide?.querySelector('.framework-project-media');
     const rows = copy?.querySelector('.project-copy-cells');
-    const result = copy?.querySelector('.project-copy-result');
+    const result = column?.querySelector('.project-copy-result');
+    const headingStyle = node => {
+      const css = getComputedStyle(node);
+      return Object.fromEntries(['fontSize', 'fontWeight', 'lineHeight', 'letterSpacing', 'marginTop', 'marginBottom'].map(name => [name, css[name]]));
+    };
     const introImage = slide?.querySelector('.project-intro-image img');
     const frame = root.closest('.framework-panels');
     const stage = root.querySelector('.showcase-stage');
@@ -128,14 +133,18 @@ async function metrics(page) {
         order: [...navigation.children].map(node => [...node.attributes].find(attr => attr.name.startsWith('data-project-'))?.name),
         bottomBars: root.querySelectorAll('.showcase-caption').length,
         textFits: [...navigation.children].every(node => node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1) },
-      copyFits: !copy || [...copy.querySelectorAll('h3, h4, p, a, .project-copy-result')].every(node => {
+      copyFits: !copy || [...(column || copy).querySelectorAll('h3, h4, p, a')].every(node => {
         const box = node.getBoundingClientRect();
-        const card = copy.getBoundingClientRect();
+        const card = node.closest('.project-copy-result, .framework-project-copy').getBoundingClientRect();
         return box.top >= card.top - 1 && box.bottom <= card.bottom + 1 && box.left >= card.left - 1 && box.right <= card.right + 1 && node.scrollWidth <= node.clientWidth + 1;
       }),
       rows: copy?.querySelectorAll('.project-copy-cells > div').length,
       rowLabels: [...(rows?.querySelectorAll('h4') || [])].map(node => node.textContent),
-      result: result && { ...rect(result), separate: result.parentElement === copy && result.previousElementSibling === rows, background: getComputedStyle(result).backgroundColor, color: getComputedStyle(result.querySelector('p')).color, headingColor: getComputedStyle(result.querySelector('h4')).color, copyBackground: getComputedStyle(copy).backgroundColor, rowsBottom: rect(rows).bottom },
+      result: result && { ...rect(result), separate: result.parentElement === column && copy.parentElement === column && result.previousElementSibling === copy,
+        background: getComputedStyle(result).backgroundColor, color: getComputedStyle(result.querySelector('p')).color, headingColor: getComputedStyle(result.querySelector('h4')).color,
+        copyBackground: getComputedStyle(copy).backgroundColor, radius: getComputedStyle(result).borderRadius, copyRadius: getComputedStyle(copy).borderRadius,
+        headingStyle: headingStyle(result.querySelector('h4')), rowHeadingStyles: [...rows.querySelectorAll('h4')].map(headingStyle),
+        columnGap: parseFloat(getComputedStyle(column).rowGap), mediaGap: parseFloat(getComputedStyle(slide).columnGap) },
       introMedia: slide?.dataset.project === 'intro' ? slide.querySelectorAll('iframe, video, audio, canvas, .framework-project-media').length : null,
       introImage: introImage && { ...rect(introImage), count: slide.querySelectorAll('img').length, complete: introImage.complete && introImage.naturalWidth > 0, source: new URL(introImage.currentSrc).pathname },
       frame: frame && rect(frame),
@@ -233,7 +242,7 @@ try {
         } else if (id === 'intro') {
           assert.equal(m.slideCount, 5);
           assert.equal(m.rows, 0);
-          assert.equal(m.result, null);
+          assert.equal(m.result ?? null, null, 'The intro has no result card'); // no column on the intro, so the probe returns undefined
           assert.equal(m.introMedia, 0, 'Intro has no live showcase media');
           assert.equal(m.introImage.count, 1, 'Intro reserves exactly one image');
           assert(m.introImage.complete && m.introImage.width > 100 && m.introImage.height > 100, 'The placeholder/replacement image loads without a broken image');
@@ -244,14 +253,20 @@ try {
         } else {
           assert.equal(m.rows, 3);
           assert.deepEqual(m.rowLabels, ['The goal', 'Developing skills', 'Finding the link']);
-          assert(m.result?.separate && m.result.y >= m.result.rowsBottom - 1, 'Result is a separate cell below the three rows');
+          assert(m.result?.separate, 'Result and copy are sibling cards in the copy column');
+          assert(m.result.columnGap >= 12 && Math.abs(m.result.y - m.copy.bottom - m.result.columnGap) <= 1, 'Result has a clear card gap below the cream copy card');
+          assert(Math.abs(m.result.x - m.copy.x) <= 1 && Math.abs(m.result.width - m.copy.width) <= 1, 'Result and copy cards have the same width and alignment');
+          assert.equal(m.result.radius, m.result.copyRadius, 'Result and copy cards share their corner radius');
+          for (const style of m.result.rowHeadingStyles) assert.deepEqual(m.result.headingStyle, style, 'Result heading matches all three copy headings in size, weight and spacing');
           assert.notEqual(m.result.background, m.result.copyBackground, 'Result has a distinct accent background');
           for (const color of [m.result.color, m.result.headingColor]) assert(contrast(color, m.result.background) >= 4.5, `${label}/${id}: result text contrast`);
           assert(Math.abs(m.slot.height - m.media.height) <= 1, 'Shared cell fills the media slot');
           if (view.width >= 1000) {
+            assert(Math.abs(m.copy.y - m.media.y) <= 1 && Math.abs(m.result.bottom - m.media.bottom) <= 1, 'Copy and result together align with the media top and bottom');
+            assert.equal(m.result.columnGap, m.result.mediaGap, 'Vertical card gap matches the gap beside the media');
             const share = m.media.width / (m.media.width + m.copy.width);
             assert(share >= .64 && share <= .66, `${label}: media gets 64–66% of the slide; media share ${share}`);
-          } else assert(m.media.y >= m.copy.bottom - 1, 'Phone uses ordinary single-column flow');
+          } else assert(m.media.y >= m.result.bottom - 1, 'Phone keeps copy, result and media in ordinary single-column flow');
         }
         if (id === 'football' && view.width === 1440 && view.height === 750) {
           const frameElement = await page.$('iframe');

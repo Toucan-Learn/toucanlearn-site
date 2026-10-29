@@ -54,18 +54,21 @@ const approved = [
 ];
 for (const [index, { html: slide }] of slides.slice(1).entries()) {
   const [heading, label, goal, skills, link, result] = approved[index];
-  const copy = slide.match(/<div class="framework-project-copy subject-card">([\s\S]*?)<\/div>\s*<div class="framework-project-media"/)?.[1];
+  const column = slide.match(/<div class="project-copy-column">([\s\S]*?)\n                <\/div>\s*<div class="framework-project-media"/)?.[1];
+  assert(column, `${heading}: missing copy column`);
+  const copy = column.match(/<div class="framework-project-copy subject-card">([\s\S]*?)\n                  <\/div>/)?.[1];
   assert(copy, `${heading}: missing shared copy card`);
-  assert.equal(text(copy), `${label} ${heading} The goal ${goal} Developing skills ${skills} Finding the link ${link} The result ${result}`, `${heading}: exact approved copy and labels, with no extra words or hints`);
+  assert.equal(text(column), `${label} ${heading} The goal ${goal} Developing skills ${skills} Finding the link ${link} The result ${result}`, `${heading}: exact approved copy and labels, with no extra words or hints`);
   const cells = copy.match(/<div class="project-copy-cells">([\s\S]*?)\n\s*<\/div>/)?.[1];
   assert(cells, `${heading}: missing copy rows`);
   assert.deepEqual([...cells.matchAll(/<div><h4>([^<]+)<\/h4><p>([^<]+)<\/p><\/div>/g)].map(([, label, body]) => [label, body]), [
     ['The goal', goal], ['Developing skills', skills], ['Finding the link', link],
   ], `${heading}: three labelled rows`);
   assert(!cells.includes('project-copy-result'), `${heading}: result is outside the teaching rows`);
-  assert(copy.includes(`</div>\n                  <div class="project-copy-result"><h4>The result</h4><p>${result}</p></div>`), `${heading}: result is its own cell below the rows`);
-  assert.equal((copy.match(/class="project-copy-result"/g) || []).length, 1, `${heading}: exactly one result cell`);
-  assert(!/<a\b/.test(copy), `${heading}: the shared header enquiry replaces per-card lesson links`);
+  assert(!copy.includes('project-copy-result'), `${heading}: result is outside the cream copy card`);
+  assert(column.includes(`</div>\n                  <div class="project-copy-result"><h4>The result</h4><p>${result}</p></div>`), `${heading}: result is a sibling card immediately after the copy card`);
+  assert.equal((column.match(/class="project-copy-result"/g) || []).length, 1, `${heading}: exactly one result card`);
+  assert(!/<a\b/.test(column), `${heading}: the shared header enquiry replaces per-card lesson links`);
   for (const [, url] of slide.matchAll(/(?:src|href)="([^"]+)"/g)) {
     assert(!/^(?:https?:|\/\/|data:)/i.test(url), `External project asset: ${url}`);
     assert((await stat(path.resolve(site, url.split(/[?#]/)[0]))).isFile(), `Missing project asset: ${url}`);

@@ -87,17 +87,19 @@
 #learner-projects .showcase-stage .piano-world { overflow: clip; min-height: 0; }
 #learner-projects .showcase-cell .piano-panel { inset: auto -1px 0; max-height: 100%; }
 #learner-projects .project-note { grid-column: 1 / -1; }
-/* A separate accent cell closes each project's three teaching rows. */
-#learner-projects .project-copy-result { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #d8e7de; color: #142f3a; }
-#learner-projects .project-copy-result h4 { margin: 0 0 3px; color: #0b3f51; font-size: .85rem; line-height: 1.3; }
+/* Two separate cards fill the copy column, with the payoff anchored at its foot. */
+#learner-projects .project-copy-column { display: grid; grid-template-rows: 1fr auto; gap: 12px; min-width: 0; align-self: stretch; }
+#learner-projects .project-copy-result { margin: 0; padding: 14px; border: 1px solid #e4be7840; border-radius: var(--radius-md, 16px); background: #0a272c; color: #f5f0e6; overflow-wrap: break-word; }
+#learner-projects :is(.project-copy-cells, .project-copy-result) h4 { margin: 0 0 3px; font-size: .85rem; font-weight: 700; line-height: 1.3; letter-spacing: normal; }
+/* The newspaper's warm gold accent, on a contrasting deep teal. */
+#learner-projects .project-copy-result h4 { color: #e4be78; }
 #learner-projects .project-copy-result p { margin: 0; color: inherit; }
+#learner-projects .project-copy-cells { margin-bottom: 0; }
 #learner-projects .framework-project-copy { overflow-wrap: break-word; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) #learner-projects .project-copy-result { background: #305b58; color: #f5f0e6; }
-  :root:not([data-theme="light"]) #learner-projects .project-copy-result h4 { color: #f5f0e6; }
+  :root:not([data-theme="light"]) #learner-projects .project-copy-result { background: #071f25; }
 }
-:root[data-theme="dark"] #learner-projects .project-copy-result { background: #305b58; color: #f5f0e6; }
-:root[data-theme="dark"] #learner-projects .project-copy-result h4 { color: #f5f0e6; }
+:root[data-theme="dark"] #learner-projects .project-copy-result { background: #071f25; }
 /* Intro follows the same copy-left, media-right order as the four projects. */
 #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); grid-template-rows: minmax(0, 1fr); gap: 12px; align-items: stretch; }
 #learner-projects .project-intro-image { position: relative; grid-area: 1 / 2; min-width: 0; min-height: 240px; overflow: hidden; border-radius: 16px; background: #d8e7de; }
@@ -115,6 +117,7 @@
   #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto; }
   #learner-projects .project-intro-image { grid-area: auto; min-height: 0; height: clamp(160px, 45vw, 240px); }
   #learner-projects .framework-project--intro .framework-project-copy.subject-card { grid-area: auto; }
+  #learner-projects .project-copy-column { grid-template-rows: auto auto; font-size: .95rem; line-height: 1.45; }
 }
 @media screen and (min-width: 1000px) and (max-width: 1199px) {
   /* Give the heading room on narrow desktop frames while retaining one shared CTA. */
@@ -133,14 +136,14 @@
   body[data-page-frame] #learner-projects .project-note { grid-column: 1 / -1; grid-row: 3; }
   /* At 1440px this gives the iframe about 590px, above its 460px phone breakpoint. */
   body[data-page-frame] #learner-projects .framework-project { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); column-gap: 12px; }
-  body[data-page-frame] #learner-projects .framework-project:not(.framework-project--intro) .framework-project-copy { align-self: start; padding: 8px 10px; font-size: clamp(.8125rem, 1.75vh, .85rem); line-height: 1.34; }
+  body[data-page-frame] #learner-projects .project-copy-column { font-size: clamp(.8125rem, 1.75vh, .85rem); line-height: 1.34; }
+  body[data-page-frame] #learner-projects .framework-project:not(.framework-project--intro) .framework-project-copy { align-self: stretch; padding: 8px 10px; font-size: inherit; line-height: inherit; }
   body[data-page-frame] #learner-projects .project-label { margin-bottom: 3px; }
   body[data-page-frame] #learner-projects .framework-project-copy h3 { margin-bottom: 5px; font-size: clamp(1.125rem, 2.6vh, 1.35rem); }
-  body[data-page-frame] #learner-projects .project-copy-cells { gap: 0; margin-bottom: 4px; }
+  body[data-page-frame] #learner-projects .project-copy-cells { gap: 0; margin-bottom: 0; }
   body[data-page-frame] #learner-projects .project-copy-cells > div { padding-block: 3px; }
-  body[data-page-frame] #learner-projects .project-copy-cells h4 { margin-bottom: 1px; font-size: .775rem; line-height: 1.25; }
-  body[data-page-frame] #learner-projects .project-copy-result { margin-bottom: 6px; padding: 6px 8px; }
-  body[data-page-frame] #learner-projects .project-copy-result h4 { margin-bottom: 2px; font-size: .775rem; line-height: 1.25; }
+  body[data-page-frame] #learner-projects :is(.project-copy-cells, .project-copy-result) h4 { margin-bottom: 1px; font-size: .775rem; line-height: 1.25; }
+  body[data-page-frame] #learner-projects .project-copy-result { padding: 8px 10px; }
   body[data-page-frame] #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 7fr) minmax(0, 13fr); }
 }
 @media (min-width: 1550px) { [data-showcase] { --showcase-height: 540px; } }
@@ -156,6 +159,8 @@
 @media print {
   .showcase-cell, .showcase-navigation { display: none !important; }
   [data-showcase][data-enhanced] .showcase-fallback { display: block !important; height: auto !important; position: static !important; }
+  #learner-projects .project-copy-result { background: #fff !important; color: #000; border-color: #aaa; break-inside: avoid; }
+  #learner-projects .project-copy-result h4 { color: #000; }
 }
 /* Earlier back-page image rules also reach nested art: keep the mascot's real
    proportions and let media previews fill the available stage. */

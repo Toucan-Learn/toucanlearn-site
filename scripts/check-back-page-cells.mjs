@@ -9,7 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const site = fileURLToPath(new URL('../', import.meta.url));
-const before = '951cb4a'; // The clean worktree supplied for this task, never a moving HEAD.
+const before = process.env.CELLS_BASE || '951cb4a'; // The clean worktree supplied for this task (CELLS_BASE: the merged site it now sits on), never a moving HEAD.
 const files = ['approach.html', 'children.html', 'adults.html', 'subjects.html'];
 const original = file => execFileSync('git', ['show', `${before}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 const words = html => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();

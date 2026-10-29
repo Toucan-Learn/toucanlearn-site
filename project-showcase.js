@@ -1,4 +1,4 @@
-import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-frames-360';
+import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-drink-carry-1';
 import { initHeroSky } from './hero-sky.js?v=20261029-piano-3';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
@@ -14,7 +14,7 @@ export const projects = [
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
-export const sectionProjects = [{ id: 'intro', name: '', type: 'intro' }, ...projects];
+export const sectionProjects = [{ id: 'intro', name: 'Intro', type: 'intro' }, ...projects];
 
 // Owner, 28 Oct 2026: "lets have piano as the 1st in the carousel on the frontpage for now".
 // Set to null to go back to a random project on each homepage load.
@@ -158,9 +158,19 @@ export function initShowcase(root) {
   cell.className = 'showcase-cell';
   cell.innerHTML = '<div class="showcase-stage"></div><div class="showcase-caption"><button type="button" data-project-prev aria-label="Previous project">←</button><span class="showcase-name" data-project-name></span><span class="showcase-piano-control piano-world"></span><span data-project-status aria-live="polite" aria-atomic="true"></span><button type="button" data-project-next aria-label="Next project">→</button></div>';
   const stage = cell.querySelector('.showcase-stage');
-  const name = cell.querySelector('[data-project-name]');
-  const status = cell.querySelector('[data-project-status]');
+  const navigation = cell.querySelector('.showcase-caption');
+  const name = navigation.querySelector('[data-project-name]');
+  const status = navigation.querySelector('[data-project-status]');
   const pianoControl = cell.querySelector('.showcase-piano-control');
+  if (!automatic) {
+    // One permanent header control for all five slides; only its text changes.
+    navigation.className = 'showcase-navigation';
+    navigation.setAttribute('role', 'group');
+    navigation.setAttribute('aria-label', 'Choose a learner project');
+    root.querySelector('.section-head').append(navigation);
+    // The piano keeps its own toggle over the sky, outside the slide navigation.
+    cell.append(pianoControl);
+  }
   root.tabIndex = 0;
   root.setAttribute('role', 'region');
   root.setAttribute('aria-roledescription', 'carousel');
@@ -314,7 +324,7 @@ export function initShowcase(root) {
   }
   function show(requestedIndex) {
     const nextIndex = (requestedIndex + entries.length) % entries.length;
-    if (cell.contains(document.activeElement) && !document.activeElement.closest('.showcase-caption')) root.focus({ preventScroll: true });
+    if (cell.contains(document.activeElement) && !navigation.contains(document.activeElement)) root.focus({ preventScroll: true });
     if (slides.some(slide => slide.dataset.project !== entries[nextIndex].id && slide.contains(document.activeElement))) root.focus({ preventScroll: true });
     unmount();
     index = nextIndex;
@@ -332,8 +342,8 @@ export function initShowcase(root) {
     timer.reset();
     sync();
   }
-  cell.querySelector('[data-project-prev]').addEventListener('click', () => show(index - 1));
-  cell.querySelector('[data-project-next]').addEventListener('click', () => show(index + 1));
+  navigation.querySelector('[data-project-prev]').addEventListener('click', () => show(index - 1));
+  navigation.querySelector('[data-project-next]').addEventListener('click', () => show(index + 1));
   activityTypes.forEach(type => root.addEventListener(type, activity, { passive: true }));
   root.addEventListener('showcase:activity', activity);
   root.addEventListener('pointerdown', event => pointers.add(event.pointerId));

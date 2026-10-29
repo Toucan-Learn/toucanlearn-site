@@ -234,6 +234,11 @@ try {
   const still = button.dataset.turns; domClock.tick(32000);
   assert.equal(button.dataset.turns, still); assert.equal(domClock.pending(), 0);
   const lastGood = [...button.children]; viewer.destroy();
+  // The shared showcase keeps its project-specific preview underneath the spin.
+  // It must not be mistaken for the outgoing viewer when carrying a frame.
+  const preview = new Element('img');
+  preview.decoded = true;
+  screen.replaceChildren(preview, button);
   const requested = images.length;
   const fizzy = createDrinkSpin(screen, { id: 'fizzy', name: 'Fizzy' }, { clock: domClock, reduced: true });
   fizzy.setActive(true); await flush();

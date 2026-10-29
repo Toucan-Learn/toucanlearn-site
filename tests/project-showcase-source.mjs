@@ -18,7 +18,7 @@ const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } 
 await import('./drink-spin-source.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 assert.deepEqual(sectionProjects.map(project => project.id), ['intro', ...projects.map(project => project.id)], 'Only the children’s carousel has a fifth slide');
-assert.deepEqual(sectionProjects[0], { id: 'intro', name: '', type: 'intro' }, 'The intro keeps its HTML photo slot and adds no caption copy or live media');
+assert.deepEqual(sectionProjects[0], { id: 'intro', name: 'Intro', type: 'intro' }, 'The intro keeps its HTML photo slot and has a name in the shared header control');
 assert.deepEqual(sectionProjects.slice(1), projects, 'Both carousels keep the same four project media records');
 assert.deepEqual(projects.find(project => project.id === 'drinks').drinks.map(({ name, lines }) => ({ name, lines })), [
   { name: 'Skids', lines: ["When you're in a rush, have some Skids."] },

@@ -123,7 +123,9 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   button.dataset.active = 'false';
   button.dataset.ready = 'false';
   // Carry the last decoded pair across drink switches until the new poster is ready.
-  const previous = screen.children[0];
+  // A project preview may precede the viewer. Carry the viewer's decoded pair,
+  // never the preview (which has no children of its own).
+  const previous = [...screen.children].find(child => child.className === 'drink-spin');
   if (previous) button.append(...previous.children);
   screen.replaceChildren(button);
   const url = file => `${base}${file}?v=${assetVersion}`;

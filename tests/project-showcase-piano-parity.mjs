@@ -22,6 +22,9 @@ export async function capturePianoParity(page) {
   const sheet = await page.addStyleTag({ url: new URL('tests/fixtures/piano-parity.css', page.url()).href });
   try {
     await page.keyboard.press('Tab'); // Compare real :focus-visible styling on both routes.
+    // A real phone tap can leave a sticky :hover on one route's toggle. Move
+    // the pointer away on BOTH routes before comparing the same control state.
+    await page.mouse.move(0, 0);
     return await page.evaluate(async path => {
       const api = await import(path);
       // Reset to the same first attack without touching song or voice settings.

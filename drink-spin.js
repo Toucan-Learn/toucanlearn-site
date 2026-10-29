@@ -6,7 +6,7 @@ export function frameBlend(turns, count) {
   const lower = Math.floor(position);
   return { lower, upper: (lower + 1) % count, mix: position - lower };
 }
-const assetVersion = '20261029-smooth-1';
+const assetVersion = '20261029-drag-1';
 
 export function spinMotion({ draw, clock = globalThis, reduced = false }) {
   const revolution = 16000; // Owner's chosen idle direction (positive turns).

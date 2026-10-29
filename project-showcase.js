@@ -1,10 +1,10 @@
-import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-dir-1';
+import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-drag-1';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
   { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-newspaper.webp', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/index.html#football' },
   { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp', alt: 'DARTY football gameplay', type: 'gallery', images: [1, 2, 3, 4].map(n => `assets/projects/darty-still-0${n}.webp`) },
-  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-smooth-1', alt: 'Skids drink design', type: 'drinks', drinks: [
+  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-drag-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red.', 'Fizzy, extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['Designed for everyone.'] },

@@ -2,6 +2,6 @@
   "frameCount": 120,
   "width": 1200,
   "height": 900,
-  "dragDirection": 1,
+  "dragDirection": -1,
   "temporary": false
 }

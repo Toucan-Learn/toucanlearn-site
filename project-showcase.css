@@ -19,8 +19,31 @@
 .showcase-caption > button { flex: 0 0 32px; align-self: stretch; padding: 0; font-size: 18px; }
 .showcase-caption button:hover, .showcase-stage .screenshot-gallery-controls button:hover { color: #efac8e; background: #103138; }
 .showcase-cell button:focus-visible { outline: 2px solid #efac8e; outline-offset: -3px; }
-.showcase-cell .showcase-match-play { position: absolute; top: 50%; left: 50%; display: flex; align-items: center; gap: 10px; transform: translate(-50%, -50%); min-height: 56px; padding: 12px 24px; border: 2px solid #f0ebe0; border-radius: 999px; color: #f0ebe0; background: #0b2228; font-size: 18px; box-shadow: 0 4px 20px #0008; }
-.showcase-cell .showcase-match-play:hover { color: #efac8e; background: #103138; }
+/* Keep number 2 clear on the left; the play menu sits in the shaded right. */
+[data-showcase][data-project="darty"] .showcase-stage > .showcase-preview { object-fit: cover; }
+.showcase-darty-title { position: absolute; inset: 0; isolation: isolate; overflow: hidden; border-radius: 14px 14px 0 0; container-type: inline-size; }
+.showcase-darty-title::after { content: ''; position: absolute; z-index: -1; inset: 0; background: linear-gradient(90deg, transparent 30%, #07121944 48%, #071219d9 100%), linear-gradient(0deg, #07121999, transparent 70%); pointer-events: none; }
+.showcase-stage .showcase-darty-title > .showcase-preview { position: absolute; z-index: -2; inset: 0; display: block; width: 100%; height: 100%; max-height: none; object-fit: cover; border-radius: 0; transform-origin: 37% 50%; }
+@media (prefers-reduced-motion: no-preference) {
+  .showcase-darty-title > .showcase-preview { animation: showcase-darty-zoom 24s ease-in-out infinite alternate; animation-play-state: paused; }
+  .showcase-darty-title[data-active="true"][data-ready] > .showcase-preview { animation-play-state: running; }
+}
+@keyframes showcase-darty-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.035); }
+}
+.showcase-darty-heading { position: absolute; inset: 0 5% 0 54%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 18px; padding-block: 24px; text-align: left; }
+.showcase-darty-wordmark { display: block; color: #e8642c; font-size: clamp(40px, 11cqw, 82px); font-weight: 900; font-style: italic; line-height: 1; letter-spacing: .025em; text-shadow: 0 3px 0 #793318, 0 8px 24px #0008; }
+.showcase-cell .showcase-darty-subtitle { margin: 0; color: #fff7e9; font-size: clamp(11px, 2.3cqw, 14px); font-weight: 500; line-height: 1.4; letter-spacing: .04em; text-shadow: 0 2px 6px #000; }
+.showcase-cell .showcase-match-play { display: block; width: 240px; max-width: 100%; min-height: 58px; padding: 14px 24px; border: 2px solid #fff7e9; border-radius: 4px; color: #10232a; background: #fff7e9; font-size: 19px; font-weight: 800; line-height: 1.2; box-shadow: 0 4px 20px #0005; }
+.showcase-cell .showcase-match-play:hover { color: #10232a; background: #ffe0c0; border-color: #ffe0c0; }
+.showcase-cell .showcase-match-play:focus-visible { outline: 3px solid #fff7e9; outline-offset: 5px; box-shadow: 0 0 0 5px #10232a; }
+.showcase-cell .showcase-match-mute { display: grid; place-items: center; width: 36px; height: 36px; padding: 6px; border: 1px solid #adc4b566; border-radius: 4px; color: #fff7e9; background: #0b2228; }
+.showcase-cell .showcase-match-mute:hover { background: #103138; }
+.showcase-cell .showcase-match-mute:focus-visible { outline: 2px solid #fff7e9; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .showcase-darty-title > .showcase-preview { animation: none; transform: none; }
+}
 .showcase-caption [data-project-status] { min-width: 0; color: #c5d5ca; font-size: 11px; font-weight: 400; white-space: nowrap; }
 .showcase-cell .piano-toggle { display: flex; align-items: center; justify-content: center; gap: 6px; width: auto; min-height: 36px; padding: 0 8px; border: 0; border-radius: 4px; font-size: 12px; }
 .showcase-cell .piano-toggle svg { width: 18px; }
@@ -85,6 +108,7 @@
 #learner-projects .showcase-piano-control { position: absolute; z-index: 5; top: 8px; right: 8px; font-size: 12px; line-height: 1.2; }
 /* Back-page paragraph spacing must not reach the cloned keyboard. */
 #learner-projects .piano-world :is(.piano-hint, .piano-credit) { margin: 0; }
+#learner-projects .showcase-darty-subtitle { margin: 0; }
 #learner-projects .framework-project-media > .showcase-cell { height: var(--project-media-height); }
 #learner-projects [data-showcase][data-enhanced] .framework-project-media { overflow: visible; }
 #learner-projects .showcase-stage > img,
@@ -174,7 +198,9 @@
    proportions and let media previews fill the available stage. */
 body[data-page-frame] #learner-projects .showcase-stage > img,
 body[data-page-frame] #learner-projects .showcase-stage .screenshot-gallery img,
+body[data-page-frame] #learner-projects .showcase-stage .showcase-darty-title img,
 body[data-page-frame] #learner-projects .showcase-drink-screen img { width: 100%; height: 100%; max-height: none; }
+body[data-page-frame] #learner-projects .showcase-stage .showcase-darty-title img,
 body[data-page-frame] #learner-projects .showcase-drink-screen img,
 body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallback { object-fit: cover; object-position: center; }
 #learner-projects .showcase-stage .piano-world .hero-mascot { width: 51%; height: auto; max-height: none; border-radius: 0; object-fit: fill; }

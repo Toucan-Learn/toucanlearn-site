@@ -15,13 +15,15 @@ const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString(
 const matchSource = await readFile(new URL('../darty-match.js', import.meta.url), 'utf8');
 const matchModule = `data:text/javascript;base64,${Buffer.from(matchSource).toString('base64')}`;
 const { dartyMatchURL } = await import(matchModule);
-assert.equal(Buffer.byteLength(dartyMatchURL), 64517, 'Preserve the complete owner-approved match URL');
-assert.equal(createHash('sha256').update(dartyMatchURL).digest('hex'), '7374d72541033e56e4317ad704214bb53478a4dd0c346b712a16e87283f5c468', 'Match URL must be verbatim from outputs/darty-embed/match-url.txt');
+assert.equal(Buffer.byteLength(dartyMatchURL), 64513, 'Preserve the complete owner-approved match URL');
+assert.equal(createHash('sha256').update(dartyMatchURL).digest('hex'), 'ec050c4f3a828ae371ebcd1e9c84f601314450df099d8f79752930990ddcd32b', 'Preserve the owner-approved match URL with volume 30 and a fresh random seed');
 const matchURL = new URL(dartyMatchURL);
 assert.equal(matchURL.origin, 'https://joshtoucanlearn.github.io');
 assert.equal(matchURL.pathname, '/darty/match-engine/match.html');
 assert.deepEqual(matchURL.searchParams.getAll('autoplay'), ['1'], 'DARTY requires exactly one autoplay=1');
-for (const [key, value] of Object.entries({ simulationSeed: '1713525629', weather: 'overcast', matchMinutes: '6', clean: '1', director: 'showcase', commentary: '0' })) assert.equal(matchURL.searchParams.get(key), value);
+assert.deepEqual(matchURL.searchParams.getAll('simulationSeed'), ['random'], 'Each DARTY load requests a fresh random match');
+assert.equal(createHash('sha256').update(matchURL.hash.slice(1)).digest('hex'), '23ae1c7f971bd722b9830a21820ebbae41f4984829846425c1981e8f2a5f7724', 'Keep the complete flMatch fragment byte-identical');
+for (const [key, value] of Object.entries({ volume: '30', weather: 'overcast', matchMinutes: '6', clean: '1', director: 'showcase', commentary: '0' })) assert.equal(matchURL.searchParams.get(key), value);
 assert.match(source, /matchMedia\('\(max-width: 767px\), \(pointer: coarse\) and \(hover: none\)'\)/, 'Phones and touch-only devices keep stills');
 assert.match(source, /const interactive = '[^']*iframe/, 'The iframe keeps its own input');
 const liveMatch = source.split("project.type === 'gallery' && !stillsOnly.matches")[1].split("else if (project.type === 'gallery')")[0];
@@ -33,18 +35,43 @@ assert.match(liveMatch, /setAttribute\('sandbox', 'allow-scripts allow-same-orig
 assert.match(liveMatch, /setAttribute\('allow', 'autoplay; fullscreen'\)/);
 assert.match(liveMatch, /frame\.loading = 'eager'/);
 assert.match(liveMatch, /frame\.title = 'DARTY CPU vs CPU football match'/);
-assert.match(liveMatch, /dispose = \(\) => stop\(false\)/, 'Unmount cleanup must not restore outgoing media');
-assert(liveMatch.indexOf('if (!restore) return;') < liveMatch.indexOf('stage.replaceChildren(preview(project), play)'), 'Only visibility teardown restores the poster');
-assert.match(liveMatch, /dispose\.setActive = active => \{ if \(!active\) stop\(\); \}/);
+assert.match(liveMatch, /dispose = \(\) => \{[^}]*stop\(false\)/, 'Unmount cleanup must not restore outgoing media');
+assert(liveMatch.indexOf('if (!restore) return;') < liveMatch.indexOf('stage.replaceChildren(title)'), 'Only visibility teardown restores the title card');
+assert.match(liveMatch, /dispose\.setActive = active => \{[\s\S]*if \(!active\) stop\(\);/);
 assert.match(liveMatch, /dispose\.isPlaying = \(\) => Boolean\(frame\)/);
-assert.match(source, /stillsOnly\.addEventListener\('change', \(\) => \{\s*if \(entries\[index\]\.type !== 'gallery'\) return;/, 'Breakpoint changes use the current carousel entries, including the children-only intro');
+assert.match(source, /stillsOnly\.addEventListener\('change', \(\) => \{[\s\S]*?if \(entries\[index\]\.type !== 'gallery'\) return;/, 'Breakpoint changes use the current carousel entries, including the children-only intro');
 // Policy imports run without a DOM; browser suites exercise the real sky module.
 const skyURL = `data:text/javascript,export function initHeroSky(){throw new Error('Unexpected DOM mount in policy test')}`;
 const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL))
   .replace(/(['"])\.\/darty-match\.js(?:\?[^'"]*)?\1/, JSON.stringify(matchModule))
   .replace(/(['"])\.\/hero-sky\.js(?:\?[^'"]*)?\1/, JSON.stringify(skyURL));
 const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
+const darty = projects.find(project => project.id === 'darty');
+assert.equal(darty.images.length, 9);
+assert.equal(darty.poster, darty.images[0]);
+assert.equal(darty.titleStill, darty.images[6], 'Desktop uses the number 2 floodlit still');
+assert(!source.includes('showcase-darty-stills') && !showcaseStyles.includes('showcase-darty-still'), 'Remove the title slideshow code and styles');
+const zoom = showcaseStyles.match(/@keyframes showcase-darty-zoom\s*\{\s*from\s*\{([^}]+)\}\s*to\s*\{([^}]+)\}\s*\}/);
+assert(zoom && zoom.slice(1).every(frame => /^\s*transform:\s*scale\([\d.]+\);\s*$/.test(frame)), 'Title zoom animates only CSS transforms');
+const approvedStillHashes = [
+  'faa5316951d954e0a291949f609eb555dfb02e07089723ce20a0cc7f5e203b59',
+  '6f14a4652454b271086a6abea74c83ab5d3612a0e8ba61ac7ce7ec7546f8ecc3',
+  'd2bd13d9ca4ac685127f92adb6aaaf16b6c93d9b96a181796f57b92033c792a3',
+  'e4f7015c8bc0ea0d4e77daf26323fd63e0a5dfa3cf23b69dba308e614dde081f',
+  'a4be52d994149fa9027130a62a556053474306b141c7b8390218c91064587fe8',
+  'e9f37d49775a7868e3b4fcbf5bffaf7c33786dc19e06986c1e3e9ce1d6e366e8',
+  '6c20a858e05c57a2b8216c659d4f7eaaef9ba536da5e39dcc21642d709b7c619',
+  '346b3445bdb615b01a2cb20853d140e34496e4423d042e4f91e80476d1fd7d10',
+  '0461c313fd8721a66acad3382d7b7bb473c8bc732ef2e220cf4f742dc4799e6a',
+];
+for (const [i, src] of darty.images.entries()) {
+  const url = new URL(`../${src}`, import.meta.url);
+  assert(url.pathname.endsWith(`/assets/projects/darty-still-0${i + 1}.webp`));
+  assert.equal(url.searchParams.get('v'), '20261029-darty-title-3', 'Replaced stills need a fresh cache token');
+  assert.equal(createHash('sha256').update(await readFile(url)).digest('hex'), approvedStillHashes[i], `Still ${i + 1} must match the approved day/night image byte for byte`);
+}
 await import('./drink-spin-source.mjs');
+await import('./darty-title-lifecycle.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 assert.deepEqual(sectionProjects.map(project => project.id), ['intro', ...projects.map(project => project.id)], 'Only the children’s carousel has a fifth slide');
 assert.deepEqual(sectionProjects[0], { id: 'intro', name: 'Intro', type: 'intro' }, 'The intro keeps its HTML photo slot and has a name in the shared header control');
@@ -164,6 +191,7 @@ const belowHero = html => html.slice(html.indexOf('<section class="homepage-sect
 assert.equal(withoutOwnerContent(homeNavigationMarkup(belowHero(after))), withoutOwnerContent(homeNavigationMarkup(belowHero(before))), 'Homepage content below the hero (outside the owner-managed team section) is preserved through the URL migration');
 
 const children = await readFile(new URL('../children.html', import.meta.url), 'utf8');
+assert(children.includes(`src="${darty.poster}" alt="${darty.alt}" width="1600" height="900"`), 'Children fallback uses the new poster, night alt text and real dimensions');
 assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), sectionProjects.map(project => project.id), 'The intro precedes all four matching copy cards');
 assert(!/data-project="intro"|Learning is easier when you enjoy it\./.test(after), 'The homepage has no intro slide');
 for (const asset of ['css', 'js']) {

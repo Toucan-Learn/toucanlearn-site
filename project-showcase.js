@@ -1,11 +1,13 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-spin-progressive-1';
 import { initHeroSky } from './hero-sky.js?v=20261029-first-paint-1';
-import { dartyMatchURL } from './darty-match.js?v=20261029-darty-card-1';
+import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
+
+const dartyStills = [1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `assets/projects/darty-still-0${n}.webp?v=20261029-darty-title-3`);
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
   { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-newspaper.webp', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
-  { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp', alt: 'DARTY football gameplay', type: 'gallery', images: [1, 2, 3, 4].map(n => `assets/projects/darty-still-0${n}.webp`) },
+  { id: 'darty', name: 'DARTY', poster: dartyStills[0], titleStill: dartyStills[6], alt: 'DARTY night football match with stylised players on a green pitch', type: 'gallery', images: dartyStills },
   { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-spin-ready-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
@@ -148,12 +150,19 @@ export function initShowcase(root) {
   let activate = null;
   // Warm the small, project-specific stills before navigation. Never borrow an
   // outgoing project's decoded media while an incoming view becomes ready.
+  const previewDecodes = new WeakMap();
+  const warmPreview = (project, img) => {
+    img.src = project.titleStill && !stillsOnly.matches ? project.titleStill : project.poster;
+    const decoded = img.decode();
+    previewDecodes.set(img, decoded);
+    void decoded.catch(() => {});
+  };
   const previews = new Map(entries.filter(project => project.poster).map(project => {
     const img = new Image();
-    img.src = project.poster;
+    if (project.titleStill) { img.decoding = 'async'; img.width = 1600; img.height = 900; }
     img.alt = project.alt;
     img.className = 'showcase-preview';
-    void img.decode().catch(() => {});
+    warmPreview(project, img);
     return [project.id, img];
   }));
   const pointers = new Set();
@@ -281,43 +290,82 @@ export function initShowcase(root) {
       };
       afterPaint();
     } else if (project.type === 'gallery' && !stillsOnly.matches) {
-      const play = document.createElement('button');
-      play.type = 'button';
-      play.className = 'showcase-match-play';
-      play.dataset.dartyPlay = '';
-      play.setAttribute('aria-label', 'Play DARTY CPU vs CPU match');
-      play.innerHTML = '<svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" focusable="false"><path d="M7 3v18l15-9z" fill="currentColor"/></svg><span>Play</span>';
+      const title = document.createElement('div');
+      title.className = 'showcase-darty-title';
+      title.innerHTML = '<div class="showcase-darty-heading"><strong class="showcase-darty-wordmark">DARTY</strong><p class="showcase-darty-subtitle">CPU vs CPU · live match</p><button class="showcase-match-play" type="button" data-darty-play>Press to play</button></div>';
+      const play = title.querySelector('[data-darty-play]');
+      // Reuse the warmed still under the title and the loading match. There is
+      // one backdrop throughout, so Play and teardown never swap photographs.
+      const backdrop = preview(project);
+      backdrop.alt = '';
+      backdrop.setAttribute('aria-hidden', 'true');
+      title.prepend(backdrop);
+      void previewDecodes.get(backdrop).then(() => {
+        if (token === generation) title.dataset.ready = '';
+      }).catch(() => {});
       let frame = null;
+      let muted = false;
+      const mute = document.createElement('button');
+      mute.type = 'button';
+      mute.className = 'showcase-match-mute';
+      mute.dataset.dartyMute = '';
+      const drawMute = () => {
+        mute.setAttribute('aria-pressed', String(muted));
+        mute.setAttribute('aria-label', muted ? 'Unmute DARTY match' : 'Mute DARTY match');
+        mute.innerHTML = `<svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false"><path d="M11 4 5 9H2v6h3l6 5z" fill="currentColor"/><path d="${muted ? 'm16 8 6 8m0-8-6 8' : 'M15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14'}" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>`;
+      };
+      mute.addEventListener('click', () => {
+        if (!frame) return;
+        muted = !muted;
+        frame.contentWindow.postMessage({ source: 'toucan-showcase', type: 'darty-mute', muted }, 'https://joshtoucanlearn.github.io');
+        drawMute();
+      });
       const stop = (restore = true) => {
         if (!frame) return;
-        const focused = document.activeElement === frame;
+        const focused = document.activeElement === frame || document.activeElement === mute;
         frame.remove();
         frame = null;
+        pianoControl.replaceChildren();
         if (!restore) return;
-        stage.replaceChildren(preview(project), play);
+        title.prepend(backdrop);
+        stage.replaceChildren(title);
         if (focused && visible() && inView) play.focus({ preventScroll: true });
       };
       play.addEventListener('click', () => {
         if (token !== generation || frame || !inView || !visible() || stillsOnly.matches) return;
         const focused = document.activeElement === play;
+        title.dataset.active = 'false';
         frame = document.createElement('iframe');
-        frame.className = 'showcase-match';
+        frame.className = 'showcase-match showcase-live';
         frame.title = 'DARTY CPU vs CPU football match';
         frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
         frame.setAttribute('allow', 'autoplay; fullscreen');
         frame.loading = 'eager';
+        const loadingFrame = frame;
+        frame.addEventListener('load', () => {
+          if (frame !== loadingFrame) return;
+          mute.disabled = false;
+          reveal(loadingFrame, token);
+        }, { once: true });
         frame.src = dartyMatchURL;
-        stage.replaceChildren(frame);
+        stage.replaceChildren(preview(project), frame);
+        muted = false;
+        mute.disabled = true;
+        drawMute();
+        pianoControl.replaceChildren(mute);
         // The keyup/pointerup can land inside the cross-origin document.
         held.clear();
         pointers.clear();
         if (focused) frame.focus({ preventScroll: true });
         activity();
       });
-      stage.append(play);
+      stage.replaceChildren(title);
       // unmount() already detached the media; cleanup must not reattach it.
-      dispose = () => stop(false);
-      dispose.setActive = active => { if (!active) stop(); };
+      dispose = () => { title.dataset.active = 'false'; stop(false); };
+      dispose.setActive = active => {
+        title.dataset.active = String(active && !frame && !motion.matches);
+        if (!active) stop();
+      };
       // Cross-origin input cannot bubble here. Keep the card for the match.
       dispose.isPlaying = () => Boolean(frame);
     } else if (project.type === 'gallery') {
@@ -325,13 +373,13 @@ export function initShowcase(root) {
       gallery.className = 'screenshot-gallery';
       gallery.dataset.screenshotGallery = '';
       gallery.setAttribute('role', 'group');
-      gallery.setAttribute('aria-label', 'DARTY gameplay screenshots');
-      gallery.innerHTML = '<img data-screenshot width="960" height="540"><div class="screenshot-gallery-controls"><span data-screenshot-status aria-live="polite"></span><button type="button" data-screenshot-next>Next image <span aria-hidden="true">→</span></button></div>';
+      gallery.setAttribute('aria-label', 'DARTY night match screenshots');
+      gallery.innerHTML = '<img data-screenshot width="1600" height="900"><div class="screenshot-gallery-controls"><span data-screenshot-status aria-live="polite"></span><button type="button" data-screenshot-next>Next image <span aria-hidden="true">→</span></button></div>';
       let image = 0;
       const draw = () => {
         const img = gallery.querySelector('img');
         img.src = project.images[image];
-        img.alt = `DARTY football gameplay screenshot ${image + 1}`;
+        img.alt = `${project.alt} · screenshot ${image + 1} of ${project.images.length}`;
         gallery.querySelector('[data-screenshot-status]').textContent = `Gameplay screenshots · ${image + 1} of ${project.images.length}`;
       };
       gallery.querySelector('button').addEventListener('click', () => { image = (image + 1) % project.images.length; draw(); });
@@ -464,6 +512,8 @@ export function initShowcase(root) {
     sync();
   });
   stillsOnly.addEventListener('change', () => {
+    // Warm the new breakpoint's backdrop even when another project is selected.
+    entries.filter(project => project.titleStill).forEach(project => warmPreview(project, preview(project)));
     if (entries[index].type !== 'gallery') return;
     if (stage.contains(document.activeElement)) root.focus({ preventScroll: true });
     unmount();

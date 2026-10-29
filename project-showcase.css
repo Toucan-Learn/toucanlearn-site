@@ -59,7 +59,7 @@
 .showcase-cell [hidden] { display: none !important; }
 [data-showcase][data-enhanced] .showcase-fallback { display: none !important; }
 .hero-world .showcase-fallback { display: block; width: 100%; height: calc(var(--showcase-height) + var(--showcase-bar)); object-fit: cover; border-radius: 14px; }
-/* Keep the copy-cell grid and its 60% media share. Hide no copy from no-JS/print. */
+/* Keep the copy/media grid and all copy available without JS and in print. */
 #learner-projects .framework-project-media > .showcase-cell { height: var(--project-media-height); }
 #learner-projects [data-showcase][data-enhanced] .framework-project-media { overflow: visible; }
 #learner-projects .showcase-stage > img,
@@ -70,6 +70,44 @@
 #learner-projects .showcase-cell .piano-panel { inset: auto 0 0; max-height: 100%; }
 #learner-projects .piano-panel-inner { border-radius: 14px 14px 0 0; }
 #learner-projects .project-note { grid-column: 1 / -1; }
+/* A separate accent cell closes each project's three teaching rows. */
+#learner-projects .project-copy-result { margin: 0 0 10px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: #d8e7de; color: #142f3a; }
+#learner-projects .project-copy-result h4 { margin: 0 0 3px; color: #0b3f51; font-size: .85rem; line-height: 1.3; }
+#learner-projects .project-copy-result p { margin: 0; color: inherit; }
+#learner-projects .framework-project-copy { overflow-wrap: break-word; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) #learner-projects .project-copy-result { background: #305b58; color: #f5f0e6; }
+  :root:not([data-theme="light"]) #learner-projects .project-copy-result h4 { color: #f5f0e6; }
+}
+:root[data-theme="dark"] #learner-projects .project-copy-result { background: #305b58; color: #f5f0e6; }
+:root[data-theme="dark"] #learner-projects .project-copy-result h4 { color: #f5f0e6; }
+/* The intro reserves one photo beside its copy, with navigation beneath both. */
+#learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); grid-template-rows: minmax(0, 1fr) auto; gap: 12px; align-items: stretch; }
+#learner-projects .project-intro-image { position: relative; grid-area: 1 / 1; min-width: 0; min-height: 240px; overflow: hidden; border-radius: 16px; background: #d8e7de; }
+#learner-projects .project-intro-image img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; max-height: none; object-fit: cover; }
+#learner-projects .framework-project--intro .framework-project-copy.subject-card { grid-area: 1 / 2; justify-content: center; padding: clamp(20px, 2vw, 28px); }
+#learner-projects .framework-project--intro .framework-project-copy.subject-card h3 { max-width: 24ch; margin: 0 0 16px; font-size: clamp(1.65rem, 2.5vw, 2.25rem); line-height: 1.15; }
+#learner-projects .framework-project--intro .framework-project-copy p { max-width: 65ch; margin: 0; font-size: clamp(.95rem, 1.2vw, 1.05rem); line-height: 1.55; }
+#learner-projects [data-project="intro"] > .showcase-cell { grid-column: 1 / -1; height: auto; grid-template-rows: var(--showcase-bar); }
+#learner-projects [data-project="intro"] > .showcase-cell .showcase-stage { display: none; }
+#learner-projects [data-project="intro"] > .showcase-cell .showcase-caption { border-radius: 14px; }
+@media screen and (max-width: 999px) {
+  /* Full paragraphs use natural height; the intro photo stacks above its text. */
+  #learner-projects [data-showcase][data-enhanced] > .framework-project-slides > [data-project-slide][hidden] { display: none; }
+  #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; }
+  #learner-projects .project-intro-image { grid-area: auto; min-height: 0; height: clamp(160px, 45vw, 240px); }
+  #learner-projects .framework-project--intro .framework-project-copy.subject-card { grid-area: auto; }
+}
+@media screen and (min-width: 1000px) {
+  /* Longer copy gets half the card width instead of being squeezed into 40%. */
+  body[data-page-frame] #learner-projects .framework-project { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 16px; }
+  body[data-page-frame] #learner-projects .framework-project-copy { font-size: clamp(.8125rem, 1.8vh, .875rem); line-height: 1.38; }
+  body[data-page-frame] #learner-projects .project-copy-cells { margin-bottom: 6px; }
+  body[data-page-frame] #learner-projects .project-copy-cells > div { padding-block: 4px; }
+  body[data-page-frame] #learner-projects .project-copy-result { padding: 8px 10px; }
+  body[data-page-frame] #learner-projects .project-copy-result h4 { font-size: .8rem; }
+  body[data-page-frame] #learner-projects .framework-project.framework-project--intro { grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); }
+}
 @media (min-width: 1550px) { [data-showcase] { --showcase-height: 540px; } }
 @media (max-width: 1050px) { [data-showcase] { --showcase-height: 400px; } }
 @media (max-width: 760px) { [data-showcase] { --showcase-height: 340px; } }

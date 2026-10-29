@@ -105,17 +105,18 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
       const heading = document.querySelector('.showcase-darty-heading');
       const menu = heading.getBoundingClientRect();
       return { width: rect.width, height: rect.height, menuWidth: menu.width, color: css.color, background: css.backgroundColor, outline: parseFloat(css.outlineWidth), radius: parseFloat(css.borderRadius), orange: title.color,
-        rightSide: menu.left >= card.left + card.width * .53,
+        rightSide: menu.left >= card.left + card.width * .53, compact: card.width <= 440,
         fits: [...heading.children].every(node => { const box = node.getBoundingClientRect(); return box.left >= menu.left && box.right <= card.right - 4 && box.top >= card.top && box.bottom <= card.bottom && node.scrollWidth <= node.clientWidth + 1; }),
         focusFits: rect.left - 8 >= card.left && rect.right + 8 <= card.right && rect.top - 8 >= card.top && rect.bottom + 8 <= card.bottom,
         pageFits: document.documentElement.scrollWidth <= innerWidth + 1 };
     });
-    assert(button.width >= (desktopReference ? 200 : Math.min(200, button.menuWidth) - 1) && button.height >= (phone ? 44 : 56) && button.radius <= 6 && button.outline >= 3, 'Large rectangular button has a clear keyboard focus ring');
+    assert(button.width >= (desktopReference ? 200 : Math.min(200, button.menuWidth) - 1) && button.height >= (phone || button.compact ? 44 : 56) && button.radius <= 6 && button.outline >= 3, 'Large rectangular button has a clear keyboard focus ring');
     assert.equal(button.color, 'rgb(16, 35, 42)');
     assert.equal(button.background, 'rgb(255, 247, 233)');
     assert.equal(button.orange, 'rgb(232, 100, 44)', 'Use the game banner orange');
     assert(button.fits, 'Heading, subtitle and button fit inside the cell without clipping');
-    if (phone) assert(button.focusFits && button.pageFits, 'Phone focus ring fits and the page has no horizontal overflow');
+    // Narrow cells (phones, and the children's page below 1000px) centre the menu.
+    if (phone || button.compact) assert(button.focusFits && button.pageFits, 'Narrow-cell focus ring fits and the page has no horizontal overflow');
     else assert(button.rightSide, 'Menu stays on the shaded right, clear of the centre-left player');
   }
 

@@ -45,15 +45,18 @@
   from { transform: scale(1); }
   to { transform: scale(1.035); }
 }
-.showcase-darty-heading { position: absolute; inset: 0 5% 0 54%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; gap: 18px; padding-block: 24px; text-align: left; }
+.showcase-darty-heading { position: absolute; inset: 0 5% 0 54%; display: flex; flex-direction: column; align-items: flex-start; justify-content: center; --darty-heading-gap: 18px; gap: var(--darty-heading-gap); padding-block: 24px; text-align: left; }
 .showcase-darty-wordmark { display: block; color: #e8642c; font-size: clamp(40px, 11cqw, 82px); font-weight: 900; font-style: italic; line-height: 1; letter-spacing: .025em; text-shadow: 0 3px 0 #793318, 0 8px 24px #0008; }
 .showcase-cell .showcase-darty-subtitle { margin: 0; color: #fff7e9; font-size: clamp(11px, 2.3cqw, 14px); font-weight: 500; line-height: 1.4; letter-spacing: .04em; text-shadow: 0 2px 6px #000; }
+/* The two short lines read as one tagline under the wordmark. */
+.showcase-cell .showcase-darty-subtitle + .showcase-darty-subtitle { margin-top: calc(4px - var(--darty-heading-gap, 12px)); }
 .showcase-cell .showcase-match-play { display: block; width: 240px; max-width: 100%; min-height: 58px; padding: 14px 24px; border: 2px solid #fff7e9; border-radius: 4px; color: #10232a; background: #fff7e9; font-size: 19px; font-weight: 800; line-height: 1.2; box-shadow: 0 4px 20px #0005; }
 .showcase-cell .showcase-match-play:hover { color: #10232a; background: #ffe0c0; border-color: #ffe0c0; }
 .showcase-cell .showcase-match-play:focus-visible { outline: 3px solid #fff7e9; outline-offset: 5px; box-shadow: 0 0 0 5px #10232a; }
-/* A wider, centred menu keeps the same title and large button inside phone cells. */
-@media (max-width: 767px) {
-  .showcase-darty-heading { inset: 0 8%; align-items: center; gap: 16px; padding-block: 20px; text-align: center; }
+/* A wider, centred menu keeps the same title and large button inside narrow cells
+   (phones, and the children's page between 768px and 1000px). */
+@container (max-width: 440px) {
+  .showcase-darty-heading { inset: 0 8%; align-items: center; --darty-heading-gap: 16px; gap: var(--darty-heading-gap); padding-block: 20px; text-align: center; }
   .showcase-darty-wordmark { font-size: clamp(48px, 17cqw, 64px); }
   .showcase-cell .showcase-darty-subtitle { font-size: clamp(12px, 3.6cqw, 14px); }
   .showcase-cell .showcase-match-play { flex-shrink: 0; }

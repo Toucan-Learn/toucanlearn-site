@@ -147,6 +147,9 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   const pending = new Map();
   const failed = new Set();
   let manifestRequest = null;
+  let loadFrame = null;
+  let loadTask = null;
+  const idleLoads = typeof clock.requestIdleCallback === 'function';
   let manifest = null;
   let order = [];
   let active = false;
@@ -165,6 +168,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
   function refreshFrames() {
     if (disposed) return;
     if (ready()) {
+      cancelScheduledLoads();
       button.dataset.ready = 'true';
       motion.setAutomatic(true);
     }
@@ -191,7 +195,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
     let first = loaded.get(lower);
     let second = loaded.get(upper);
     if (!first || (mix > 0 && !second)) {
-      pump();
+      scheduleLoads();
       // A manual target can outrun decoding. Paint its nearest decoded view across
       // the wrap; with none available, leave the poster or last good paint intact.
       const position = wrap(turns) * manifest.frameCount;
@@ -217,14 +221,34 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
     button.dataset.upperFrame = String(second ? upper : lower);
     button.dataset.blend = String(second ? mix : 0);
   }
+  function cancelScheduledLoads() {
+    if (loadFrame !== null) clock.cancelAnimationFrame(loadFrame);
+    if (loadTask !== null) {
+      if (idleLoads) clock.cancelIdleCallback(loadTask);
+      else clock.clearTimeout(loadTask);
+    }
+    loadFrame = loadTask = null;
+  }
   function cancelLoads() {
+    cancelScheduledLoads();
     manifestRequest?.abort();
     manifestRequest = null;
     for (const frame of pending.values()) frame.removeAttribute('src');
     pending.clear();
   }
+  function scheduleLoads() {
+    if (!allowed() || loadFrame !== null || loadTask !== null || pending.size >= 6 || ready()) return;
+    // Let the selected poster paint before starting or refilling a decode batch.
+    // Even cached decodes must yield instead of draining all 360 in microtasks.
+    loadFrame = clock.requestAnimationFrame(() => {
+      loadFrame = null;
+      const run = () => { loadTask = null; void prepare(); };
+      loadTask = idleLoads ? clock.requestIdleCallback(run, { timeout: 100 }) : clock.setTimeout(run, 0);
+    });
+  }
   function pump() {
     if (!allowed() || !manifest) return;
+    cancelScheduledLoads();
     const { lower, upper } = frameBlend(turns, manifest.frameCount);
     for (const i of new Set([lower, upper, ...order])) {
       if (pending.size >= 6) break;
@@ -237,18 +261,18 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
         frame.dataset.decoded = 'true';
         loaded.set(i, frame);
         refreshFrames();
-        pump();
+        scheduleLoads();
       }).catch(() => {
         if (disposed || pending.get(i) !== frame) return;
         pending.delete(i);
         failed.add(i);
-        pump();
+        scheduleLoads();
       });
     }
   }
   async function prepare() {
     if (!allowed()) return;
-    if (manifest) { refreshFrames(); pump(); return; }
+    if (manifest) { pump(); refreshFrames(); return; }
     if (manifestRequest) return;
     const request = new AbortController();
     manifestRequest = request;
@@ -320,7 +344,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
       active = value;
       button.dataset.active = String(active);
       motion.setActive(active);
-      if (active) { failed.clear(); void prepare(); }
+      if (active) { failed.clear(); scheduleLoads(); }
       else cancelLoads();
     },
     setReduced(value) {
@@ -331,7 +355,7 @@ export function createDrinkSpin(screen, drink, { reduced = false, activity = () 
         painted = false;
         showPoster();
       }
-      if (allowed()) void prepare();
+      if (allowed()) scheduleLoads();
       else cancelLoads();
     },
     isDragging: () => pointer !== null,

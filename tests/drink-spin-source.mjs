@@ -136,16 +136,20 @@ const event = (type, props) => Object.assign(new Event(type, { cancelable: true 
 const globals = Object.fromEntries(['document', 'window', 'Image', 'fetch'].map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]));
 const images = [];
 const requests = [];
+let cachedDecodes = false;
 let manifestData = { frameCount: 12, dragDirection: 1 };
 const file = img => img.src?.split('/').pop().split('?')[0];
 const flush = async () => { for (let i = 0; i < 15; i++) await Promise.resolve(); };
-async function complete() {
+const loadBatch = async clock => { clock.tick(16); await flush(); };
+async function complete(clock, button) {
   for (let round = 0; round < 150; round++) {
+    await loadBatch(clock);
     const pending = images.filter(img => img.src && !img.settled);
     if (!pending.length) return;
     assert(pending.filter(img => /^\d{3}\.webp$/.test(file(img))).length <= 6, 'At most six frame fetch/decode jobs run concurrently');
     pending.forEach(img => img.resolve());
     await flush();
+    if (button?.dataset.ready === 'true') return;
   }
   assert.fail('Preload queue did not drain');
 }
@@ -167,7 +171,10 @@ try {
   }
   globalThis.Image = class extends Element {
     constructor() { super('img'); images.push(this); }
-    decode() { return new Promise((resolve, reject) => { this.accept = resolve; this.reject = reject; }); }
+    decode() {
+      if (cachedDecodes) { this.decoded = this.settled = true; return Promise.resolve(); }
+      return new Promise((resolve, reject) => { this.accept = resolve; this.reject = reject; });
+    }
     resolve() { this.decoded = this.settled = true; this.accept?.(); }
     fail() { this.settled = true; this.reject?.(Error('decode failed')); }
   };
@@ -183,17 +190,22 @@ try {
   assert.equal(file(button.children[0]), 'poster.webp');
   assert.equal(button.getAttribute('aria-label'), 'Rotate Skids, 360° view');
   viewer.setActive(true); await flush();
+  assert.equal(requests.length, 0, 'Activation leaves manifest and frame loading out of the switch task');
+  assert.equal(images.length, 1, 'The poster paints before any sequence frames are requested');
+  await loadBatch(domClock);
   assert.deepEqual(images.slice(1).map(file), ['000.webp', '001.webp', '011.webp', '002.webp', '010.webp', '003.webp']);
   images[1].resolve(); await flush();
+  assert.equal(images.length, 7, 'A completed decode cannot refill the queue in a microtask');
   domClock.tick(1000);
   const held = [...button.children];
   assert.equal(file(held[0]), 'poster.webp');
   domClock.tick(1000);
   assert.deepEqual(button.children, held, 'Keep the poster still while any frame is undecoded');
   images[2].resolve(); await flush(); // 001 is the next frame in the idle direction
+  await loadBatch(domClock);
   assert.equal(button.children.length, 1, 'Even an available adjacent pair cannot start an incomplete rotation');
   assert.equal(domClock.pending(), 0, 'Loading time never advances the motion clock');
-  await complete();
+  await complete(domClock, button);
   assert.equal(button.dataset.ready, 'true');
   assert.equal(Number(button.dataset.turns), 0, 'Start at the current angle without catching up loading time');
   assert.equal(button.children.length, 2);
@@ -252,7 +264,7 @@ try {
   await flush(); assert.equal(images.length, requested + 7, 'Pointerdown starts frame loading even with reduced motion');
   fizzButton.releasePointerCapture(3); assert(!fizzy.isDragging());
   fizzButton.dispatchEvent(event('keydown', { key: 'ArrowLeft' })); await flush();
-  await complete(); assert.equal(fizzButton.dataset.frame, '11', 'Reduced motion permits keyboard rotation');
+  await complete(domClock, fizzButton); assert.equal(fizzButton.dataset.frame, '11', 'Reduced motion permits keyboard rotation');
   const manual = fizzButton.dataset.turns; domClock.tick(32000);
   assert.equal(fizzButton.dataset.turns, manual, 'Reduced motion has no auto spin or inertia');
   fizzy.destroy();
@@ -265,6 +277,7 @@ try {
     const dragButton = screen.children[0];
     images.at(-1).resolve(); await flush();
     firstDrag.setActive(true); await flush();
+    await loadBatch(firstDragClock);
     const requestsBeforeDown = requests.length;
     dragButton.dispatchEvent(event('pointerdown', { pointerId: 8, isPrimary: true, button: 0, clientX: 300 }));
     if (reducedMotion) assert.equal(requests.length, requestsBeforeDown + 1, 'Reduced-motion pointerdown starts loading before any move');
@@ -277,7 +290,7 @@ try {
     const decode = async name => {
       const image = images.slice(sequenceStart + 1).find(img => file(img) === name);
       assert(image && !image.settled, `${name} is queued for decode (${images.slice(sequenceStart + 1).map(file)})`);
-      image.resolve(); await flush();
+      image.resolve(); await flush(); await loadBatch(firstDragClock);
     };
     await decode('001.webp');
     assert.equal(dragButton.dataset.frame, '1', 'A reduced-motion first drag changes the frame as soon as a nearby frame decodes');
@@ -297,7 +310,7 @@ try {
     dragButton.dispatchEvent(event('pointerup', { pointerId: 8 }));
     firstDragClock.tick(1000);
     assert.equal(firstDragClock.pending(), 0, 'Release cannot start automatic rotation before full decode');
-    await complete();
+    await complete(firstDragClock, dragButton);
     assert.equal(dragButton.dataset.ready, 'true');
     assert.equal(firstDragClock.pending(), reducedMotion ? 0 : 1, 'Automatic motion starts only after every decode and respects reduced motion');
     firstDrag.destroy();
@@ -314,6 +327,7 @@ try {
   assert.equal(requests.length, beforeFirstKey + 1, 'The first reduced-motion keydown starts loading');
   await flush();
   images.slice(keyStart + 1).find(img => file(img) === '119.webp').resolve(); await flush();
+  await loadBatch(firstKeyClock);
   assert.equal(keyButton.dataset.frame, '119', 'The key queued before the manifest paints before the full sequence decodes');
   assert.equal(keyButton.dataset.ready, 'false');
   assert.equal(firstKeyClock.pending(), 0);
@@ -321,31 +335,35 @@ try {
   manifestData = { frameCount: 12, dragDirection: 1 };
   const partial = createDrinkSpin(screen, { id: 'ground-pinch', name: 'Ground Pinch' }, { clock: domClock });
   partial.setActive(true); await flush();
+  await loadBatch(domClock);
   const pending = images.slice(-6);
   partial.setActive(false);
   assert(pending.every(img => !img.src), 'Pausing cancels pending frame work');
   pending.forEach(img => img.resolve()); await flush();
   const pausedRequests = images.length;
   partial.setActive(true); await flush();
+  await loadBatch(domClock);
   assert.equal(images.length, pausedRequests + 6, 'Cancelled decodes never enter the ready cache');
   const oldComposition = [...screen.children[0].children];
   images.at(-1).fail(); await flush();
   assert.deepEqual(screen.children[0].children, oldComposition, 'Decode failure keeps the previous good image');
-  await complete();
+  await complete(domClock);
   assert.equal(screen.children[0].dataset.ready, 'false', 'One failed decode prevents partial rotation even after every other frame is ready');
   assert.equal(file(screen.children[0].children[0]), 'poster.webp');
   assert.equal(domClock.pending(), 0);
   partial.setActive(false);
   const beforeRetry = images.length;
   partial.setActive(true); await flush();
+  await loadBatch(domClock);
   assert.equal(images.length, beforeRetry + 1, 'Reactivation retries only the failed frame and retains decoded frames');
-  await complete();
+  await complete(domClock);
   assert.equal(screen.children[0].dataset.ready, 'true');
   partial.destroy();
   // A late manifest cannot mutate the replacement viewer.
   let deliver, lateSignal;
   globalThis.fetch = (url, options) => { lateSignal = options.signal; return new Promise(resolve => { deliver = resolve; }); };
   const late = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); late.setActive(true);
+  await loadBatch(domClock);
   const beforeLate = images.length; const latePoster = images.at(-1); late.destroy();
   assert(lateSignal.aborted); latePoster.resolve();
   deliver({ ok: true, json: async () => ({ frameCount: 120 }) }); await flush();
@@ -357,17 +375,18 @@ try {
   const finalButton = screen.children[0];
   images.at(-1).resolve(); await flush();
   finalFrames.setActive(true); await flush();
+  await loadBatch(domClock);
   // Drain only five slots until every frame has been requested: no input or motion drives loading.
   while (images.length < sequenceStart + 121) {
     const batch = images.slice(sequenceStart + 1).filter(img => !img.settled);
     assert(batch.length <= 6);
-    batch.slice(0, 5).forEach(img => img.resolve()); await flush();
+    batch.slice(0, 5).forEach(img => img.resolve()); await flush(); await loadBatch(domClock);
     domClock.tick(1000);
     assert.equal(file(finalButton.children[0]), 'poster.webp');
     assert.equal(Number(finalButton.dataset.turns || 0), 0);
   }
   assert.equal(new Set(images.slice(sequenceStart + 1).map(file)).size, 120, 'Activation requests all 120 frames without rotating or interacting');
-  await complete();
+  await complete(domClock, finalButton);
   assert.equal(finalButton.dataset.frameCount, '120');
   const checkFrames = (ticks, direction = 1) => {
     let before = [finalButton.dataset.lowerFrame, finalButton.dataset.upperFrame, finalButton.dataset.frame].map(Number);
@@ -403,6 +422,36 @@ try {
   const broken = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: domClock }); broken.setActive(true);
   images.at(-1).resolve(); await flush(); assert.equal(file(screen.children[0].children[0]), 'poster.webp'); broken.destroy();
   assert.equal(domClock.pending(), 0);
+  // Cached decodes must also yield between batches, with and without idle callbacks.
+  manifestData = { frameCount: 360, dragDirection: -1 };
+  cachedDecodes = true;
+  for (const idle of [false, true]) {
+    const batchClock = fakeClock();
+    if (idle) {
+      batchClock.requestIdleCallback = fn => batchClock.setTimeout(fn, 1);
+      batchClock.cancelIdleCallback = id => batchClock.clearTimeout(id);
+    }
+    const before = images.length;
+    const beforeRequests = requests.length;
+    const cached = createDrinkSpin(screen, { id: 'skids', name: 'Skids' }, { clock: batchClock });
+    const cachedButton = screen.children[0];
+    await flush();
+    cached.setActive(true); await flush();
+    assert.equal(requests.length, beforeRequests, 'Even a cached manifest is deferred past activation');
+    if (idle) batchClock.tick(16); // Cancel an idle callback as well as a not-yet-run RAF.
+    cached.setActive(false);
+    batchClock.tick(100); await flush();
+    assert.equal(requests.length, beforeRequests, 'Pausing cancels deferred startup before any manifest request');
+    cached.setActive(true);
+    for (let frames = 6; frames <= 360; frames += 6) {
+      batchClock.tick(17); await flush();
+      assert.equal(images.length - before - 1, frames, 'Only six cached frames decode per paint/idle batch');
+      assert.equal(cachedButton.dataset.ready, String(frames === 360));
+      if (frames < 360) assert.equal(file(cachedButton.children[0]), 'poster.webp', 'All 360 frames must decode before idle rotation replaces the poster');
+    }
+    cached.destroy();
+    assert.equal(batchClock.pending(), 0, 'Disposal cancels every queued load and animation callback');
+  }
 } finally {
   for (const [key, descriptor] of Object.entries(globals)) {
     if (descriptor) Object.defineProperty(globalThis, key, descriptor);
@@ -440,4 +489,4 @@ for (const drink of ['skids', 'fizzy', 'ground-pinch']) {
     assert.deepEqual(webpSize(frame), [manifest.width, manifest.height], `${drink}/${i}: actual dimensions match the manifest`);
   }
 }
-console.log('Drink spin checks passed: all 120 frames requested on activation in six slots, still poster until full decode, no skipped animation views, 16-second turns, coast/immediate resume, crossfade/decode guards, direction, visibility, reduced motion and complete assets.');
+console.log('Drink spin checks passed: 120-frame loading and 360 cached frames in deferred six-slot batches, cancelled startup, still poster until full decode, no skipped idle views, 16-second turns, free coasting, drag gain/direction, visibility, reduced motion and complete assets.');

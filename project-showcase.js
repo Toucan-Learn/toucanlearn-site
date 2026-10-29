@@ -1,4 +1,4 @@
-import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-children-batch-1';
+import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-spin-batches-1';
 import { initHeroSky } from './hero-sky.js?v=20261029-piano-3';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.

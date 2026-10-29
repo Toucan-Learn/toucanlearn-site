@@ -419,16 +419,21 @@ try {
   await page.keyboard.press('ArrowLeft');
   assert.equal(await selected(page), 'darty', 'Gallery keyboard input does not change projects');
   await project(page, 'drinks');
-  await page.focus('[data-project-slide]:not([hidden]) .framework-project-copy > a');
+  await page.focus('[data-project-enquiry]');
+  assert.deepEqual(await page.$eval('[data-project-enquiry]', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href') })),
+    { label: 'Tell us what they love', href: 'contact.html?service=children' });
   await page.keyboard.press('ArrowRight');
-  assert.equal(await selected(page), 'drinks', 'Copy links retain keyboard input');
+  assert.equal(await selected(page), 'drinks', 'The Projects enquiry button retains keyboard input');
   await assertImmediateProjectSwitch(page, 'next');
-  assert(await page.$eval('[data-showcase]', root => document.activeElement === root), 'Hiding focused copy recovers focus to the viewer');
+  assert(await page.$eval('[data-project-enquiry]', link => document.activeElement === link), 'The shared Projects enquiry keeps focus when the slide changes');
   await project(page, 'drinks');
   await page.evaluate(() => { window.sectionSpin = document.querySelector('.drink-spin'); });
   await page.evaluate(() => { location.hash = 'getting-started'; });
   await page.waitForFunction(() => document.querySelector('#learner-projects').hidden);
   assert(await page.evaluate(() => window.sectionSpin.dataset.active === 'false'), 'Hidden Projects section pauses its frame viewer');
+  await page.focus('#getting-started a.button');
+  assert.deepEqual(await page.$eval('#getting-started a.button', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href') })),
+    { label: 'Tell us your child’s goal', href: 'contact.html?service=children' });
   report.behaviour.push('homepage unchanged, five-slide section, intro, separate result cells, review overrides, wrap, interaction reset, idle advance, focus, held playing key, all drink sequences, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
   await context.close();
   // Keep the intro, all four projects and separate result cells for no-JS and print.

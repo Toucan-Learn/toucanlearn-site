@@ -6,8 +6,19 @@ import { fileURLToPath } from 'node:url';
 import '../scripts/check-project-cells-static.mjs';
 const source = await readFile(new URL('../project-showcase.js', import.meta.url), 'utf8');
 assert(source.includes("iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox')"), 'The newspaper clip must open in a new tab');
-const { projects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(source).toString('base64')}`);
+const spinSource = await readFile(new URL('../drink-spin.js', import.meta.url), 'utf8');
+const showcaseStyles = await readFile(new URL('../project-showcase.css', import.meta.url), 'utf8');
+assert(!spinSource.includes('Drag to spin') && !showcaseStyles.includes('drink-spin-hint'), 'Remove the drag hint markup and styles entirely');
+const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString('base64')}`;
+const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL));
+const { projects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
+await import('./drink-spin-source.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
+assert.deepEqual(projects.find(project => project.id === 'drinks').drinks.map(({ name, lines }) => ({ name, lines })), [
+  { name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
+  { name: 'Fizzy', lines: ['Light, bright red.', 'Fizzy, extreme.'] },
+  { name: 'Ground Pinch', lines: ['Designed for everyone.'] },
+], 'The drink cards retain the exact approved words and capitalisation');
 for (let i = 0; i < projects.length; i++) {
   assert.equal(initialProject(undefined, () => (i + .5) / projects.length, null), i, 'With no fixed start, every project can start a load');
   assert.equal(initialProject(projects[i].id, () => 0), i, 'Review override is deterministic');
@@ -86,6 +97,8 @@ for (const reason of ['reduced', 'manual']) {
 }
 timer.destroy();
 assert.equal(clock.pending(), 0);
+assert(!/createElement\('video'\)|\.mp4|\.webm/.test(source), 'Drinks use frame sequences, never video');
+assert.match(source, /IntersectionObserver/);
 for (const page of ['index.html', 'children.html']) {
   const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
   assert.match(html, /project-showcase\.js[^"']*["'] type="module"/);
@@ -97,7 +110,7 @@ for (const page of ['index.html', 'children.html']) {
 await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.url)), 'Retire the alternate piano implementation');
 
 const site = fileURLToPath(new URL('../', import.meta.url));
-const before = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || '0070267'}:index.html`], { cwd: site, encoding: 'utf8' });
+const before = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || 'd9d653b'}:index.html`], { cwd: site, encoding: 'utf8' });
 const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');

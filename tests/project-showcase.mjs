@@ -7,13 +7,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import './project-showcase-source.mjs';
 import { activatePianoToggle } from './piano-toggle-helpers.mjs';
+import { checkDrinkSpin, assertDrinkLayout, dragOverDrink, checkDrinkMenuKeys } from './drink-spin-browser.mjs';
 const site = fileURLToPath(new URL('../', import.meta.url));
 const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_MODULE || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/website/node_modules/puppeteer-core');
 const base = process.env.BASE_URL || process.env.SHOWCASE_URL || 'http://127.0.0.1:4206';
-const output = process.env.SHOWCASE_SCREENSHOTS || path.resolve(site, '../outputs/shared-showcase-20261028/showcase');
-const originalHome = execFileSync('git', ['show', '0070267:index.html'], { cwd: site, encoding: 'utf8' });
-const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 1440, height: 900 }, { width: 390, height: 844, isMobile: true, hasTouch: true }];
+const output = process.env.SHOWCASE_SCREENSHOTS || path.resolve(site, '../outputs/drink-spin-20261028/showcase');
+const originalHome = execFileSync('git', ['show', `${process.env.SHOWCASE_BASE || 'd9d653b'}:index.html`], { cwd: site, encoding: 'utf8' });
+const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 390, height: 844, isMobile: true, hasTouch: true }];
 const ids = ['football', 'darty', 'drinks', 'piano'];
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const report = { layouts: [], pianoToggles: [], behaviour: [], errors: [] };
@@ -28,7 +29,6 @@ async function open(view, theme, reduced = true, options = {}) {
   await page.evaluateOnNewDocument(() => { try { localStorage.setItem('toucan-launch-offer-last-shown', String(Date.now())); } catch {} }); // offer pop-up already seen
   await page.evaluateOnNewDocument(({ theme, random, fast }) => {
     localStorage.removeItem('toucan-theme');
-    if (theme !== 'system-dark') localStorage.setItem('toucan-theme', theme);
     if (random !== undefined) Math.random = () => random;
     if (fast) {
       // Test-only acceleration. Production keeps 20,000 ms; source tests check it exactly.
@@ -60,6 +60,7 @@ async function project(page, id) {
   await page.$eval('[data-showcase]', root => root.focus({ preventScroll: true }));
   for (let i = 0; i < ids.length && await selected(page) !== id; i++) await page.$eval('[data-project-next]', button => button.click());
   assert.equal(await selected(page), id);
+  await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
   if (id === 'piano') await page.waitForSelector('#hero-keyboard[data-song]');
 }
 async function metrics(page) {
@@ -92,7 +93,7 @@ async function heroMetrics(page) {
   });
 }
 try {
-  for (const view of views) for (const theme of ['light', 'dark', 'system-dark']) {
+  for (const view of views) for (const theme of ['light', 'dark']) {
     const { context, page } = await open(view, theme);
     const label = `${view.width}x${view.height}-${theme}`;
     await page.setRequestInterception(true);
@@ -111,7 +112,7 @@ try {
       const sizes = [];
       for (const id of ids) {
         await project(page, id);
-        await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
+        await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
         await wait(100);
         const m = await metrics(page);
         sizes.push(m.slot.height);
@@ -153,7 +154,15 @@ try {
           await page.click(`[data-drink="${drink}"]`);
           assert.equal(await page.$eval(`[data-drink="${drink}"]`, button => button.getAttribute('aria-pressed')), 'true');
           assert.equal(await page.$('video'), null);
-          assert((await page.$eval('.showcase-drink-screen img', img => img.src)).includes(`${drink}-poster.jpg`));
+          assert((await page.$eval('.showcase-drink-screen img', img => img.src)).includes(`${drink}/poster.webp`));
+          assert.equal(await page.$eval('.drink-spin', button => button.dataset.frame), '0');
+          const drinkLayout = await assertDrinkLayout(page, drink);
+          report.layouts.push({ label, route, drink, ...drinkLayout });
+          await page.screenshot({ path: path.join(output, `${label}-${route.startsWith('index') ? 'home' : 'projects'}-${drink}-card.png`) });
+          if (drink === 'skids') {
+            await dragOverDrink(page, view);
+            if (view.width === 1440 && theme === 'light') await checkDrinkMenuKeys(page);
+          }
         }
         if (id === 'piano') {
           report.pianoToggles.push(await activatePianoToggle(page, `${label}/${route}`));
@@ -168,6 +177,7 @@ try {
     }
     await context.close();
   }
+  await checkDrinkSpin({ open, views, base, output, report });
   // Homepage opens on the piano for now (owner, 28 Oct), whatever the RNG says.
   for (let i = 0; i < ids.length; i++) {
     const { context, page } = await open(views[0], 'system-dark', true, { random: (i + .5) / ids.length });
@@ -189,15 +199,15 @@ try {
   await page.$eval('[data-showcase]', root => root.focus());
   await wait(1700);
   assert.equal(await selected(page), 'drinks', 'Focused cell cannot advance');
-  await page.waitForSelector('video');
+  await page.waitForSelector('.drink-spin');
   for (const drink of ['skids', 'fizzy', 'ground-pinch']) {
     await page.click(`[data-drink="${drink}"]`);
-    await page.waitForFunction(() => { const video = document.querySelector('video'); return video && !video.paused && video.readyState >= 2; });
-    assert(await page.$eval('video', video => video.muted && video.loop && video.playsInline && Boolean(video.poster)), 'Drink is muted, looping, inline and has a poster');
+    await page.waitForFunction(() => document.querySelector('.drink-spin')?.dataset.frameCount);
+    assert.equal(await page.$eval('.drink-spin', button => button.getAttribute('aria-label')), `Rotate ${drink === 'ground-pinch' ? 'Ground Pinch' : drink === 'skids' ? 'Skids' : 'Fizzy'}, 360° view`);
   }
-  await page.evaluate(() => { window.oldVideo = document.querySelector('video'); });
+  await page.evaluate(() => { window.oldSpin = document.querySelector('.drink-spin'); });
   await project(page, 'piano');
-  assert(await page.evaluate(() => window.oldVideo.paused && !window.oldVideo.isConnected && !window.oldVideo.querySelector('source')), 'Switched video is paused and unloaded');
+  assert(await page.evaluate(() => !window.oldSpin.isConnected), 'Switched frame viewer is disposed');
   report.pianoToggles.push(await activatePianoToggle(page, 'Idle/held-key check'));
   await page.keyboard.down('z');
   await page.evaluate(() => document.activeElement.blur());
@@ -215,22 +225,22 @@ try {
   assert(await page.evaluate(() => !window.oldFrame.isConnected), 'Old iframe discarded');
   await project(page, 'drinks');
   await page.evaluate(() => {
-    window.backgroundVideo = document.querySelector('video');
+    window.backgroundSpin = document.querySelector('.drink-spin');
+    window.backgroundFrame = window.backgroundSpin.dataset.frame;
     window.showcaseHidden = true;
     Object.defineProperty(document, 'hidden', { configurable: true, get: () => window.showcaseHidden });
     document.dispatchEvent(new Event('visibilitychange'));
   });
   await wait(1700);
   assert.equal(await selected(page), 'drinks', 'Hidden document does not advance');
-  assert(await page.evaluate(() => window.backgroundVideo.paused && !window.backgroundVideo.querySelector('source')), 'Background video paused and unloaded');
-  assert.equal(await page.$eval('[data-showcase]', root => root.dataset.showcaseMounted), undefined);
+  assert(await page.evaluate(() => window.backgroundSpin.dataset.active === 'false' && window.backgroundSpin.dataset.frame === window.backgroundFrame), 'Background frame viewer is paused');
   await page.evaluate(() => { window.showcaseHidden = false; document.dispatchEvent(new Event('visibilitychange')); });
   await page.$eval('[data-showcase]', root => root.focus());
   await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'reduce' }, { name: 'prefers-color-scheme', value: 'dark' }]);
   await page.evaluate(() => document.activeElement.blur());
   await wait(1700);
   assert.equal(await selected(page), 'drinks', 'Reduced motion prevents automatic advance');
-  assert.equal(await page.$('video'), null, 'Changing to reduced motion replaces a live loop with its poster');
+  assert((await page.$eval('.drink-spin img', img => img.src)).endsWith('/poster.webp'), 'Changing to reduced motion restores the poster before manual input');
   await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
   await load(page, 'children.html?project=drinks#learner-projects');
   await page.evaluate(() => document.activeElement.blur());
@@ -251,12 +261,11 @@ try {
   await page.$eval('[data-project-next]', button => button.click());
   assert(await page.$eval('[data-showcase]', root => document.activeElement === root), 'Hiding focused copy recovers focus to the viewer');
   await project(page, 'drinks');
-  await page.evaluate(() => { window.sectionVideo = document.querySelector('video'); });
+  await page.evaluate(() => { window.sectionSpin = document.querySelector('.drink-spin'); });
   await page.evaluate(() => { location.hash = 'getting-started'; });
   await page.waitForFunction(() => document.querySelector('#learner-projects').hidden);
-  assert.equal(await page.$('[data-showcase] video'), null, 'Hidden Projects section unloads video');
-  assert(await page.evaluate(() => window.sectionVideo.paused && !window.sectionVideo.querySelector('source')));
-  report.behaviour.push('random start, interaction reset, idle advance, focus, held playing key, all drink loops, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
+  assert(await page.evaluate(() => window.sectionSpin.dataset.active === 'false'), 'Hidden Projects section pauses its frame viewer');
+  report.behaviour.push('random start, interaction reset, idle advance, focus, held playing key, all drink sequences, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
   await context.close();
   // Keep readable static projects and all four copy cells for no-JS and print.
   const staticView = await open(views[0], 'light');

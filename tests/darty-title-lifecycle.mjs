@@ -8,7 +8,7 @@ const source = await readFile(new URL('../project-showcase.js', import.meta.url)
 const matchSource = await readFile(new URL('../darty-match.js', import.meta.url), 'utf8');
 const { dartyMatchURL } = await import(`data:text/javascript;base64,${Buffer.from(matchSource).toString('base64')}`);
 
-function mount(manual = false, phone = false) {
+function mount(manual = false, { width = 1440, coarse = false } = {}) {
   const f = fixture(`http://toucan.test/${manual ? 'children' : 'index'}.html?project=darty`);
   const pendingDecodes = [], decodeCalls = [], observers = [], messages = [];
   const prototype = Object.getPrototypeOf(f.node('div'));
@@ -64,12 +64,12 @@ function mount(manual = false, phone = false) {
     globalThis.Image = class { constructor(width, height) { const img = document.createElement('img'); img.width = width; img.height = height; return img; } };
     globalThis.matchMedia = query => {
       const target = document.createElement('media');
-      target.matches = query.includes('max-width') ? ${phone} : false;
+      target.matches = query.includes('max-width') ? ${width <= 767 || coarse} : false;
       return target;
     };
-    const motion = matchMedia('reduce'), stillsOnly = matchMedia('max-width');
-    globalThis.matchMedia = query => query.includes('max-width') ? stillsOnly : motion;
-    [motion, stillsOnly];
+    const motion = matchMedia('reduce'), compactDevice = matchMedia('max-width');
+    globalThis.matchMedia = query => query.includes('max-width') ? compactDevice : motion;
+    [motion, compactDevice];
   `);
   f.runCode('globalThis.IntersectionObserver = class { constructor(callback, options) { this.callback = callback; this.options = options; } observe(target) { this.target = target; document.body.intersections.push(this); } };');
   f.document.body.intersections = observers;
@@ -87,9 +87,12 @@ function mount(manual = false, phone = false) {
   };
 }
 
-for (const manual of [false, true]) {
-  const f = mount(manual);
+const devices = [{ width: 1440 }, { width: 390, coarse: true }, { width: 320, coarse: true }, { width: 767 }, { width: 768 }, { width: 1024, coarse: true }];
+for (const manual of [false, true]) for (const device of devices) {
+  const f = mount(manual, device);
   assert.equal(f.frame, null, 'No iframe before the visitor presses Play');
+  assert(f.play && f.title.querySelector('.showcase-darty-wordmark') && f.title.querySelector('.showcase-darty-subtitle'), `${device.width}px: every device has the title and Press to play button`);
+  assert.equal(f.root.querySelector('[data-screenshot-gallery]'), null, 'No device uses a gallery');
   assert.equal(f.title.dataset.active, 'true');
   assert.equal(f.stage.querySelectorAll('img').length, 1, 'One still is shared by the title and loading match');
   const backdrop = f.title.querySelector('img');
@@ -103,11 +106,12 @@ for (const manual of [false, true]) {
   const title = f.title;
   const poster = f.stage.querySelector('.showcase-preview');
   const start = () => {
+    const currentTitle = f.title;
     f.play.focus();
     f.emit(f.play, 'click');
     assert.equal(f.frame.src, dartyMatchURL);
     assert.equal(f.document.activeElement, f.frame, 'Keyboard focus transfers to the frame');
-    assert.equal(title.dataset.active, 'false', 'Title zoom is paused during playback');
+    assert.equal(currentTitle.dataset.active, 'false', 'Title zoom is paused during playback');
     assert.equal(f.stage.querySelector('.showcase-preview'), poster, 'Retain the incoming poster during match loading');
     assert.equal(f.frame.dataset.showcaseRevealed, undefined);
     assert.equal(f.mute.disabled, true, 'Do not send mute messages before the game loads');
@@ -150,18 +154,18 @@ for (const manual of [false, true]) {
   f.document.hidden = false;
   f.emit(f.document, 'visibilitychange');
   start();
-  f.media[1].matches = true;
+  const compact = f.media[1].matches;
+  f.media[1].matches = !compact;
   f.emit(f.media[1], 'change');
-  assert.equal(f.frame, null, 'Switching to phone mode destroys the iframe');
-  assert.equal(f.title, null);
-  assert(f.root.querySelector('[data-screenshot-gallery]'));
-  for (let i = 1; i <= 12; i++) {
-    assert(f.root.querySelector('[data-screenshot]').src.includes(`darty-still-${String(i).padStart(2, '0')}.webp`));
-    f.emit(f.root.querySelector('[data-screenshot-next]'), 'click');
-  }
-  f.media[1].matches = false;
+  assert.equal(f.frame, null, 'Crossing a device breakpoint destroys the iframe');
+  assert(f.play, 'Breakpoint teardown restores the shared title and button');
+  assert.equal(f.title.querySelector('img'), backdrop, 'Resizing reuses the same backdrop');
+  assert.equal(f.root.querySelector('[data-screenshot-gallery]'), null);
+  start();
+  f.media[1].matches = compact;
   f.emit(f.media[1], 'change');
-  assert(f.play);
+  assert.equal(f.frame, null, 'Crossing back also requires another click');
+  assert(f.play && f.title);
   f.media[0].matches = true;
   f.emit(f.media[0], 'change');
   assert.equal(f.title.dataset.active, 'false', 'Reduced motion keeps a static title');
@@ -181,10 +185,9 @@ for (const manual of [false, true]) {
   assert.equal(f.location.href, `http://toucan.test/${manual ? 'children' : 'index'}.html?project=darty`, 'Controls keep the URL unchanged');
 }
 
-// A phone load must not decode the desktop backdrop. If the breakpoint changes
-// on another slide, warm it there so the next project switch stays cheap.
-const phone = mount(false, true);
-assert(!phone.decodeCalls.some(src => src.includes('darty-still-07.webp')));
+// Phone loads warm the same backdrop once, even if resizing on another slide.
+const phone = mount(false, { width: 390, coarse: true });
+assert.equal(phone.decodeCalls.filter(src => src.includes('darty-still-07.webp')).length, 1);
 phone.emit(phone.root.querySelector('[data-project-prev]'), 'click');
 phone.media[1].matches = false;
 phone.emit(phone.media[1], 'change');
@@ -192,7 +195,7 @@ assert.equal(phone.decodeCalls.filter(src => src.includes('darty-still-07.webp')
 const warmedCount = phone.decodeCalls.length;
 phone.emit(phone.root.querySelector('[data-project-next]'), 'click');
 assert(phone.title.querySelector('img').src.includes('darty-still-07.webp'));
-assert.equal(phone.decodeCalls.length, warmedCount, 'Breakpoint warming happens before the title is selected');
+assert.equal(phone.decodeCalls.length, warmedCount, 'Resizing and project switches never restart the shared backdrop decode');
 await phone.decode();
 assert.equal(phone.title.dataset.ready, '');
-console.log('DARTY lifecycle checks passed on both carousels: one decorative still, decode guard, exact URL, click-only frame, reveal, mute messages/icon/labels, viewport/tab/resize/page teardown, nine-image phone gallery, reduced motion and clean URLs. Rendering remains a browser check.');
+console.log('DARTY lifecycle checks passed on both carousels at 1440, 390, 320, 767, 768 and wide coarse-pointer mode: shared title/still, decode guard, exact URL, click-only frame, reveal, mute messages/icon/labels, viewport/tab/breakpoint/page teardown, reduced motion and clean URLs. Rendering remains a browser check.');

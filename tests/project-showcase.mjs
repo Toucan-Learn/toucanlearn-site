@@ -312,14 +312,9 @@ try {
           await frame.waitForSelector('.news-front');
         }
         if (id === 'darty') {
-          if (view.width <= 767 || view.hasTouch) {
-            const beforeImage = await page.$eval('[data-screenshot]', img => img.src);
-            await page.click('[data-screenshot-next]');
-            assert.notEqual(await page.$eval('[data-screenshot]', img => img.src), beforeImage);
-          } else {
-            assert.equal(await page.$$eval('[data-darty-play]', buttons => buttons.length), 1);
-            assert.equal(await page.$('.showcase-match'), null, 'Desktop match waits for Play');
-          }
+          assert.equal(await page.$$eval('[data-darty-play]', buttons => buttons.length), 1);
+          assert.equal(await page.$('.showcase-match'), null, 'Every device waits for Play');
+          assert.equal(await page.$('[data-screenshot-gallery]'), null, 'The shared title replaces the phone gallery');
           assert.equal(await selected(page), 'darty', 'DARTY controls leave the project selected');
         }
         if (id === 'drinks') for (const drink of ['skids', 'fizzy', 'ground-pinch']) {

@@ -42,14 +42,15 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
   async function poster(page, { visible = true } = {}) {
     await page.waitForSelector('[data-darty-play]', { visible });
     assert.equal(await page.$('.showcase-match'), null, 'Poster has no iframe');
-    assert.equal(await page.$('[data-screenshot-gallery]'), null, 'Desktop has no gallery controls');
+    assert.equal(await page.$('[data-screenshot-gallery]'), null, 'No device has gallery controls');
     assert.equal(await page.$$eval('.showcase-stage img', images => images.length), 1, 'Title uses one decorative still');
     assert.deepEqual(await page.$eval('.showcase-darty-title > img', img => [img.getAttribute('src'), img.alt, img.getAttribute('aria-hidden')]), [stillURL(7), '', 'true']);
     assert.deepEqual(await page.$$eval('.showcase-darty-heading > *', nodes => nodes.map(node => node.textContent)), ['DARTY', 'A student’s answer to FIFA', 'CPU vs CPU · live match', 'Press to play'], 'Title card has exactly the wordmark, subtitle and one large button');
     assert.equal(await page.$$eval('[data-darty-play]', buttons => buttons.length), 1);
     assert.equal(await page.$('[data-darty-mute]'), null, 'Mute only appears during playback');
   }
-  async function start(page, keyboard = false) {
+  async function start(page, keyboard = false, touch = false) {
+    await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center', behavior: 'instant' }));
     await poster(page);
     // Allow the card's IntersectionObserver to see a programmatic scroll.
     await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
@@ -64,7 +65,8 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     } else {
       // The rectangular button's outer padding must activate it too.
       const box = await (await page.$('[data-darty-play]')).boundingBox();
-      await page.mouse.click(box.x + 6, box.y + box.height / 2);
+      if (touch) await page.touchscreen.tap(box.x + 6, box.y + box.height / 2);
+      else await page.mouse.click(box.x + 6, box.y + box.height / 2);
     }
     await response;
     await page.waitForSelector('.showcase-match');
@@ -92,12 +94,7 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     assert.equal(await page.$('[data-darty-mute]'), null, 'Teardown removes the mute control');
   }
 
-  async function checkTitle(page, stillRequests, route) {
-    await page.waitForSelector('.showcase-darty-title[data-active="false"][data-ready]');
-    const reduced = await page.$$eval('.showcase-darty-title img', images => images.map(img => ({ opacity: getComputedStyle(img).opacity, transform: getComputedStyle(img).transform, animations: img.getAnimations().length, fit: getComputedStyle(img).objectFit, cap: getComputedStyle(img).maxHeight })));
-    assert.deepEqual(reduced.map(img => img.opacity), ['1'], 'Reduced motion shows the single still');
-    assert(reduced.every(img => img.transform === 'none' && img.animations === 0), 'Reduced motion has no animation');
-    assert(reduced.every(img => img.fit === 'cover' && img.cap === 'none'), 'Back-page image rules must not letterbox or cap the title stills');
+  async function checkTitleLayout(page, { phone = false, desktopReference = false } = {}) {
     await page.keyboard.press('Tab');
     await page.focus('[data-darty-play]');
     const button = await page.$eval('[data-darty-play]', node => {
@@ -107,14 +104,28 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
       const card = document.querySelector('.showcase-darty-title').getBoundingClientRect();
       const heading = document.querySelector('.showcase-darty-heading');
       const menu = heading.getBoundingClientRect();
-      return { width: rect.width, height: rect.height, color: css.color, background: css.backgroundColor, outline: parseFloat(css.outlineWidth), radius: parseFloat(css.borderRadius), orange: title.color,
-        rightSide: menu.left >= card.left + card.width * .53, fits: [...heading.children].every(node => { const box = node.getBoundingClientRect(); return box.left >= menu.left && box.right <= card.right - 4 && box.top >= card.top && box.bottom <= card.bottom && node.scrollWidth <= node.clientWidth + 1; }) };
+      return { width: rect.width, height: rect.height, menuWidth: menu.width, color: css.color, background: css.backgroundColor, outline: parseFloat(css.outlineWidth), radius: parseFloat(css.borderRadius), orange: title.color,
+        rightSide: menu.left >= card.left + card.width * .53,
+        fits: [...heading.children].every(node => { const box = node.getBoundingClientRect(); return box.left >= menu.left && box.right <= card.right - 4 && box.top >= card.top && box.bottom <= card.bottom && node.scrollWidth <= node.clientWidth + 1; }),
+        focusFits: rect.left - 8 >= card.left && rect.right + 8 <= card.right && rect.top - 8 >= card.top && rect.bottom + 8 <= card.bottom,
+        pageFits: document.documentElement.scrollWidth <= innerWidth + 1 };
     });
-    assert(button.width >= 200 && button.height >= 56 && button.radius <= 6 && button.outline >= 3, 'Large rectangular button has a clear keyboard focus ring');
+    assert(button.width >= (desktopReference ? 200 : Math.min(200, button.menuWidth) - 1) && button.height >= (phone ? 44 : 56) && button.radius <= 6 && button.outline >= 3, 'Large rectangular button has a clear keyboard focus ring');
     assert.equal(button.color, 'rgb(16, 35, 42)');
     assert.equal(button.background, 'rgb(255, 247, 233)');
     assert.equal(button.orange, 'rgb(232, 100, 44)', 'Use the game banner orange');
-    assert(button.rightSide && button.fits, 'Menu fits on the shaded right, clear of the centre-left player');
+    assert(button.fits, 'Heading, subtitle and button fit inside the cell without clipping');
+    if (phone) assert(button.focusFits && button.pageFits, 'Phone focus ring fits and the page has no horizontal overflow');
+    else assert(button.rightSide, 'Menu stays on the shaded right, clear of the centre-left player');
+  }
+
+  async function checkTitle(page, stillRequests, route) {
+    await page.waitForSelector('.showcase-darty-title[data-active="false"][data-ready]');
+    const reduced = await page.$$eval('.showcase-darty-title img', images => images.map(img => ({ opacity: getComputedStyle(img).opacity, transform: getComputedStyle(img).transform, animations: img.getAnimations().length, fit: getComputedStyle(img).objectFit, cap: getComputedStyle(img).maxHeight })));
+    assert.deepEqual(reduced.map(img => img.opacity), ['1'], 'Reduced motion shows the single still');
+    assert(reduced.every(img => img.transform === 'none' && img.animations === 0), 'Reduced motion has no animation');
+    assert(reduced.every(img => img.fit === 'cover' && img.cap === 'none'), 'Back-page image rules must not letterbox or cap the title stills');
+    await checkTitleLayout(page, { desktopReference: true });
     await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
     await page.waitForSelector('.showcase-darty-title[data-active="true"][data-ready]');
     await page.$eval('[data-showcase]', root => root.focus({ preventScroll: true }));
@@ -172,7 +183,7 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     await page.waitForSelector('.showcase-darty-title[data-active="true"]');
     const requested = [...new Set(stillRequests.map(url => new URL(url).pathname))];
     assert(requested.includes('/assets/projects/darty-still-07.webp'));
-    assert(requested.every(src => /darty-still-0[17]\.webp$/.test(src)), 'Desktop requests only its backdrop and any static HTML/phone fallback');
+    assert(requested.every(src => /darty-still-0[17]\.webp$/.test(src)), 'Desktop requests only its backdrop and any static HTML fallback');
     await page.screenshot({ path: path.join(output, `darty-title-${route}.png`) });
   }
 
@@ -255,8 +266,11 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     await start(page);
     await page.setViewport({ width: 767, height: 844, deviceScaleFactor: 1 });
     await stopped(page);
-    await page.waitForSelector('[data-screenshot-next]');
-    assert.equal(await page.$('[data-darty-play]'), null, 'Crossing the phone breakpoint removes the live player');
+    await poster(page);
+    await start(page);
+    await page.setViewport({ width: 768, height: 844, deviceScaleFactor: 1 });
+    await stopped(page);
+    await poster(page);
     await page.setViewport({ ...views[0], deviceScaleFactor: 1 });
     await poster(page);
 
@@ -287,8 +301,11 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     await start(page);
     await page.setViewport({ width: 767, height: 844, deviceScaleFactor: 1 });
     await stopped(page);
-    await page.waitForSelector('[data-screenshot-next]');
-    assert.equal(await page.$('[data-darty-play]'), null);
+    await poster(page);
+    await start(page);
+    await page.setViewport({ width: 768, height: 844, deviceScaleFactor: 1 });
+    await stopped(page);
+    await poster(page);
     await page.setViewport({ ...views[0], deviceScaleFactor: 1 });
     await poster(page);
     report.behaviour.push(`DARTY ${live ? 'live game' : 'cross-origin fixture'}: click-only exact URL, focus, fixed size, playing blocks idle, switch/scroll/tab/panel/resize teardown`);
@@ -296,35 +313,38 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     await context.close();
   }
 
-  for (const view of [views[2], { width: 767, height: 844 }, { width: 768, height: 844 }, { width: 1024, height: 768, hasTouch: true }]) {
+  for (const view of [views[2], views[3], { width: 767, height: 844 }, { width: 768, height: 844 }, { width: 1024, height: 768, hasTouch: true }]) {
     const session = await prepare(view);
     try {
       for (const route of ['index.html?project=darty', 'children.html?project=darty#learner-projects']) {
+        const requestsBefore = session.requests.length;
         await load(session.page, route);
         await project(session.page, 'darty');
-        const gallery = await session.page.evaluate(() => matchMedia('(max-width: 767px), (pointer: coarse) and (hover: none)').matches);
-        assert.equal(gallery, view.width <= 767 || Boolean(view.hasTouch), 'Exercise both the width and coarse-pointer gates');
-        if (gallery) {
-          await session.page.waitForSelector('[data-screenshot-next]');
-          assert.equal(await session.page.$('[data-darty-play]'), null);
-          assert.equal(await session.page.$('iframe'), null);
-          for (let i = 1; i <= 12; i++) {
-            assert.equal(await session.page.$eval('[data-screenshot]', img => img.getAttribute('src')), stillURL(i));
-            assert.equal(await session.page.$eval('[data-screenshot-status]', status => status.textContent), `Gameplay screenshots · ${i} of 12`);
-            assert.match(await session.page.$eval('[data-screenshot]', img => img.alt), new RegExp(`DARTY night football match.*screenshot ${i} of 12`));
-            await session.page.click('[data-screenshot-next]');
-          }
-          assert.equal(await session.page.$eval('[data-screenshot]', img => img.getAttribute('src')), stillURL(1), 'Twelve-image phone gallery wraps to the first still');
-          await session.page.focus('[data-screenshot-next]');
-          await session.page.keyboard.press('ArrowLeft');
-          assert.equal(await selected(session.page), 'darty', 'Phone gallery retains its keyboard input');
-        } else await poster(session.page);
-        assert.deepEqual(session.requests, [], 'Gallery and unplayed desktop poster never request the game');
+        const compact = await session.page.evaluate(() => matchMedia('(max-width: 767px), (pointer: coarse) and (hover: none)').matches);
+        assert.equal(compact, view.width <= 767 || Boolean(view.hasTouch), 'Exercise narrow widths and wide coarse-pointer input');
+        await poster(session.page);
+        await checkTitleLayout(session.page, { phone: view.width <= 767 });
+        await session.page.focus('[data-darty-play]');
+        await session.page.keyboard.press('ArrowLeft');
+        assert.equal(await selected(session.page), 'darty', 'The Play button retains its keyboard input');
+        assert.equal(session.requests.length, requestsBefore, 'The title card never requests the game before Play');
+        await session.page.screenshot({ path: path.join(output, `darty-title-${view.width}-${route.startsWith('children') ? 'children' : 'home'}.png`) });
+        await start(session.page, false, Boolean(view.hasTouch));
+        assert.equal(await selected(session.page), 'darty', 'Playing leaves the project selected');
+        await session.page.click('[data-darty-mute]');
+        assert.equal(await session.page.$eval('[data-darty-mute]', button => button.getAttribute('aria-pressed')), 'true', 'Phone and tablet mute controls work');
+        await session.page.screenshot({ path: path.join(output, `darty-playing-${view.width}-${route.startsWith('children') ? 'children' : 'home'}.png`) });
+        await assertImmediateProjectSwitch(session.page);
+        await stopped(session.page);
+        const afterSwitch = session.requests.length;
+        await project(session.page, 'darty');
+        await poster(session.page);
+        assert.equal(session.requests.length, afterSwitch, 'Returning on a phone or tablet still requires another press');
       }
     } finally {
       await session.context.close();
     }
   }
   report.behaviour.push('DARTY title: one decorative number 2 still, shaded right-side menu, gentle zoom, static reduced motion, tab/off-screen pause, title/button/focus, playback poster reveal and accessible cross-origin mute');
-  report.behaviour.push('DARTY phones: twelve-image gallery on both pages, 767/768 boundary and wide coarse-pointer coverage');
+  report.behaviour.push('DARTY phones/tablets: shared title, large fitting Press to play button, click/tap-only exact iframe URL, reveal, mute and switch teardown on both pages at 390, 320, 767/768 and wide coarse-pointer input');
 }

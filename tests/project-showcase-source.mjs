@@ -24,9 +24,12 @@ assert.deepEqual(matchURL.searchParams.getAll('autoplay'), ['1'], 'DARTY require
 assert.deepEqual(matchURL.searchParams.getAll('simulationSeed'), ['random'], 'Each DARTY load requests a fresh random match');
 assert.equal(createHash('sha256').update(matchURL.hash.slice(1)).digest('hex'), '23ae1c7f971bd722b9830a21820ebbae41f4984829846425c1981e8f2a5f7724', 'Keep the complete flMatch fragment byte-identical');
 for (const [key, value] of Object.entries({ volume: '30', weather: 'overcast', matchMinutes: '6', clean: '1', director: 'showcase', commentary: '0' })) assert.equal(matchURL.searchParams.get(key), value);
-assert.match(source, /matchMedia\('\(max-width: 767px\), \(pointer: coarse\) and \(hover: none\)'\)/, 'Phones and touch-only devices keep stills');
+assert.match(source, /matchMedia\('\(max-width: 767px\), \(pointer: coarse\) and \(hover: none\)'\)/, 'Keep the device query for newspaper prefetch and breakpoint teardown');
 assert.match(source, /const interactive = '[^']*iframe/, 'The iframe keeps its own input');
-const liveMatch = source.split("project.type === 'gallery' && !stillsOnly.matches")[1].split("else if (project.type === 'gallery')")[0];
+const liveMatch = source.split("project.type === 'match'")[1].split("else if (project.type === 'drinks')")[0];
+assert(!/compactDevice|stillsOnly/.test(liveMatch), 'DARTY title and playback have no phone or pointer gate');
+assert(!/stillsOnly|screenshot-gallery|data-screenshot|dartyStills/.test(source) && !showcaseStyles.includes('screenshot-gallery'), 'Delete the obsolete gallery code and showcase styles');
+assert.match(source, /img\.src = project\.titleStill \|\| poster;/, 'Every device warms the shared title backdrop');
 assert(liveMatch.includes("play.addEventListener('click'"));
 const beforeClick = liveMatch.split("play.addEventListener('click'")[0];
 assert(!beforeClick.includes("createElement('iframe')") && !beforeClick.includes('dartyMatchURL'), 'No match is created or requested before Play');
@@ -39,7 +42,7 @@ assert.match(liveMatch, /dispose = \(\) => \{[^}]*stop\(false\)/, 'Unmount clean
 assert(liveMatch.indexOf('if (!restore) return;') < liveMatch.indexOf('stage.replaceChildren(title)'), 'Only visibility teardown restores the title card');
 assert.match(liveMatch, /dispose\.setActive = active => \{[\s\S]*if \(!active\) stop\(\);/);
 assert.match(liveMatch, /dispose\.isPlaying = \(\) => Boolean\(frame\)/);
-assert.match(source, /stillsOnly\.addEventListener\('change', \(\) => \{[\s\S]*?if \(entries\[index\]\.type !== 'gallery'\) return;/, 'Breakpoint changes use the current carousel entries, including the children-only intro');
+assert.match(source, /compactDevice\.addEventListener\('change', \(\) => \{[\s\S]*?if \(entries\[index\]\.type !== 'match'\) return;/, 'Breakpoint changes use the current carousel entries, including the children-only intro');
 // Policy imports run without a DOM; browser suites exercise the real sky module.
 const skyURL = `data:text/javascript,export function initHeroSky(){throw new Error('Unexpected DOM mount in policy test')}`;
 const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL))
@@ -48,9 +51,11 @@ const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, J
   .replace(/(['"])\.\/hero-sky-shaders\.js(?:\?[^'"]*)?\1/, JSON.stringify(new URL('../hero-sky-shaders.js', import.meta.url).href));
 const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
 const darty = projects.find(project => project.id === 'darty');
-assert.equal(darty.images.length, 12);
-assert.equal(darty.poster, darty.images[0]);
-assert.equal(darty.titleStill, darty.images[6], 'Desktop uses the number 2 floodlit still');
+assert.equal(darty.type, 'match');
+assert(!('images' in darty), 'There is no gallery image list');
+const stillURL = n => `assets/projects/darty-still-${String(n).padStart(2, '0')}.webp?v=20261029-darty-title-5`;
+assert.equal(darty.poster, stillURL(1), 'Keep the no-JS fallback poster');
+assert.equal(darty.titleStill, stillURL(7), 'All devices use the number 2 floodlit still');
 assert(!source.includes('showcase-darty-stills') && !showcaseStyles.includes('showcase-darty-still'), 'Remove the title slideshow code and styles');
 const zoom = showcaseStyles.match(/@keyframes showcase-darty-zoom\s*\{\s*from\s*\{([^}]+)\}\s*to\s*\{([^}]+)\}\s*\}/);
 assert(zoom && zoom.slice(1).every(frame => /^\s*transform:\s*scale\([\d.]+\);\s*$/.test(frame)), 'Title zoom animates only CSS transforms');
@@ -68,11 +73,12 @@ const approvedStillHashes = [
   '91f1ebb0e6895de23e1b8661e5578f5e3bb529cb64452409f0debefd3ad61638',
   '2bcef459980e7bd3b4530206fb7a232b2e30e010fc79acf95bba0aa8fbd6a8e7',
 ];
-for (const [i, src] of darty.images.entries()) {
+for (const [i, hash] of approvedStillHashes.entries()) {
+  const src = stillURL(i + 1);
   const url = new URL(`../${src}`, import.meta.url);
   assert(url.pathname.endsWith(`/assets/projects/darty-still-${String(i + 1).padStart(2, '0')}.webp`));
   assert.equal(url.searchParams.get('v'), '20261029-darty-title-5', 'Replaced stills need a fresh cache token');
-  assert.equal(createHash('sha256').update(await readFile(url)).digest('hex'), approvedStillHashes[i], `Still ${i + 1} must match the approved day/night image byte for byte`);
+  assert.equal(createHash('sha256').update(await readFile(url)).digest('hex'), hash, `Retained still ${i + 1} must match the approved day/night image byte for byte`);
 }
 await import('./drink-spin-source.mjs');
 await import('./darty-title-lifecycle.mjs');
@@ -250,4 +256,4 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
     .replace('  sized = rect.width > 0 && rect.height > 0;\n', '');
   assert.equal(current, execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '16f98d3'}:${file}`], { cwd: site, encoding: 'utf8' }), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }
-console.log('Shared showcase checks passed: exact DARTY URL/hash/single autoplay, click-only iframe, phone gate, teardown, children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');
+console.log('Shared showcase checks passed: exact DARTY URL/hash/single autoplay, click-only iframe on all devices, teardown, children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

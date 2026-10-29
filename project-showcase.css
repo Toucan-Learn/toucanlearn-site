@@ -4,7 +4,7 @@
 .hero-world > [data-showcase] { display: block; }
 .hero-world .showcase-cell { height: calc(var(--showcase-height) + var(--showcase-bar)); }
 .showcase-stage { position: relative; min-width: 0; min-height: 0; border-radius: 14px 14px 0 0; background: #071219; }
-.showcase-stage > :is(img, iframe, .screenshot-gallery, .showcase-drinks, .piano-world) { display: block; width: 100%; height: 100%; min-width: 0; border: 0; margin: 0; }
+.showcase-stage > :is(img, iframe, .showcase-drinks, .piano-world) { display: block; width: 100%; height: 100%; min-width: 0; border: 0; margin: 0; }
 .showcase-stage > img { object-fit: contain; border-radius: 14px 14px 0 0; }
 .showcase-stage > .showcase-preview { position: absolute; inset: 0; }
 .showcase-stage > .showcase-live { position: relative; z-index: 1; opacity: 0; transition: opacity 150ms ease; }
@@ -30,7 +30,7 @@
 .showcase-caption .showcase-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .showcase-cell button { min-width: 0; border: 0; color: #f0ebe0; background: transparent; font: inherit; cursor: pointer; }
 .showcase-caption > button { flex: 0 0 32px; align-self: stretch; padding: 0; font-size: 18px; }
-.showcase-caption button:hover, .showcase-stage .screenshot-gallery-controls button:hover { color: #efac8e; background: #103138; }
+.showcase-caption button:hover { color: #efac8e; background: #103138; }
 .showcase-cell button:focus-visible { outline: 2px solid #efac8e; outline-offset: -3px; }
 /* Keep number 2 clear on the left; the play menu sits in the shaded right. */
 [data-showcase][data-project="darty"] .showcase-stage > .showcase-preview { object-fit: cover; }
@@ -51,6 +51,13 @@
 .showcase-cell .showcase-match-play { display: block; width: 240px; max-width: 100%; min-height: 58px; padding: 14px 24px; border: 2px solid #fff7e9; border-radius: 4px; color: #10232a; background: #fff7e9; font-size: 19px; font-weight: 800; line-height: 1.2; box-shadow: 0 4px 20px #0005; }
 .showcase-cell .showcase-match-play:hover { color: #10232a; background: #ffe0c0; border-color: #ffe0c0; }
 .showcase-cell .showcase-match-play:focus-visible { outline: 3px solid #fff7e9; outline-offset: 5px; box-shadow: 0 0 0 5px #10232a; }
+/* A wider, centred menu keeps the same title and large button inside phone cells. */
+@media (max-width: 767px) {
+  .showcase-darty-heading { inset: 0 8%; align-items: center; gap: 16px; padding-block: 20px; text-align: center; }
+  .showcase-darty-wordmark { font-size: clamp(48px, 17cqw, 64px); }
+  .showcase-cell .showcase-darty-subtitle { font-size: clamp(12px, 3.6cqw, 14px); }
+  .showcase-cell .showcase-match-play { flex-shrink: 0; }
+}
 .showcase-cell .showcase-match-mute { display: grid; place-items: center; width: 36px; height: 36px; padding: 6px; border: 1px solid #adc4b566; border-radius: 4px; color: #fff7e9; background: #0b2228; }
 .showcase-cell .showcase-match-mute:hover { background: #103138; }
 .showcase-cell .showcase-match-mute:focus-visible { outline: 2px solid #fff7e9; outline-offset: 2px; }
@@ -65,10 +72,6 @@
 .showcase-stage .piano-world .world-art { width: 100%; height: 100%; }
 /* In the opening the original keyboard still drops below the caption. */
 .showcase-cell .piano-panel { inset: calc(100% + var(--showcase-bar) + 1px) -1px auto; }
-.showcase-stage .screenshot-gallery { position: relative; overflow: hidden; border-radius: 14px 14px 0 0; }
-.showcase-stage .screenshot-gallery img { display: block; width: 100%; height: 100%; max-height: none; object-fit: contain; border-radius: 0; }
-.showcase-stage .screenshot-gallery-controls { position: absolute; right: 8px; bottom: 8px; left: 8px; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 0; padding: 4px 8px; border-radius: 10px; background: #04161ee6; color: #f0ebe0; font-size: 12px; }
-.showcase-stage .screenshot-gallery-controls button { flex-shrink: 0; min-height: 34px; padding: 4px 8px; border-radius: 6px; }
 [data-showcase][data-project="drinks"] .showcase-stage,
 .showcase-stage .showcase-drinks,
 .showcase-drink-screen { background: var(--drink-backdrop); }
@@ -138,7 +141,6 @@
 #learner-projects [data-showcase][data-enhanced] .framework-project-media { overflow: visible; }
 #learner-projects .showcase-stage > img,
 #learner-projects .showcase-drink-screen img { height: 100%; max-height: none; }
-#learner-projects .showcase-stage .screenshot-gallery-controls { right: 8px; bottom: 8px; left: 8px; }
 /* The section keyboard opens inside its media cell so the section footer stays clear. */
 #learner-projects .showcase-stage .piano-world { overflow: clip; min-height: 0; }
 #learner-projects .showcase-cell .piano-panel { inset: auto -1px 0; max-height: 100%; }
@@ -222,7 +224,6 @@
 /* Earlier back-page image rules also reach nested art: keep the mascot's real
    proportions and let media previews fill the available stage. */
 body[data-page-frame] #learner-projects .showcase-stage > img,
-body[data-page-frame] #learner-projects .showcase-stage .screenshot-gallery img,
 body[data-page-frame] #learner-projects .showcase-stage .showcase-darty-title img,
 body[data-page-frame] #learner-projects .showcase-drink-screen img { width: 100%; height: 100%; max-height: none; }
 body[data-page-frame] #learner-projects .showcase-stage .showcase-darty-title img,

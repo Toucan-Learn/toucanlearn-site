@@ -3,12 +3,10 @@ import { initHeroSky } from './hero-sky.js?v=20261029-match-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
-const dartyStills = Array.from({ length: 12 }, (_, i) => `assets/projects/darty-still-${String(i + 1).padStart(2, '0')}.webp?v=20261029-darty-title-5`);
-
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
   { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-home.webp?v=20261029-match-1', sectionPoster: 'assets/projects/football-section.webp?v=20261029-match-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
-  { id: 'darty', name: 'DARTY', poster: dartyStills[0], titleStill: dartyStills[6], alt: 'DARTY night football match with stylised players on a green pitch', type: 'gallery', images: dartyStills },
+  { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
   { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
@@ -125,7 +123,7 @@ const pianoToggle = `            <button class="piano-toggle" id="piano-toggle" 
             </button>
 `;
 
-const interactive = 'a, button, input, textarea, select, video, audio, iframe, summary, [contenteditable], [role="slider"], [data-screenshot-gallery]';
+const interactive = 'a, button, input, textarea, select, video, audio, iframe, summary, [contenteditable], [role="slider"]';
 const activityTypes = ['pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'keydown', 'keyup', 'touchstart', 'touchmove', 'touchend', 'focusin'];
 
 export function initShowcase(root) {
@@ -134,7 +132,7 @@ export function initShowcase(root) {
   const entries = automatic ? projects : sectionProjects;
   const slides = [...root.querySelectorAll('[data-project-slide]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
-  const stillsOnly = matchMedia('(max-width: 767px), (pointer: coarse) and (hover: none)');
+  const compactDevice = matchMedia('(max-width: 767px), (pointer: coarse) and (hover: none)');
   const requested = new URLSearchParams(location.search).get('project');
   let index = automatic ? initialProject(requested) : Math.max(0, entries.findIndex(project => project.id === requested));
   // The homepage counts from wherever it opened, so its first project reads "1 of 4".
@@ -160,7 +158,7 @@ export function initShowcase(root) {
     // Football and piano posters are captures of each carousel's live view
     // (scripts/capture-showcase-posters.mjs), so the cross-fade is invisible.
     const poster = ((!automatic && project.sectionPoster) || project.poster).replace('{sky}', pianoSky);
-    img.src = project.titleStill && !stillsOnly.matches ? project.titleStill : poster;
+    img.src = project.titleStill || poster;
     const decoded = img.decode();
     previewDecodes.set(img, decoded);
     void decoded.catch(() => {});
@@ -247,7 +245,7 @@ export function initShowcase(root) {
     drinkPrefetch.setActive(nearView && visible() && !motion.matches);
     // Laptops load the newspaper in the background shortly after the showcase
     // nears view, so even the first switch shows the live page. Phones wait.
-    const warm = nearView && visible() && !stillsOnly.matches && !newspaper.iframe;
+    const warm = nearView && visible() && !compactDevice.matches && !newspaper.iframe;
     if (warm && !newspaperWarm) newspaperWarm = setTimeout(() => { newspaperWarm = 0; if (nearView && visible()) loadNewspaper(); }, 2000);
     else if (!warm && newspaperWarm) { clearTimeout(newspaperWarm); newspaperWarm = 0; }
   };
@@ -338,7 +336,7 @@ export function initShowcase(root) {
         };
         afterPaint();
       }
-    } else if (project.type === 'gallery' && !stillsOnly.matches) {
+    } else if (project.type === 'match') {
       const title = document.createElement('div');
       title.className = 'showcase-darty-title';
       title.innerHTML = '<div class="showcase-darty-heading"><strong class="showcase-darty-wordmark">DARTY</strong><p class="showcase-darty-subtitle">A student’s answer to FIFA</p><p class="showcase-darty-subtitle">CPU vs CPU · live match</p><button class="showcase-match-play" type="button" data-darty-play>Press to play</button></div>';
@@ -381,7 +379,7 @@ export function initShowcase(root) {
         if (focused && visible() && inView) play.focus({ preventScroll: true });
       };
       play.addEventListener('click', () => {
-        if (token !== generation || frame || !inView || !visible() || stillsOnly.matches) return;
+        if (token !== generation || frame || !inView || !visible()) return;
         const focused = document.activeElement === play;
         title.dataset.active = 'false';
         frame = document.createElement('iframe');
@@ -417,24 +415,6 @@ export function initShowcase(root) {
       };
       // Cross-origin input cannot bubble here. Keep the card for the match.
       dispose.isPlaying = () => Boolean(frame);
-    } else if (project.type === 'gallery') {
-      const gallery = document.createElement('div');
-      gallery.className = 'screenshot-gallery';
-      gallery.dataset.screenshotGallery = '';
-      gallery.setAttribute('role', 'group');
-      gallery.setAttribute('aria-label', 'DARTY night match screenshots');
-      gallery.innerHTML = '<img data-screenshot width="1600" height="900"><div class="screenshot-gallery-controls"><span data-screenshot-status aria-live="polite"></span><button type="button" data-screenshot-next>Next image <span aria-hidden="true">→</span></button></div>';
-      let image = 0;
-      const draw = () => {
-        const img = gallery.querySelector('img');
-        img.src = project.images[image];
-        img.alt = `${project.alt} · screenshot ${image + 1} of ${project.images.length}`;
-        gallery.querySelector('[data-screenshot-status]').textContent = `Gameplay screenshots · ${image + 1} of ${project.images.length}`;
-      };
-      gallery.querySelector('button').addEventListener('click', () => { image = (image + 1) % project.images.length; draw(); });
-      gallery.dataset.enhanced = '';
-      draw();
-      stage.replaceChildren(gallery);
     } else if (project.type === 'drinks') {
       const drinks = document.createElement('div');
       drinks.className = 'showcase-drinks';
@@ -561,10 +541,8 @@ export function initShowcase(root) {
     timer.reset();
     sync();
   });
-  stillsOnly.addEventListener('change', () => {
-    // Warm the new breakpoint's backdrop even when another project is selected.
-    entries.filter(project => project.titleStill).forEach(project => warmPreview(project, preview(project)));
-    if (entries[index].type !== 'gallery') return;
+  compactDevice.addEventListener('change', () => {
+    if (entries[index].type !== 'match') return;
     if (stage.contains(document.activeElement)) root.focus({ preventScroll: true });
     unmount();
     timer.reset();

@@ -15,7 +15,7 @@ For the final Blender delivery, replace each sequence and poster together and us
 {"frameCount":120,"width":1200,"height":900,"dragDirection":-1,"temporary":false}
 ```
 
-Frame zero must face front. Increasing indices in the supplied clockwise turn
+Frame zero faces east, label to the right (owner, 29 Oct). Increasing indices in the supplied clockwise turn
 move the front label left, so `dragDirection: -1` makes the label follow the hand.
 If the final render direction reverses, use `1`. Frame counts are independent of
 the 16-second rotation speed. The preparation script refuses production manifests.

@@ -32,11 +32,12 @@
 /* Use the back pages' outer frame and intro rhythm. Independent columns keep
    the pricing card's height from pushing the first form fields down. */
 .contact-main {
-  --enquiry-surface: #fffaf2;
-  --enquiry-line: #d8d2c6;
-  --enquiry-shadow: 0 12px 30px rgba(11, 63, 81, .12);
-  --field-surface: #fffdf8;
-  --field-border: #82918a;
+  /* Owner, 29 Oct: the near-white form glared against the cream page. */
+  --enquiry-surface: #f3ece2;
+  --enquiry-line: #d3cbbd;
+  --enquiry-shadow: 0 10px 24px rgba(11, 63, 81, .08);
+  --field-surface: #faf6ef;
+  --field-border: #87958e;
   --field-focus: #1f7a75;
   --field-focus-rgb: 31, 122, 117;
   --sidebar-surface: #eee6da;
@@ -107,7 +108,7 @@
     --enquiry-surface: #26383a;
     --enquiry-line: #4e6867;
     --enquiry-shadow: 0 12px 30px rgba(0, 0, 0, .22);
-    --field-surface: #172a2d;
+    --field-surface: #31474a;
     --field-border: #658982;
     --field-focus: #7fcfc3;
     --field-focus-rgb: 127, 207, 195;
@@ -118,7 +119,7 @@
   --enquiry-surface: #26383a;
   --enquiry-line: #4e6867;
   --enquiry-shadow: 0 12px 30px rgba(0, 0, 0, .22);
-  --field-surface: #172a2d;
+  --field-surface: #31474a;
   --field-border: #658982;
   --field-focus: #7fcfc3;
   --field-focus-rgb: 127, 207, 195;
@@ -134,7 +135,7 @@
 .pricing-bands > .price-band dt { color: #fff8ea; }
 .pricing-bands > .price-band dd { color: inherit; opacity: .92; }
 /* Progressively lighter overlays reveal more sky; all text stays on a dark tint. */
-.price-band--emerging { --band-base: #1f4a37; --band-overlay: linear-gradient(135deg, #1f4a37f0, #22553de6); box-shadow: inset 0 0 0 1px #8fd3a940; }
+.price-band--emerging { --band-base: #163b2b; --band-overlay: linear-gradient(135deg, #153a2af0, #19412fe6); box-shadow: inset 0 0 0 1px #8fd3a940; }
 .price-band--emerging dt span { color: #a9e6bf; }
 .price-band--academic { --band-base: #0b3a46; --band-overlay: linear-gradient(135deg, #0b3a46e6, #10414be0 60%, #123441d9); box-shadow: inset 0 0 0 1px #e4be7850; }
 .price-band--academic dt span { color: #e9c37d; }

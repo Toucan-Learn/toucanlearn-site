@@ -308,6 +308,7 @@
     "licence": "Public Domain",
     "timeSignature": "2/4",
     "transposeSemitones": 0,
+    "loop": "Printed bars 1-8, upper-staff melody only. The top voice crosses to the lower staff in bar 7; omit those lower-staff attacks and retain that bar as upper-staff silence. Do not expand the repeat. Wrap the initial sixteenth rest into the last onset gap so the loop remains eight complete 2/4 bars.",
     "bars": [
       {
         "number": 1,
@@ -319,6 +320,14 @@
           "C5",
           "D#5",
           "G4"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.25,
+          1.75
         ]
       },
       {
@@ -329,6 +338,12 @@
           "G4",
           "A#4",
           "D#5"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75
         ]
       },
       {
@@ -341,6 +356,14 @@
           "C5",
           "D#5",
           "G4"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.25,
+          1.75
         ]
       },
       {
@@ -352,8 +375,89 @@
           "A#4",
           "D#5",
           "D#5"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          0.75,
+          1.75
+        ]
+      },
+      {
+        "number": 5,
+        "lilypond": "r16 as, ces <fes fes,> r16 <es es,> r16 <es es,>",
+        "attacks": [
+          "G#4",
+          "B4",
+          "E5",
+          "D#5",
+          "D#5"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.75
+        ]
+      },
+      {
+        "number": 6,
+        "lilypond": "r16 as, ces <fes fes,> r16 <es es,> r8",
+        "attacks": [
+          "G#4",
+          "B4",
+          "E5",
+          "D#5"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1.25
+        ]
+      },
+      {
+        "number": 7,
+        "lilypond": "\\change Staff = \"down\" \\stemUp r16^\\p as,,,-( ces as'-) r as-( ces as'-) \\stemNeutral",
+        "staff": "down",
+        "attacks": [],
+        "onsets": [],
+        "lowerStaffAttacks": [
+          "G#2",
+          "B2",
+          "G#3",
+          "G#3",
+          "B3",
+          "G#4"
+        ]
+      },
+      {
+        "number": 8,
+        "lilypond": "\\change Staff = \"up\" r16 as-( ces as'-) r as-( ces as'-)",
+        "staff": "up",
+        "attacks": [
+          "G#4",
+          "B4",
+          "G#5",
+          "G#5",
+          "B5",
+          "G#6"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1.25,
+          1.5,
+          1.75
         ]
       }
-    ]
+    ],
+    "tempo": 100,
+    "tempoSource": "Retain the existing chosen quarter note = 100 practice pace; the printed Tempo di marcia is not a numeric metronome mark.",
+    "initialRestBeats": 0.25,
+    "totalBeats": 16
   }
 }

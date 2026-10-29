@@ -44,7 +44,8 @@ assert.match(source, /stillsOnly\.addEventListener\('change', \(\) => \{[\s\S]*?
 const skyURL = `data:text/javascript,export function initHeroSky(){throw new Error('Unexpected DOM mount in policy test')}`;
 const linkedSource = source.replace(/(['"])\.\/drink-spin\.js(?:\?[^'"]*)?\1/, JSON.stringify(spinURL))
   .replace(/(['"])\.\/darty-match\.js(?:\?[^'"]*)?\1/, JSON.stringify(matchModule))
-  .replace(/(['"])\.\/hero-sky\.js(?:\?[^'"]*)?\1/, JSON.stringify(skyURL));
+  .replace(/(['"])\.\/hero-sky\.js(?:\?[^'"]*)?\1/, JSON.stringify(skyURL))
+  .replace(/(['"])\.\/hero-sky-shaders\.js(?:\?[^'"]*)?\1/, JSON.stringify(new URL('../hero-sky-shaders.js', import.meta.url).href));
 const { projects, sectionProjects, initialProject, idleAdvance, homepageStart } = await import(`data:text/javascript;base64,${Buffer.from(linkedSource).toString('base64')}`);
 const darty = projects.find(project => project.id === 'darty');
 assert.equal(darty.images.length, 12);
@@ -186,6 +187,8 @@ const withoutOwnerContent = html => html
   .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
 const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html))
   .replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN')
+  // 29 Oct flicker fix: the static fallback is recaptured from the live piano view.
+  .replace(/(<img class="showcase-fallback" src=")[^"]+(" alt="[^"]*") width="\d+" height="\d+"/g, '$1FALLBACK$2 width="W" height="H"')
   .replace("frame-src 'self' https://joshtoucanlearn.github.io;", "frame-src 'self';");
 assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the showcase tokens, DARTY frame origin and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
@@ -236,7 +239,8 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
   // Only the first-frame receipt is new; the shared renderer and exact piano
   // appearance/music/input remain byte-for-byte identical to the approved hero.
   if (file === 'hero-sky.js') current = current
-    .replace('initHeroSky(root, { onFirstFrame } = {})', 'initHeroSky(root)')
+    .replace('initHeroSky(root, { onFirstFrame, preset: presetId } = {})', 'initHeroSky(root)')
+    .replace('  || SKY_PRESETS.find(candidate => candidate.id === presetId)\n', '')
     .replace('let sized = false, firstFrame = false;\n', '')
     .replace('  // Showcase readiness only: report a fully sized draw with the sky image ready.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
     .replace('  sized = rect.width > 0 && rect.height > 0;\n', '');

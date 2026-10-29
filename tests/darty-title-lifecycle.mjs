@@ -73,7 +73,7 @@ function mount(manual = false, phone = false) {
   `);
   f.runCode('globalThis.IntersectionObserver = class { constructor(callback, options) { this.callback = callback; this.options = options; } observe(target) { this.target = target; document.body.intersections.push(this); } };');
   f.document.body.intersections = observers;
-  const stubs = `const prefetchDrink = () => ({setActive(){}}); const initHeroSky = () => { throw new Error('Unexpected piano mount'); }; const dartyMatchURL = ${JSON.stringify(dartyMatchURL)};`;
+  const stubs = `const prefetchDrink = () => ({setActive(){}}); const initHeroSky = () => { throw new Error('Unexpected piano mount'); }; const SKY_PRESETS = [{ id: 'og' }]; const dartyMatchURL = ${JSON.stringify(dartyMatchURL)};`;
   f.runCode(stubs + source.replace(/^import .*;\n/gm, '').replace(/\bexport /g, ''));
   const intersection = active => observers.filter(observer => !observer.options).forEach(observer => observer.callback([{ target: observer.target, isIntersecting: active }]));
   intersection(true);

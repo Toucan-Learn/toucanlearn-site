@@ -4,7 +4,7 @@ import { initHeroKeyboard } from './hero-keyboard.js?v=20261029-piano-3';
 import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
 
 // Each showcase mounts the same world and disposes it before changing project.
-export function initHeroSky(root, { onFirstFrame } = {}) {
+export function initHeroSky(root, { onFirstFrame, preset: presetId } = {}) {
 const controller = new AbortController();
 const listen = (target, type, callback, options = {}) => target?.addEventListener(type, callback, { ...options, signal: controller.signal });
 let disposed = false;
@@ -18,6 +18,7 @@ const flockCtx = flockCanvas.getContext('2d');
 // fresh random choice as a normal page load; no storage or controls are needed.
 const requestedPreset = new URLSearchParams(window.location.search).get('sky');
 const preset = SKY_PRESETS.find(candidate => candidate.id === requestedPreset)
+  || SKY_PRESETS.find(candidate => candidate.id === presetId)
   || SKY_PRESETS[Math.floor(Math.random() * SKY_PRESETS.length)];
 art.dataset.skyPreset = preset.id;
 sky.dataset.skyPreset = preset.id;

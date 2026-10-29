@@ -90,6 +90,8 @@
 }
 .showcase-cell [hidden] { display: none !important; }
 [data-showcase][data-enhanced] .showcase-fallback { display: none !important; }
+/* With scripts on, the matched poster replaces it; never flash the static image first. */
+@media (scripting: enabled) { [data-showcase]:not([data-enhanced]) .showcase-fallback { visibility: hidden; } }
 .hero-world .showcase-fallback { display: block; width: 100%; height: calc(var(--showcase-height) + var(--showcase-bar)); object-fit: cover; border-radius: 14px; }
 /* Keep the copy/media grid and all copy available without JS and in print. */
 #learner-projects .framework-project-viewer > .section-head { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 6px 16px; }

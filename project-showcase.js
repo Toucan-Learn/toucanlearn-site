@@ -1,19 +1,20 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-east-start-1';
-import { initHeroSky } from './hero-sky.js?v=20261029-first-paint-1';
+import { initHeroSky } from './hero-sky.js?v=20261029-match-1';
+import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
 const dartyStills = Array.from({ length: 12 }, (_, i) => `assets/projects/darty-still-${String(i + 1).padStart(2, '0')}.webp?v=20261029-darty-title-5`);
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
-  { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-newspaper.webp', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
+  { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-home.webp?v=20261029-match-1', sectionPoster: 'assets/projects/football-section.webp?v=20261029-match-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
   { id: 'darty', name: 'DARTY', poster: dartyStills[0], titleStill: dartyStills[6], alt: 'DARTY night football match with stylised players on a green pitch', type: 'gallery', images: dartyStills },
   { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-east-start-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
   ] },
-  { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-preview.png', alt: 'Toucan piano and pixel sky', type: 'piano' },
+  { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-home-{sky}.webp?v=20261029-match-1', sectionPoster: 'assets/projects/toucan-piano-section-{sky}.webp?v=20261029-match-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
@@ -151,8 +152,15 @@ export function initShowcase(root) {
   // Warm the small, project-specific stills before navigation. Never borrow an
   // outgoing project's decoded media while an incoming view becomes ready.
   const previewDecodes = new WeakMap();
+  // The piano sky is picked once per page load, before its poster warms, so
+  // the poster always shows the colours the live sky draws.
+  const requestedSky = new URLSearchParams(location.search).get('sky');
+  const pianoSky = (SKY_PRESETS.find(sky => sky.id === requestedSky) || SKY_PRESETS[Math.floor(Math.random() * SKY_PRESETS.length)]).id;
   const warmPreview = (project, img) => {
-    img.src = project.titleStill && !stillsOnly.matches ? project.titleStill : project.poster;
+    // Football and piano posters are captures of each carousel's live view
+    // (scripts/capture-showcase-posters.mjs), so the cross-fade is invisible.
+    const poster = ((!automatic && project.sectionPoster) || project.poster).replace('{sky}', pianoSky);
+    img.src = project.titleStill && !stillsOnly.matches ? project.titleStill : poster;
     const decoded = img.decode();
     previewDecodes.set(img, decoded);
     void decoded.catch(() => {});
@@ -254,7 +262,7 @@ export function initShowcase(root) {
       activate = () => {
         if (token !== generation || !visible()) return;
         const mascot = live.querySelector('.hero-mascot').decode().catch(() => {});
-        dispose = initHeroSky(cell, { onFirstFrame: () => {
+        dispose = initHeroSky(cell, { preset: pianoSky, onFirstFrame: () => {
           void mascot.then(() => { if (token === generation) reveal(live, token); });
         } });
       };

@@ -310,3 +310,6 @@ bdi[lang="ar"] { white-space: nowrap; }
   .homepage .homepage-section.team-section > .container { flex: 1; display: flex; flex-direction: column; }
   .homepage .team-section .framework-team-grid { flex: 1; grid-template-rows: 1fr auto; }
 }
+
+/* Owner (29 Oct): the emphasised "team" in Josh's quote wears the pixel-sky blues (hard-stepped bands for a pixel feel). */
+p .sky-word { font-style: normal; font-weight: 800; color: #1f6fae; background-image: linear-gradient(180deg, #2a93d1 0 25%, #1f7cc0 25% 50%, #1667a8 50% 75%, #0f5f96 75%); background-size: 100% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }

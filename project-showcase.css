@@ -220,3 +220,6 @@ body[data-page-frame] #learner-projects .showcase-drink-screen img,
 body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallback { object-fit: cover; object-position: center; }
 #learner-projects .showcase-stage .piano-world .hero-mascot { width: 51%; height: auto; max-height: none; border-radius: 0; object-fit: fill; }
 [data-showcase]:focus-visible { outline: 2px solid #efac8e; outline-offset: 3px; }
+/* Owner, 29 Oct: the showcase label and the projects invitation sit in opposite corners; they stack when narrow. */
+.living-hero .hero-world > .hero-world-eyebrow { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; letter-spacing: .05em; }
+.living-hero .hero-world > .hero-world-eyebrow::before { display: none; }

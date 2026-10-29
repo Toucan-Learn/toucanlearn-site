@@ -341,7 +341,7 @@ export function initShowcase(root) {
     } else if (project.type === 'gallery' && !stillsOnly.matches) {
       const title = document.createElement('div');
       title.className = 'showcase-darty-title';
-      title.innerHTML = '<div class="showcase-darty-heading"><strong class="showcase-darty-wordmark">DARTY</strong><p class="showcase-darty-subtitle">CPU vs CPU · live match</p><button class="showcase-match-play" type="button" data-darty-play>Press to play</button></div>';
+      title.innerHTML = '<div class="showcase-darty-heading"><strong class="showcase-darty-wordmark">DARTY</strong><p class="showcase-darty-subtitle">A student’s answer to FIFA</p><button class="showcase-match-play" type="button" data-darty-play>Press to play</button></div>';
       const play = title.querySelector('[data-darty-play]');
       // Reuse the warmed still under the title and the loading match. There is
       // one backdrop throughout, so Play and teardown never swap photographs.

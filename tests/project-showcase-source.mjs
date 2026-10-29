@@ -184,6 +184,10 @@ const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 // framework/menu/favicon tokens), so these guards compare the showcase-owned markup only.
 const withoutOwnerContent = html => html
   .replace(/<section class="homepage-section team-section"[\s\S]*?<\/section>/, '<!-- team section: owner-managed -->')
+  // 29 Oct owner edits: text-only reviews (no autoplay/pause/art) and the showcase label's two corners.
+  .replace(/<section class="homepage-section proof-section" id="reviews">[\s\S]*?<\/section>/, '<!-- reviews: owner-managed -->')
+  .replace(/reviews-carousel\.js\?v=[^"]+/, 'reviews-carousel.js?v=TOKEN')
+  .replace(/<p class="eyebrow light[^"]*">[\s\S]*?<\/p>/, '<!-- showcase label: owner copy -->')
   .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
 const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html))
   .replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN')

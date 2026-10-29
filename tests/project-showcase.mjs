@@ -172,7 +172,8 @@ async function heroMetrics(page) {
       const r = document.querySelector(selector).getBoundingClientRect();
       return [r.x + scrollX, r.y + scrollY, r.width, r.height];
     };
-    return Object.fromEntries(['.living-hero', '.hero-layout', '.hero-copy', '.hero-actions', '.hero-benefits', '.sky-studio'].map(selector => [selector, rect(selector)]));
+    return { ...Object.fromEntries(['.living-hero', '.hero-layout', '.hero-copy', '.hero-actions', '.hero-benefits', '.sky-studio'].map(selector => [selector, rect(selector)])),
+      label: document.querySelector('.hero-world > .eyebrow').getBoundingClientRect().height };
   });
 }
 try {
@@ -239,7 +240,9 @@ try {
         if (homepage) {
           assert.equal(m.slideCount, 0, 'Homepage retains its four media projects and has no copy slides');
           const after = await heroMetrics(page);
-          for (const selector of Object.keys(before)) after[selector].forEach((value, i) => assert(Math.abs(value - before[selector][i]) <= 1, `${label}/${id}: ${selector} geometry changed`));
+          // 29 Oct owner copy: the showcase label's two phrases stack on phones, one line taller.
+          const labelGrowth = Math.max(0, after.label - before.label);
+          for (const selector of Object.keys(before).filter(key => key !== 'label')) after[selector].forEach((value, i) => assert(Math.abs(value - before[selector][i]) <= 1 + (i % 2 ? labelGrowth : 0), `${label}/${id}: ${selector} geometry changed`));
         } else if (id === 'intro') {
           assert.equal(m.slideCount, 5);
           assert.equal(m.rows, 0);

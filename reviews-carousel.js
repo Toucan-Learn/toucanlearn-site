@@ -1,43 +1,17 @@
 (function () {
   'use strict';
 
-  // Approved decorative Toucan art only: single-toucan scenes (owner's art rule; b, d and f
-  // showed more than one toucan, one an adult touching a chick, so they are retired).
-  const REVIEW_ART = {
-    "g": "assets/art/review-g.png",
-    "h": "assets/art/review-h.png",
-    "i": "assets/art/review-i.png",
-    "j": "assets/art/review-j.png"
-  };
+  // Owner, 29 Oct: text-only cards that turn only when asked (no autoplay, pause or drawings).
   const carousel = document.querySelector('[data-reviews-carousel]');
   if (!carousel) return;
   const ring = carousel.querySelector('.reviews-grid');
   const cards = Array.from(ring.querySelectorAll('.review-quote'));
   const count = cards.length;
   if (count < 3 || count > 8) return;
-  const keys = Object.keys(REVIEW_ART);
-  const requested = (new URLSearchParams(window.location.search).get('reviewart') || '').split(',');
-  const validOverride = requested.length === Math.min(count, keys.length) &&
-    new Set(requested).size === requested.length && requested.every(key => keys.includes(key));
-  let art = keys.slice();
-  if (count !== keys.length) {
-    // Fisher-Yates: distinct art before any reuse.
-    for (let i = art.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [art[i], art[j]] = [art[j], art[i]];
-    }
-    if (validOverride) art = requested;
-  }
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const laptop = window.matchMedia('(min-width: 900px)');
-  const pause = carousel.querySelector('[data-reviews-pause]');
   const status = carousel.querySelector('[data-reviews-status]');
   let position = 0;
-  let timer = null;
-  let hovered = false;
-  let focused = false;
-  let userPaused = false;
-  let onScreen = false;
   let drag = null;
   let suppressClick = false;
   const modulo = value => ((value % count) + count) % count;
@@ -47,26 +21,12 @@
     return delta;
   };
 
-  // Retain the established distinct slot pairing and legacy ?reviewart= override.
-  const chosen = cards.map(card => card.querySelector('[data-review-art]').getAttribute('data-review-art'));
-  if (!validOverride && chosen.every(key => keys.includes(key)) && new Set(chosen).size === count) art = chosen;
-
   cards.forEach((card, index) => {
-    const image = card.querySelector('[data-review-art]');
-    image.src = REVIEW_ART[art[index % art.length]];
     card.setAttribute('role', 'group');
     card.setAttribute('aria-roledescription', 'slide');
     card.setAttribute('aria-label', `Review ${index + 1} of ${count}`);
     card.tabIndex = 0;
   });
-
-  function schedule() {
-    window.clearTimeout(timer);
-    timer = null;
-    if (!userPaused && !hovered && !focused && onScreen && !document.hidden && !motion.matches) {
-      timer = window.setTimeout(() => { turn(1); }, 6000);
-    }
-  }
 
   function render() {
     // Layout width stays constant while the first card is angled at the side.
@@ -75,7 +35,7 @@
     carousel.classList.toggle('reviews-instant', motion.matches);
     ring.style.transform = laptop.matches ? `translateZ(${-radius}px) rotateY(${-position * 360 / count}deg)` : 'none';
     // Remove the previous equal height before measuring natural content again.
-    // This allows shorter layouts after a wider resize, new font or image load.
+    // This allows shorter layouts after a wider resize or new font.
     cards.forEach(card => { card.style.height = ''; });
     const height = Math.ceil(Math.max(...cards.map(card => card.offsetHeight)));
     cards.forEach(card => { card.style.height = `${height}px`; });
@@ -104,16 +64,12 @@
       else card.removeAttribute('aria-hidden');
     });
     ring.style.height = `${height}px`;
-    pause.setAttribute('aria-label', userPaused ? 'Play reviews' : 'Pause reviews');
-    pause.setAttribute('aria-pressed', String(userPaused));
-    carousel.classList.toggle('reviews-paused', userPaused);
     status.textContent = `Review ${modulo(position) + 1} of ${count}`;
   }
 
   function turn(delta) {
     position += delta;
     render();
-    schedule();
   }
   function select(index) { turn(relative(index)); }
   cards.forEach((card, index) => {
@@ -135,23 +91,10 @@
     turn(event.key === 'ArrowRight' ? 1 : -1);
     if (cardHadFocus) cards[modulo(position)].focus({ preventScroll: true });
   });
-  carousel.addEventListener('pointerenter', event => {
-    if (event.pointerType === 'touch') return;
-    hovered = true;
-    schedule();
-  });
-  carousel.addEventListener('pointerleave', () => { hovered = false; schedule(); });
-  carousel.addEventListener('focusin', () => { focused = true; schedule(); });
-  carousel.addEventListener('focusout', event => {
-    focused = carousel.contains(event.relatedTarget);
-    schedule();
-  });
-  pause.addEventListener('click', () => { userPaused = !userPaused; render(); schedule(); });
   ring.addEventListener('pointerdown', event => {
     if (laptop.matches || event.isPrimary === false || event.button !== 0) return;
     suppressClick = false;
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
-    window.clearTimeout(timer);
   });
   ring.addEventListener('pointermove', event => {
     if (!drag || drag.id !== event.pointerId) return;
@@ -167,29 +110,17 @@
     if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) {
       suppressClick = true;
       turn(dx < 0 ? 1 : -1);
-    } else schedule();
+    }
   });
-  ring.addEventListener('pointercancel', () => { drag = null; schedule(); });
-  document.addEventListener('visibilitychange', schedule);
-  motion.addEventListener('change', () => { render(); schedule(); });
+  ring.addEventListener('pointercancel', () => { drag = null; });
+  motion.addEventListener('change', render);
   laptop.addEventListener('change', render);
   carousel.classList.add('reviews-enhanced');
   render();
-  cards.forEach(card => {
-    const image = card.querySelector('[data-review-art]');
-    image.addEventListener('load', render);
-    image.addEventListener('error', render);
-  });
   if (document.fonts) {
     document.fonts.ready.then(render);
     document.fonts.addEventListener('loadingdone', render);
   }
   if ('ResizeObserver' in window) new window.ResizeObserver(render).observe(carousel);
   else window.addEventListener('resize', render);
-  if ('IntersectionObserver' in window) {
-    new window.IntersectionObserver(entries => {
-      onScreen = entries.some(entry => entry.isIntersecting);
-      schedule();
-    }, { threshold: 0 }).observe(carousel);
-  } // Without visibility observation, manual controls still work; do not autoplay.
 })();

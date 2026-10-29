@@ -34,17 +34,32 @@ export async function assertDrinkLayout(page, drink) {
     const subject = { x: painted.x + painted.width * .32, right: painted.x + painted.width * .68,
       y: Math.max(s.y, painted.y + painted.height * .06), bottom: Math.min(s.bottom, painted.y + painted.height * .94) };
     const c = rect(card);
+    const menu = rect(controls);
+    const coversDrink = box => box.x < subject.right && box.right > subject.x && box.y < subject.bottom && box.bottom > subject.y;
     return { screen: s, stage: rect(stage), image: rect(image), controls: rect(controls), caption: rect(caption), card: c,
       painted, fit: getComputedStyle(image).objectFit, position: getComputedStyle(image).objectPosition,
       backgrounds: [stage, screen, stage.querySelector('.showcase-drinks')].map(node => getComputedStyle(node).backgroundColor),
       buttons: [...controls.querySelectorAll('button')].map(rect),
+      menuDirection: getComputedStyle(controls).flexDirection,
+      phoneMenu: matchMedia('(max-width: 760px)').matches,
+      menuCoversDrink: coversDrink(menu),
+      menuInDragZone: Boolean(controls.closest('.drink-spin')),
+      menuButtons: [...controls.querySelectorAll('button')].map(button => {
+        const b = rect(button);
+        const css = getComputedStyle(button);
+        return { id: button.dataset.drink, pressed: button.getAttribute('aria-pressed'), tag: button.tagName,
+          type: button.type, tabIndex: button.tabIndex, background: css.backgroundColor, ink: css.color,
+          radius: parseFloat(css.borderRadius), receivesInput: document.elementFromPoint(b.x + b.width / 2, b.y + b.height / 2) === button };
+      }),
+      hintCount: document.querySelectorAll('.drink-spin-hint').length,
+      hintText: stage.textContent.includes('Drag to spin'),
       inset: parseFloat(getComputedStyle(caption).paddingLeft),
       cardName: card.querySelector('strong').textContent, cardLine: card.querySelector('p').textContent,
       cardBackground: getComputedStyle(card).backgroundColor, cardInk: getComputedStyle(card).color,
       cardPointerEvents: getComputedStyle(card).pointerEvents,
       cardPassesDrag: c.y + c.height / 2 < s.y || document.elementFromPoint(c.x + c.width / 2, c.y + c.height / 2)?.closest('.drink-spin') === document.querySelector('.drink-spin'),
       cardFits: card.scrollWidth <= card.clientWidth + 1 && card.scrollHeight <= card.clientHeight + 1,
-      cardCoversDrink: c.x < subject.right && c.right > subject.x && c.y < subject.bottom && c.bottom > subject.y,
+      cardCoversDrink: coversDrink(c),
     };
   });
   assert.equal(layout.fit, 'cover', 'Drink frames cover the available image slot');
@@ -53,10 +68,32 @@ export async function assertDrinkLayout(page, drink) {
   for (const edge of ['x', 'y', 'width', 'height']) assert(Math.abs(layout.image[edge] - layout.screen[edge]) <= 1, `Image fills the drag zone: ${edge}`);
   for (const edge of ['x', 'right']) assert(Math.abs(layout.screen[edge] - layout.stage[edge]) <= 1, 'The drink fills the slot edge to edge');
   assert.deepEqual(layout.backgrounds, Array(3).fill('rgb(31, 122, 117)'), 'Teal stays behind the poster and loading frames');
-  assert(Math.abs(layout.controls.bottom - layout.stage.bottom) <= 1 && Math.abs(layout.controls.bottom - layout.caption.y) <= 1, 'The switch row sits against the caption edge');
-  assert(Math.abs(layout.controls.y - layout.screen.bottom) <= 1, 'The switch never floats over the image');
-  assert(Math.abs(layout.buttons[0].x - layout.stage.x - layout.inset) <= 1 && Math.abs(layout.stage.right - layout.buttons.at(-1).right - layout.inset) <= 1, 'Switch and caption use the same side inset');
-  assert(layout.buttons.every(button => Math.abs(button.y - layout.buttons[0].y) <= 1 && Math.abs(button.height - layout.buttons[0].height) <= 1), 'All three drink buttons share one row');
+  assert.equal(layout.hintCount, 0, 'No drag hint is mounted');
+  assert.equal(layout.hintText, false, 'No drag hint copy is shown');
+  assert(Math.abs(layout.screen.bottom - layout.stage.bottom) <= 1 && Math.abs(layout.screen.bottom - layout.caption.y) <= 1, 'The image fills the former switch footer');
+  assert(Math.abs(layout.controls.x - layout.stage.x - layout.inset) <= 1, 'The menu uses the left inset');
+  assert(!layout.menuInDragZone && !layout.menuCoversDrink, `The menu stays outside the central drink region: ${JSON.stringify(layout)}`);
+  assert(layout.controls.width < layout.stage.width - 2 * layout.inset - 1, 'The menu stays compact');
+  if (layout.phoneMenu) {
+    assert.equal(layout.menuDirection, 'row', 'Phone uses a compact horizontal menu');
+    assert(layout.buttons.every(button => Math.abs(button.y - layout.buttons[0].y) <= 1), 'Phone pills share one row');
+    assert(layout.controls.y >= layout.card.bottom + 4 && layout.controls.bottom <= layout.screen.y - 4, 'The phone menu sits between the card and drink');
+  } else {
+    assert.equal(layout.menuDirection, 'column', 'Desktop uses a vertical menu');
+    assert(Math.abs(layout.controls.y - layout.card.y) <= 1 && Math.abs(layout.controls.y - layout.stage.y - layout.inset) <= 1, 'Menu and card share the top inset');
+    assert(layout.buttons.every((button, i, buttons) => Math.abs(button.x - buttons[0].x) <= 1 && (!i || button.y >= buttons[i - 1].bottom + 4)), 'Desktop pills are stacked at the left');
+    assert(layout.controls.right < layout.stage.x + layout.stage.width / 2, 'The desktop menu stays left of centre');
+  }
+  assert.equal(layout.menuButtons.filter(button => button.pressed === 'true').length, 1, 'Exactly one drink is selected');
+  for (const button of layout.menuButtons) {
+    const selected = button.id === drink;
+    assert.equal(button.pressed, String(selected));
+    assert(button.tag === 'BUTTON' && button.type === 'button' && button.tabIndex >= 0, 'Every drink remains keyboard accessible');
+    assert(button.receivesInput, 'Menu pills receive their own pointer input');
+    assert.equal(button.background, selected ? 'rgb(10, 39, 44)' : layout.cardBackground, 'Selected pill is filled; other pills match the cream card');
+    assert.equal(button.ink, selected ? layout.cardBackground : layout.cardInk, 'Pill labels retain readable contrast');
+    assert(button.radius >= 16, 'Drink controls use compact cream pills');
+  }
   assert.equal(layout.cardName, copy[drink].name);
   assert.equal(layout.cardLine, copy[drink].line, 'The card uses the exact words for this drink');
   assert.equal(layout.cardPointerEvents, 'none', 'The card cannot intercept dragging');
@@ -65,8 +102,23 @@ export async function assertDrinkLayout(page, drink) {
   assert.equal(layout.cardInk, 'rgb(10, 39, 44)', 'Cream card text stays readable');
   assert(layout.cardFits && !layout.cardCoversDrink, `The card stays clear of the drink: ${JSON.stringify(layout)}`);
   assert(Math.abs(layout.stage.right - layout.card.right - layout.inset) <= 1 && Math.abs(layout.card.y - layout.stage.y - layout.inset) <= 1, 'The card stays in the top-right corner');
-  assert(layout.card.bottom < layout.controls.y, 'The card stays inside the image/header area');
+  assert(layout.card.bottom <= layout.stage.bottom, 'The card stays inside the image/header area');
   return layout;
+}
+
+export async function checkDrinkMenuKeys(page) {
+  await page.focus('[data-drink="skids"]');
+  for (const [drink, key] of [['fizzy', 'Space'], ['ground-pinch', 'Enter']]) {
+    await page.keyboard.press('Tab');
+    assert.equal(await page.evaluate(() => document.activeElement.dataset.drink), drink, 'Tab reaches the next drink pill');
+    await page.keyboard.press(key);
+    assert.equal(await page.$eval(`[data-drink="${drink}"]`, button => button.getAttribute('aria-pressed')), 'true', `${key} selects the focused drink`);
+    assert.equal(await page.$eval('.drink-spin', button => button.hasAttribute('data-dragging')), false, 'Menu input never starts a spin gesture');
+    assert.equal(await frame(page), 0, 'Selecting with the keyboard resets to the front');
+  }
+  await page.focus('[data-drink="skids"]');
+  await page.keyboard.press('Enter');
+  assert.equal(await page.$eval('[data-showcase]', root => root.dataset.project), 'drinks', 'Menu keys leave the showcase on drinks');
 }
 
 export async function dragOverDrink(page, view) {
@@ -106,6 +158,8 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
       await page.waitForSelector('.drink-spin[data-frame-count]');
       const count = await page.$eval('.drink-spin', button => Number(button.dataset.frameCount));
+      // Render direction from the delivered manifest: -1 (label moves left as frames increase) or 1.
+      const dir = await page.evaluate(() => fetch('assets/projects/drinks/skids/manifest.json').then(r => r.json()).then(m => m.dragDirection ?? -1));
       // Wait for the actual requests, allowing final 120-frame renders as well.
       const deadline = Date.now() + 15000;
       while ([...requested].filter(url => /\/skids\/\d{3}\.webp$/.test(url)).length < count && Date.now() < deadline) await wait(50);
@@ -119,7 +173,7 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       await page.keyboard.press('ArrowLeft'); // Stops auto rotation for the manual assertions.
       const beforeKey = await frame(page);
       await page.keyboard.press('ArrowRight');
-      assert.equal(await frame(page), (beforeKey + count - 1) % count, 'Right arrow rotates one frame to the right');
+      assert.equal(await frame(page), (beforeKey + count + dir) % count, 'Right arrow rotates one frame to the right');
       assert.equal(await page.$eval('[data-showcase]', root => root.dataset.project), 'drinks', 'Viewer keys do not navigate the showcase');
       const box = await button.boundingBox();
       const x = box.x + box.width / 2;
@@ -142,7 +196,8 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       assert(await page.$eval('.drink-spin', button => button.hasAttribute('data-dragging')), 'Pointer capture keeps the gesture active');
       const dragged = await frame(page);
       const delta = (dragged - start + count) % count;
-      assert(delta > 0 && delta < count / 2, 'Dragging left advances the clockwise turn');
+      const withHand = dir === -1 ? delta : (count - delta) % count;
+      assert(withHand > 0 && withHand < count / 2, 'Dragging left turns the label left with the hand');
       if (client) await client.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
       else await page.mouse.up();
       await wait(100);
@@ -151,7 +206,7 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       const settled = await frame(page);
       await wait(300);
       assert.equal(await frame(page), settled, 'Inertia settles before the six-second auto-resume');
-      assert.equal(await page.$eval('.drink-spin-hint', hint => getComputedStyle(hint).opacity), '0', 'The hint fades after interaction');
+      assert.equal(await page.$('.drink-spin-hint'), null, 'The hint stays absent after interaction');
       assert.equal(await page.$eval('.drink-spin', button => getComputedStyle(button).cursor), 'grab');
       await page.screenshot({ path: path.join(output, `${view.width}x${view.height}-${theme}-spin.png`) });
       // Exercise the real IntersectionObserver while retaining the same viewer.
@@ -209,5 +264,5 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
     assert.equal(await frame(page), manual, 'Reduced motion has no inertia or automatic animation');
     assert(requested.every(url => url.includes('/skids/')));
   } finally { await context.close(); }
-  report.behaviour.push('360 viewer: mouse/touch drag direction and capture, keyboard, inertia settle, off-screen/tab pause, visible-only loading, front resets, reduced motion; edge-to-edge cover, teal loading background, bottom-aligned switch and exact unobstructed cards on both routes; exact speed and idle delays checked with a test clock');
+  report.behaviour.push('360 viewer: mouse/touch drag direction and capture, keyboard, inertia settle, off-screen/tab pause, visible-only loading, front resets, reduced motion; edge-to-edge cover, no hint, compact left desktop menu aligned with the card, phone row above the drink, keyboard menu selection and no central overlap on both routes; exact speed and idle delays checked with a test clock');
 }

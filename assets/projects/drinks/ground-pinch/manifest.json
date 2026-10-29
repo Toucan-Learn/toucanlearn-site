@@ -1,7 +1,7 @@
 {
-  "frameCount": 72,
+  "frameCount": 120,
   "width": 1200,
   "height": 900,
-  "dragDirection": -1,
-  "temporary": true
+  "dragDirection": 1,
+  "temporary": false
 }

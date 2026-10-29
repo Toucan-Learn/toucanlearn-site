@@ -31,6 +31,10 @@ assert.deepEqual(fixtures.entertainer.bars.map(bar => bar.number), Array.from({ 
   'Entertainer includes the complete first A strain through the first-ending cadence');
 const entertainer = seed.songs.find(song => song.id === 'entertainer');
 assert.equal(entertainer.notes.length, 77, 'Full strain plus its boundary pickup, with ties counted once');
+const maple = seed.songs.find(song => song.id === 'maple-leaf-rag');
+assert.deepEqual(fixtures[maple.id].bars.map(bar => bar.number), Array.from({ length: 8 }, (_, i) => i + 1),
+  'Maple includes all eight printed bars through the answering phrase');
+assert.equal(maple.notes.length, 36, 'Upper-staff attacks only, with ties counted once and the lower-staff bar 7 silent');
 for (const [id, reference] of Object.entries(fixtures)) {
   const sourceNotes = [...(reference.pickup || []), ...reference.bars.flatMap(bar => bar.attacks)];
   if (reference.pickup) {
@@ -53,8 +57,31 @@ for (const [id, reference] of Object.entries(fixtures)) {
     assert.equal(entertainer.tempo, reference.tempo);
     assert.equal(entertainer.tempo, 100, 'A moderate practice tempo for the published Not fast indication');
     assert.ok(gaps.every(gap => gap > 0));
+  } else if (reference.initialRestBeats !== undefined) {
+    const onsets = reference.bars.flatMap((bar, i) => {
+      assert.equal(bar.attacks.length, bar.onsets.length, `Bar ${bar.number}: one onset per upper-staff attack`);
+      assert.ok(bar.onsets.every((beat, j) => beat >= 0 && beat < 2 && (j === 0 || beat > bar.onsets[j - 1])));
+      return bar.onsets.map(beat => i * 2 + beat);
+    });
+    assert.equal(onsets[0], reference.initialRestBeats);
+    const gaps = onsets.map((beat, i) => (onsets[i + 1] ?? reference.totalBeats + onsets[0]) - beat);
+    assert.deepEqual(Array.from(maple.noteBeats), gaps, 'Maple preserves score onset gaps, ties, rests and the loop-boundary rest');
+    assert.equal(maple.noteBeats.length, maple.notes.length);
+    assert.equal(maple.noteBeats.reduce((a, b) => a + b), 16, 'Maple loops in exactly eight 2/4 bars');
+    assert.equal(maple.tempo, reference.tempo);
+    assert.equal(maple.tempo, 100, 'Retain Maple\'s existing 100 BPM practice pace');
+    assert.ok(gaps.every(gap => gap > 0));
   }
 }
+assert.deepEqual(Array.from(maple.notes.slice(21)), [
+  'G#4', 'B4', 'E5', 'D#5', 'D#5', 'G#4', 'B4', 'E5', 'D#5',
+  'G#4', 'B4', 'G#5', 'G#5', 'B5', 'G#6',
+], 'Maple adds the exact answering phrase: C-flat is B, F-flat is E, and the rising octaves are retained');
+assert.equal(fixtures[maple.id].bars[6].staff, 'down');
+assert.deepEqual(fixtures[maple.id].bars[6].attacks, [], 'Bar 7 is written on the lower staff, outside this upper-staff melody');
+assert.equal(maple.noteBeats[29], 3, 'Hold the last bar-6 attack through the lower-staff bar and the bar-8 opening rest');
+assert.equal(maple.noteBeats.at(-1), .5, 'The final sixteenth and the opening sixteenth rest complete the loop');
+assert.equal(maple.keyboardOctave, 1, 'Shift the keyboard to C4-C7 for the upper-staff answer');
 assert.deepEqual(Array.from(entertainer.notes.slice(0, 18)), [
   'D3', 'D#3', 'E3', 'C4', 'E3', 'C4', 'E3', 'C4', 'C5', 'D5', 'D#5', 'E5', 'C5', 'D5', 'E5', 'B4', 'D5', 'C5',
 ], 'The previously approved opening remains intact; the C4 to C5 leap is not folded');
@@ -80,6 +107,7 @@ assert.equal(gymnopedie.tempo, undefined, 'Retain its existing practice tempo ra
 const pitchMidi = note => (Number(note.at(-1)) + 1) * 12
   + { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[note[0]] + Number(note.includes('#'));
 assert.deepEqual([Math.min(...entertainer.notes.map(pitchMidi)), Math.max(...entertainer.notes.map(pitchMidi))], [50, 76], 'The complete Entertainer strain fits D3-E5');
+assert.deepEqual([Math.min(...maple.notes.map(pitchMidi)), Math.max(...maple.notes.map(pitchMidi))], [67, 92], 'The eight-bar upper-staff Maple melody spans G4-G#6');
 assert.deepEqual([Math.min(...gymnopedie.notes.map(pitchMidi)), Math.max(...gymnopedie.notes.map(pitchMidi))], [54, 69], 'The shortened Gymnopedie fits F#3-A4');
 assert.deepEqual(Array.from(seed.api.currentSong().notes), [
   'E6', 'E6', 'E6', 'E5', 'D#6', 'D#6', 'D#6', 'D#5',

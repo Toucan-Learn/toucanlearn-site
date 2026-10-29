@@ -1,6 +1,7 @@
 // Browser integration is run by Claude through check-shared-showcase.sh.
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import { assertImmediateProjectSwitch } from './project-showcase-switch-helpers.mjs';
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 const frame = page => page.$eval('.drink-spin', button => Number(button.dataset.frame));
 const copy = {
@@ -44,7 +45,7 @@ async function auditDecodedImages(page) {
           window.spinPrematureRotation.push(b.dataset.turns);
         }
         if (b.dataset.ready === 'true' && window.spinStartupRows.length < 90) {
-          window.spinStartupRows.push([Number(b.dataset.lowerFrame), Number(b.dataset.upperFrame), Number(b.dataset.blend), window.spinFrameDecodes.size]);
+          window.spinStartupRows.push([Number(b.dataset.lowerFrame), Number(b.dataset.upperFrame), Number(b.dataset.blend), window.spinFrameDecodes.size, [...window.spinFrameDecodes].filter(path => Number(path.match(/(\d{3})\.webp$/)[1]) % 4 === 0).length, Number(b.dataset.turns)]);
         }
       }
       requestAnimationFrame(tick);
@@ -191,7 +192,56 @@ export async function dragOverDrink(page, view) {
   assert.equal(await page.$eval('[data-showcase]', root => root.dataset.project), 'drinks', 'Dragging the drink leaves the project selected');
 }
 
+async function checkDrinkPrefetch({ open, views, base, report }) {
+  for (const connection of [null, { saveData: true }, { effectiveType: '2g' }]) {
+    const { context, page } = await open(views[0], 'light', false);
+    const requested = [];
+    let concurrent = 0, peak = 0;
+    await page.evaluateOnNewDocument(connection => {
+      if (connection) Object.defineProperty(navigator, 'connection', { configurable: true, value: connection });
+      const nativeDecode = HTMLImageElement.prototype.decode;
+      window.prefetchJobs = 0; window.prefetchPeak = 0; window.prefetchDecodes = [];
+      HTMLImageElement.prototype.decode = async function () {
+        if (!/\/drinks\/skids\/\d{3}\.webp/.test(this.src)) return nativeDecode.call(this);
+        window.prefetchPeak = Math.max(window.prefetchPeak, ++window.prefetchJobs);
+        try {
+          await nativeDecode.call(this);
+          await new Promise(resolve => setTimeout(resolve, 20));
+          window.prefetchDecodes.push({ src: this.src, priority: this.fetchPriority, decoding: this.decoding });
+        } finally { window.prefetchJobs--; }
+      };
+    }, connection);
+    const isFrame = request => /\/drinks\/skids\/\d{3}\.webp/.test(request.url());
+    page.on('request', request => { if (isFrame(request)) { requested.push(request.url()); peak = Math.max(peak, ++concurrent); } });
+    page.on('requestfinished', request => { if (isFrame(request)) concurrent--; });
+    page.on('requestfailed', request => { if (isFrame(request)) concurrent--; });
+    try {
+      await page.goto(`${base}/index.html?project=darty`, { waitUntil: 'networkidle0' });
+      await page.$eval('[data-showcase]', root => { root.focus({ preventScroll: true }); root.scrollIntoView({ block: 'center' }); });
+      if (connection) {
+        await wait(300);
+        assert.equal(requested.length, 0, 'Save-Data/2G suppress speculative frame requests');
+      } else {
+        await page.waitForFunction(() => window.prefetchDecodes.length === 90);
+        assert.equal(await page.$eval('[data-showcase]', root => root.dataset.project), 'darty', 'Skids warms while another project is selected');
+        assert.equal(requested.length, 90); assert(peak <= 3, 'At most three background network jobs');
+        const decoded = await page.evaluate(() => ({ peak: window.prefetchPeak, frames: window.prefetchDecodes }));
+        assert(decoded.peak <= 3, 'At most three background fetch/decode jobs');
+        assert(decoded.frames.every(frame => Number(frame.src.match(/(\d{3})\.webp/)[1]) % 4 === 0 && frame.priority === 'low' && frame.decoding === 'async'));
+      }
+      const switched = await assertImmediateProjectSwitch(page);
+      assert.equal(switched.expected, 'drinks');
+      if (!connection) {
+        assert.equal(await page.$eval('.drink-spin', button => button.dataset.ready), 'true', 'Switch immediately uses the prefetched coarse set');
+        assert.equal(new Set(requested.filter(src => Number(src.match(/(\d{3})\.webp/)[1]) % 4 === 0)).size, 90, 'Coarse images are reused on switch');
+      }
+      report.behaviour.push(`Background prefetch ${connection ? JSON.stringify(connection) : '90 decoded low-priority frames, <=3 concurrent'}; switch ${switched.duration.toFixed(1)}ms (<50ms)`);
+    } finally { await context.close(); }
+  }
+}
+
 export async function checkDrinkSpin({ open, views, base, output, report }) {
+  await checkDrinkPrefetch({ open, views, base, report });
   for (const view of views) for (const theme of ['light', 'dark']) {
     const { context, page } = await open(view, theme, false);
     await auditDecodedImages(page);
@@ -207,17 +257,19 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       const count = await page.$eval('.drink-spin', button => Number(button.dataset.frameCount));
       // Render direction from the delivered manifest: -1 (label moves left as frames increase) or 1.
       const dir = await page.evaluate(() => fetch('assets/projects/drinks/skids/manifest.json').then(r => r.json()).then(m => m.dragDirection ?? -1));
-      // Wait for the actual requests, allowing final 120-frame renders as well.
+      // Refinement continues without input after the coarse quarter starts spinning.
       const deadline = Date.now() + 15000;
       while ([...requested].filter(url => /\/skids\/\d{3}\.webp$/.test(url)).length < count && Date.now() < deadline) await wait(50);
       assert.equal([...requested].filter(url => /\/skids\/\d{3}\.webp$/.test(url)).length, count, 'The selected sequence loads completely');
       await page.waitForFunction(() => window.spinStartupRows.length === 90);
       const startup = await page.evaluate(() => ({ rows: window.spinStartupRows, early: window.spinPrematureRotation }));
-      assert.deepEqual(startup.early, [], 'The poster remains still until every frame has decoded, including a delayed middle frame');
-      assert(startup.rows.every(row => row[3] === count), 'All 120 frames are requested and decoded on activation before the first rotation');
-      for (let i = 1; i < startup.rows.length; i++) for (const column of [0, 1]) {
-        assert((startup.rows[i][column] - startup.rows[i - 1][column] + count) % count <= 1, 'No frame skips greater than one on consecutive animation frames from the first rotation');
+      assert.deepEqual(startup.early, [], 'The poster remains still until the coarse set has decoded, including a delayed coarse frame');
+      assert(startup.rows.every(row => row[4] === Math.ceil(count / 4)), 'Every coarse frame is decoded before the first rotation');
+      assert(startup.rows[0][3] < count, 'Rotation starts before the finer frames decode');
+      for (let i = 1; i < startup.rows.length; i++) {
+        assert(startup.rows[i][5] >= startup.rows[i - 1][5] && startup.rows[i][5] - startup.rows[i - 1][5] <= 1 / count, 'Idle step cap holds through progressive refinement');
       }
+      await page.waitForFunction(count => window.spinFrameDecodes.size === count, {}, count);
       await page.waitForNetworkIdle({ idleTime: 100 });
       await assertDrinkLayout(page, 'skids');
       assert([...requested].every(url => url.includes('/skids/')), 'Only Skids is requested before a drink switch');
@@ -367,10 +419,10 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
     await page.focus('.drink-spin');
     await page.keyboard.press('ArrowLeft');
     await page.waitForFunction(() => Number(document.querySelector('.drink-spin').dataset.frame) > 0);
-    const manual = await frame(page);
+    const manual = await turns(page);
     await wait(400);
-    assert.equal(await frame(page), manual, 'Reduced motion has no inertia or automatic animation');
+    assert.equal(await turns(page), manual, 'Reduced motion has no inertia or automatic animation while finer views decode');
     assert(requested.every(url => url.includes('/skids/')));
   } finally { await context.close(); }
-  report.behaviour.push('360 viewer: all 120 frames requested on activation, still poster until every decode (including delayed middle frame), consecutive animation frames skip no more than one view from first rotation; mouse/touch direction and capture, coast to idle, immediate resume, visibility pause, reduced motion, decoded crossfades and drink switches, layout/menu checks');
+  report.behaviour.push('360 viewer: coarse quarter starts rotation before refinement, poster until coarse decode (including delayed coarse frame), decoded neighbours crossfade throughout refinement, idle step cap; mouse/touch direction and capture, coast to idle, immediate resume, visibility pause, reduced motion, decoded crossfades and drink switches, layout/menu checks');
 }

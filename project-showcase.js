@@ -1,4 +1,4 @@
-import { createDrinkSpin, renderDrinkInfo } from './drink-spin.js?v=20261029-spin-batches-1';
+import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-spin-progressive-1';
 import { initHeroSky } from './hero-sky.js?v=20261029-piano-3';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-card-1';
 
@@ -141,6 +141,7 @@ export function initShowcase(root) {
   let mounted = null;
   let printing = false;
   let inView = typeof IntersectionObserver === 'undefined';
+  let nearView = inView;
   let gesture = null;
   let workFrame = 0;
   let activate = null;
@@ -178,6 +179,8 @@ export function initShowcase(root) {
   root.setAttribute('aria-roledescription', 'carousel');
   if (!root.hasAttribute('aria-label')) root.setAttribute('aria-label', 'Learner projects');
   const visible = () => !printing && !document.hidden && !root.closest('[hidden], [inert]');
+  const drinkPrefetch = prefetchDrink(projects.find(project => project.id === 'drinks').drinks[0]);
+  const syncPrefetch = () => drinkPrefetch.setActive(nearView && visible() && !motion.matches);
   const timer = idleAdvance({
     advance: () => show(index + 1),
     blocked: () => root.contains(document.activeElement) || pointers.size > 0 || held.size > 0 || Boolean(dispose?.isPlaying?.()) || Boolean(dispose?.isDragging?.()),
@@ -350,6 +353,7 @@ export function initShowcase(root) {
     }
   }
   function sync() {
+    syncPrefetch();
     if (!visible()) {
       if (dispose?.setActive) dispose.setActive(false);
       else if (mounted) unmount();
@@ -441,11 +445,15 @@ export function initShowcase(root) {
     timer.reset();
     sync();
   });
-  window.addEventListener('pagehide', () => { unmount(); timer.pause(); });
+  window.addEventListener('pagehide', () => { drinkPrefetch.setActive(false); unmount(); timer.pause(); });
   window.addEventListener('pageshow', sync);
-  window.addEventListener('beforeprint', () => { printing = true; unmount(); timer.pause(); slides.forEach(slide => { slide.hidden = false; slide.inert = false; }); });
+  window.addEventListener('beforeprint', () => { printing = true; syncPrefetch(); unmount(); timer.pause(); slides.forEach(slide => { slide.hidden = false; slide.inert = false; }); });
   window.addEventListener('afterprint', () => { printing = false; show(index); });
   if (typeof IntersectionObserver !== 'undefined') {
+    new IntersectionObserver(entries => {
+      nearView = entries.some(entry => entry.isIntersecting);
+      syncPrefetch();
+    }, { rootMargin: '300px' }).observe(cell);
     new IntersectionObserver(entries => {
       const entry = entries.find(item => item.target === cell);
       if (!entry || inView === entry.isIntersecting) return;

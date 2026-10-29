@@ -15,7 +15,7 @@
   const fieldMap = { utm_source: 'traffic-source', utm_medium: 'traffic-medium', utm_campaign: 'campaign-name' };
   // Keep this document's context after consuming the cross-page handoff, so a
   // restored form can be hydrated again without depending on the cleaned URL.
-  const enquiry = location.pathname.endsWith('/contact.html') ? read('toucan-enquiry-context') : {};
+  const enquiry = /\/contact(?:\.html)?$/.test(location.pathname) ? read('toucan-enquiry-context') : {};
   let consumed = false;
   const fillFields = () => {
     const fields = keys.map(key => {
@@ -35,7 +35,7 @@
     return fields.every(Boolean);
   };
   let observer;
-  if (!fillFields() && location.pathname.endsWith('/contact.html')) {
+  if (!fillFields() && /\/contact(?:\.html)?$/.test(location.pathname)) {
     // This script runs in the head: fill hidden controls as the parser creates
     // them, before navigation observers can read their default HTML values.
     observer = new MutationObserver(() => { if (fillFields()) observer.disconnect(); });
@@ -49,7 +49,7 @@
     const link = event.target.closest('a[href]');
     if (!link || link.hasAttribute('download')) return;
     const target = new URL(link.href, location.href);
-    if (target.origin !== location.origin || !target.pathname.endsWith('/contact.html')) return;
+    if (target.origin !== location.origin || !/\/contact(?:\.html)?$/.test(target.pathname)) return;
     write('toucan-enquiry-context', { service: link.dataset.service, offer: link.dataset.offer });
   };
   document.addEventListener('click', rememberEnquiry, true);

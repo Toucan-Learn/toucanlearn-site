@@ -21,6 +21,8 @@ async function context(viewport) {
     let file = path.resolve(root, '.' + decodeURIComponent(url.pathname.slice(base.pathname.length - 1)));
     if (file !== root && !file.startsWith(root + path.sep)) return route.abort();
     try {
+      // Like GitHub Pages: /subjects serves subjects.html.
+      if (!path.extname(file) && !(await stat(file).catch(() => null))) file += '.html';
       if ((await stat(file)).isDirectory()) file = path.join(file, 'index.html');
       return route.fulfill({ path: file });
     } catch { return route.fulfill({ status: 404, body: 'Not found' }); }
@@ -28,9 +30,11 @@ async function context(viewport) {
   return context;
 }
 async function clean(page, pathname) {
-  await page.waitForFunction(() => !location.hash && !location.pathname.endsWith('/index.html'));
+  // 29 Oct: pages running menu.js also drop .html from the address.
+  await page.waitForFunction(() => !location.hash && !location.pathname.endsWith('/index.html')
+    && !(location.pathname.endsWith('.html') && document.querySelector('script[src^="menu.js"]')));
   const url = new URL(page.url());
-  if (pathname) assert.equal(url.pathname, new URL(pathname, base).pathname);
+  if (pathname) assert.equal(url.pathname, new URL(pathname, base).pathname.replace(/\.html$/, ''));
   checks++;
 }
 async function open(page, route) {

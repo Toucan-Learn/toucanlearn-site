@@ -11,8 +11,8 @@
     return `${part('year')}-${part('month')}-${part('day')}` <= config.closes;
   }
   window.LaunchOffer = { config, isActive };
-  const page = window.location.pathname.split('/').pop();
-  if (!isActive() || ['contact.html', 'thank-you.html'].includes(page)) return;
+  const page = window.location.pathname.split('/').pop().replace(/\.html$/, '');
+  if (!isActive() || ['contact', 'thank-you'].includes(page)) return;
 
   const storageKey = 'toucan-launch-offer-last-shown';
   const rememberFor = 14 * 24 * 60 * 60 * 1000;
@@ -58,7 +58,7 @@
     const summary = element('p', 'launch-offer-dialog__summary', `Book by ${closes}.`);
     summary.id = 'launch-offer-summary';
     const claim = element('a', 'button launch-offer-dialog__claim', 'Claim a free spot');
-    claim.setAttribute('href', 'contact.html');
+    claim.setAttribute('href', 'contact');
     claim.setAttribute('data-offer', 'launch');
     const later = element('button', 'launch-offer-dialog__later', 'Maybe later');
     later.type = 'button';

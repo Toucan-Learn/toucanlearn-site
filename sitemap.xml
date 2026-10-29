@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://toucanlearn.co.uk/</loc></url>
-  <url><loc>https://toucanlearn.co.uk/approach.html</loc></url>
-  <url><loc>https://toucanlearn.co.uk/children.html</loc></url>
-  <url><loc>https://toucanlearn.co.uk/adults.html</loc></url>
-  <url><loc>https://toucanlearn.co.uk/team.html</loc></url>
-  <url><loc>https://toucanlearn.co.uk/contact.html</loc></url>
-  <url><loc>https://toucanlearn.co.uk/subjects.html</loc></url>
+  <url><loc>https://toucanlearn.co.uk/approach</loc></url>
+  <url><loc>https://toucanlearn.co.uk/children</loc></url>
+  <url><loc>https://toucanlearn.co.uk/adults</loc></url>
+  <url><loc>https://toucanlearn.co.uk/team</loc></url>
+  <url><loc>https://toucanlearn.co.uk/contact</loc></url>
+  <url><loc>https://toucanlearn.co.uk/subjects</loc></url>
 </urlset>

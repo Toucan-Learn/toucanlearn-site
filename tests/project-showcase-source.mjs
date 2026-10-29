@@ -192,7 +192,7 @@ const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(h
   .replace("frame-src 'self' https://joshtoucanlearn.github.io;", "frame-src 'self';");
 assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the showcase tokens, DARTY frame origin and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
-assert.equal(heroCopy(after), heroCopy(before), 'Homepage copy, buttons and benefits stay untouched');
+assert.equal(homeNavigationMarkup(heroCopy(after)), homeNavigationMarkup(heroCopy(before)), 'Homepage copy, buttons and benefits stay untouched');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
 assert.equal(withoutOwnerContent(homeNavigationMarkup(belowHero(after))), withoutOwnerContent(homeNavigationMarkup(belowHero(before))), 'Homepage content below the hero (outside the owner-managed team section) is preserved through the URL migration');
 

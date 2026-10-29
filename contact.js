@@ -165,7 +165,7 @@ var EnquiryRules = (function () {
         body: withSubjectInMessage(body), signal: requestController.signal
       });
       if (!response.ok || (await response.json()).ok !== true) throw new Error("Enquiry failed");
-      window.location.assign("thank-you.html");
+      window.location.assign("thank-you");
     } catch (error) {
       showMessage("The enquiry could not be sent. Please try again.");
       formMessage.focus();

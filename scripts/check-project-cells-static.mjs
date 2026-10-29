@@ -13,10 +13,10 @@ assert(!/<script\b(?![^>]*\bsrc=)|<style\b|\sstyle\s*=|\son\w+\s*=/i.test(html),
 assert(html.includes("script-src 'self'; style-src 'self'") && !/unsafe-inline|unsafe-eval/.test(html), 'Strict CSP changed');
 assert(!/See how our lessons work|See the Toucan approach/.test(html), 'Retired approach links must be removed');
 const gettingStarted = html.split('<section id="getting-started"')[1]?.split('</section>')[0];
-assert(gettingStarted?.includes('<a class="button" href="contact.html" data-service="children">Tell us your child’s goal <span aria-hidden="true">→</span></a>'), 'Getting started uses the children enquiry button and exact owner label');
+assert(gettingStarted?.includes('<a class="button" href="contact" data-service="children">Tell us your child’s goal <span aria-hidden="true">→</span></a>'), 'Getting started uses the children enquiry button and exact owner label');
 assert.equal((section.match(/data-project-enquiry\b/g) || []).length, 1, 'One shared Projects enquiry button across all five slides');
 const projectHeader = section.match(/<div id="every-lesson" class="section-head">([\s\S]*?)<\/div>/)?.[1];
-assert(projectHeader?.includes('<a class="button" data-project-enquiry href="contact.html" data-service="children">Tell us what they love <span aria-hidden="true">→</span></a>'), 'The shared Projects header carries the enquiry button');
+assert(projectHeader?.includes('<a class="button" data-project-enquiry href="contact" data-service="children">Tell us what they love <span aria-hidden="true">→</span></a>'), 'The shared Projects header carries the enquiry button');
 const slides = [...section.matchAll(/<article\b[^>]*data-project-slide[^>]*data-project="([^"]+)"[^>]*>([\s\S]*?)<\/article>/g)].map(([, id, html]) => ({ id, html }));
 assert.deepEqual(slides.map(slide => slide.id), ['intro', 'football', 'darty', 'drinks', 'piano']);
 const text = html => html.replace(/<!--[\s\S]*?-->/g, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();

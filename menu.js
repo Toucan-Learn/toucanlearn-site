@@ -22,7 +22,8 @@
 // Keep fragment navigation in the page. Defer arrival cleanup until all deferred/module
 // viewers have read the deep link and the original browser jump has settled.
 (() => {
-  const path = () => location.pathname.replace(/\/index\.html$/, '/');
+  // Clean addresses: /index.html becomes /, and /subjects.html becomes /subjects (Pages serves both).
+  const path = () => location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
   const clean = () => {
     const url = new URL(location.href);
     url.pathname = path();
@@ -67,7 +68,7 @@
     if (!link || link.hasAttribute('download') || (link.target && link.target !== '_self')) return;
     let url;
     try { url = new URL(link.href, location.href); } catch (_) { return; }
-    if (url.origin !== location.origin || url.pathname.replace(/\/index\.html$/, '/') !== path() || url.search !== location.search || !url.hash) return;
+    if (url.origin !== location.origin || url.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '') !== path() || url.search !== location.search || !url.hash) return;
     const target = targetFor(url.hash);
     // The panel handler reveals hidden content and moves focus before scrolling.
     if (!target || target.closest('[data-content-panel]')) return;

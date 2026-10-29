@@ -5,14 +5,26 @@ import { execFileSync } from 'node:child_process';
 import vm from 'node:vm';
 import { contactMarkup, contactScript } from './helpers/contact-markup.mjs';
 import { navigationMarkup } from './helpers/navigation-markup.mjs';
+import { contactSourceChecks } from './helpers/contact-layout.mjs';
 const root = new URL('../', import.meta.url);
 const source = await readFile(new URL('launch-offer.js', root), 'utf8');
 const contact = await readFile(new URL('contact.js', root), 'utf8');
 const html = await readFile(new URL('contact.html', root), 'utf8');
 const css = await readFile(new URL('campaigns.css', root), 'utf8');
+const contactCSS = await readFile(new URL('contact.css', root), 'utf8');
 const output = new URL('../outputs/final-pass-20261028/codex-offer/', root);
 const checks = [];
 function check(name, fn) { fn(); checks.push(name); }
+check('Contact reading order, preserved controls, CSP, sky hierarchy and AA contrast', () => {
+  const original = execFileSync('git', ['show', 'HEAD:contact.html'], { cwd: root, encoding: 'utf8' });
+  const originalCSS = execFileSync('git', ['show', 'HEAD:contact.css'], { cwd: root, encoding: 'utf8' });
+  assert.equal(contactMarkup(html), contactMarkup(original));
+  assert.equal(contact, execFileSync('git', ['show', 'HEAD:contact.js'], { cwd: root, encoding: 'utf8' }), 'Enquiry logic is unchanged');
+  const contrast = contactSourceChecks(html, original, contactCSS, originalCSS);
+  console.log(`PASS: Contact controls, DOM order, CSP and CSS cache token; minimum contrast over white sky pixels: ${JSON.stringify(contrast)}.`);
+});
+// Run the contact regressions independently of the known pop-up baseline failure.
+if (process.env.CONTACT_ONLY === '1') process.exit(0);
 class Events {
   listeners = new Map();
   addEventListener(type, fn) { const list = this.listeners.get(type) || []; this.listeners.set(type, [...list, fn]); }

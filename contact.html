@@ -24,7 +24,7 @@
   <script src="campaigns.js?v=20261029-attribution-2"></script>
   <link rel="stylesheet" href="style.css?v=20261028-toggle-4" />
   <link rel="stylesheet" href="campaigns.css?v=20261029-safari-wrap-1" />
-  <link rel="stylesheet" href="contact.css?v=20261029-price-bands-1" />
+  <link rel="stylesheet" href="contact.css?v=20261029-enquiry-sky-2" />
   <script src="menu.js?v=20261029-clean-url-1" defer></script>
   <link rel="stylesheet" href="framework.css?v=20261029-arabic-gap-1" />
 </head>
@@ -175,7 +175,13 @@
           </div>
           </div>
           </div>
-          <div class="fields-two">
+          <div class="fields-two enquiry-details">
+          <div class="field field--support">
+            <label for="support-needed">What would you like help with?</label>
+            <textarea id="support-needed" name="Support requested" rows="9" maxlength="1000" aria-describedby="support-needed-error" required></textarea>
+            <span class="field-error" id="support-needed-error"></span>
+          </div>
+          <div class="field-stack">
           <div class="field">
             <label for="subject">Subject (optional)</label>
             <select id="subject" name="Subject" aria-describedby="subject-error">
@@ -192,13 +198,6 @@
             </select>
             <span class="field-error" id="subject-error"></span>
           </div>
-          <div class="field">
-            <label for="support-needed">What would you like help with?</label>
-            <textarea id="support-needed" name="Support requested" rows="3" maxlength="1000" aria-describedby="support-needed-error" required></textarea>
-            <span class="field-error" id="support-needed-error"></span>
-          </div>
-          </div>
-          <div class="fields-two">
           <div class="field">
             <label for="desired-lesson-rate">What's your desired lesson rate?</label>
             <input id="desired-lesson-rate" name="Desired lesson rate" type="text" inputmode="text" maxlength="60" aria-describedby="desired-lesson-rate-hint desired-lesson-rate-error" />
@@ -219,6 +218,7 @@
             <label for="location">Town or postcode area</label>
             <input id="location" name="Town or postcode area" type="text" maxlength="80" autocomplete="address-level2" aria-describedby="location-error" disabled />
             <span class="field-error" id="location-error"></span>
+          </div>
           </div>
           </div>
           </div>

@@ -5,7 +5,8 @@ import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { contactMarkup, contactScript } from './helpers/contact-markup.mjs';
-assert.ok(process.env.BASE_URL, 'Set BASE_URL to the server serving website-codex-offer.');
+import { contactLayoutChecks, contactBehaviourChecks } from './helpers/contact-layout.mjs';
+assert.ok(process.env.BASE_URL, 'Set BASE_URL to the server serving this checkout. CONTACT_ONLY=1 runs the contact regressions.');
 const base = new URL(process.env.BASE_URL.replace(/\/?$/, '/'));
 const root = new URL('../', import.meta.url);
 const output = new URL('../outputs/final-pass-20261028/codex-offer/', root);
@@ -150,6 +151,21 @@ async function popupFits(page) {
 try {
   const receipt = await browser.newContext();
   assert.equal(await (await receipt.request.get(url('launch-offer.js?v=20261028-launch-offer-3'))).text(), source, 'BASE_URL must serve the edited worktree'); await receipt.close();
+  for (const viewport of [...viewports, { width: 320, height: 740 }, { width: 680, height: 900 }, { width: 900, height: 750 }]) for (const colour of ['light', 'dark']) {
+    await run(`contact-${viewport.width}x${viewport.height}-${colour}-layout-contrast-and-validation`, async () => {
+      const { context, page } = await setup({ viewport, colour });
+      try {
+        await open(page, 'contact.html');
+        const detail = await contactLayoutChecks(page);
+        await page.screenshot({ path: fileURLToPath(new URL(`contact-${viewport.width}-${colour}.png`, output)), fullPage: true, animations: 'disabled' });
+        await collect(page, 'contact-layout');
+        await contactBehaviourChecks(page, context);
+        await collect(page, 'contact-validation');
+        return detail;
+      } finally { await context.close(); }
+    });
+  }
+  if (process.env.CONTACT_ONLY !== '1') {
   for (const viewport of viewports) for (const colour of ['light', 'dark']) {
     const label = `${viewport.width}x${viewport.height}-${colour}`;
     const sessions = new Map();
@@ -280,6 +296,7 @@ try {
       assert.equal(await page.locator('.launch-offer-dialog').count(), 0); await collect(page, 'storage-denied');
     } finally { await context.close(); }
   });
+  }
 } catch (error) { report.failures.push({ name: 'suite', message: error.stack }); }
 finally {
   await browser.close(); report.status = report.failures.length || report.errors.length || report.csp.length ? 'FAIL' : 'PASS';

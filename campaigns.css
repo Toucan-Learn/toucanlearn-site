@@ -1960,9 +1960,14 @@ body.homepage .toucan-opening-header .nav-links {
 
 /* Keep the heading, unchanged enquiry bar and readable quote on short laptops. */
 @media (min-width: 900px) and (max-height: 800px) {
-  #main > .homepage-section.proof-section { padding-block: 16px; }
+  #main > .homepage-section.proof-section { padding-block: 8px; }
   #reviews .reviews-enhanced { padding-bottom: 36px; }
   #reviews .reviews-enhanced .review-art { width: 160px; }
+  /* Owner, 29 Oct: the landing cut the enquiry bar's bottom (1440x750 Firefox,
+     1280x720). Tighter gaps above and below the carousel; the bar is unchanged. */
+  #reviews .section-head { margin-bottom: 12px; }
+  #reviews .reviews-enquiry { margin-top: 12px; }
+  #reviews .reviews-enhanced .review-quote { padding-block: 26px; }
 }
 
 @media (max-width: 899px) {

@@ -184,7 +184,7 @@ const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 // framework/menu/favicon tokens), so these guards compare the showcase-owned markup only.
 const withoutOwnerContent = html => html
   .replace(/<section class="homepage-section team-section"[\s\S]*?<\/section>/, '<!-- team section: owner-managed -->')
-  .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
+  .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
 const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html))
   .replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN')
   // 29 Oct flicker fix: the static fallback is recaptured from the live piano view.

@@ -377,12 +377,15 @@ if (
   });
   function resizeSky() {
     const phone = window.matchMedia('(max-width: 760px)').matches;
+    // The homepage piano is mounted only while selected. A detached or newly
+    // remounted sky has no size, which collapsed this one to a 1px line.
+    const hero = [heroArt, document.querySelector('.world-art')].find(node => node?.isConnected && node.clientHeight > 0);
     framing = getSkyFrame(
       Math.max(1, art.clientWidth),
-      Math.max(1, heroArt ? heroArt.clientHeight : Math.max(scene.clientHeight, phone ? STANDALONE_FRAME.phoneHeight : STANDALONE_FRAME.height)),
+      Math.max(1, hero ? hero.clientHeight : Math.max(scene.clientHeight, phone ? STANDALONE_FRAME.phoneHeight : STANDALONE_FRAME.height)),
       fallbackImage.naturalWidth,
       fallbackImage.naturalHeight,
-      heroArt ? heroArt.getBoundingClientRect().width : Math.min(art.clientWidth, STANDALONE_FRAME.width),
+      hero ? hero.getBoundingClientRect().width : Math.min(art.clientWidth, STANDALONE_FRAME.width),
     );
     sky.width = framing.width;
     sky.height = framing.height;

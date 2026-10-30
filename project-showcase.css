@@ -259,3 +259,9 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 }
 /* Owner, 30 Oct: the project caption sits above the window; the showcase label moves underneath. */
 .living-hero .hero-world > .hero-world-eyebrow { margin: 10px 0 0; }
+/* Owner, 30 Oct: longer Learning lines wrap differently per project and browser; a reserved
+   height keeps the project window from jumping as the captions rotate. */
+.living-hero .hero-project-caption { box-sizing: border-box; min-height: 139px; }
+@media (min-width: 768px) and (max-width: 1099px) { .living-hero .hero-project-caption { min-height: 157px; } }
+@media (max-width: 767px) { .living-hero .hero-project-caption { min-height: 175px; } }
+.living-hero .hero-project-caption { display: flex; flex-direction: column; justify-content: center; }

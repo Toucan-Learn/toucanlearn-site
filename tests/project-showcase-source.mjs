@@ -86,7 +86,7 @@ assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'dri
 export const homepageCaptions = [
   ['English · Journalism', 'Football newspaper', 'Getting a discouraged student excited to practise English through his interests and insight.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
   ['English · Game design', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
-  ['SEN & English', 'Drink design', 'A struggling SEN student regains his creative and working flow designing drinks.', 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.'],
+  ['SEN & English', 'Drink design', 'We found a dysregulated SEN student often regains his creative and working flow designing drinks.', 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.'],
   ['SEN · Music brain breaks', 'Toucan piano', 'A tool for a student, a few minutes at a time for productive brain breaks.', 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.'],
 ];
 assert.deepEqual(projects.map(({ label, heading, learning, result }) => [label, heading, learning, result]), homepageCaptions, 'Each caption has the approved subject, heading, learning and result');
@@ -231,7 +231,7 @@ assert.match(source, /const caption = automatic \? root\.parentElement\.querySel
 const captionMarkup = after.match(/<div class="hero-project-caption"[^>]*>([\s\S]*?)<\/div>/)[1];
 const captionParts = ['label', 'heading', 'learning', 'result'];
 assert.deepEqual(captionParts.map(part => captionMarkup.match(new RegExp(`data-project-${part}>([^<]+)<`))?.[1]), homepageCaptions[3], 'The no-JS caption shows the complete piano story');
-assert.deepEqual([...captionMarkup.matchAll(/<p class="project-caption-detail"><strong>(Learning:|Result:)<\/strong> <span data-project-(learning|result)>[^<]+<\/span><\/p>/g)].map(([, lead, field]) => [lead, field]), [['Learning:', 'learning'], ['Result:', 'result']], 'Two paragraphs retain bold lead words outside the changing text spans');
+assert.deepEqual([...captionMarkup.matchAll(/<p class="project-caption-detail"><strong>(Mission:|Result:)<\/strong> <span data-project-(learning|result)>[^<]+<\/span><\/p>/g)].map(([, lead, field]) => [lead, field]), [['Mission:', 'learning'], ['Result:', 'result']], 'Two paragraphs retain bold lead words outside the changing text spans');
 const captionUpdate = source.match(/if \(caption\) \{([\s\S]*?)\n    \}/)[1];
 for (const part of captionParts) assert(captionUpdate.includes(`caption.querySelector('[data-project-${part}]').textContent = entries[index].${part};`), `${part}: update only textContent`);
 assert(!/innerHTML|outerHTML|insertAdjacentHTML/.test(captionUpdate), 'Caption updates never parse HTML');

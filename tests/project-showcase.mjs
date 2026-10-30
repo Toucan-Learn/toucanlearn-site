@@ -258,8 +258,8 @@ try {
           });
           assert.deepEqual(caption.copy, homepageCaptions[position], `${label}/${id}: caption matches the selected project`);
           assert.deepEqual(caption.parts, ['P', 'H2', 'P', 'P'], 'Caption has a label, heading and two short paragraphs');
-          assert.deepEqual(caption.lines.map(line => [line.lead, line.label, line.children]), [['STRONG', 'Learning:', ['STRONG', 'SPAN']], ['STRONG', 'Result:', ['STRONG', 'SPAN']]], 'Both lines begin with bold lead words');
-          assert.deepEqual(caption.lines.map(line => line.text), [`Learning: ${homepageCaptions[position][2]}`, `Result: ${homepageCaptions[position][3]}`], 'Lead words and project text retain their spacing');
+          assert.deepEqual(caption.lines.map(line => [line.lead, line.label, line.children]), [['STRONG', 'Mission:', ['STRONG', 'SPAN']], ['STRONG', 'Result:', ['STRONG', 'SPAN']]], 'Both lines begin with bold lead words');
+          assert.deepEqual(caption.lines.map(line => line.text), [`Mission: ${homepageCaptions[position][2]}`, `Result: ${homepageCaptions[position][3]}`], 'Lead words and project text retain their spacing');
           assert.equal(caption.live, position === 0 ? 'off' : 'polite', 'Only manual switches announce the caption');
           assert.equal(caption.controls, 0, 'The caption adds no controls');
           assert(caption.fits && caption.bottom <= caption.window.y, 'Caption fits directly above the window (owner, 30 Oct)');

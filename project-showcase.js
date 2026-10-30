@@ -5,14 +5,14 @@ import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
 // One media cell for the opening and Projects. Full section copy stays in HTML for no-JS/print.
 export const projects = [
-  { id: 'football', name: 'Sports journalism', label: 'English', line: 'Persuasive writing through football, ending in his own newspaper.', poster: 'assets/projects/football-home{size}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/football-section{size}.webp?v=20261030-forecast-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
-  { id: 'darty', name: 'DARTY', label: 'English · Game design', line: 'Clear, precise written instructions that shaped a playable football game.', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
-  { id: 'drinks', name: 'Drink design', label: 'English · Design', line: 'Writing for an audience: three drinks, from pencil sketches to 3D renders.', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
+  { id: 'football', name: 'Sports journalism', label: 'English · Journalism', heading: 'Football newspaper', learning: 'Persuasive writing: making a case and backing it up.', result: 'His own newspaper of previews, reports and opinion pieces.', poster: 'assets/projects/football-home{size}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/football-section{size}.webp?v=20261030-forecast-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
+  { id: 'darty', name: 'DARTY', label: 'English · Game design', heading: 'DARTY (football game)', learning: 'Writing clear, precise instructions.', result: 'A playable football game, built from his written requests.', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
+  { id: 'drinks', name: 'Drink design', label: 'English · Design', heading: 'Drink design', learning: 'Writing for an audience: choosing words that sell.', result: 'Three drinks, from his sketches and labels to 3D renders.', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
   ] },
-  { id: 'piano', name: 'Piano', label: 'Music', line: 'A way into music through play, with songs to learn and sounds to try.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
+  { id: 'piano', name: 'Piano', label: 'Music', heading: 'Toucan piano', learning: 'Music through play, with no pressure to get it right.', result: 'A piano anyone can play here, with songs to learn.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
@@ -497,8 +497,9 @@ export function initShowcase(root) {
     if (caption) {
       caption.setAttribute('aria-live', userAction ? 'polite' : 'off');
       caption.querySelector('[data-project-label]').textContent = entries[index].label;
-      caption.querySelector('[data-project-heading]').textContent = entries[index].name;
-      caption.querySelector('[data-project-line]').textContent = entries[index].line;
+      caption.querySelector('[data-project-heading]').textContent = entries[index].heading;
+      caption.querySelector('[data-project-learning]').textContent = entries[index].learning;
+      caption.querySelector('[data-project-result]').textContent = entries[index].result;
     }
     status.textContent = `${(index - countFrom + entries.length) % entries.length + 1} of ${entries.length}`;
     timer.reset();

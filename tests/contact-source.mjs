@@ -44,7 +44,7 @@ assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));
 assert.match(html, /href="tel:\+447309639095">07309 639095<\/a>/);
 assert.match(html, /href="https:\/\/wa.me\/447307045816"[^>]*>WhatsApp 07307 045816</);
-assert.match(html, /src="contact.js\?v=20261030-subject-dropdown-2"/);
+assert.match(html, /src="contact.js\?v=20261030-subject-sep-1"/);
 assert.match(html, /href="contact.css\?v=20261030-subject-dropdown-3"/);
 assert.match(html, /script-src 'self'; style-src 'self'/);
 assert.doesNotMatch(html, /\s(?:style|on\w+)\s*=/i);
@@ -274,7 +274,7 @@ for (const [service, subject] of Object.entries({ maths: 'Maths', languages: 'La
   const direct = enquiry(valid, 'ok', { search: '?service=' + service });
   assert.equal(direct.elements.get('subject').value, subject);
   await direct.submit();
-  assert.equal(direct.requests[0].body.get('Support requested'), 'Subject: ' + subject + '\n' + valid['Support requested']);
+  assert.equal(direct.requests[0].body.get('Support requested'), 'Subject: ' + subject + ' | ' + valid['Support requested']);
   // Exercise the actual data-service handoff with clean URLs, then hydrate the form.
   const storage = new Map(), origin = fixture('https://example.test/subjects', storage);
   const link = origin.node('a', { href: 'contact', 'data-service': service }); origin.document.body.append(link);
@@ -309,7 +309,7 @@ for (const subject of [undefined, '', ...subjects]) {
   assert.equal(page.requests.length, 1);
   const sent = page.requests[0];
   assert.equal(sent.body.has('Subject'), false, 'Subject stays inside Support requested for the existing backend');
-  assert.equal(sent.body.get('Support requested'), (subject ? 'Subject: ' + subject + '\n' : '') + valid['Support requested']);
+  assert.equal(sent.body.get('Support requested'), (subject ? 'Subject: ' + subject + ' | ' : '') + valid['Support requested']);
   assert.deepEqual([...sent.body.keys()], Object.keys(valid), 'Backend field names stay unchanged');
   assert.equal(sent.method, 'POST'); assert.equal(sent.headers['Content-Type'], 'application/x-www-form-urlencoded');
   assert.deepEqual(page.redirects, ['thank-you']);
@@ -332,7 +332,7 @@ for (const enhanced of [true, false]) {
   assert.equal(page.elements.get('subject-button').attrs['aria-invalid'], undefined);
 }
 for (const Subject of ['', ...subjects]) {
-  const allowance = 1000 - (Subject ? ('Subject: ' + Subject + '\n').length : 0);
+  const allowance = 1000 - (Subject ? ('Subject: ' + Subject + ' | ').length : 0);
   const page = enquiry({ ...valid, Subject, 'Support requested': 'x'.repeat(allowance) }); await page.submit();
   assert.equal(page.requests.length, 1); assert.equal(page.requests[0].body.get('Support requested').length, 1000);
   for (const length of new Set([allowance + 1, 1000])) {

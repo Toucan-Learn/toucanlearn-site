@@ -149,7 +149,8 @@ var EnquiryRules = (function () {
     const sent = new URLSearchParams(body);
     const subject = sent.get("Subject");
     sent.delete("Subject");
-    if (subject) sent.set("Support requested", "Subject: " + subject + "\n" + (sent.get("Support requested") || ""));
+    // A visible separator: the enquiry email drops line breaks, which ran the subject into the message.
+    if (subject) sent.set("Support requested", "Subject: " + subject + " | " + (sent.get("Support requested") || ""));
     return sent;
   }
   form.addEventListener("submit", async (event) => {

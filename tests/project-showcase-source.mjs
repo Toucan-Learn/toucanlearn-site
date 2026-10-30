@@ -253,6 +253,7 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
     .replace('  || SKY_PRESETS.find(candidate => candidate.id === presetId)\n', '')
     .replace('let sized = false, firstFrame = false;\n', '')
     .replace('  // Showcase readiness only: report a fully sized draw with the sky image ready.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
+    .replace('  // Showcase readiness only: report a fully sized draw once the live sky (not its still fallback) shows.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth && (!renderer || !sky.hidden)) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
     .replace('  sized = rect.width > 0 && rect.height > 0;\n', '');
   // 30 Oct: base moved to 90e02ba, the owner-requested Maple Leaf bars 1-16.
   const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '90e02ba'}:${file}`], { cwd: site, encoding: 'utf8' });

@@ -22,15 +22,18 @@ const scratch = await mkdtemp(path.join(tmpdir(), 'showcase-posters-'));
 try {
   // The piano sky is random per page load; each sky gets its own poster.
   const views = [['football', ''], ...SKY_PRESETS.map(sky => ['piano', sky.id])];
-  for (const [mode, route] of pages) for (const [id, sky] of views) {
+  // Phones get their own captures: the cell there is near-square, so a laptop
+  // poster would show the toucan larger than the live view (owner, 30 Oct).
+  const sizes = [['', { width: 1440, height: 750, deviceScaleFactor: 2 }], ['phone', { width: 390, height: 844, deviceScaleFactor: 3, isMobile: true, hasTouch: true }]];
+  for (const [size, viewport] of sizes) for (const [mode, route] of pages) for (const [id, sky] of views) {
     const page = await browser.newPage();
-    await page.setViewport({ width: 1440, height: 750, deviceScaleFactor: 2 });
+    await page.setViewport(viewport);
     await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
     await page.evaluateOnNewDocument(() => { try { localStorage.setItem('toucan-launch-offer-last-shown', String(Date.now())); } catch {} });
     await page.goto(`${base}/${route}?project=${id}${sky ? `&sky=${sky}` : ''}`, { waitUntil: 'networkidle0' });
     if (mode === 'section') await page.$eval('[data-panel-link][href="#learner-projects"]', link => link.click());
     await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center', behavior: 'instant' }));
-    await page.waitForSelector('.showcase-stage > .showcase-live[data-showcase-revealed]', { timeout: 30000 });
+    await page.waitForSelector('.showcase-stage > .showcase-live[data-showcase-revealed], .showcase-newspaper-layer[data-showcase-revealed]', { timeout: 30000 });
     if (id === 'football') {
       await page.$eval('.showcase-newspaper', async iframe => {
         const doc = iframe.contentDocument;
@@ -49,7 +52,7 @@ try {
     await page.$$eval('.site-header, header', nodes => nodes.forEach(node => { node.style.visibility = 'hidden'; }));
     const stage = await page.$('.showcase-stage');
     const clip = await stage.boundingBox();
-    const name = [id === 'piano' ? 'toucan-piano' : id, mode, sky].filter(Boolean).join('-');
+    const name = [id === 'piano' ? 'toucan-piano' : id, mode, size, sky].filter(Boolean).join('-');
     const png = path.join(scratch, `${name}.png`);
     await stage.screenshot({ path: png });
     const out = path.join(site, 'assets/projects', `${name}.webp`);

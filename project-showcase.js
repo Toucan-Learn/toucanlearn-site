@@ -1,18 +1,18 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-condensation-1';
-import { initHeroSky } from './hero-sky.js?v=20261029-maple-16-bars-1';
+import { initHeroSky } from './hero-sky.js?v=20261030-live-sky-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
 // One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
 export const projects = [
-  { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-home.webp?v=20261029-match-1', sectionPoster: 'assets/projects/football-section.webp?v=20261029-match-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
+  { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-home{size}.webp?v=20261030-phone-1', sectionPoster: 'assets/projects/football-section{size}.webp?v=20261030-phone-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
   { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
   { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
   ] },
-  { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-home-{sky}.webp?v=20261029-match-1', sectionPoster: 'assets/projects/toucan-piano-section-{sky}.webp?v=20261029-match-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
+  { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-phone-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-phone-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
@@ -133,6 +133,8 @@ export function initShowcase(root) {
   const slides = [...root.querySelectorAll('[data-project-slide]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const compactDevice = matchMedia('(max-width: 767px), (pointer: coarse) and (hover: none)');
+  // Phone cells are near-square, so the football and piano posters have phone captures.
+  const phoneCell = matchMedia('(max-width: 767px)');
   const requested = new URLSearchParams(location.search).get('project');
   let index = automatic ? initialProject(requested) : Math.max(0, entries.findIndex(project => project.id === requested));
   // The homepage counts from wherever it opened, so its first project reads "1 of 4".
@@ -157,7 +159,8 @@ export function initShowcase(root) {
   const warmPreview = (project, img) => {
     // Football and piano posters are captures of each carousel's live view
     // (scripts/capture-showcase-posters.mjs), so the cross-fade is invisible.
-    const poster = ((!automatic && project.sectionPoster) || project.poster).replace('{sky}', pianoSky);
+    const poster = ((!automatic && project.sectionPoster) || project.poster).replace('{sky}', pianoSky)
+      .replace('{size}', phoneCell.matches ? '-phone' : '');
     img.src = project.titleStill || poster;
     const decoded = img.decode();
     previewDecodes.set(img, decoded);
@@ -541,6 +544,7 @@ export function initShowcase(root) {
     timer.reset();
     sync();
   });
+  phoneCell.addEventListener('change', () => entries.filter(project => project.poster?.includes('{size}')).forEach(project => warmPreview(project, preview(project))));
   compactDevice.addEventListener('change', () => {
     if (entries[index].type !== 'match') return;
     if (stage.contains(document.activeElement)) root.focus({ preventScroll: true });

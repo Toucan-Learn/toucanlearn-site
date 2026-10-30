@@ -285,8 +285,8 @@ function draw() {
   pixelRipples.expire(time);
   renderer?.draw(time);
   drawFlock();
-  // Showcase readiness only: report a fully sized draw with the sky image ready.
-  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth) {
+  // Showcase readiness only: report a fully sized draw once the live sky (not its still fallback) shows.
+  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth && (!renderer || !sky.hidden)) {
     firstFrame = true;
     onFirstFrame?.();
   }

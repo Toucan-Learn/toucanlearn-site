@@ -66,9 +66,7 @@ teacherCards.forEach((card, index) => {
   assert.ok(card.includes(`>${teacherCopy[index][0]}</h3>`), 'Teacher order and name');
   assert.ok(card.includes(`<p>${teacherCopy[index][1]}</p>`), 'Exact teacher copy');
 });
-assert.match(teacherCards[2], /<span class="framework-portrait-placeholder" aria-hidden="true">N<\/span>/);
-assert.doesNotMatch(teacherCards[2], /<img\b/);
-assert.match(html, /<!--[^]*replace the next line with: <span class="framework-portrait-frame framework-portrait-frame--photo"><img class="framework-portrait" src="assets\/team\/nhu-portrait\.jpg" alt="Cô Như" width="900" height="1200" decoding="async" \/><\/span> -->/);
+assert.match(teacherCards[2], /<span class="framework-portrait-frame framework-portrait-frame--photo"><img class="framework-portrait" src="assets\/team\/nhu-portrait\.jpg\?v=[^"]+" alt="Cô Như" width="405" height="600"/, 'Như has her own photo');
 assert.equal((html.match(/class="vietnam-card"/g) || []).length, 3);
 assert.equal((html.match(/<li>Buổi đầu|<li>Học 1|<li>Báo cáo/g) || []).length, 3);
 const ids = [...markup.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);

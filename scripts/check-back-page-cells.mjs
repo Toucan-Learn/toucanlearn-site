@@ -17,6 +17,8 @@ const words = html => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ''
 const csp = html => html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)?.[0];
 function approvedCopy(file) {
   let copy = words(original(file, copyBefore));
+  // Owner, 30 Oct: no "UK only" wording for online lessons.
+  if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
   if (file !== 'approach.html') return copy;
   const changes = [
     ['From the first session onwards ', ''],
@@ -25,13 +27,23 @@ function approvedCopy(file) {
     ['We use the diagnostic report to choose the skills to practise and a pace that suits the learner.', 'Choose skills to practise and a pace that suits you.'],
     ['Sessions can combine focused skill-building, exam preparation and meaningful longer-term projects.', 'Combine skill-building, exam preparation and meaningful projects.'],
     ['Your tutor writes a weekly lesson report, and our founder reads it. We review what is working and adjust the learner’s plan.', 'Your tutor reports each week, helping us review and adjust your plan. Book a free first session'],
-    ['Talk about the week. Typing the answers can double as writing practice.', 'Catch up on the week, with typing as writing practice.'],
+    ['Talk about the week. Typing the answers can double as writing practice.', 'New ideas explained and modelled step by step, building on what the learner already knows.'],
     ['choose a Functional Skills practice task. Weekly reports', 'choose a Functional Skills practice task. Try a free first lesson Weekly reports'],
     ["we adjust the plan each week. Online and in person", "we adjust the plan each week. Start with a free session Online and in person"],
     // Owner, 29 Oct: the third report heading is the tutor's feedback, in his own report style.
     ["What we're still building", "We'll keep working at"],
     // Owner, 29 Oct: Where we teach drops its blue line; its intro sits in a swash cell.
     ['Online and in person Where we teach', 'Where we teach'],
+    // Owner, 30 Oct: the lesson stages describe how lessons really run; no "UK only" wording.
+    ['Four simple stages, with activities and pace shaped around the learner. ', ''],
+    ['Hello and the plan', 'Settle in and set the aim'],
+    ['A friendly start, a short plan and a choice of activities.', 'A warm-up to get thinking, a quick look back at last week, and a clear aim for today’s lesson.'],
+    ['Catch-up', 'Learn something new'],
+    ['Skills built into their interests', 'Practise it their way'],
+    ['Use games, websites or newspapers to practise a skill with guidance.', 'Guided practice through games, projects, websites or real texts they enjoy. Support steps back as their confidence grows.'],
+    ['Look back at the work and choose what to practise next.', 'We reflect on the work we’ve done together, assess feedback, and make the changes that really reinforce the purpose of what we’re learning.'],
+    ['One-to-one lessons online across the UK', 'One-to-one lessons online wherever you live'],
+    ['wherever you live in the UK.', 'wherever you live.'],
   ];
   for (const [from, to] of changes) {
     assert.equal(copy.split(from).length - 1, 1, `Approved Approach copy: ${from}`);
@@ -61,7 +73,8 @@ for (const file of files) {
     const where = source => source.match(/<section id="where-we-teach"[\s\S]*?<\/section>/)?.[0];
     // Owner, 29 Oct: only the header changes (no blue line; the intro sits in a swash cell).
     const whereHead = section => section
-      .replace('<div class="section-head"><h2 id="where-heading">Where we teach</h2><p class="approach-swash">One-to-one lessons online across the UK, with in-person sessions in selected areas, subject to tutor availability.</p></div>',
+      .replace('with a tutor matched to you wherever you live.</p>', 'with a tutor matched to you wherever you live in the UK.</p>')
+      .replace('<div class="section-head"><h2 id="where-heading">Where we teach</h2><p class="approach-swash">One-to-one lessons online wherever you live, with in-person sessions in selected areas, subject to tutor availability.</p></div>',
         '<div class="section-head"><div class="eyebrow">Online and in person</div><h2 id="where-heading">Where we teach</h2><p>One-to-one lessons online across the UK, with in-person sessions in selected areas, subject to tutor availability.</p></div>');
     assert.equal(whereHead(where(html)), where(original(file, copyBefore)), 'Where we teach: preserve the rest of the section exactly');
     const panels = ['steps-to-success', 'our-lessons', 'weekly-reports'];

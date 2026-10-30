@@ -39,3 +39,26 @@ confirm the crops, absence of prominent logos/text and the actual JPEG sizes.
 - Photo: [Young woman in headphones crafting with cardboard for a school project](https://www.pexels.com/photo/7949392/), Pexels.
 - Downloaded 30 October 2026 at 1280 × 853. Owner's pick (D2).
 - Licence: [Pexels Licence](https://www.pexels.com/license/), free commercial use; attribution not required. Illustrative only, not Toucan clients.
+
+## Subject cells (subjects page: English, Maths, Science, Psychology)
+
+Downloaded 30 October 2026 at 720 px wide from Pexels; chosen by the director, shown to the owner. All under the [Pexels Licence](https://www.pexels.com/license/): free commercial use, attribution not required. Illustrative only, not Toucan clients.
+
+| File | Pexels photo |
+| --- | --- |
+| english-primary.jpg | https://www.pexels.com/photo/3661467/ |
+| english-ks3.jpg | https://www.pexels.com/photo/5537488/ |
+| english-gcse.jpg | https://www.pexels.com/photo/5877567/ |
+| english-adults.jpg | https://www.pexels.com/photo/29242209/ |
+| maths-primary.jpg | https://www.pexels.com/photo/7014772/ |
+| maths-ks3.jpg | https://www.pexels.com/photo/8472944/ |
+| maths-gcse.jpg | https://www.pexels.com/photo/6238039/ |
+| maths-numeracy.jpg | https://www.pexels.com/photo/6963030/ |
+| science-biology.jpg | https://www.pexels.com/photo/32213405/ |
+| science-chemistry.jpg | https://www.pexels.com/photo/29210063/ |
+| science-physics.jpg | https://www.pexels.com/photo/9785602/ |
+| science-exams.jpg | https://www.pexels.com/photo/6684209/ |
+| psych-papers.jpg | https://www.pexels.com/photo/9489760/ |
+| psych-ia.jpg | https://www.pexels.com/photo/9159397/ |
+| psych-ee.jpg | https://www.pexels.com/photo/3807759/ |
+| psych-alevel.jpg | https://www.pexels.com/photo/15410078/ |

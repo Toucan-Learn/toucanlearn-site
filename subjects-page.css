@@ -120,3 +120,15 @@ body.subjects-page #art .subject-photo-body p { margin: 0 0 6px; }
 @media (max-width: 760px) { body.subjects-page #art .subject-photo-cards { grid-template-columns: minmax(0, 1fr); } }
 /* Owner, 30 Oct: six SEND cells (three rows) still fit one laptop screen. */
 @media screen and (min-width: 1000px) { body.subjects-page.cell-art-page[data-page-frame] #send-support .send-points { gap: 10px; margin-block: 8px; } }
+/* Owner, 30 Oct: English, Maths, Science and Psychology cells each get a stock photo, beside the copy like SEND. */
+body.subjects-page.cell-art-page .framework-panels .learning-subject-grid > .photo-cell { grid-template-columns: 34% minmax(0, 1fr); gap: 0; padding: 0; overflow: hidden; }
+body.subjects-page.cell-art-page .framework-panels .photo-cell .picture-cell-media { min-height: clamp(104px, 21vh, 170px); aspect-ratio: auto; border-radius: 15px 0 0 15px; background: #d9d2c4; }
+body.subjects-page.cell-art-page .framework-panels .photo-cell .picture-cell-media > img { object-fit: cover; object-position: center 45%; }
+body.subjects-page .framework-panels .photo-cell .picture-cell-copy { align-self: center; padding: 10px 12px; }
+body.subjects-page .framework-panels .photo-cell h3 { margin: 0 0 6px; font-size: 1rem; line-height: 1.3; }
+body.subjects-page .framework-panels .photo-cell p { margin: 0; font-size: .95rem; line-height: 1.4; }
+@media screen and (min-width: 1000px) { body.subjects-page.cell-art-page[data-page-frame] .framework-panels .learning-subject-grid:has(> .photo-cell) { grid-auto-rows: 1fr; align-items: stretch; } }
+@media (max-width: 759px) {
+  body.subjects-page.cell-art-page .framework-panels .learning-subject-grid > .photo-cell { grid-template-columns: minmax(0, 1fr); }
+  body.subjects-page.cell-art-page .framework-panels .photo-cell .picture-cell-media { min-height: 0; aspect-ratio: 16 / 9; border-radius: 15px 15px 0 0; }
+}

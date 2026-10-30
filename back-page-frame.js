@@ -55,7 +55,9 @@
     body.toggleAttribute('data-page-frame', roomy.matches);
     viewport.style.removeProperty('min-height');
     carousels.forEach(state => state.pages.forEach(page => page.style.removeProperty('min-height')));
-    if (!roomy.matches) { layoutChanged(); return; }
+    // Subjects keep the same frame when switching on phones too; its natural
+    // minimum can grow with the copy, so the document still scrolls normally.
+    if (!roomy.matches && !body.classList.contains('subjects-page')) { layoutChanged(); return; }
     const visible = panels.filter(panel => !panel.hidden);
     // Measure natural heights, not the height the page grid stretches the frame to.
     viewport.classList.add('is-measuring');

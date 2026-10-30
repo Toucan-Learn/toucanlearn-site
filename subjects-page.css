@@ -1,0 +1,83 @@
+/* Subject copy and equal cells, after the shared frame and illustrated-cell rules. */
+body.subjects-page .framework-panels { display: flex; flex-direction: column; }
+body.subjects-page .framework-panels > [data-content-panel]:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+}
+body.subjects-page .framework-panels > [data-content-panel] > .section-head {
+  grid-template-columns: minmax(0, 1fr) 120px;
+  gap: 8px 20px;
+}
+body.subjects-page .framework-panels .section-head > .subject-art {
+  grid-row: 1 / span 2;
+  width: 120px;
+  height: 75px;
+}
+body.subjects-page.cell-art-page .framework-panels > [data-content-panel] > .learning-subject-grid,
+body.subjects-page .framework-panels #languages > .learning-languages {
+  grid-auto-rows: 1fr;
+  align-items: stretch;
+  gap: 12px;
+  margin-block: 12px;
+}
+body.subjects-page .framework-panels #languages > .learning-languages {
+  grid-template-columns: minmax(0, 1fr);
+}
+body.subjects-page .framework-panels .subject-card > p { margin: 0; line-height: 1.45; }
+body.subjects-page .framework-panels .subject-card { overflow-wrap: anywhere; }
+body.subjects-page .framework-panels > [data-content-panel] > .subject-note {
+  margin-block: 4px 12px;
+  font-size: .95em;
+  line-height: 1.45;
+}
+body.subjects-page .framework-panels > [data-content-panel] > .learning-links {
+  margin-block: auto 0;
+  padding-top: 12px;
+  gap: 8px 24px;
+}
+body.subjects-page.cell-art-page .framework-panels #send-support .send-points > .picture-cell {
+  grid-template-columns: 30% minmax(0, 1fr);
+  gap: 0;
+  padding: 0;
+}
+body.subjects-page.cell-art-page #send-support .picture-cell-media {
+  min-height: 110px;
+  aspect-ratio: auto;
+  border-radius: 15px 0 0 15px;
+}
+body.subjects-page #send-support .picture-cell-copy { align-self: center; padding: 12px; }
+body.subjects-page #send-support .send-points h3 { margin: 0 0 6px; font-size: 1rem; line-height: 1.3; }
+body.subjects-page #send-support .send-points p { margin: 0; font-size: .95rem; line-height: 1.4; }
+
+@media (min-width: 760px) {
+  body.subjects-page .framework-panels #languages > .learning-languages {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media screen and (min-width: 1000px) {
+  body.subjects-page .framework-panels #languages > .learning-languages {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  body.subjects-page .framework-panels #languages .subject-card { padding: 14px; }
+  body.subjects-page .framework-panels #languages dt { font-size: 1rem; margin-bottom: 6px; }
+  body.subjects-page .framework-panels #languages dd { font-size: .95rem; line-height: 1.4; }
+}
+@media (max-width: 759px) {
+  body.subjects-page .framework-panels > [data-content-panel] > .section-head {
+    grid-template-columns: minmax(0, 1fr) 88px;
+    gap: 12px;
+  }
+  body.subjects-page .framework-panels .section-head > .subject-art {
+    grid-row: 1;
+    width: 88px;
+    height: 55px;
+  }
+  body.subjects-page .framework-panels .section-head > h2 { align-self: center; font-size: 1.5rem; }
+  body.subjects-page .framework-panels .section-head > p { grid-column: 1 / -1; }
+  body.subjects-page .framework-panels #languages .subject-card { padding: 14px 16px; }
+}
+@media print {
+  body.subjects-page .framework-panels,
+  body.subjects-page .framework-panels > [data-content-panel]:not([hidden]) { display: block; }
+}

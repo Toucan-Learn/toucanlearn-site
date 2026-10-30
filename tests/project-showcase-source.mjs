@@ -86,7 +86,7 @@ assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'dri
 export const homepageCaptions = [
   ['English · Journalism', 'Football newspaper', 'Getting a low-motivation student excited to share his insights and interests, whilst working on core English skills.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
   ['English · Game design', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
-  ['English · Design', 'Drink design', 'Writing for an audience: knowing who you’re selling to, and choosing words that make them want it.', 'Three drinks brands, from his sketches, labels and slogans to 3D renders you can spin.'],
+  ['SEN & English', 'Drink design', 'Writing for an audience: knowing who you’re selling to, and choosing words that make them want it.', 'Three drinks brands, from his sketches, labels and slogans to 3D renders you can spin.'],
   ['Music · Brain breaks', 'Toucan piano', 'The keyboard, a few minutes at a time in our brain breaks.', 'Real songs they can play, and a fresh head for the next task.'],
 ];
 assert.deepEqual(projects.map(({ label, heading, learning, result }) => [label, heading, learning, result]), homepageCaptions, 'Each caption has the approved subject, heading, learning and result');
@@ -275,15 +275,22 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
   const current = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
   // Only the first-frame receipt and preset hand-off differ from the hero; both
   // sides are normalised so the approved base can move with owner-approved music.
-  const normalise = text => file !== 'hero-sky.js' ? text : text
+  // 30 Oct: iOS only starts audio on a finger lift; the piano resumes its queued note then.
+  const iosAudio = text => text
+    .replace("if (audio.state === 'suspended') { resumeOnLift = true; audio.resume().catch(() => {}); }", "if (audio.state === 'suspended') audio.resume().catch(() => {});")
+    .replace(/\/\/ iOS Safari only lets a page start audio[\s\S]*?\n}\n\n(?=export function playNextNote)/, '');
+  const normalise = text => file === 'hero-piano.js' ? iosAudio(text) : file !== 'hero-sky.js' ? text : text
     .replace('initHeroSky(root, { onFirstFrame, preset: presetId } = {})', 'initHeroSky(root)')
     .replace('  || SKY_PRESETS.find(candidate => candidate.id === presetId)\n', '')
     .replace('let sized = false, firstFrame = false;\n', '')
     .replace('  // Showcase readiness only: report a fully sized draw with the sky image ready.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
     .replace('  // Showcase readiness only: report a fully sized draw once the live sky (not its still fallback) shows.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth && (!renderer || !sky.hidden)) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
-    .replace('  sized = rect.width > 0 && rect.height > 0;\n', '');
+    .replace('  sized = rect.width > 0 && rect.height > 0;\n', '')
+    // Cache tokens on its piano imports change with each piano fix (30 Oct: iOS audio).
+    .replace(/(hero-(?:keyboard|piano)\.js\?v=)[^'"]+/g, '$1TOKEN');
   // 30 Oct: base moved to 90e02ba, the owner-requested Maple Leaf bars 1-16.
   const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '90e02ba'}:${file}`], { cwd: site, encoding: 'utf8' });
-  assert.equal(normalise(current), normalise(approved), `${file}: preserve the existing hero and owner-confirmed music settings`);
+  const untoken = text => text.replace(/(hero-(?:keyboard|piano|sky)\.js\?v=)[^'"]+/g, '$1TOKEN');
+  assert.equal(untoken(normalise(current)), untoken(normalise(approved)), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }
 console.log('Shared showcase checks passed: exact DARTY URL/hash/single autoplay, click-only iframe on all devices, teardown, children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

@@ -123,7 +123,7 @@ export function playNote(noteName) {
       synth = createPianoSynth(audio);
       synth.select(currentVoicePreset());
     }
-    if (audio.state === 'suspended') audio.resume().catch(() => {});
+    if (audio.state === 'suspended') { resumeOnLift = true; audio.resume().catch(() => {}); }
     if (audio.state === 'closed') return false;
     synth.play(frequencyFor(noteName));
     return true;
@@ -132,6 +132,19 @@ export function playNote(noteName) {
     synth?.stop();
     return false;
   }
+}
+
+// iOS Safari only lets a page start audio on a finger lift (touchend/pointerup/
+// click), not on pointerdown, so a note pressed on the way down is queued in a
+// suspended context. The next lift resumes it, and the queued note sounds.
+let resumeOnLift = false;
+const resumeAfterGesture = () => {
+  if (!resumeOnLift || !audio || audio.state !== 'suspended') return;
+  resumeOnLift = false;
+  audio.resume().catch(() => {});
+};
+for (const type of ['touchend', 'pointerup', 'click', 'keydown']) {
+  globalThis.document?.addEventListener(type, resumeAfterGesture, { capture: true, passive: true });
 }
 
 export function playNextNote() {

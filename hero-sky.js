@@ -1,6 +1,6 @@
 import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-ripple-1';
-import { playNextNote, noteWavePosition, stopPiano, isPianoPlaying } from './hero-piano.js?v=20261029-maple-16-bars-1';
-import { initHeroKeyboard } from './hero-keyboard.js?v=20261029-maple-16-bars-1';
+import { playNextNote, noteWavePosition, stopPiano, isPianoPlaying } from './hero-piano.js?v=20261030-ios-audio-1';
+import { initHeroKeyboard } from './hero-keyboard.js?v=20261030-ios-audio-1';
 import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
 
 // Each showcase mounts the same world and disposes it before changing project.

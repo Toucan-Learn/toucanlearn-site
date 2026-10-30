@@ -265,3 +265,8 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 @media (min-width: 768px) and (max-width: 1099px) { .living-hero .hero-project-caption { min-height: 157px; } }
 @media (max-width: 767px) { .living-hero .hero-project-caption { min-height: 175px; } }
 .living-hero .hero-project-caption { display: flex; flex-direction: column; justify-content: center; }
+/* 1100–1320px laptops: four caption lines fit, and the window gives up the same height. */
+@media (min-width: 1100px) and (max-width: 1320px) {
+  .living-hero .hero-project-caption { min-height: 157px; }
+  .living-hero .hero-world > [data-showcase-mode="auto"] { --showcase-height: 297px; }
+}

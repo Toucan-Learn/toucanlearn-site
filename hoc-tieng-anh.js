@@ -76,16 +76,18 @@
     // accepts them: learner child/adult, lower-case format, email replies, no
     // Subject field (contact.js folds it into the message) and no non-UK phone.
     const kind = body.get('Learner') || '';
+    const teacher = body.get('Preferred teacher') || 'Chưa chắc, hãy tư vấn giúp tôi';
     const contact = body.get('phone') || '';
     body.set('Learner', kind === 'Học sinh' ? 'child' : 'adult');
     if (kind === 'Học sinh' && !body.get('Age or school year')) body.set('Age or school year', 'Chưa ghi');
     body.delete('Subject');
+    body.delete('Preferred teacher');
     body.delete('phone');
     body.set('Preferred format', 'online');
     body.set('Reply method', 'email');
     body.set('Town or postcode area', 'Vietnam');
     body.set('Traffic source', 'vietnam-page');
-    const head = ['Subject: English (Vietnam)', 'Học viên là: ' + (kind || 'Chưa chọn'), contact && 'Số điện thoại / Zalo: ' + contact].filter(Boolean).join('\n');
+    const head = ['Subject: English (Vietnam)', 'Học viên là: ' + (kind || 'Chưa chọn'), 'Giáo viên mong muốn: ' + teacher, contact && 'Số điện thoại / Zalo: ' + contact].filter(Boolean).join('\n');
     body.set('Support requested', (head + '\n' + (body.get('Support requested') || '')).slice(0, 1000));
     const started = Number(body.get('loaded_at'));
     if (!/^\d{13}$/.test(body.get('loaded_at') || '') || started > Date.now() || Date.now() - started < 3000) {

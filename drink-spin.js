@@ -6,7 +6,7 @@ export function frameBlend(turns, count) {
   const lower = Math.floor(position);
   return { lower, upper: (lower + 1) % count, mix: position - lower };
 }
-const assetVersion = '20261029-condensation-1';
+const assetVersion = '20261030-fizzy-clear-1';
 
 export function spinMotion({ draw, clock = globalThis, reduced = false, automatic = true, maxStep = () => Infinity }) {
   const revolution = 16000; // Clockwise from above (owner, 29 Oct, final): frames count up, the label travels right to left.

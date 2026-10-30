@@ -135,9 +135,9 @@
 .pricing-bands > .price-band dt { color: #fff8ea; }
 .pricing-bands > .price-band dd { color: inherit; opacity: .92; }
 /* Progressively lighter overlays reveal more sky; all text stays on a dark tint. */
-.price-band--emerging { --band-base: #163b2b; --band-overlay: linear-gradient(135deg, #153a2af0, #19412fe6); box-shadow: inset 0 0 0 1px #8fd3a940; }
-/* Owner, 29 Oct: Emerging takes its own corner of the pixel sky, not the shared centre crop. */
-.pricing-bands > .price-band--emerging { background-position: 12% 82%; }
+.price-band--emerging { --band-base: #163b2b; --band-overlay: linear-gradient(135deg, #153a2ae0, #19412fc4); box-shadow: inset 0 0 0 1px #8fd3a940; }
+/* Owner, 29 Oct: Emerging takes its own, busier slice of the pixel sky. */
+.pricing-bands > .price-band--emerging { background-position: 50% 34%; }
 .price-band--emerging dt span { color: #a9e6bf; }
 .price-band--academic { --band-base: #0b3a46; --band-overlay: linear-gradient(135deg, #0b3a46e6, #10414be0 60%, #123441d9); box-shadow: inset 0 0 0 1px #e4be7850; }
 .price-band--academic dt span { color: #e9c37d; }

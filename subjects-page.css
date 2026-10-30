@@ -99,7 +99,7 @@ body.subjects-page .framework-panels > [data-content-panel] > .section-head > h2
   }
 }
 body.subjects-page #english { --subject-tint: linear-gradient(120deg, #361329ed, #49234bc9 55%, #103f4de6); --sky-pos: 12% 20%; }
-body.subjects-page #maths { --subject-tint: linear-gradient(120deg, #0c2a5aed, #1b4a8ac9 55%, #0f3048e6); --sky-pos: 80% 28%; }
+body.subjects-page #maths { --subject-tint: linear-gradient(120deg, #064a4aed, #0e7470c9 55%, #0f3a48e6); --sky-pos: 80% 28%; }
 body.subjects-page #science { --subject-tint: linear-gradient(120deg, #12342aed, #1f4a37c9 55%, #0d3a40e6); --sky-pos: 35% 85%; }
 body.subjects-page #languages { --subject-tint: linear-gradient(120deg, #3d1f0ced, #6a3714c9 55%, #2a2a3ae6); --sky-pos: 90% 70%; }
 body.subjects-page #psychology { --subject-tint: linear-gradient(120deg, #1f1340ed, #3a2675c9 55%, #102a4ce6); --sky-pos: 55% 40%; }

@@ -7,6 +7,9 @@ const root = new URL('../', import.meta.url);
 const token = '20261029-clean-url-2';
 const home = await readFile(new URL('index.html', root), 'utf8');
 const showcaseToken = home.match(/src="project-showcase\.js\?v=([^"]+)"/)[1];
+// Homepage captions refresh this entry point without changing the manual section.
+const children = await readFile(new URL('children.html', root), 'utf8');
+const sectionShowcaseToken = children.match(/src="project-showcase\.js\?v=([^"]+)"/)[1];
 let checks = 0;
 const clean = page => { assert.equal(page.location.hash, ''); assert.equal(page.history.length, 1); assert(!page.calls.some(call => call.kind === 'push')); checks++; };
 const hrefBefore = '<a href="index.html">Home</a><a href="index.html#reviews">Reviews</a>';
@@ -17,7 +20,7 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   const html = await readFile(new URL(file, root), 'utf8');
   assert.doesNotMatch(html, /href="index\.html(?:#|")/);
   assert.doesNotMatch(html, /href="contact\.html\?/);
-  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'project-showcase.js' ? showcaseToken : token, `${file}: ${script} cache token`);
+  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'project-showcase.js' ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : token, `${file}: ${script} cache token`);
   if (file === 'contact.html') {
     assert(html.indexOf('src="campaigns.js') < html.indexOf('src="menu.js'), `${file}: capture campaigns before URL cleanup`);
     assert(html.indexOf('src="campaigns.js') < html.indexOf('</head>'), `${file}: campaign capture runs before the form is parsed`);

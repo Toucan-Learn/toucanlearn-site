@@ -1,4 +1,4 @@
-/* The opening keeps the sky's original height; every project shares that slot. */
+/* Every project shares the same media slot; the homepage reserves caption room below. */
 [data-showcase] { --showcase-height: 450px; --showcase-bar: 38px; --showcase-inset: 8px; --drink-backdrop: var(--brand-green, #1f7a75); }
 .showcase-cell { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) var(--showcase-bar); width: 100%; height: 100%; min-width: 0; color: #f0ebe0; font-family: 'Avenir Next', Avenir, ui-sans-serif, system-ui, sans-serif; }
 .hero-world > [data-showcase] { display: block; }
@@ -212,6 +212,21 @@
 @media (max-width: 1050px) { [data-showcase] { --showcase-height: 400px; } }
 @media (max-width: 760px) { [data-showcase] { --showcase-height: 340px; } }
 @media (max-width: 360px) { [data-showcase] { --showcase-height: 280px; } }
+/* The compact homepage story fits beside the existing hero copy at 1440x750.
+   Keep media sizing and poster crops shared; only the homepage slot is shorter. */
+.living-hero .hero-world > [data-showcase-mode="auto"] { --showcase-height: 370px; }
+.living-hero .hero-project-caption { flex: none; width: 100%; min-width: 0; margin-top: 10px; padding: 10px 14px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); color: var(--ink); }
+.living-hero .hero-project-caption .project-label { margin: 0 0 2px; color: var(--orange-text); font-size: .7rem; font-weight: 800; line-height: 1.3; letter-spacing: .12em; text-transform: uppercase; }
+.living-hero .hero-project-caption h2 { margin: 0 0 4px; color: var(--heading); font-size: 18px; font-weight: 800; line-height: 1.3; letter-spacing: normal; }
+.living-hero .hero-project-caption > [data-project-line] { margin: 0; color: inherit; font-size: 13px; line-height: 1.4; }
+@media (min-width: 1550px) { .living-hero .hero-world > [data-showcase-mode="auto"] { --showcase-height: 460px; } }
+@media (min-width: 768px) and (max-width: 1050px) { .living-hero .hero-world > [data-showcase-mode="auto"] { --showcase-height: 320px; } }
+@media (max-width: 767px) {
+  .living-hero .hero-layout { grid-template-columns: minmax(0, 1fr); }
+  .living-hero .hero-world { width: 100%; margin: 32px auto; padding: 0; }
+  .living-hero .hero-world > [data-showcase-mode="auto"] { --showcase-height: 340px; }
+}
+@media (max-width: 360px) { .living-hero .hero-world > [data-showcase-mode="auto"] { --showcase-height: 280px; } }
 /* Match the positioned media slot in back-page-frame.css. Below this breakpoint
    normal flow reserves the cell height; absolute fill would attach to the page. */
 @media screen and (min-width: 1000px) {
@@ -241,3 +256,7 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 @media (max-width: 759px) {
   #learner-projects .framework-project-slides > [data-project-slide] > .framework-project-media { order: -1; margin-top: 0; }
 }
+/* Light caption label a shade deeper than --orange-text so it reads at 4.5:1 on cream. */
+.living-hero .hero-project-caption .project-label { color: #a8431d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .living-hero .hero-project-caption .project-label { color: var(--orange-text); } }
+:root[data-theme="dark"] .living-hero .hero-project-caption .project-label { color: var(--orange-text); }

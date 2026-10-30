@@ -83,6 +83,13 @@ for (const [i, hash] of approvedStillHashes.entries()) {
 await import('./drink-spin-source.mjs');
 await import('./darty-title-lifecycle.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
+export const homepageCaptions = [
+  ['English', 'Sports journalism', 'Persuasive writing through football, ending in his own newspaper.'],
+  ['English · Game design', 'DARTY', 'Clear, precise written instructions that shaped a playable football game.'],
+  ['English · Design', 'Drink design', 'Writing for an audience: three drinks, from pencil sketches to 3D renders.'],
+  ['Music', 'Piano', 'A way into music through play, with songs to learn and sounds to try.'],
+];
+assert.deepEqual(projects.map(({ label, name, line }) => [label, name, line]), homepageCaptions, 'The homepage has exactly the approved label, name and single sentence for each project');
 assert.deepEqual(sectionProjects.map(project => project.id), ['intro', ...projects.map(project => project.id)], 'Only the children’s carousel has a fifth slide');
 assert.deepEqual(sectionProjects[0], { id: 'intro', name: 'Intro', type: 'intro' }, 'The intro keeps its HTML photo slot and has a name in the shared header control');
 assert.deepEqual(sectionProjects.slice(1), projects, 'Both carousels keep the same four project media records');
@@ -131,13 +138,13 @@ let reduced = false;
 let manual = false;
 const timer = idleAdvance({ clock, advance: () => changes++, blocked: () => focused || playing || pointerHeld || keyHeld, enabled: () => !hidden && !reduced && !manual });
 timer.reset();
-clock.tick(19999);
-assert.equal(changes, 0, 'No advance before exactly 20 seconds');
+clock.tick(7999);
+assert.equal(changes, 0, 'No advance before exactly 8 seconds');
 clock.tick(1);
-assert.equal(changes, 1, 'Advances at 20 seconds');
-clock.tick(19000);
+assert.equal(changes, 1, 'Advances at 8 seconds');
+clock.tick(7000);
 timer.reset();
-clock.tick(19999);
+clock.tick(7999);
 assert.equal(changes, 1, 'Interaction resets the full deadline');
 clock.tick(1);
 assert.equal(changes, 2);
@@ -156,7 +163,7 @@ clock.tick(120000);
 assert.equal(changes, 2, 'A hidden tab cannot advance');
 hidden = false;
 timer.resume();
-clock.tick(12999);
+clock.tick(999);
 assert.equal(changes, 2, 'Hidden time is excluded from the deadline');
 clock.tick(1);
 assert.equal(changes, 3);
@@ -197,10 +204,12 @@ const withoutOwnerContent = html => html
   .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
 const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html))
   .replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN')
+  // 30 Oct: one homepage-only caption directly below the media window.
+  .replace(/\n {10}<div class="hero-project-caption"[^>]*>[\s\S]*?<\/div>/, '')
   // 29 Oct flicker fix: the static fallback is recaptured from the live piano view.
   .replace(/(<img class="showcase-fallback" src=")[^"]+(" alt="[^"]*") width="\d+" height="\d+"/g, '$1FALLBACK$2 width="W" height="H"')
   .replace("frame-src 'self' https://joshtoucanlearn.github.io;", "frame-src 'self';");
-assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the showcase tokens, DARTY frame origin and clean home links');
+assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the caption, showcase tokens, DARTY frame origin and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
 assert.equal(homeNavigationMarkup(heroCopy(after)), homeNavigationMarkup(heroCopy(before)), 'Homepage copy, buttons and benefits stay untouched');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
@@ -210,9 +219,14 @@ const children = await readFile(new URL('../children.html', import.meta.url), 'u
 assert(children.includes(`src="${darty.poster}" alt="${darty.alt}" width="1600" height="900"`), 'Children fallback uses the new poster, night alt text and real dimensions');
 assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), sectionProjects.map(project => project.id), 'The intro precedes all four matching copy cards');
 assert(!/data-project="intro"|Learning is easier when you enjoy it\./.test(after), 'The homepage has no intro slide');
+assert.equal((after.match(/data-project-caption\b/g) || []).length, 1, 'The homepage has one caption');
+assert.match(after, /<div class="sky-studio" data-showcase data-showcase-mode="auto"[^>]*>[\s\S]*?<\/div>\s*<div class="hero-project-caption" data-project-caption aria-atomic="true">/, 'The caption immediately follows the homepage window');
+assert(!children.includes('data-project-caption'), 'The manual Children section has no homepage caption');
+assert.match(source, /const caption = automatic \? root\.parentElement\.querySelector\('\[data-project-caption\]'\) : null;/, 'Only automatic homepage mode renders the caption');
 for (const asset of ['css', 'js']) {
   const token = html => html.match(new RegExp(`project-showcase\\.${asset}\\?v=([^"']+)`))?.[1];
-  assert(token(children) && token(children) === token(after), `${asset}: both pages share the refreshed cache token`);
+  assert(token(children), `${asset}: the Children page retains its existing asset reference`);
+  assert.match(token(after), /^20261030-captions-\d+$/, `${asset}: the homepage uses a caption release token`);
   assert.notEqual(token(after), token(before), `${asset}: bump the changed asset’s cache token`);
 }
 

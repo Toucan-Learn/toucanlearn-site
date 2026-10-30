@@ -16,7 +16,7 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
   assert.notEqual(new URL(base).origin, matchOrigin, 'Exercise a cross-origin iframe');
   async function prepare(view) {
     // Reduced motion keeps setup deterministic. The idle test enables motion
-    // before Play; production still uses the source-tested 20-second delay.
+    // before Play; production still uses the source-tested 8-second delay.
     const session = await open(view, 'light', true, { fast: true });
     const requests = [];
     const stillRequests = [];

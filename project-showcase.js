@@ -3,16 +3,16 @@ import { initHeroSky } from './hero-sky.js?v=20261030-live-sky-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
-// One media cell for the opening and Projects. Copy stays in HTML for no-JS/print.
+// One media cell for the opening and Projects. Full section copy stays in HTML for no-JS/print.
 export const projects = [
-  { id: 'football', name: 'Sports journalism', poster: 'assets/projects/football-home{size}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/football-section{size}.webp?v=20261030-forecast-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
-  { id: 'darty', name: 'DARTY', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
-  { id: 'drinks', name: 'Drink design', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
+  { id: 'football', name: 'Sports journalism', label: 'English', line: 'Persuasive writing through football, ending in his own newspaper.', poster: 'assets/projects/football-home{size}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/football-section{size}.webp?v=20261030-forecast-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
+  { id: 'darty', name: 'DARTY', label: 'English · Game design', line: 'Clear, precise written instructions that shaped a playable football game.', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
+  { id: 'drinks', name: 'Drink design', label: 'English · Design', line: 'Writing for an audience: three drinks, from pencil sketches to 3D renders.', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
   ] },
-  { id: 'piano', name: 'Piano', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
+  { id: 'piano', name: 'Piano', label: 'Music', line: 'A way into music through play, with songs to learn and sounds to try.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
@@ -30,8 +30,8 @@ export function initialProject(requested, random = Math.random, start = homepage
   return fixed >= 0 ? fixed : Math.floor(random() * projects.length);
 }
 
-// Injectable clock keeps the real 20-second policy testable without a browser.
-export function idleAdvance({ advance, blocked, enabled, clock = globalThis, delay = 20000 }) {
+// Injectable clock keeps the real 8-second policy testable without a browser.
+export function idleAdvance({ advance, blocked, enabled, clock = globalThis, delay = 8000 }) {
   let timer = null;
   let remaining = delay;
   let started = 0;
@@ -129,6 +129,7 @@ const activityTypes = ['pointerdown', 'pointermove', 'pointerup', 'pointercancel
 export function initShowcase(root) {
   if (root.hasAttribute('data-showcase-ready')) return;
   const automatic = root.dataset.showcaseMode === 'auto';
+  const caption = automatic ? root.parentElement.querySelector('[data-project-caption]') : null;
   const entries = automatic ? projects : sectionProjects;
   const slides = [...root.querySelectorAll('[data-project-slide]')];
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
@@ -473,7 +474,7 @@ export function initShowcase(root) {
     if (automatic && inView && !motion.matches) timer.resume();
     else timer.pause();
   }
-  function show(requestedIndex) {
+  function show(requestedIndex, userAction = false) {
     const nextIndex = (requestedIndex + entries.length) % entries.length;
     if (cell.contains(document.activeElement) && !navigation.contains(document.activeElement)) root.focus({ preventScroll: true });
     if (slides.some(slide => slide.dataset.project !== entries[nextIndex].id && slide.contains(document.activeElement))) root.focus({ preventScroll: true });
@@ -490,12 +491,21 @@ export function initShowcase(root) {
     // Re-appending moves the node, which would reload the parked newspaper.
     if (cell.parentNode !== slot) slot.append(cell);
     name.textContent = entries[index].name;
+    // Set live policy before changing text. Initial and idle changes stay quiet,
+    // including the existing count; manual section navigation keeps its policy.
+    if (automatic) status.setAttribute('aria-live', userAction ? 'polite' : 'off');
+    if (caption) {
+      caption.setAttribute('aria-live', userAction ? 'polite' : 'off');
+      caption.querySelector('[data-project-label]').textContent = entries[index].label;
+      caption.querySelector('[data-project-heading]').textContent = entries[index].name;
+      caption.querySelector('[data-project-line]').textContent = entries[index].line;
+    }
     status.textContent = `${(index - countFrom + entries.length) % entries.length + 1} of ${entries.length}`;
     timer.reset();
     sync();
   }
-  navigation.querySelector('[data-project-prev]').addEventListener('click', () => show(index - 1));
-  navigation.querySelector('[data-project-next]').addEventListener('click', () => show(index + 1));
+  navigation.querySelector('[data-project-prev]').addEventListener('click', () => show(index - 1, true));
+  navigation.querySelector('[data-project-next]').addEventListener('click', () => show(index + 1, true));
   activityTypes.forEach(type => root.addEventListener(type, activity, { passive: true }));
   root.addEventListener('showcase:activity', activity);
   root.addEventListener('pointerdown', event => pointers.add(event.pointerId));
@@ -511,7 +521,7 @@ export function initShowcase(root) {
     const destination = { ArrowLeft: index - 1, ArrowRight: index + 1, Home: 0, End: entries.length - 1 }[event.key];
     if (destination === undefined) return;
     event.preventDefault();
-    show(destination);
+    show(destination, true);
   });
   root.addEventListener('touchstart', event => {
     gesture = null;
@@ -523,7 +533,7 @@ export function initShowcase(root) {
     const x = event.changedTouches[0].clientX - gesture.x;
     const y = event.changedTouches[0].clientY - gesture.y;
     gesture = null;
-    if (Math.abs(x) >= 60 && Math.abs(x) > Math.abs(y) * 1.6) show(index + (x < 0 ? 1 : -1));
+    if (Math.abs(x) >= 60 && Math.abs(x) > Math.abs(y) * 1.6) show(index + (x < 0 ? 1 : -1), true);
   }, { passive: true });
   root.addEventListener('touchcancel', () => { gesture = null; }, { passive: true });
   const revealHash = event => {

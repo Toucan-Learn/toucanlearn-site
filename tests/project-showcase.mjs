@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { mkdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { newspaperMobileBreakpoint } from './project-showcase-source.mjs';
+import { newspaperMobileBreakpoint, homepageCaptions } from './project-showcase-source.mjs';
 import { assertImmediateProjectSwitch, assertRapidProjectSwitches } from './project-showcase-switch-helpers.mjs';
 import { activatePianoToggle } from './piano-toggle-helpers.mjs';
 import { checkDrinkSpin, assertDrinkLayout, dragOverDrink, checkDrinkMenuKeys } from './drink-spin-browser.mjs';
@@ -34,9 +34,10 @@ async function open(view, theme, reduced = true, options = {}) {
     localStorage.removeItem('toucan-theme');
     if (random !== undefined) Math.random = () => random;
     if (fast) {
-      // Test-only acceleration. Production keeps 20,000 ms; source tests check it exactly.
+      // Test-only acceleration. Production keeps 8,000 ms; source tests check it exactly.
+      // Retain the existing 800 ms test deadline so 450 ms activity checks fit.
       const schedule = window.setTimeout.bind(window);
-      window.setTimeout = (fn, delay, ...args) => schedule(fn, delay >= 10000 && delay <= 20000 ? delay / 25 : delay, ...args);
+      window.setTimeout = (fn, delay, ...args) => schedule(fn, delay >= 8000 && delay <= 20000 ? delay / 10 : delay, ...args);
     }
     const Audio = window.AudioContext || window.webkitAudioContext;
     window.showcaseAudio = [];
@@ -239,10 +240,36 @@ try {
         }
         if (homepage) {
           assert.equal(m.slideCount, 0, 'Homepage retains its four media projects and has no copy slides');
+          const caption = await page.$eval('[data-project-caption]', node => {
+            const box = node.getBoundingClientRect();
+            const windowBox = node.previousElementSibling.getBoundingClientRect();
+            const line = node.querySelector('[data-project-line]');
+            const style = getComputedStyle(node);
+            return { copy: [...node.children].map(child => child.textContent), live: node.getAttribute('aria-live'),
+              controls: node.querySelectorAll('a, button, input').length,
+              width: box.width, x: box.x, y: box.y, bottom: box.bottom, window: { x: windowBox.x, width: windowBox.width, bottom: windowBox.bottom },
+              fits: node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1,
+              lineHeight: line.getBoundingClientRect().height, lineSpacing: parseFloat(getComputedStyle(line).lineHeight),
+              color: style.color, background: style.backgroundColor, labelColor: getComputedStyle(node.firstElementChild).color };
+          });
+          assert.deepEqual(caption.copy, homepageCaptions[position], `${label}/${id}: caption matches the selected project`);
+          assert.equal(caption.live, position === 0 ? 'off' : 'polite', 'Only manual switches announce the caption');
+          assert.equal(caption.controls, 0, 'The caption adds no controls');
+          assert(caption.fits && caption.y >= caption.window.bottom, 'Caption fits directly under the window');
+          assert(Math.abs(caption.x - caption.window.x) <= 1 && Math.abs(caption.width - caption.window.width) <= 1, 'Caption fills the window width');
+          for (const color of [caption.color, caption.labelColor]) assert(contrast(color, caption.background) >= 4.5, `${label}/${id}: caption text contrast`);
+          report.layouts.push({ label, route, id, caption });
           const after = await heroMetrics(page);
           // 29 Oct owner copy: the showcase label's two phrases stack on phones, one line taller.
           const labelGrowth = Math.max(0, after.label - before.label);
-          for (const selector of Object.keys(before).filter(key => key !== 'label')) after[selector].forEach((value, i) => assert(Math.abs(value - before[selector][i]) <= 1 + (i % 2 ? labelGrowth : 0), `${label}/${id}: ${selector} geometry changed`));
+          // 30 Oct: media is shorter on desktop; the new caption extends the phone hero.
+          const preserved = view.width >= 900 ? ['.living-hero', '.hero-layout', '.hero-copy', '.hero-actions', '.hero-benefits'] : ['.hero-copy', '.hero-actions', '.hero-benefits'];
+          for (const selector of preserved) after[selector].forEach((value, i) => assert(Math.abs(value - before[selector][i]) <= 1 + (i % 2 ? labelGrowth : 0), `${label}/${id}: ${selector} geometry changed`));
+          if (view.width === 1440 && view.height === 750) {
+            assert(caption.bottom <= view.height, 'Caption stays above the laptop fold');
+            assert(caption.lineHeight <= caption.lineSpacing + 1, 'Laptop caption sentence fits on one line');
+            assert(m.stage.height < 450, 'The original 450px media slot makes room for its caption');
+          }
         } else if (id === 'intro') {
           assert.equal(m.slideCount, 5);
           assert.equal(m.rows, 0);
@@ -382,6 +409,9 @@ try {
   await wait(450);
   assert.equal(await selected(page), 'darty', 'Interaction postpones the deadline');
   await page.waitForFunction(() => document.querySelector('[data-showcase]').dataset.project === 'drinks');
+  assert.equal(await page.$eval('[data-project-caption]', node => node.getAttribute('aria-live')), 'off', 'Idle switches keep caption announcements off');
+  assert.deepEqual(await page.$$eval('[data-project-caption] > *', nodes => nodes.map(node => node.textContent)), homepageCaptions[2], 'Idle switching also updates all three caption parts');
+  assert.equal(await page.$eval('[data-project-status]', node => node.getAttribute('aria-live')), 'off', 'Idle count changes stay quiet too');
   await page.$eval('[data-showcase]', root => root.focus());
   await wait(1700);
   assert.equal(await selected(page), 'drinks', 'Focused cell cannot advance');
@@ -457,7 +487,7 @@ try {
   await page.focus('#getting-started a.button');
   assert.deepEqual(await page.$eval('#getting-started a.button', link => ({ label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), service: link.dataset.service })),
     { label: 'Tell us your child’s goal', href: 'contact', service: 'children' });
-  report.behaviour.push('homepage unchanged, five-slide section, intro, separate result cells, review overrides, wrap, interaction reset, idle advance, focus, held playing key, all drink sequences, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
+  report.behaviour.push('homepage captions, five-slide section, intro, separate result cells, review overrides, wrap, interaction reset, idle advance, focus, held playing key, all drink sequences, piano/audio/iframe teardown, tab visibility, reduced motion, manual mode, hidden section');
   await context.close();
   // Keep the intro, all four projects and separate result cells for no-JS and print.
   const staticView = await open(views[0], 'light');

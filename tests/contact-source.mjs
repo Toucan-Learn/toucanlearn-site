@@ -76,7 +76,7 @@ assert.match(html, /<div class="subject-dropdown" data-subject-dropdown>/);
 assert.match(html, /<div data-subject-control hidden>/, 'Only JS activates the custom control');
 assert.match(html, /<button[^>]*id="subject-button"[^>]*type="button"[^>]*aria-haspopup="listbox"[^>]*aria-expanded="false"[^>]*aria-controls="subject-listbox"[^>]*aria-labelledby="subject-label subject-value"[^>]*aria-describedby="subject-error"/);
 assert.match(html, /<ul[^>]*id="subject-listbox"[^>]*role="listbox"[^>]*aria-labelledby="subject-label"[^>]*tabindex="-1" hidden/);
-assert.match(html, /src="subject-select.js\?v=20261030-subject-dropdown-2"/);
+assert.match(html, /src="subject-select.js\?v=20261030-subject-dropdown-3"/);
 assert.ok(html.indexOf('src="subject-select.js') < html.indexOf('src="contact.js'));
 assert.match(dropdownScript, /Array.from\(select.options\)/, 'The native options drive the custom list');
 assert.match(dropdownScript, /new Event\("change", \{ bubbles: true \}\)/);
@@ -84,14 +84,15 @@ assert.match(dropdownScript, /@license lucide-static v0.469.0 - ISC/);
 assert.match(dropdownScript, /stroke="currentColor"/);
 const iconData = JSON.parse(dropdownScript.match(/const icons = ([\s\S]*?);/)[1]);
 assert.deepEqual(Object.keys(iconData), subjects, 'Only subject rows have icons');
-const iconFiles = ['book-open', 'calculator', 'flask-conical', 'languages', 'brain', 'palette', 'clipboard-check', 'plus', 'sparkles'];
+// Owner, 30 Oct: a globe for Languages; SEN and Other swapped (SEN sparkles, Other plus).
+const iconFiles = ['book-open', 'calculator', 'flask-conical', 'globe', 'brain', 'palette', 'clipboard-check', 'sparkles', 'plus'];
 // Pin the supplied Lucide geometry, including line/rect/circle elements.
 const expectedIcons = [
   '<path d="M12 7v14" />', '<rect width="16" height="20" x="4" y="2" rx="2" />',
   '<path d="M14 2v6a2 2 0 0 0 .245.96l5.51 10.08A2 2 0 0 1 18 22H6a2 2 0 0 1-1.755-2.96l5.51-10.08A2 2 0 0 0 10 8V2" />',
-  '<path d="m5 8 6 6" />', '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />',
+  '<circle cx="12" cy="12" r="10" />', '<path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z" />',
   '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />', '<rect width="8" height="4" x="8" y="2" rx="1" ry="1" />',
-  '<path d="M5 12h14" />', '<path d="M20 3v4" />'
+  '<path d="M20 3v4" />', '<path d="M5 12h14" />'
 ];
 subjects.forEach((subject, index) => assert.ok(iconData[subject][1].includes(expectedIcons[index]), `${subject}: ${iconFiles[index]}`));
 assert.match(css, /\.subject-listbox \{[^}]*position: absolute;[^}]*inset-inline: 0;/);

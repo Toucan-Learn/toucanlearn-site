@@ -2960,6 +2960,7 @@ body:not(.team-page) footer.site-footer { border-top: 0; padding: 16px 0 18px; b
 body:not(.team-page) footer.site-footer .footer-slogan { display: block; margin: 0 0 2px; }
 body:not(.team-page) footer.site-footer .footer-copy { display: block; font-size: .85rem; letter-spacing: 0; word-spacing: normal; }
 footer.site-footer .footer-copy { white-space: nowrap; }
+footer.site-footer .footer-business { display: block; margin: 2px 0 0; font-size: .85rem; white-space: normal; }
 body:not(.team-page) footer.site-footer .footer-links { gap: 4px 18px; }
 body:not(.team-page) footer.site-footer .footer-links > a { min-height: 32px; color: rgba(var(--ink-rgb), .72); font-weight: 600; text-decoration: none; }
 body:not(.team-page) footer.site-footer .footer-links > a:hover,

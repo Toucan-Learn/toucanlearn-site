@@ -16,7 +16,7 @@ const original = (file, revision = before) => execFileSync('git', ['show', `${re
 const words = html => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 const csp = html => html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)?.[0];
 // 30 Oct: the owner asked for every subject panel to be reworked (1817511), then Art & DT by level (e6c2404) and panel CTAs (692b636).
-const copyBase = { 'subjects.html': '5239e94' };
+const copyBase = { 'subjects.html': '5239e94', 'children.html': '504a3d3' };
 function approvedCopy(file) {
   let copy = words(original(file, copyBase[file] || copyBefore));
   // Owner, 30 Oct: no "UK only" wording for online lessons.

@@ -21,7 +21,8 @@ function approvedCopy(file) {
   let copy = words(original(file, copyBase[file] || copyBefore));
   // Owner, 30 Oct: no "UK only" wording for online lessons.
   if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
-  if (file !== 'approach.html') return copy;
+  // A copyBase entry already contains every approved change below.
+  if (file !== 'approach.html' || copyBase[file]) return copy;
   const changes = [
     ['From the first session onwards ', ''],
     ['Inside a lesson ', ''],

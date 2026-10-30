@@ -155,3 +155,5 @@ body.subjects-page #art { --cta-ink: #8a2450; }
 body.subjects-page #send-support { --cta-ink: #1d3a6b; }
 body.subjects-page .framework-panels .learning-links > .subject-cta,
 body.subjects-page .framework-panels .learning-links > .subject-cta:hover { color: var(--cta-ink, #0b3f51); font-weight: 800; }
+/* Owner, 30 Oct: SEND invites visitors to the projects and custom tools, bottom right. */
+body.subjects-page #send-support .learning-links > .send-projects-link { margin-left: auto; }

@@ -86,8 +86,8 @@ assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'dri
 export const homepageCaptions = [
   ['English · Journalism', 'Football newspaper', 'Getting a discouraged student excited to practise English through his interests and insight.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
   ['English · Game design', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
-  ['SEN & English', 'Drink design', 'Writing for an audience: knowing who you’re selling to, and choosing words that make them want it.', 'Three drinks brands, from his sketches, labels and slogans to 3D renders you can spin.'],
-  ['Music · Brain breaks', 'Toucan piano', 'The keyboard, a few minutes at a time in our brain breaks.', 'Real songs they can play, and a fresh head for the next task.'],
+  ['SEN & English', 'Drink design', 'A struggling SEN student regains his creative and working flow designing drinks.', 'A growing collection of drinks brands, from his sketches, label designs and slogans into 3D renders.'],
+  ['SEN · Music brain breaks', 'Toucan piano', 'A tool for a student, a few minutes at a time for productive brain breaks.', 'A custom keyboard, songs they can request and learn to play, and a fresh head for the next task.'],
 ];
 assert.deepEqual(projects.map(({ label, heading, learning, result }) => [label, heading, learning, result]), homepageCaptions, 'Each caption has the approved subject, heading, learning and result');
 assert.deepEqual(projects.map(project => project.name), ['Sports journalism', 'DARTY', 'Drink design', 'Piano'], 'The window bar keeps its existing project names');

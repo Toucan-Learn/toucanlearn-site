@@ -37,7 +37,7 @@ body.subjects-page .framework-panels > [data-content-panel] > .learning-links {
   gap: 8px 24px;
 }
 body.subjects-page.cell-art-page .framework-panels #send-support .send-points > .picture-cell {
-  grid-template-columns: 30% minmax(0, 1fr);
+  grid-template-columns: 25% minmax(0, 1fr);
   gap: 0;
   padding: 0;
 }
@@ -157,3 +157,10 @@ body.subjects-page .framework-panels .learning-links > .subject-cta,
 body.subjects-page .framework-panels .learning-links > .subject-cta:hover { color: var(--cta-ink, #0b3f51); font-weight: 800; }
 /* Owner, 30 Oct: SEND invites visitors to the projects and custom tools, bottom right. */
 body.subjects-page #send-support .learning-links > .send-projects-link { margin-left: auto; }
+/* Owner, 30 Oct: on smaller framed laptops the six SEND cells stay two lines each. */
+@media screen and (min-width: 1000px) and (max-width: 1399px) {
+  body.subjects-page.cell-art-page .framework-panels #send-support .send-points > .picture-cell { grid-template-columns: 21% minmax(0, 1fr); }
+  body.subjects-page #send-support .picture-cell-copy { padding: 8px 10px; }
+  body.subjects-page #send-support .send-points h3 { margin-bottom: 4px; font-size: .95rem; }
+  body.subjects-page #send-support .send-points p { font-size: .88rem; line-height: 1.35; }
+}

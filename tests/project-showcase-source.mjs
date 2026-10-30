@@ -245,15 +245,17 @@ const hero = await readFile(new URL('../hero-sky.js', import.meta.url), 'utf8');
 const keyboard = await readFile(new URL('../hero-keyboard.js', import.meta.url), 'utf8');
 assert.equal(hero.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], keyboard.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], 'Sky and keyboard must share one song/audio singleton');
 for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.js', 'hero-songs.js', 'hero-piano-voices.js']) {
-  let current = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
-  // Only the first-frame receipt is new; the shared renderer and exact piano
-  // appearance/music/input remain byte-for-byte identical to the approved hero.
-  if (file === 'hero-sky.js') current = current
+  const current = await readFile(new URL(`../${file}`, import.meta.url), 'utf8');
+  // Only the first-frame receipt and preset hand-off differ from the hero; both
+  // sides are normalised so the approved base can move with owner-approved music.
+  const normalise = text => file !== 'hero-sky.js' ? text : text
     .replace('initHeroSky(root, { onFirstFrame, preset: presetId } = {})', 'initHeroSky(root)')
     .replace('  || SKY_PRESETS.find(candidate => candidate.id === presetId)\n', '')
     .replace('let sized = false, firstFrame = false;\n', '')
     .replace('  // Showcase readiness only: report a fully sized draw with the sky image ready.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
     .replace('  sized = rect.width > 0 && rect.height > 0;\n', '');
-  assert.equal(current, execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '16f98d3'}:${file}`], { cwd: site, encoding: 'utf8' }), `${file}: preserve the existing hero and owner-confirmed music settings`);
+  // 30 Oct: base moved to 90e02ba, the owner-requested Maple Leaf bars 1-16.
+  const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '90e02ba'}:${file}`], { cwd: site, encoding: 'utf8' });
+  assert.equal(normalise(current), normalise(approved), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }
 console.log('Shared showcase checks passed: exact DARTY URL/hash/single autoplay, click-only iframe on all devices, teardown, children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

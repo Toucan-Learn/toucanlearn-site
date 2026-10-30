@@ -275,7 +275,9 @@ try {
           for (const selector of preserved) after[selector].forEach((value, i) => assert(Math.abs(value - before[selector][i]) <= 1 + (i % 2 ? labelGrowth : 0), `${label}/${id}: ${selector} geometry changed`));
           if (view.width === 1440 && view.height === 750) {
             assert(caption.bottom <= view.height, 'Caption stays above the laptop fold');
-            assert(caption.lines.every(line => line.height <= line.spacing + 1), 'Each laptop caption detail fits on one line');
+            // Owner, 30 Oct: stronger copy may wrap to two lines; the caption reserves that height.
+            assert(caption.lines.every(line => line.height <= 2 * line.spacing + 1), 'Each laptop caption detail fits within two lines');
+            assert(caption.fits, 'The caption holds its copy without overflow');
             assert(m.stage.height < 450, 'The original 450px media slot makes room for its caption');
           }
         } else if (id === 'intro') {

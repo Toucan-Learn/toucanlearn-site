@@ -107,7 +107,6 @@ body.team-page > header {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  body.team-page, .team-page > .reviews-enquiry-sky { cursor: none; }
   .team-page header, .team-page footer,
   .team-page .team-page-info, .team-page .team-biography,
   .team-page .cta-box > div { cursor: auto; }

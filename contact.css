@@ -13,6 +13,27 @@
 .radio-options label { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: .9rem; line-height: 1.35; cursor: pointer; }
 .radio-options input { width: 20px; height: 20px; margin: 0; accent-color: var(--field-focus); }
 .radio-options input:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
+/* The native select and enhanced button share the same box and chevron. */
+.subject-dropdown { position: relative; min-width: 0; }
+.subject-dropdown.is-open { z-index: 10; }
+.subject-dropdown::after { content: ""; position: absolute; top: 50%; right: 14px; width: 6px; height: 6px; margin-top: -5px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(45deg); pointer-events: none; }
+.enquiry-form .field .subject-dropdown > select { appearance: none; padding-right: 34px; }
+.enquiry-form .field .subject-button { display: block; width: 100%; min-height: 40px; padding: 6px 34px 6px 10px; border: 1px solid var(--field-border); border-radius: 12px; color: var(--ink); background: var(--field-surface); font: inherit; line-height: 1.4; text-align: left; cursor: pointer; transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease; }
+.subject-dropdown [hidden] { display: none; }
+.subject-listbox { position: absolute; top: calc(100% + 4px); inset-inline: 0; z-index: 1; max-height: min(440px, 70dvh); overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; margin: 0; padding: 4px; list-style: none; border: 1px solid var(--field-border); border-radius: 12px; color: var(--ink); background: var(--field-surface); box-shadow: 0 8px 24px rgba(0, 0, 0, .18); }
+.subject-listbox [role="option"] { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; padding: 8px 10px; border-radius: 7px; line-height: 1.4; cursor: pointer; }
+.subject-listbox [aria-selected="true"] { background: rgba(var(--field-focus-rgb), .12); }
+.subject-listbox .is-active { outline: 2px solid var(--field-focus); outline-offset: -2px; }
+.subject-listbox [role="option"]:hover { background: rgba(var(--field-focus-rgb), .18); }
+.subject-listbox svg { flex: 0 0 18px; width: 18px; height: 18px; color: var(--subject-ink, var(--field-focus)); }
+.subject-option--english { --subject-ink: var(--subject-english, #6b2a5e); }
+.subject-option--maths { --subject-ink: var(--subject-maths, #0b5e5a); }
+.subject-option--science { --subject-ink: var(--subject-science, #1f5640); }
+.subject-option--languages { --subject-ink: var(--subject-languages, #8a4b0b); }
+.subject-option--psychology { --subject-ink: var(--subject-psychology, #3b2f7a); }
+.subject-option--art { --subject-ink: var(--subject-art, #8a2450); }
+.subject-option--sen { --subject-ink: var(--subject-sen, #1d3a6b); }
+@media (forced-colors: active) { .subject-listbox [aria-selected="true"] { outline: 1px solid Highlight; outline-offset: -4px; } }
 /* Round 66 (Joshua, 18 Oct 2026: "the enquiries form is spaced out strangely"):
    hidden follow-up questions take no space until a choice reveals them. They
    stay inert and disabled, so they are out of focus and the accessibility tree. */
@@ -82,6 +103,7 @@
   .enquiry-form .fields-two { grid-template-columns: minmax(0, 1fr); }
   .enquiry-form .field :is(input, select) { min-height: 44px; }
   .radio-options label { min-height: 40px; }
+  .enquiry-form .field .subject-button { min-height: 44px; }
 }
 
 /* Pricing shares the existing cell tokens and occupies the spare right column,
@@ -99,12 +121,19 @@
 
 /* Owner, 28 Oct 2026: "When you click on cells in the enquiry page the cells outline red. That is
    very bad. We need a neutral or green." Focus rings use the logo teal; red stays for real errors. */
-.enquiry-form .field :is(input, textarea, select):focus { border-color: var(--field-focus); outline: 2px solid var(--field-focus); outline-offset: 2px; box-shadow: 0 0 0 5px rgba(var(--field-focus-rgb), .12); }
+.enquiry-form .field :is(input, textarea, select, .subject-button):focus { border-color: var(--field-focus); outline: 2px solid var(--field-focus); outline-offset: 2px; box-shadow: 0 0 0 5px rgba(var(--field-focus-rgb), .12); }
 .enquiry-form :is(.radio-options input, .consent input):focus-visible { outline-color: var(--field-focus); }
-.enquiry-form .field :is(input, textarea, select)[aria-invalid="true"] { border-color: var(--error-ink); }
+.enquiry-form .field :is(input, textarea, select, .subject-button)[aria-invalid="true"] { border-color: var(--error-ink); }
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) .contact-main {
+    --subject-english: #e6add9;
+    --subject-maths: #9ae2d8;
+    --subject-science: #a9dfb9;
+    --subject-languages: #f1c28e;
+    --subject-psychology: #c9bcff;
+    --subject-art: #f2b5d0;
+    --subject-sen: #b8d0ff;
     --enquiry-surface: #26383a;
     --enquiry-line: #4e6867;
     --enquiry-shadow: 0 12px 30px rgba(0, 0, 0, .22);
@@ -116,6 +145,13 @@
   }
 }
 :root[data-theme="dark"] .contact-main {
+  --subject-english: #e6add9;
+  --subject-maths: #9ae2d8;
+  --subject-science: #a9dfb9;
+  --subject-languages: #f1c28e;
+  --subject-psychology: #c9bcff;
+  --subject-art: #f2b5d0;
+  --subject-sen: #b8d0ff;
   --enquiry-surface: #26383a;
   --enquiry-line: #4e6867;
   --enquiry-shadow: 0 12px 30px rgba(0, 0, 0, .22);

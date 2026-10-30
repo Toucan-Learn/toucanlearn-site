@@ -24,7 +24,7 @@
   <script src="campaigns.js?v=20261029-clean-url-2"></script>
   <link rel="stylesheet" href="style.css?v=20261028-toggle-4" />
   <link rel="stylesheet" href="campaigns.css?v=20261030-trust-footer-1" />
-  <link rel="stylesheet" href="contact.css?v=20261030-calm-form-4" />
+  <link rel="stylesheet" href="contact.css?v=20261030-subject-dropdown-3" />
   <script src="menu.js?v=20261029-clean-url-2" defer></script>
   <link rel="stylesheet" href="framework.css?v=20261030-nav-span-1" />
 </head>
@@ -168,11 +168,6 @@
             </div>
             <span class="field-error" id="learner-child-error"></span>
           </fieldset>
-          <div class="field conditional-field" id="age-year-field" hidden inert>
-            <label for="age-year">Age or school year</label>
-            <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
-            <span class="field-error" id="age-year-error"></span>
-          </div>
           </div>
           </div>
           <div class="fields-two enquiry-details">
@@ -183,8 +178,14 @@
             <span class="field-error" id="support-needed-error"></span>
           </div>
           <div class="field-stack">
+          <div class="field conditional-field" id="age-year-field" hidden inert>
+            <label for="age-year">Age or school year</label>
+            <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
+            <span class="field-error" id="age-year-error"></span>
+          </div>
           <div class="field">
-            <label for="subject">Subject (optional)</label>
+            <label id="subject-label" for="subject">Subject (optional)</label>
+            <div class="subject-dropdown" data-subject-dropdown>
             <select id="subject" name="Subject" aria-describedby="subject-error">
               <option value="">Choose a subject</option>
               <option value="English">English</option>
@@ -197,6 +198,11 @@
               <option value="SEN support">SEN support</option>
               <option value="Other">Other</option>
             </select>
+              <div data-subject-control hidden>
+                <button class="subject-button" id="subject-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="subject-listbox" aria-labelledby="subject-label subject-value" aria-describedby="subject-error"><span id="subject-value">Choose a subject</span></button>
+                <ul class="subject-listbox" id="subject-listbox" role="listbox" aria-labelledby="subject-label" tabindex="-1" hidden></ul>
+              </div>
+            </div>
             <span class="field-error" id="subject-error"></span>
           </div>
           <div class="field">
@@ -315,6 +321,7 @@
 
   <script src="site.js"></script>
   <script src="launch-offer.js?v=20261029-clean-url-2"></script>
-  <script src="contact.js?v=20261030-ad-landing-1"></script>
+  <script src="subject-select.js?v=20261030-subject-dropdown-2"></script>
+  <script src="contact.js?v=20261030-subject-dropdown-2"></script>
 </body>
 </html>

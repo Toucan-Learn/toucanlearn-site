@@ -242,7 +242,7 @@ try {
           assert.equal(m.slideCount, 0, 'Homepage retains its four media projects and has no copy slides');
           const caption = await page.$eval('[data-project-caption]', node => {
             const box = node.getBoundingClientRect();
-            const windowBox = node.previousElementSibling.getBoundingClientRect();
+            const windowBox = node.nextElementSibling.getBoundingClientRect();
             const lines = [...node.querySelectorAll('.project-caption-detail')];
             const style = getComputedStyle(node);
             return { copy: ['label', 'heading', 'learning', 'result'].map(part => node.querySelector(`[data-project-${part}]`).textContent), live: node.getAttribute('aria-live'),
@@ -251,7 +251,7 @@ try {
                 children: [...line.children].map(child => child.tagName), text: line.textContent,
                 height: line.getBoundingClientRect().height, spacing: parseFloat(getComputedStyle(line).lineHeight) })),
               controls: node.querySelectorAll('a, button, input').length,
-              width: box.width, x: box.x, y: box.y, bottom: box.bottom, window: { x: windowBox.x, width: windowBox.width, bottom: windowBox.bottom },
+              width: box.width, x: box.x, y: box.y, bottom: box.bottom, window: { x: windowBox.x, y: windowBox.y, width: windowBox.width, bottom: windowBox.bottom },
               fits: node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1,
               color: style.color, background: style.backgroundColor, labelColor: getComputedStyle(node.firstElementChild).color,
               headingColor: getComputedStyle(node.querySelector('h2')).color };
@@ -262,7 +262,7 @@ try {
           assert.deepEqual(caption.lines.map(line => line.text), [`Learning: ${homepageCaptions[position][2]}`, `Result: ${homepageCaptions[position][3]}`], 'Lead words and project text retain their spacing');
           assert.equal(caption.live, position === 0 ? 'off' : 'polite', 'Only manual switches announce the caption');
           assert.equal(caption.controls, 0, 'The caption adds no controls');
-          assert(caption.fits && caption.y >= caption.window.bottom, 'Caption fits directly under the window');
+          assert(caption.fits && caption.bottom <= caption.window.y, 'Caption fits directly above the window (owner, 30 Oct)');
           assert(Math.abs(caption.x - caption.window.x) <= 1 && Math.abs(caption.width - caption.window.width) <= 1, 'Caption fills the window width');
           assert.deepEqual([caption.background, caption.color, caption.headingColor, caption.labelColor], ['rgb(243, 236, 226)', 'rgb(16, 36, 45)', 'rgb(11, 63, 81)', 'rgb(168, 67, 29)'], `${label}/${id}: caption keeps the light palette in both themes`);
           for (const color of [caption.color, caption.headingColor, caption.labelColor]) assert(contrast(color, caption.background) >= 4.5, `${label}/${id}: caption text contrast`);

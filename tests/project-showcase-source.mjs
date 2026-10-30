@@ -222,7 +222,7 @@ assert(children.includes(`src="${darty.poster}" alt="${darty.alt}" width="1600" 
 assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), sectionProjects.map(project => project.id), 'The intro precedes all four matching copy cards');
 assert(!/data-project="intro"|Learning is easier when you enjoy it\./.test(after), 'The homepage has no intro slide');
 assert.equal((after.match(/data-project-caption\b/g) || []).length, 1, 'The homepage has one caption');
-assert.match(after, /<div class="sky-studio" data-showcase data-showcase-mode="auto"[^>]*>[\s\S]*?<\/div>\s*<div class="hero-project-caption" data-project-caption aria-atomic="true">/, 'The caption immediately follows the homepage window');
+assert.match(after, /<div class="hero-project-caption" data-project-caption aria-atomic="true">[\s\S]*?<\/div>\s*<div class="sky-studio" data-showcase data-showcase-mode="auto"/, 'The caption sits immediately above the homepage window (owner, 30 Oct)');
 assert(!children.includes('data-project-caption'), 'The manual Children section has no homepage caption');
 assert.match(source, /const caption = automatic \? root\.parentElement\.querySelector\('\[data-project-caption\]'\) : null;/, 'Only automatic homepage mode renders the caption');
 const captionMarkup = after.match(/<div class="hero-project-caption"[^>]*>([\s\S]*?)<\/div>/)[1];

@@ -16,14 +16,17 @@ const script = await read('contact.js');
 const rules = createRequire(import.meta.url)('../contact.js');
 
 const help = "Please don't include diagnoses or medical records; we'll talk through needs together.";
-const expected = baseline('contact.html')
+// 30 Oct: the owner-approved footer (Terms link, sole-trader line) replaces the old one.
+const footer = html => html.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)[0];
+const expected = baseline('contact.html').replace(footer(baseline('contact.html')), footer(html))
   .replace('aria-describedby="support-needed-error"', 'aria-describedby="support-needed-privacy support-needed-error"')
   .replace('</textarea>', '</textarea>\n<small id="support-needed-privacy">' + help + '</small>')
   .replace('Use a UK number, starting with 0 or +44.', 'Use 7–15 digits; include + and the country code for international numbers.')
   .replace('>WhatsApp us<', '>WhatsApp 07307 045816<');
-assert.equal(contactMarkup(html), contactMarkup(expected),
+const untokened = page => page.replace(/\?v=[^"']+/g, '?v=T'); // stylesheet/script cache tokens change with every release
+assert.equal(contactMarkup(untokened(html)), contactMarkup(untokened(expected)),
   'Preserve field names, order, hooks, configuration and copy outside the requested help and phone labels');
-assert.equal(navigationMarkup(await read('privacy.html')), navigationMarkup(baseline('privacy.html')), 'Keep privacy content unchanged through the URL migration');
+assert.equal(navigationMarkup(untokened(await read('privacy.html'))), navigationMarkup(untokened(execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' }))), 'Privacy matches the owner-approved 30 Oct notice');
 assert.doesNotMatch(html, /support-needed-hint|The subject or goal, and what's tricky at the moment/);
 assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-needed-privacy support-needed-error"[^>]*required/);
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));

@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="style.css?v=20261028-toggle-4" />
   <link rel="stylesheet" href="campaigns.css?v=20261029-reviews-fit-1" />
   <link rel="stylesheet" href="contact.css?v=20261030-calm-form-4" />
-  <script src="menu.js?v=20261029-clean-url-2" defer></script>
+  <script src="menu.js?v=20261030-ad-landing-1" defer></script>
   <link rel="stylesheet" href="framework.css?v=20261029-team-plain-1" />
 </head>
 
@@ -178,7 +178,8 @@
           <div class="fields-two enquiry-details">
           <div class="field field--support">
             <label for="support-needed">What would you like help with?</label>
-            <textarea id="support-needed" name="Support requested" rows="9" maxlength="1000" aria-describedby="support-needed-error" required></textarea>
+            <textarea id="support-needed" name="Support requested" rows="9" maxlength="1000" aria-describedby="support-needed-privacy support-needed-error" required></textarea>
+            <small id="support-needed-privacy">Please don't include diagnoses or medical records; we'll talk through needs together.</small>
             <span class="field-error" id="support-needed-error"></span>
           </div>
           <div class="field-stack">
@@ -242,7 +243,7 @@
           <div class="field conditional-field" id="phone-field" hidden inert>
             <label for="phone">Phone number</label>
             <input id="phone" name="phone" type="tel" maxlength="40" autocomplete="tel" inputmode="tel" aria-describedby="phone-hint phone-error" disabled />
-            <small id="phone-hint">Use a UK number, starting with 0 or +44.</small>
+            <small id="phone-hint">Use 7–15 digits; include + and the country code for international numbers.</small>
             <span class="field-error" id="phone-error"></span>
           </div>
           </div>
@@ -288,7 +289,7 @@
         <p class="contact-next-talk">Prefer to talk?</p>
         <div class="contact-next-actions">
           <a class="button" href="tel:+447309639095">Call 07309 639095</a>
-          <a class="button secondary" href="https://wa.me/447307045816" target="_blank" rel="noopener">WhatsApp us<span class="visually-hidden"> (opens WhatsApp in a new tab)</span></a>
+          <a class="button secondary" href="https://wa.me/447307045816" target="_blank" rel="noopener">WhatsApp 07307 045816<span class="visually-hidden"> (opens WhatsApp in a new tab)</span></a>
         </div>
       </div>
     </div>
@@ -306,13 +307,13 @@
         <a href="complaints">Complaints</a>
         <a href="./">Home</a>
         <a href="contact">Enquire</a>
-        <a href="tel:+447309639095">07309 639095</a>
+        <a href="tel:+447309639095">Call 07309 639095</a>
       </nav>
     </div>
   </footer>
 
   <script src="site.js"></script>
   <script src="launch-offer.js?v=20261029-clean-url-2"></script>
-  <script src="contact.js?v=20261029-clean-url-2"></script>
+  <script src="contact.js?v=20261030-ad-landing-1"></script>
 </body>
 </html>

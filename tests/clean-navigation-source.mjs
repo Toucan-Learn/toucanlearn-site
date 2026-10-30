@@ -5,13 +5,14 @@ import { fixture } from './helpers/navigation-dom.mjs';
 import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 const root = new URL('../', import.meta.url);
 const token = '20261029-clean-url-2';
+const panelToken = '20261030-ad-landing-1';
 const home = await readFile(new URL('index.html', root), 'utf8');
 const showcaseToken = home.match(/src="project-showcase\.js\?v=([^"]+)"/)[1];
 // Homepage captions refresh this entry point without changing the manual section.
 const children = await readFile(new URL('children.html', root), 'utf8');
 const sectionShowcaseToken = children.match(/src="project-showcase\.js\?v=([^"]+)"/)[1];
 let checks = 0;
-const clean = page => { assert.equal(page.location.hash, ''); assert.equal(page.history.length, 1); assert(!page.calls.some(call => call.kind === 'push')); checks++; };
+const clean = (page, hash = '') => { assert.equal(page.location.hash, hash); assert.equal(page.history.length, 1); assert(!page.calls.some(call => call.kind === 'push')); checks++; };
 const hrefBefore = '<a href="index.html">Home</a><a href="index.html#reviews">Reviews</a>';
 assert.equal(homeNavigationMarkup(hrefBefore), '<a href="./">Home</a><a href="./#reviews">Reviews</a>');
 for (const unrelated of ['<p>index.html#reviews</p>', '<a href="contact.html?service=children">Enquire</a>', '<link href="assets/toucan-favicon.png?v=rounded">', '<link href="framework.css?v=changed">']) assert.equal(homeNavigationMarkup(unrelated), unrelated, 'The homepage link exception must not hide other changes');
@@ -20,12 +21,25 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   const html = await readFile(new URL(file, root), 'utf8');
   assert.doesNotMatch(html, /href="index\.html(?:#|")/);
   assert.doesNotMatch(html, /href="contact\.html\?/);
-  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'project-showcase.js' ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : token, `${file}: ${script} cache token`);
+  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'project-showcase.js' ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : ['menu.js', 'content-panels.js'].includes(script) ? panelToken : token, `${file}: ${script} cache token`);
   if (['contact.html', 'hoc-tieng-anh.html'].includes(file)) {
     assert(html.indexOf('src="campaigns.js') < html.indexOf('src="menu.js'), `${file}: capture campaigns before URL cleanup`);
     assert(html.indexOf('src="campaigns.js') < html.indexOf('</head>'), `${file}: campaign capture runs before the form is parsed`);
   }
 }
+for (const file of ['children.html', 'adults.html', 'subjects.html']) {
+  const html = await readFile(new URL(file, root), 'utf8');
+  const header = html.match(/<header\b[^>]*>[\s\S]*?<\/header>/)[0];
+  assert.match(header, /class="container nav nav--phone-book"/);
+  assert.match(header, /<\/nav>\s*<a class="button trial-button trial-button--light-surface phone-book" href="contact"[^>]*>Book<\/a>\s*<details class="mobile-menu">/);
+  assert.match(html, /href="phone-booking.css\?v=20261030-ad-landing-1"/);
+  if (file === 'children.html') assert.match(header, /phone-book" href="contact" data-service="children"/);
+}
+assert.doesNotMatch((await readFile(new URL('contact.html', root), 'utf8')).match(/<header\b[^>]*>[\s\S]*?<\/header>/)[0], /phone-book/, 'Contact hides the phone booking CTA');
+const bookingCSS = await readFile(new URL('phone-booking.css', root), 'utf8');
+assert.match(bookingCSS, /\.nav > \.phone-book\s*\{ display: none; \}/);
+assert.match(bookingCSS, /@media \(max-width: 767px\)[\s\S]*?display: inline-flex;[\s\S]*?height: 44px;/);
+assert.doesNotMatch(bookingCSS, /\b(?:min-height|height):\s*(?:64|78)px/, 'Keep the existing phone header heights');
 for (const suffix of ['', '#team', '#%ZZ', '#missing']) {
   const page = fixture('https://example.test/site/index.html?project=darty&sky=night&reviewart=a,b' + suffix);
   const main = page.node('main', { id: 'main' }), team = page.node('section', { id: 'team' });
@@ -58,11 +72,42 @@ for (const wide of [true, false]) {
   await page.run('menu.js'); await page.run('content-panels.js'); await page.run('project-viewer.js'); await page.load();
   assert(!projects.hidden && first.hidden); assert(!slides[1].hidden && slides[0].hidden); clean(page);
   page.emit(page.window, 'pageshow'); assert(!projects.hidden, 'pageshow preserves the selected panel after cleanup');
-  page.click(links[0]); assert(!first.hidden && projects.hidden); assert.equal(page.document.activeElement, first.querySelector('h2')); clean(page);
+  page.click(links[0]); assert(!first.hidden && projects.hidden); assert.equal(page.document.activeElement, first.querySelector('h2')); clean(page, '#overview');
   const nested = page.node('a', { href: '#project-one' }); page.document.body.append(nested);
   page.click(nested); assert(!projects.hidden && !slides[0].hidden && slides[1].hidden, 'A nested deep link reveals both the panel and its project'); clean(page);
-  page.incoming('#overview', 'popstate'); assert(!first.hidden); clean(page);
+  page.incoming('#overview', 'popstate'); assert(!first.hidden); clean(page, '#overview');
   page.emit(page.window, 'popstate'); assert(!first.hidden);
+}
+
+// Exercise real landing-page panel IDs on ad arrivals, clean routes, legacy .html
+// routes and reloads. Only exact panel hashes survive; nested anchors stay clean.
+for (const wide of [true, false]) {
+  for (const [file, ids] of [['subjects', ['maths', 'english', 'send-support']], ['adults', ['qualifications']]]) {
+    const html = await readFile(new URL(file + '.html', root), 'utf8');
+    const panelIds = [...html.matchAll(/<section\b[^>]*id="([^"]+)"[^>]*data-content-panel/g)].map(match => match[1]);
+    const make = async href => {
+      const page = fixture(href, new Map(), wide);
+      const shell = page.node('div', { 'data-content-panels': '' });
+      const panels = panelIds.map(id => { const panel = page.node('section', { id, 'data-content-panel': '' }); panel.append(page.node('h2')); return panel; });
+      const links = panelIds.map(id => page.node('a', { href: '#' + id, 'data-panel-link': '' }));
+      shell.append(...links, ...panels); page.document.body.append(shell);
+      await page.run('menu.js'); await page.run('content-panels.js'); await page.load();
+      return { page, links, panels };
+    };
+    for (const id of ids) for (const extension of ['', '.html']) {
+      const { page, links, panels } = await make(`https://example.test/${file}${extension}?utm_source=ad#${id}`);
+      assert.equal(page.location.pathname, '/' + file); assert.equal(page.location.search, ''); clean(page, '#' + id);
+      assert(panels.every(panel => panel.hidden === (panel.id !== id)), `Ad arrival selects ${id}`);
+      const reloaded = await make(page.location.href);
+      assert(reloaded.panels.every(panel => panel.hidden === (panel.id !== id)), `Reload selects ${id}`); clean(reloaded.page, '#' + id);
+      const next = panels.findIndex(panel => panel.id !== id);
+      page.click(links[next]); clean(page, '#' + panels[next].id);
+      page.emit(page.window, 'pageshow'); assert(!panels[next].hidden, 'Restoration keeps the new panel');
+      page.incoming('#' + id); assert(!panels.find(panel => panel.id === id).hidden); clean(page, '#' + id);
+      const skip = page.node('a', { href: '#main' }), main = page.node('main', { id: 'main' }); page.document.body.append(skip, main);
+      page.click(skip); clean(page);
+    }
+  }
 }
 
 {

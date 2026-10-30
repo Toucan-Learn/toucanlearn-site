@@ -80,6 +80,9 @@
       const panel = target && panels.find(candidate => candidate === target || candidate.contains(target));
       if (!panel) return;
       event.preventDefault();
+      // Replace rather than push: the selected panel survives refresh/share without
+      // adding history entries. Nested targets keep the existing clean navigation.
+      history.replaceState(history.state, '', location.pathname + location.search + (target === panel ? url.hash : ''));
       show(panel, target, { focus: links.includes(anchor), scroll: true });
       if (window.matchMedia('(min-width: 1000px)').matches) window.scrollTo({ top: 0, behavior: 'instant' });
     });

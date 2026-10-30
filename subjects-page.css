@@ -42,11 +42,11 @@ body.subjects-page.cell-art-page .framework-panels #send-support .send-points > 
   padding: 0;
 }
 body.subjects-page.cell-art-page #send-support .picture-cell-media {
-  min-height: 110px;
+  min-height: 92px;
   aspect-ratio: auto;
   border-radius: 15px 0 0 15px;
 }
-body.subjects-page #send-support .picture-cell-copy { align-self: center; padding: 12px; }
+body.subjects-page #send-support .picture-cell-copy { align-self: center; padding: 10px 12px; }
 body.subjects-page #send-support .send-points h3 { margin: 0 0 6px; font-size: 1rem; line-height: 1.3; }
 body.subjects-page #send-support .send-points p { margin: 0; font-size: .95rem; line-height: 1.4; }
 
@@ -118,3 +118,5 @@ body.subjects-page #art .subject-photo-body { padding: 12px 14px; }
 body.subjects-page #art .subject-photo-body h3 { margin: 0 0 6px; }
 body.subjects-page #art .subject-photo-body p { margin: 0 0 6px; }
 @media (max-width: 760px) { body.subjects-page #art .subject-photo-cards { grid-template-columns: minmax(0, 1fr); } }
+/* Owner, 30 Oct: six SEND cells (three rows) still fit one laptop screen. */
+@media screen and (min-width: 1000px) { body.subjects-page.cell-art-page[data-page-frame] #send-support .send-points { gap: 10px; margin-block: 8px; } }

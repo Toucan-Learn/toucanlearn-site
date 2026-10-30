@@ -60,7 +60,7 @@ assert.equal(teacherCards.length, 3);
 const teacherCopy = [
   ['Thầy Aaron', 'Giáo viên bản ngữ đến từ Anh, có chứng chỉ CELTA. Bài bản, chuẩn mực và chất lượng.'],
   ['Thầy Josh', 'Người sáng lập Toucan Learn. Thầy hiểu ngữ âm tiếng Việt, nên giúp bạn sửa phát âm từ gốc.'],
-  ['Cô Như', 'Người Việt, IELTS 7.0. Cô giải thích bằng tiếng Việt và gỡ những lỗi phát âm, ngữ pháp mà người Việt hay gặp.']
+  ['Cô Như', 'Người Việt, IELTS 7.0. Cô giúp bạn “gỡ rối” các lỗi ngữ pháp và phát âm tiếng Việt mà bạn dễ mắc phải.']
 ];
 teacherCards.forEach((card, index) => {
   assert.ok(card.includes(`>${teacherCopy[index][0]}</h3>`), 'Teacher order and name');

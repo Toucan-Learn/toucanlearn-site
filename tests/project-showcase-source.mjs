@@ -84,12 +84,14 @@ await import('./drink-spin-source.mjs');
 await import('./darty-title-lifecycle.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 export const homepageCaptions = [
-  ['English', 'Sports journalism', 'Persuasive writing through football, ending in his own newspaper.'],
-  ['English · Game design', 'DARTY', 'Clear, precise written instructions that shaped a playable football game.'],
-  ['English · Design', 'Drink design', 'Writing for an audience: three drinks, from pencil sketches to 3D renders.'],
-  ['Music', 'Piano', 'A way into music through play, with songs to learn and sounds to try.'],
+  ['English · Journalism', 'Football newspaper', 'Persuasive writing: making a case and backing it up.', 'His own newspaper of previews, reports and opinion pieces.'],
+  ['English · Game design', 'DARTY (football game)', 'Writing clear, precise instructions.', 'A playable football game, built from his written requests.'],
+  ['English · Design', 'Drink design', 'Writing for an audience: choosing words that sell.', 'Three drinks, from his sketches and labels to 3D renders.'],
+  ['Music', 'Toucan piano', 'Music through play, with no pressure to get it right.', 'A piano anyone can play here, with songs to learn.'],
 ];
-assert.deepEqual(projects.map(({ label, name, line }) => [label, name, line]), homepageCaptions, 'The homepage has exactly the approved label, name and single sentence for each project');
+assert.deepEqual(projects.map(({ label, heading, learning, result }) => [label, heading, learning, result]), homepageCaptions, 'Each caption has the approved subject, heading, learning and result');
+assert.deepEqual(projects.map(project => project.name), ['Sports journalism', 'DARTY', 'Drink design', 'Piano'], 'The window bar keeps its existing project names');
+assert(projects.every(project => !('line' in project)), 'The learning and result replace the old single sentence');
 assert.deepEqual(sectionProjects.map(project => project.id), ['intro', ...projects.map(project => project.id)], 'Only the children’s carousel has a fifth slide');
 assert.deepEqual(sectionProjects[0], { id: 'intro', name: 'Intro', type: 'intro' }, 'The intro keeps its HTML photo slot and has a name in the shared header control');
 assert.deepEqual(sectionProjects.slice(1), projects, 'Both carousels keep the same four project media records');
@@ -223,6 +225,14 @@ assert.equal((after.match(/data-project-caption\b/g) || []).length, 1, 'The home
 assert.match(after, /<div class="sky-studio" data-showcase data-showcase-mode="auto"[^>]*>[\s\S]*?<\/div>\s*<div class="hero-project-caption" data-project-caption aria-atomic="true">/, 'The caption immediately follows the homepage window');
 assert(!children.includes('data-project-caption'), 'The manual Children section has no homepage caption');
 assert.match(source, /const caption = automatic \? root\.parentElement\.querySelector\('\[data-project-caption\]'\) : null;/, 'Only automatic homepage mode renders the caption');
+const captionMarkup = after.match(/<div class="hero-project-caption"[^>]*>([\s\S]*?)<\/div>/)[1];
+const captionParts = ['label', 'heading', 'learning', 'result'];
+assert.deepEqual(captionParts.map(part => captionMarkup.match(new RegExp(`data-project-${part}>([^<]+)<`))?.[1]), homepageCaptions[3], 'The no-JS caption shows the complete piano story');
+assert.deepEqual([...captionMarkup.matchAll(/<p class="project-caption-detail"><strong>(Learning:|Result:)<\/strong> <span data-project-(learning|result)>[^<]+<\/span><\/p>/g)].map(([, lead, field]) => [lead, field]), [['Learning:', 'learning'], ['Result:', 'result']], 'Two paragraphs retain bold lead words outside the changing text spans');
+const captionUpdate = source.match(/if \(caption\) \{([\s\S]*?)\n    \}/)[1];
+for (const part of captionParts) assert(captionUpdate.includes(`caption.querySelector('[data-project-${part}]').textContent = entries[index].${part};`), `${part}: update only textContent`);
+assert(!/innerHTML|outerHTML|insertAdjacentHTML/.test(captionUpdate), 'Caption updates never parse HTML');
+assert.match(source, /name\.textContent = entries\[index\]\.name;/, 'The window bar uses the unchanged name field');
 for (const asset of ['css', 'js']) {
   const token = html => html.match(new RegExp(`project-showcase\\.${asset}\\?v=([^"']+)`))?.[1];
   assert(token(children), `${asset}: the Children page retains its existing asset reference`);

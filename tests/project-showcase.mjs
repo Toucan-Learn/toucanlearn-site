@@ -243,21 +243,29 @@ try {
           const caption = await page.$eval('[data-project-caption]', node => {
             const box = node.getBoundingClientRect();
             const windowBox = node.previousElementSibling.getBoundingClientRect();
-            const line = node.querySelector('[data-project-line]');
+            const lines = [...node.querySelectorAll('.project-caption-detail')];
             const style = getComputedStyle(node);
-            return { copy: [...node.children].map(child => child.textContent), live: node.getAttribute('aria-live'),
+            return { copy: ['label', 'heading', 'learning', 'result'].map(part => node.querySelector(`[data-project-${part}]`).textContent), live: node.getAttribute('aria-live'),
+              parts: [...node.children].map(child => child.tagName),
+              lines: lines.map(line => ({ lead: line.firstElementChild.tagName, label: line.firstElementChild.textContent,
+                children: [...line.children].map(child => child.tagName), text: line.textContent,
+                height: line.getBoundingClientRect().height, spacing: parseFloat(getComputedStyle(line).lineHeight) })),
               controls: node.querySelectorAll('a, button, input').length,
               width: box.width, x: box.x, y: box.y, bottom: box.bottom, window: { x: windowBox.x, width: windowBox.width, bottom: windowBox.bottom },
               fits: node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1,
-              lineHeight: line.getBoundingClientRect().height, lineSpacing: parseFloat(getComputedStyle(line).lineHeight),
-              color: style.color, background: style.backgroundColor, labelColor: getComputedStyle(node.firstElementChild).color };
+              color: style.color, background: style.backgroundColor, labelColor: getComputedStyle(node.firstElementChild).color,
+              headingColor: getComputedStyle(node.querySelector('h2')).color };
           });
           assert.deepEqual(caption.copy, homepageCaptions[position], `${label}/${id}: caption matches the selected project`);
+          assert.deepEqual(caption.parts, ['P', 'H2', 'P', 'P'], 'Caption has a label, heading and two short paragraphs');
+          assert.deepEqual(caption.lines.map(line => [line.lead, line.label, line.children]), [['STRONG', 'Learning:', ['STRONG', 'SPAN']], ['STRONG', 'Result:', ['STRONG', 'SPAN']]], 'Both lines begin with bold lead words');
+          assert.deepEqual(caption.lines.map(line => line.text), [`Learning: ${homepageCaptions[position][2]}`, `Result: ${homepageCaptions[position][3]}`], 'Lead words and project text retain their spacing');
           assert.equal(caption.live, position === 0 ? 'off' : 'polite', 'Only manual switches announce the caption');
           assert.equal(caption.controls, 0, 'The caption adds no controls');
           assert(caption.fits && caption.y >= caption.window.bottom, 'Caption fits directly under the window');
           assert(Math.abs(caption.x - caption.window.x) <= 1 && Math.abs(caption.width - caption.window.width) <= 1, 'Caption fills the window width');
-          for (const color of [caption.color, caption.labelColor]) assert(contrast(color, caption.background) >= 4.5, `${label}/${id}: caption text contrast`);
+          assert.deepEqual([caption.background, caption.color, caption.headingColor, caption.labelColor], ['rgb(243, 236, 226)', 'rgb(16, 36, 45)', 'rgb(11, 63, 81)', 'rgb(168, 67, 29)'], `${label}/${id}: caption keeps the light palette in both themes`);
+          for (const color of [caption.color, caption.headingColor, caption.labelColor]) assert(contrast(color, caption.background) >= 4.5, `${label}/${id}: caption text contrast`);
           report.layouts.push({ label, route, id, caption });
           const after = await heroMetrics(page);
           // 29 Oct owner copy: the showcase label's two phrases stack on phones, one line taller.
@@ -267,7 +275,7 @@ try {
           for (const selector of preserved) after[selector].forEach((value, i) => assert(Math.abs(value - before[selector][i]) <= 1 + (i % 2 ? labelGrowth : 0), `${label}/${id}: ${selector} geometry changed`));
           if (view.width === 1440 && view.height === 750) {
             assert(caption.bottom <= view.height, 'Caption stays above the laptop fold');
-            assert(caption.lineHeight <= caption.lineSpacing + 1, 'Laptop caption sentence fits on one line');
+            assert(caption.lines.every(line => line.height <= line.spacing + 1), 'Each laptop caption detail fits on one line');
             assert(m.stage.height < 450, 'The original 450px media slot makes room for its caption');
           }
         } else if (id === 'intro') {
@@ -410,7 +418,7 @@ try {
   assert.equal(await selected(page), 'darty', 'Interaction postpones the deadline');
   await page.waitForFunction(() => document.querySelector('[data-showcase]').dataset.project === 'drinks');
   assert.equal(await page.$eval('[data-project-caption]', node => node.getAttribute('aria-live')), 'off', 'Idle switches keep caption announcements off');
-  assert.deepEqual(await page.$$eval('[data-project-caption] > *', nodes => nodes.map(node => node.textContent)), homepageCaptions[2], 'Idle switching also updates all three caption parts');
+  assert.deepEqual(await page.$eval('[data-project-caption]', node => ['label', 'heading', 'learning', 'result'].map(part => node.querySelector(`[data-project-${part}]`).textContent)), homepageCaptions[2], 'Idle switching also updates all four caption parts');
   assert.equal(await page.$eval('[data-project-status]', node => node.getAttribute('aria-live')), 'off', 'Idle count changes stay quiet too');
   await page.$eval('[data-showcase]', root => root.focus());
   await wait(1700);

@@ -81,3 +81,30 @@ body.subjects-page #send-support .send-points p { margin: 0; font-size: .95rem; 
   body.subjects-page .framework-panels,
   body.subjects-page .framework-panels > [data-content-panel]:not([hidden]) { display: block; }
 }
+/* Owner, 30 Oct: each subject's title and intro sit in swash cells over one
+   shared pixel sky, in that subject's own colour. On framed laptops the sky
+   is fixed to the window, so title and intro read as a single crop. */
+body.subjects-page .framework-panels > [data-content-panel] > .section-head > :is(h2, p) {
+  margin: 0;
+  padding: 6px 14px;
+  border-radius: 14px;
+  color: #fff8ea;
+  background: var(--subject-tint), #1b1b2a url("assets/loading-pixel-sky.png") var(--sky-pos, center) / cover;
+  box-shadow: inset 0 0 0 1px #ffffff26;
+}
+body.subjects-page .framework-panels > [data-content-panel] > .section-head > h2 { padding-block: 4px; }
+@media screen and (min-width: 1000px) {
+  body.subjects-page[data-page-frame] .framework-panels > [data-content-panel] > .section-head > :is(h2, p) {
+    background: var(--subject-tint) fixed, #1b1b2a url("assets/loading-pixel-sky.png") var(--sky-pos, center) / cover fixed;
+  }
+}
+body.subjects-page #english { --subject-tint: linear-gradient(120deg, #361329ed, #49234bc9 55%, #103f4de6); --sky-pos: 12% 20%; }
+body.subjects-page #maths { --subject-tint: linear-gradient(120deg, #0c2a5aed, #1b4a8ac9 55%, #0f3048e6); --sky-pos: 80% 28%; }
+body.subjects-page #science { --subject-tint: linear-gradient(120deg, #12342aed, #1f4a37c9 55%, #0d3a40e6); --sky-pos: 35% 85%; }
+body.subjects-page #languages { --subject-tint: linear-gradient(120deg, #3d1f0ced, #6a3714c9 55%, #2a2a3ae6); --sky-pos: 90% 70%; }
+body.subjects-page #psychology { --subject-tint: linear-gradient(120deg, #1f1340ed, #3a2675c9 55%, #102a4ce6); --sky-pos: 55% 40%; }
+body.subjects-page #art { --subject-tint: linear-gradient(120deg, #3d0f2aed, #6b1f45c9 55%, #2a1838e6); --sky-pos: 20% 60%; }
+body.subjects-page #send-support { --subject-tint: linear-gradient(120deg, #0f2147ed, #1d3a6bc9 55%, #12304ae6); --sky-pos: 70% 12%; }
+/* Owner, 30 Oct: every subject panel ends with a proper CTA beside its links. */
+body.subjects-page .framework-panels > [data-content-panel] > .learning-links { align-items: center; }
+body.subjects-page .framework-panels .learning-links > .subject-cta { min-height: 44px; margin-right: 8px; text-decoration: none; line-height: 1.3; }

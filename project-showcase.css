@@ -237,3 +237,7 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 /* Owner, 29 Oct: the showcase label and the projects invitation sit in opposite corners; they stack when narrow. */
 .living-hero .hero-world > .hero-world-eyebrow { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; letter-spacing: .05em; }
 .living-hero .hero-world > .hero-world-eyebrow::before { display: none; }
+/* Owner, 30 Oct: on phones the project comes first, straight under the slide controls, then its story. */
+@media (max-width: 759px) {
+  #learner-projects .framework-project-slides > [data-project-slide] > .framework-project-media { order: -1; margin-top: 0; }
+}

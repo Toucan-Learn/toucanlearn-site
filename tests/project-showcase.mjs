@@ -272,7 +272,7 @@ try {
             assert.equal(m.result.columnGap, m.result.mediaGap, 'Vertical card gap matches the gap beside the media');
             const share = m.media.width / (m.media.width + m.copy.width);
             assert(share >= .64 && share <= .66, `${label}: media gets 64–66% of the slide; media share ${share}`);
-          } else assert(m.media.y >= m.result.bottom - 1, 'Phone keeps copy, result and media in ordinary single-column flow');
+          } else assert(m.media.bottom <= m.copy.y + 1 && m.copy.y <= m.result.y, 'Phone shows the project first, then its copy and result, in one column');
         }
         if (id === 'football' && view.width === 1440 && view.height === 750) {
           const frameElement = await page.$('iframe');

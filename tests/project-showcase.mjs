@@ -264,7 +264,7 @@ try {
           assert.equal(caption.controls, 0, 'The caption adds no controls');
           assert(caption.fits && caption.bottom <= caption.window.y, 'Caption fits directly above the window (owner, 30 Oct)');
           assert(Math.abs(caption.x - caption.window.x) <= 1 && Math.abs(caption.width - caption.window.width) <= 1, 'Caption fills the window width');
-          assert.deepEqual([caption.background, caption.color, caption.headingColor, caption.labelColor], ['rgb(243, 236, 226)', 'rgb(16, 36, 45)', 'rgb(11, 63, 81)', 'rgb(168, 67, 29)'], `${label}/${id}: caption keeps the light palette in both themes`);
+          assert.deepEqual([caption.background, caption.color, caption.headingColor, caption.labelColor], ['rgb(243, 236, 226)', 'rgb(16, 36, 45)', 'rgb(11, 63, 81)', 'rgb(29, 116, 112)'], `${label}/${id}: caption keeps the light palette in both themes`);
           for (const color of [caption.color, caption.headingColor, caption.labelColor]) assert(contrast(color, caption.background) >= 4.5, `${label}/${id}: caption text contrast`);
           report.layouts.push({ label, route, id, caption });
           const after = await heroMetrics(page);

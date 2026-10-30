@@ -9,18 +9,22 @@ const read = file => readFile(new URL(file, root), 'utf8');
 const [html, script, contact, sitemap] = await Promise.all([
   read('hoc-tieng-anh.html'), read('hoc-tieng-anh.js'), read('contact.html'), read('sitemap.xml')
 ]);
-const title = 'Học tiếng Anh 1 kèm 1 với giáo viên bản ngữ | Toucan Learn';
-const description = 'Học tiếng Anh trực tuyến 1 kèm 1 với thầy Aaron, giáo viên bản ngữ đến từ Anh, có chứng chỉ CELTA. Buổi học đầu tiên miễn phí.';
+const title = 'Học tiếng Anh 1 kèm 1 với giáo viên người Anh và người Việt | Toucan Learn';
+const description = 'Học tiếng Anh trực tuyến 1 kèm 1 với thầy Aaron (CELTA), thầy Josh hoặc cô Như (IELTS 7.0). Buổi học đầu tiên miễn phí.';
+const markup = html.replace(/<!--[\s\S]*?-->/g, '');
+const teacherChoices = ['Chưa chắc, hãy tư vấn giúp tôi', 'Thầy Aaron', 'Thầy Josh', 'Cô Như'];
 assert.match(html, /<html lang="vi">/);
 assert.ok(html.includes(`<title>${title}</title>`));
 assert.ok(html.includes(`content="${description}"`));
-assert.ok(html.includes('<h1 id="vietnam-heading">Học tiếng Anh 1 kèm 1 với giáo viên bản ngữ.</h1>'));
-assert.ok(html.includes('<p class="lead">Học trực tuyến cùng thầy Aaron, giáo viên bản ngữ đến từ Anh, có chứng chỉ CELTA. Buổi học đầu tiên miễn phí.</p>'));
+assert.ok(html.includes(`<meta property="og:title" content="${title}" />`));
+assert.ok(html.includes(`<meta property="og:description" content="${description}" />`));
+assert.ok(html.includes('<h1 id="vietnam-heading">Học tiếng Anh 1 kèm 1, chọn giáo viên phù hợp với bạn.</h1>'));
+assert.ok(html.includes('<p class="lead">Học trực tuyến với giáo viên người Anh hoặc người Việt. Buổi học đầu tiên miễn phí.</p>'));
 for (const text of [
   'Cho học sinh', 'Giao tiếp tự tin, ngữ pháp và từ vựng, bám sát chương trình ở trường.',
   'Luyện thi IELTS', 'Speaking, Writing, Reading và Listening, luyện đề với nhận xét chi tiết.',
   'Cho người đi làm', 'Tiếng Anh giao tiếp và công việc: họp, email, thuyết trình.',
-  'Cách học', 'Buổi đầu miễn phí: thầy Aaron đánh giá trình độ và mục tiêu của học viên.',
+  'Cách học', 'Buổi đầu miễn phí: giáo viên đánh giá trình độ và mục tiêu của học viên.',
   'Học 1 kèm 1 trực tuyến, vào buổi tối và cuối tuần theo giờ Việt Nam.',
   'Báo cáo hằng tuần: đã học được gì và bước tiếp theo là gì.',
   '650.000đ / giờ', 'Buổi học đầu tiên miễn phí.',
@@ -35,8 +39,8 @@ for (const [, attrs, content] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/sc
   assert.match(attrs, /\bsrc="[^"]+"/);
   assert.equal(content.trim(), '');
 }
-for (const [, file] of html.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^"]*)?"/g)) {
-  if (/\.(?:css|js|png|jpeg)$/.test(file)) await access(new URL(file, root));
+for (const [, file] of markup.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^"]*)?"/g)) {
+  if (/\.(?:css|js|png|jpe?g)$/.test(file)) await access(new URL(file, root));
 }
 const header = source => source.match(/<header>[\s\S]*?<\/header>/)[0];
 assert.equal(header(html).replaceAll('Đăng ký học thử', 'Book a free trial'), header(contact), 'Shared menu, theme toggle and local trial CTA');
@@ -45,11 +49,29 @@ assert.equal(footer(html), footer(contact));
 const endpoint = source => source.match(/data-form-endpoint="([^"]+)"/)[1];
 assert.equal(endpoint(html), endpoint(contact));
 const team = await read('team.html');
-const portrait = source => source.match(/<span class="framework-portrait-frame framework-portrait-frame--aaron">([\s\S]*?)<\/span>/)[1];
-assert.equal(portrait(html).replace('Thầy Aaron Gelsthorpe', 'Aaron Gelsthorpe'), portrait(team).replace(' loading="lazy"', ''));
+const portrait = (source, teacher) => source.match(new RegExp(`<span class="framework-portrait-frame framework-portrait-frame--${teacher}">([\\s\\S]*?)<\\/span>`))[1];
+assert.equal(portrait(markup, 'aaron').replace('Thầy Aaron Gelsthorpe', 'Aaron Gelsthorpe'), portrait(team, 'aaron').replace(' loading="lazy"', ''));
+assert.equal(portrait(markup, 'joshua').replace('Thầy Joshua Gordon Jones', 'Joshua Gordon Jones'), portrait(team, 'joshua').replace(' loading="lazy"', ''));
+const teachers = markup.match(/<section class="vietnam-teachers"[\s\S]*?<\/section>/)[0];
+assert.match(teachers, /aria-labelledby="teachers-heading"/);
+assert.ok(teachers.includes('<h2 id="teachers-heading">Chọn giáo viên</h2>'));
+const teacherCards = [...teachers.matchAll(/<article class="vietnam-teacher"[\s\S]*?<\/article>/g)].map(match => match[0]);
+assert.equal(teacherCards.length, 3);
+const teacherCopy = [
+  ['Thầy Aaron', 'Giáo viên bản ngữ đến từ Anh, có chứng chỉ CELTA. Bài bản, chuẩn mực và chất lượng.'],
+  ['Thầy Josh', 'Người sáng lập Toucan Learn. Thầy hiểu ngữ âm tiếng Việt, nên giúp bạn sửa phát âm từ gốc.'],
+  ['Cô Như', 'Người Việt, IELTS 7.0. Cô giải thích bằng tiếng Việt và gỡ những lỗi phát âm, ngữ pháp mà người Việt hay gặp.']
+];
+teacherCards.forEach((card, index) => {
+  assert.ok(card.includes(`>${teacherCopy[index][0]}</h3>`), 'Teacher order and name');
+  assert.ok(card.includes(`<p>${teacherCopy[index][1]}</p>`), 'Exact teacher copy');
+});
+assert.match(teacherCards[2], /<span class="framework-portrait-placeholder" aria-hidden="true">N<\/span>/);
+assert.doesNotMatch(teacherCards[2], /<img\b/);
+assert.match(html, /<!--[^]*replace the next line with: <span class="framework-portrait-frame framework-portrait-frame--photo"><img class="framework-portrait" src="assets\/team\/nhu-portrait\.jpg" alt="Cô Như" width="900" height="1200" decoding="async" \/><\/span> -->/);
 assert.equal((html.match(/class="vietnam-card"/g) || []).length, 3);
 assert.equal((html.match(/<li>Buổi đầu|<li>Học 1|<li>Báo cáo/g) || []).length, 3);
-const ids = [...html.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
+const ids = [...markup.matchAll(/\bid="([^"]+)"/g)].map(match => match[1]);
 assert.equal(ids.length, new Set(ids).size);
 for (const [, target] of html.matchAll(/\bfor="([^"]+)"/g)) assert.ok(ids.includes(target), target);
 for (const [, targets] of html.matchAll(/\baria-(?:labelledby|describedby)="([^"]+)"/g)) {
@@ -75,6 +97,11 @@ for (const route of ['hoc-tieng-anh', 'hoc-tieng-anh.html']) {
 }
 
 const formMarkup = html.match(/<form\b[\s\S]*?<\/form>/)[0];
+assert.ok(formMarkup.includes('<label for="teacher">Giáo viên mong muốn</label>'));
+const teacherSelect = formMarkup.match(/<select id="teacher"[^>]*>[\s\S]*?<\/select>/)[0];
+assert.deepEqual([...teacherSelect.matchAll(/<option value="([^"]*)">([^<]*)<\/option>/g)].map(([, value, label]) => [value, label]), teacherChoices.map(choice => [choice, choice]));
+assert.ok(formMarkup.indexOf('id="teacher"') > formMarkup.indexOf('id="learner"'), 'Teacher choice follows learner');
+assert.ok(formMarkup.indexOf('id="teacher"') < formMarkup.indexOf('id="age-year"'), 'Teacher choice precedes age');
 const attributes = tag => Object.fromEntries([...tag.matchAll(/([\w-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value]));
 const successText = 'Cảm ơn bạn! Chúng tôi sẽ liên hệ trong vòng 24 giờ.';
 const errorText = 'Chưa gửi được. Vui lòng thử lại hoặc email cho chúng tôi.';
@@ -106,9 +133,11 @@ function setup({ result = 'success', pending = false, formEndpoint = endpoint(ht
     append(...nodes) { this.children.push(...nodes); this.textContent += nodes.map(node => typeof node === 'string' ? node : node.textContent).join(''); }
     focus() { document.activeElement = this; }
   }
-  const inputs = [...formMarkup.matchAll(/<(input|textarea|select)\b([^>]*?)(?:\/>|>)/g)].map(([, tag, attrs]) => {
+  const inputs = [...formMarkup.matchAll(/<(input|textarea|select)\b([^>]*?)(?:\/>|>)/g)].map(match => {
+    const [, tag, attrs] = match;
     const parsed = attributes(attrs);
-    const control = new Node(parsed, parsed.value || (tag === 'select' ? 'Học sinh' : ''));
+    const firstOption = tag === 'select' ? formMarkup.slice(match.index + match[0].length).match(/<option\b[^>]*value="([^"]*)"/)[1] : '';
+    const control = new Node(parsed, parsed.value ?? firstOption);
     control.required = /\brequired\b/.test(attrs);
     return control;
   });
@@ -161,8 +190,9 @@ function setup({ result = 'success', pending = false, formEndpoint = endpoint(ht
     submit: () => form.emit('submit'), resolve: () => resolveFetch(), advance: ms => { now += ms; } };
 }
 
-for (const learner of ['Học sinh', 'Luyện thi IELTS', 'Người đi làm']) {
+for (const learner of ['Học sinh', 'Luyện thi IELTS', 'Người đi làm']) for (const teacher of teacherChoices) {
   const page = setup(); page.valid(); page.set('learner', learner);
+  page.set('teacher', teacher);
   page.set('traffic-source', 'utm-source-that-must-not-override');
   page.set('traffic-medium', 'zalo'); page.set('campaign-name', 'autumn');
   await page.submit();
@@ -183,7 +213,7 @@ for (const learner of ['Học sinh', 'Luyện thi IELTS', 'Người đi làm']) 
     'Traffic source': 'vietnam-page', 'Traffic medium': 'zalo', 'Campaign name': 'autumn', website: '',
     'Contact name': 'Nguyễn An', email: 'test@example.invalid', Learner: learner === 'Học sinh' ? 'child' : 'adult',
     'Age or school year': 'Lớp 8',
-    'Support requested': `Subject: English (Vietnam)\nHọc viên là: ${learner}\nSố điện thoại / Zalo: +84 912 345 678\nGiao tiếp tự tin.`
+    'Support requested': `Subject: English (Vietnam)\nHọc viên là: ${learner}\nGiáo viên mong muốn: ${teacher}\nSố điện thoại / Zalo: +84 912 345 678\nGiao tiếp tự tin.`
   });
   assert.equal(page.nodes.get('form-message').textContent, successText);
   assert.equal(page.nodes.get('form-message').getAttribute('role'), 'status');
@@ -268,5 +298,7 @@ for (const protection of ['honeypot', 'too-fast', 'future', 'missing-time']) {
   const page = setup(); page.valid();
   page.set('phone', ''); page.set('age-year', ''); page.set('support-needed', '');
   await page.submit(); assert.equal(page.requests.length, 1, 'Only name and email are required');
+  assert.equal(page.requests[0].body.get('Support requested'), `Subject: English (Vietnam)\nHọc viên là: Học sinh\nGiáo viên mong muốn: ${teacherChoices[0]}\n`, 'The default advice choice is included without a phone number');
+  assert.equal(page.requests[0].body.has('Preferred teacher'), false, 'Teacher choice is sent only within the message');
 }
-console.log('PASS: Vietnamese copy, shared assets/CSP/navigation, both clean routes, tracking, payloads, validation, spam guards, duplicate protection, timeout, success and retry states. Live Apps Script acceptance and layout remain unverified.');
+console.log('PASS: Vietnamese copy, three teacher cards/portraits, teacher choices in message-only payloads, shared assets/CSP/navigation, both clean routes, tracking, validation, spam guards, duplicate protection, timeout, success and retry states. Live Apps Script acceptance and layout remain unverified.');

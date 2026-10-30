@@ -165,5 +165,5 @@ for (const outcome of ['network', 'timeout', 'http-error', 'rejected']) {
   assert.equal(page.focused, 'form-message');
   if (outcome === 'timeout') assert.equal(page.requests[0].signal.aborted, true);
 }
-assert.equal(await read('hoc-tieng-anh.js'), baseline('hoc-tieng-anh.js'), 'Vietnamese form stays separate and unchanged');
+assert.equal(await read('hoc-tieng-anh.js'), execFileSync('git', ['show', '330fef9:hoc-tieng-anh.js'], { cwd: root, encoding: 'utf8' }), 'Vietnamese form stays separate (owner-approved 30 Oct version with the SEN option)');
 console.log('PASS: Contact payload compatibility, combined message limits, UK/international phones, uncertain-send alternatives, accessibility, CSP and requested copy. Browser layout and server deployment unverified.');

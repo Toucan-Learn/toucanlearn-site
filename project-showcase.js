@@ -7,12 +7,12 @@ import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 export const projects = [
   { id: 'football', name: 'Sports journalism', label: 'English · Journalism', heading: 'Football newspaper', learning: 'Getting a discouraged student excited to practise English through his interests and insight.', result: 'His own growing sports journalism website, full of his previews, analysis and reports.', poster: 'assets/projects/football-home{size}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/football-section{size}.webp?v=20261030-forecast-1', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
   { id: 'darty', name: 'DARTY', label: 'English · Game design', heading: 'DARTY (football game)', learning: 'Getting an avoidant learner excited to practise writing clear, precise instructions.', result: 'A playable 3D football game built from his written requests: he directs, we code.', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
-  { id: 'drinks', name: 'Drink design', label: 'SEN & English', heading: 'Drink design', learning: 'A struggling SEN student regains his creative and working flow designing drinks.', result: 'A growing collection of drinks brands, from his sketches, label designs and slogans into 3D renders.', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
+  { id: 'drinks', name: 'Drink design', label: 'SEN & English', heading: 'Drink design', learning: 'A struggling SEN student regains his creative and working flow designing drinks.', result: 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.', poster: 'assets/projects/drinks/skids/poster.webp?v=20261029-condensation-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
   ] },
-  { id: 'piano', name: 'Piano', label: 'SEN · Music brain breaks', heading: 'Toucan piano', learning: 'A tool for a student, a few minutes at a time for productive brain breaks.', result: 'A custom keyboard, songs they can request and learn to play, and a fresh head for the next task.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
+  { id: 'piano', name: 'Piano', label: 'SEN · Music brain breaks', heading: 'Toucan piano', learning: 'A tool for a student, a few minutes at a time for productive brain breaks.', result: 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
@@ -63,7 +63,6 @@ const pianoMarkup = `<div class="piano-world">
             </button>
             <div class="piano-panel" id="hero-keyboard" role="group" aria-label="Piano keyboard" aria-hidden="true" inert>
               <div class="piano-panel-inner">
-                <p class="piano-hint">Play with your keyboard: bottom rows for low notes, top rows for high notes.</p>
                 <div class="piano-song-controls">
                   <p class="piano-credit" aria-live="polite" aria-atomic="true"></p>
                   <button class="piano-next" type="button">Next song</button>

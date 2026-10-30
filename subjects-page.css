@@ -132,3 +132,7 @@ body.subjects-page .framework-panels .photo-cell p { margin: 0; font-size: .95re
   body.subjects-page.cell-art-page .framework-panels .learning-subject-grid > .photo-cell { grid-template-columns: minmax(0, 1fr); }
   body.subjects-page.cell-art-page .framework-panels .photo-cell .picture-cell-media { min-height: 0; aspect-ratio: 16 / 9; border-radius: 15px 15px 0 0; }
 }
+/* Owner, 30 Oct: the panel CTA stands out as the site's cream button on every dark subject panel. */
+body.subjects-page .framework-panels .learning-links > .subject-cta { border-color: transparent; background: #f3ece2; color: #0b3f51; box-shadow: 0 6px 18px #00000033; }
+body.subjects-page .framework-panels .learning-links > .subject-cta:hover { background: #fffaf3; color: #0b3f51; }
+body.subjects-page .framework-panels .learning-links > .subject-cta:focus-visible { outline: 3px solid #f2a57a; outline-offset: 3px; }

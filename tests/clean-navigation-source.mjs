@@ -21,7 +21,7 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   assert.doesNotMatch(html, /href="index\.html(?:#|")/);
   assert.doesNotMatch(html, /href="contact\.html\?/);
   for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'project-showcase.js' ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : token, `${file}: ${script} cache token`);
-  if (file === 'contact.html') {
+  if (['contact.html', 'hoc-tieng-anh.html'].includes(file)) {
     assert(html.indexOf('src="campaigns.js') < html.indexOf('src="menu.js'), `${file}: capture campaigns before URL cleanup`);
     assert(html.indexOf('src="campaigns.js') < html.indexOf('</head>'), `${file}: campaign capture runs before the form is parsed`);
   }

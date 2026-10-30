@@ -336,3 +336,5 @@ body.cell-art-page.approach-page #where-we-teach { --sky-pos: 92% 78%; }
 @media screen and (min-width: 1000px) and (max-height: 740px) {
   body.cell-art-page[data-page-frame] .framework-panels { padding-block: 10px; }
 }
+/* Owner, 30 Oct: the Children exams panel gained a CTA; slightly shorter art keeps it on one laptop screen. */
+@media (min-width: 760px) { body.children-page.cell-art-page #qualifications .qualification-art { height: clamp(120px, 20vh, 225px); } }

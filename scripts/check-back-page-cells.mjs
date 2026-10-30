@@ -76,6 +76,8 @@ for (const file of files) {
     const where = source => source.match(/<section id="where-we-teach"[\s\S]*?<\/section>/)?.[0];
     // Owner, 29 Oct: only the header changes (no blue line; the intro sits in a swash cell).
     const whereHead = section => section
+      // Owner, 30 Oct: every page promises weekly reports.
+      .replace('<p>The same free first session and weekly written reports.</p>', '<p>The same free first session and a written report after every lesson.</p>')
       .replace('with a tutor matched to you wherever you live.</p>', 'with a tutor matched to you wherever you live in the UK.</p>')
       .replace('<div class="section-head"><h2 id="where-heading">Where we teach</h2><p class="approach-swash">One-to-one lessons online wherever you live, with in-person sessions in selected areas, subject to tutor availability.</p></div>',
         '<div class="section-head"><div class="eyebrow">Online and in person</div><h2 id="where-heading">Where we teach</h2><p>One-to-one lessons online across the UK, with in-person sessions in selected areas, subject to tutor availability.</p></div>');

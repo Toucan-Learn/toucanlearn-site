@@ -174,12 +174,12 @@ body.cell-art-page #getting-started .picture-cell-copy { align-self: center; pad
 
 /* Approach: shared sky subheaders and compact, evenly aligned teaching cards.
    All selectors stay inside the three requested panels. */
-body.cell-art-page.approach-page .framework-panels :is(#steps-to-success, #our-lessons, #weekly-reports) .approach-swash {
+body.cell-art-page.approach-page .framework-panels :is(#steps-to-success, #our-lessons, #weekly-reports, #where-we-teach) .approach-swash {
   padding: 12px 16px;
   border-radius: 14px;
   color: #fff8ea;
-  background: linear-gradient(120deg, #361329ed, #49234bc9 55%, #103f4de6),
-    #361329 url("assets/loading-pixel-sky.png") center / cover;
+  background: var(--sky-tint),
+    #361329 url("assets/loading-pixel-sky.png") var(--sky-pos, center) / cover;
   box-shadow: inset 0 0 0 1px #e9bcd33d;
 }
 body.cell-art-page.approach-page #steps-to-success .picture-cell {
@@ -240,7 +240,7 @@ body.cell-art-page.approach-page #weekly-reports .report-example { margin-top: 0
   body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid > .picture-cell {
     grid-template-rows: minmax(clamp(95px, 16vh, 144px), 1fr) auto;
   }
-  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-media { height: auto; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-media { height: clamp(120px, 27vh, 210px); }
   body.cell-art-page.approach-page[data-page-frame] #our-lessons .framework-page-controls {
     grid-column: 2; grid-row: 3; align-self: center; margin: 0; padding: 0; gap: 12px;
   }
@@ -271,12 +271,64 @@ body.cell-art-page.approach-page #weekly-reports .report-example { margin-top: 0
   }
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) body.cell-art-page.approach-page #steps-to-success .picture-cell {
-    --heading: #f5f0e6; --ink: #f5f0e6; --orange-text: #ffb486; background: #294e46;
-  }
   :root:not([data-theme="light"]) body.cell-art-page.approach-page #weekly-reports .report-parts strong { color: #f1bfd8; }
 }
-:root[data-theme="dark"] body.cell-art-page.approach-page #steps-to-success .picture-cell {
-  --heading: #f5f0e6; --ink: #f5f0e6; --orange-text: #ffb486; background: #294e46;
-}
 :root[data-theme="dark"] body.cell-art-page.approach-page #weekly-reports .report-parts strong { color: #f1bfd8; }
+/* Owner, 29 Oct: the swash and the cells under it are windows onto one shared
+   pixel sky, so together they read as a single crop. The framed page doesn't
+   scroll on laptops, so the sky can sit fixed to the window. */
+@media screen and (min-width: 1000px) {
+  body.cell-art-page.approach-page[data-page-frame] :is(#our-lessons, #steps-to-success) :is(.approach-swash, .picture-cell),
+  body.cell-art-page.approach-page[data-page-frame] #where-we-teach .approach-swash {
+    --heading: #fff8ea;
+    --ink: #f3e9df;
+    --orange-text: #f2b48c;
+    color: var(--ink);
+    background: var(--sky-tint) fixed, #361329 url("assets/loading-pixel-sky.png") var(--sky-pos, center) / cover fixed;
+    box-shadow: inset 0 0 0 1px #e9bcd33d;
+  }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-media { margin: 8px 8px 0; border-radius: 10px; background: #f0e9db; overflow: hidden; }
+  body.cell-art-page.approach-page[data-page-frame] :is(#our-lessons, #steps-to-success) .picture-cell :is(h3, h4) { color: var(--heading); }
+}
+/* Owner, 29 Oct: each panel title sits in its own cell over the same sky as the
+   swash beneath it, so title and swash read as one crop. */
+body.cell-art-page.approach-page .framework-panels :is(#steps-to-success, #our-lessons, #weekly-reports, #where-we-teach) .section-head > h2 {
+  margin-bottom: 6px;
+  padding: 4px 14px;
+  border-radius: 14px;
+  color: #fff8ea;
+  background: var(--sky-tint), #361329 url("assets/loading-pixel-sky.png") var(--sky-pos, center) / cover;
+  box-shadow: inset 0 0 0 1px #e9bcd33d;
+}
+@media screen and (min-width: 1000px) {
+  body.cell-art-page.approach-page[data-page-frame] .framework-panels :is(#steps-to-success, #our-lessons, #weekly-reports, #where-we-teach) .section-head > h2,
+  body.cell-art-page.approach-page[data-page-frame] .framework-panels :is(#weekly-reports) .approach-swash {
+    background: var(--sky-tint) fixed, #361329 url("assets/loading-pixel-sky.png") var(--sky-pos, center) / cover fixed;
+  }
+}
+/* Owner, 29 Oct: Our lessons takes Getting started's neater 2x2 layout, art left and copy right. */
+@media screen and (min-width: 1000px) {
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 1fr; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid > .picture-cell { display: grid; grid-template-columns: 38% minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-media { grid-area: 1 / 1; height: auto; min-height: 110px; margin: 10px 0 10px 10px; border-radius: 12px; }
+  body.cell-art-page.approach-page[data-page-frame] #our-lessons .lesson-stage-grid .picture-cell-copy { grid-area: 1 / 2; align-self: center; padding: 12px; }
+}
+/* Owner, 29 Oct: one sky tint, darker at night, and each panel takes its own part of the sky. */
+body.cell-art-page.approach-page { --sky-tint: linear-gradient(120deg, #361329ed, #49234bc9 55%, #103f4de6); }
+body.cell-art-page.approach-page #steps-to-success { --sky-pos: 12% 18%; }
+body.cell-art-page.approach-page #our-lessons { --sky-pos: 82% 30%; }
+body.cell-art-page.approach-page #weekly-reports { --sky-pos: 30% 88%; }
+body.cell-art-page.approach-page #where-we-teach { --sky-pos: 92% 78%; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.cell-art-page.approach-page { --sky-tint: linear-gradient(120deg, #1c0915f4, #2a1230e6 55%, #072630f0); }
+}
+:root[data-theme="dark"] body.cell-art-page.approach-page { --sky-tint: linear-gradient(120deg, #1c0915f4, #2a1230e6 55%, #072630f0); }
+/* At night the report cards turn blue and keep the plum headers of his report emails. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body.cell-art-page.approach-page #weekly-reports .report-parts > li { color: #12303a; background: #cfdee7; }
+  :root:not([data-theme="light"]) body.cell-art-page.approach-page #weekly-reports .report-parts strong { color: #4c1130; }
+}
+:root[data-theme="dark"] body.cell-art-page.approach-page #weekly-reports .report-parts > li { color: #12303a; background: #cfdee7; }
+:root[data-theme="dark"] body.cell-art-page.approach-page #weekly-reports .report-parts strong { color: #4c1130; }
+:root[data-theme="dark"] .learning-page .framework-shell .approach-report .report-example { color: #294c59; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .learning-page .framework-shell .approach-report .report-example { color: #294c59; } }

@@ -26,8 +26,12 @@ function approvedCopy(file) {
     ['Sessions can combine focused skill-building, exam preparation and meaningful longer-term projects.', 'Combine skill-building, exam preparation and meaningful projects.'],
     ['Your tutor writes a weekly lesson report, and our founder reads it. We review what is working and adjust the learner’s plan.', 'Your tutor reports each week, helping us review and adjust your plan. Book a free first session'],
     ['Talk about the week. Typing the answers can double as writing practice.', 'Catch up on the week, with typing as writing practice.'],
-    ['choose a Functional Skills practice task. Weekly reports', 'choose a Functional Skills practice task. Find your lesson rhythm Weekly reports'],
+    ['choose a Functional Skills practice task. Weekly reports', 'choose a Functional Skills practice task. Try a free first lesson Weekly reports'],
     ["we adjust the plan each week. Online and in person", "we adjust the plan each week. Start with a free session Online and in person"],
+    // Owner, 29 Oct: the third report heading is the tutor's feedback, in his own report style.
+    ["What we're still building", "We'll keep working at"],
+    // Owner, 29 Oct: Where we teach drops its blue line; its intro sits in a swash cell.
+    ['Online and in person Where we teach', 'Where we teach'],
   ];
   for (const [from, to] of changes) {
     assert.equal(copy.split(from).length - 1, 1, `Approved Approach copy: ${from}`);
@@ -55,7 +59,11 @@ for (const file of files) {
   }
   if (file === 'approach.html') {
     const where = source => source.match(/<section id="where-we-teach"[\s\S]*?<\/section>/)?.[0];
-    assert.equal(where(html), where(original(file, copyBefore)), 'Where we teach: preserve the entire section exactly');
+    // Owner, 29 Oct: only the header changes (no blue line; the intro sits in a swash cell).
+    const whereHead = section => section
+      .replace('<div class="section-head"><h2 id="where-heading">Where we teach</h2><p class="approach-swash">One-to-one lessons online across the UK, with in-person sessions in selected areas, subject to tutor availability.</p></div>',
+        '<div class="section-head"><div class="eyebrow">Online and in person</div><h2 id="where-heading">Where we teach</h2><p>One-to-one lessons online across the UK, with in-person sessions in selected areas, subject to tutor availability.</p></div>');
+    assert.equal(whereHead(where(html)), where(original(file, copyBefore)), 'Where we teach: preserve the rest of the section exactly');
     const panels = ['steps-to-success', 'our-lessons', 'weekly-reports'];
     for (const id of panels) {
       const panel = html.match(new RegExp(`<section id="${id}"[\\s\\S]*?<\\/section>`))?.[0];
@@ -159,7 +167,8 @@ async function browserChecks() {
           if (metrics.steps.length) check(metrics.steps.length === 4, `${state}: expected all four steps`);
           for (const [index, step] of metrics.steps.entries()) {
             check(step.imageAreaRatio >= .35, `${state} step ${index + 1}: picture ${(step.imageAreaRatio * 100).toFixed(1)}% < 35%`);
-            check(step.emptyBelowRatio <= .25, `${state} step ${index + 1}: empty space below text ${(step.emptyBelowRatio * 100).toFixed(1)}% > 25%`);
+            // Owner, 29 Oct: the copy sits centred against its art, not hugging the bottom.
+            if (step.sideBySide) check(step.centreOffset <= .08, `${state} step ${index + 1}: copy is ${(step.centreOffset * 100).toFixed(1)}% off centre`);
             check(!step.overlap, `${state} step ${index + 1}: picture overlaps copy`);
           }
           if (view.width >= 1000) check(metrics.frame.bottom <= view.height + 1 && metrics.frame.top >= metrics.headerBottom - 1, `${state}: frame outside ${view.height}px screen (${metrics.frame.top}–${metrics.frame.bottom})`);
@@ -264,10 +273,12 @@ function measure(panelId) {
     range.selectNodeContents(paragraph);
     const lines = [...range.getClientRects()];
     const textBottom = Math.max(...lines.map(line => line.bottom));
+    const heading = card.querySelector('h3, h4');
+    const textTop = heading ? rect(heading).top : Math.min(...lines.map(line => line.top));
     const imageWidth = Math.max(0, Math.min(image.right, box.right) - Math.max(image.left, box.left));
     const imageHeight = Math.max(0, Math.min(image.bottom, box.bottom) - Math.max(image.top, box.top));
     const overlap = Math.min(image.right, text.right) - Math.max(image.left, text.left) > 1 && Math.min(image.bottom, text.bottom) - Math.max(image.top, text.top) > 1;
-    return { card: box, image, imageAreaRatio: imageWidth * imageHeight / (box.width * box.height), emptyBelowRatio: Math.max(0, box.bottom - textBottom) / box.height, overlap };
+    return { card: box, image, imageAreaRatio: imageWidth * imageHeight / (box.width * box.height), centreOffset: Math.abs((textTop + textBottom) / 2 - (box.top + box.bottom) / 2) / box.height, sideBySide: image.right <= text.left + 1, overlap };
   });
   const themeAttribute = document.documentElement.getAttribute('data-theme');
   return {

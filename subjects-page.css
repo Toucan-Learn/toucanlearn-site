@@ -108,3 +108,13 @@ body.subjects-page #send-support { --subject-tint: linear-gradient(120deg, #0f21
 /* Owner, 30 Oct: every subject panel ends with a proper CTA beside its links. */
 body.subjects-page .framework-panels > [data-content-panel] > .learning-links { align-items: center; }
 body.subjects-page .framework-panels .learning-links > .subject-cta { min-height: 44px; margin-right: 8px; text-decoration: none; line-height: 1.3; }
+/* Owner, 30 Oct: Art and DT each get a photo card, like Where we teach. */
+body.subjects-page #art .subject-photo-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-block: 12px 4px; }
+body.subjects-page #art .subject-photo-card { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+body.subjects-page #art .subject-photo { display: block; width: 100%; height: clamp(120px, 27vh, 240px); max-height: none; object-fit: cover; border-radius: 0; }
+body.subjects-page #art .subject-photo--art { object-position: center 40%; }
+body.subjects-page #art .subject-photo--dt { object-position: center 50%; }
+body.subjects-page #art .subject-photo-body { padding: 12px 14px; }
+body.subjects-page #art .subject-photo-body h3 { margin: 0 0 6px; }
+body.subjects-page #art .subject-photo-body p { margin: 0 0 6px; }
+@media (max-width: 760px) { body.subjects-page #art .subject-photo-cards { grid-template-columns: minmax(0, 1fr); } }

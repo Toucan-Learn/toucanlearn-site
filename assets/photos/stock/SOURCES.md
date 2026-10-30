@@ -27,3 +27,15 @@ confirm the crops, absence of prominent logos/text and the actual JPEG sizes.
 - Intended use: illustrative stock photo — not Toucan clients.
 - Download date: pending; source selected 28 October 2026.
 - Licence: [Pexels Licence](https://www.pexels.com/license/), free commercial use; attribution not required. No implied endorsement by the people or brands pictured.
+
+## art-studio.jpg (subjects, Art & DT)
+
+- Photo: [Two women engaged in studio art lesson](https://www.pexels.com/photo/two-women-engaged-in-studio-art-lesson-36715332/), Pexels.
+- Downloaded 30 October 2026 at 1280 × 720. Owner's pick (A5).
+- Licence: [Pexels Licence](https://www.pexels.com/license/), free commercial use; attribution not required. Illustrative only, not Toucan clients.
+
+## dt-workshop.jpg (subjects, Art & DT)
+
+- Photo: [Young woman in headphones crafting with cardboard for a school project](https://www.pexels.com/photo/7949392/), Pexels.
+- Downloaded 30 October 2026 at 1280 × 853. Owner's pick (D2).
+- Licence: [Pexels Licence](https://www.pexels.com/license/), free commercial use; attribution not required. Illustrative only, not Toucan clients.

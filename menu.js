@@ -19,7 +19,7 @@
   });
 })();
 
-// Keep fragment navigation in the page. Defer arrival cleanup until all deferred/module
+// Keep panel fragments shareable. Defer arrival cleanup until all deferred/module
 // viewers have read the deep link and the original browser jump has settled.
 (() => {
   // Clean addresses: /index.html becomes /, and /subjects.html becomes /subjects (Pages serves both).
@@ -27,11 +27,11 @@
   const clean = () => {
     const url = new URL(location.href);
     url.pathname = path();
-    url.hash = '';
+    if (!targetFor(url.hash)?.matches('[data-content-panel]')) url.hash = '';
     // Attribution has already been captured; preserve the site's review/test overrides.
     const overrides = ['project', 'sky', 'reviewart', 'song', 'kids', 'adults', 'step1', 'step2', 'step3'];
     [...url.searchParams.keys()].forEach(key => { if (!overrides.includes(key)) url.searchParams.delete(key); });
-    if (url.href !== location.href) history.replaceState(history.state, '', url.pathname + url.search);
+    if (url.href !== location.href) history.replaceState(history.state, '', url.pathname + url.search + url.hash);
   };
   if (path() !== location.pathname) history.replaceState(history.state, '', path() + location.search + location.hash);
   const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -74,6 +74,8 @@
     if (!target || target.closest('[data-content-panel]')) return;
     event.preventDefault();
     document.dispatchEvent(new CustomEvent('site:fragment', { detail: { target } }));
+    // Ordinary anchors still leave a clean address, even after a panel deep link.
+    history.replaceState(history.state, '', path() + location.search);
     align(target, calm.matches ? 'instant' : 'smooth');
     if (target !== document.body) {
       if (!target.hasAttribute('tabindex') && !target.matches('a, button, input, select, textarea')) target.setAttribute('tabindex', '-1');
@@ -81,7 +83,7 @@
     }
     clean();
   });
-  // Legacy hash/history entries still select their destination before being cleaned.
+  // Legacy hash/history entries select their destination before non-panel cleanup.
   const arrived = () => {
     const target = targetFor(location.hash);
     requestAnimationFrame(() => { align(target); clean(); });

@@ -1,0 +1,26 @@
+/* Ad landing pages: reuse the trial treatment inside the existing phone bar. */
+.nav > .phone-book { display: none; }
+
+@media (max-width: 767px) {
+  .nav > .phone-book {
+    display: inline-flex;
+    flex: 0 0 auto;
+    width: auto;
+    height: 44px;
+    padding: 8px 12px;
+    font-size: .875rem;
+    line-height: 1;
+    white-space: nowrap;
+  }
+}
+
+@media (max-width: 620px) {
+  .nav.nav--phone-book { gap: 8px; }
+  .nav--phone-book .logo { gap: 6px; }
+  .nav--phone-book .mobile-home { font-size: .875rem; }
+  .nav--phone-book .mobile-menu summary { gap: 6px; padding-inline: 10px; }
+}
+
+@media (max-width: 360px) {
+  .nav--phone-book .mobile-home { display: none; }
+}

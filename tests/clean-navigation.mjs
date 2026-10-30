@@ -31,8 +31,14 @@ async function context(viewport) {
 }
 async function clean(page, pathname) {
   // 29 Oct: pages running menu.js also drop .html from the address.
-  await page.waitForFunction(() => !location.hash && !location.pathname.endsWith('/index.html')
-    && !(location.pathname.endsWith('.html') && document.querySelector('script[src^="menu.js"]')));
+  await page.waitForFunction(() => {
+    let panelHash = false;
+    try { panelHash = !!location.hash && !!document.getElementById(decodeURIComponent(location.hash.slice(1)))?.matches('[data-content-panel]'); } catch {}
+    const overrides = ['project', 'sky', 'reviewart', 'song', 'kids', 'adults', 'step1', 'step2', 'step3'];
+    return (!location.hash || panelHash) && !location.pathname.endsWith('/index.html')
+      && !(location.pathname.endsWith('.html') && document.querySelector('script[src^="menu.js"]'))
+      && [...new URLSearchParams(location.search).keys()].every(key => overrides.includes(key));
+  });
   const url = new URL(page.url());
   if (pathname) assert.equal(url.pathname, new URL(pathname, base).pathname.replace(/\.html$/, ''));
   checks++;
@@ -42,7 +48,7 @@ async function open(page, route) {
   await clean(page);
 }
 try {
-  for (const viewport of [{ width: 1440, height: 900 }, { width: 390, height: 844 }]) {
+  for (const viewport of [{ width: 1440, height: 750 }, { width: 390, height: 844 }]) {
     const ctx = await context(viewport), page = await ctx.newPage();
     for (const file of (await readdir(root)).filter(file => file.endsWith('.html'))) {
       if (!(await readFile(path.join(root, file), 'utf8')).includes('<header')) continue;
@@ -55,6 +61,7 @@ try {
         const link = links.nth(index), id = (await link.getAttribute('href')).split('#')[1];
         await link.click(); await clean(page);
         assert.equal(await page.locator(`#${id}`).evaluate(panel => !panel.hidden && !panel.inert), true);
+        assert.equal(new URL(page.url()).hash, '#' + id);
         assert.equal(await page.evaluate(() => history.length), initial);
       }
       if (viewport.width < 1000) {
@@ -64,9 +71,29 @@ try {
         assert.equal(await page.locator('.mobile-menu summary').evaluate(summary => document.activeElement === summary), true);
       }
     }
-    for (const [route, panel] of [['children.html#learner-projects', 'learner-projects'], ['approach.html#online-sessions', 'where-we-teach'], ['subjects.html#science', 'science']]) {
+    for (const route of ['children', 'adults', 'subjects']) {
+      await open(page, route);
+      const book = page.locator('header .phone-book');
+      assert.equal(await book.isVisible(), viewport.width <= 767);
+      if (viewport.width <= 767) {
+        const bounds = await book.boundingBox(), bar = await page.locator('header').boundingBox();
+        const theme = await page.locator('header .theme-toggle').boundingBox(), menu = await page.locator('.mobile-menu summary').boundingBox();
+        assert(bounds.x >= theme.x + theme.width && bounds.x + bounds.width <= menu.x, 'Book sits between theme and Menu');
+        assert(bounds.y >= bar.y && bounds.y + bounds.height <= bar.y + bar.height && bounds.y + bounds.height < viewport.height);
+        assert.equal(Math.round(bar.height), 64, 'The phone header keeps its current height');
+        assert.equal(await book.getAttribute('href'), 'contact');
+      }
+    }
+    for (const [route, panel] of [['children.html#learner-projects', 'learner-projects'], ['approach.html#online-sessions', 'where-we-teach'], ['subjects.html#science', 'science'], ['subjects?utm_source=ad#maths', 'maths'], ['subjects#english', 'english'], ['subjects#send-support', 'send-support'], ['adults?utm_source=ad#qualifications', 'qualifications']]) {
       await open(page, route);
       assert.equal(await page.locator(`#${panel}`).evaluate(node => !node.closest('[data-content-panel]').hidden), true);
+      const exactPanel = route.split('#')[1] === panel;
+      assert.equal(new URL(page.url()).hash, exactPanel ? '#' + panel : '');
+      if (exactPanel) {
+        await page.reload({ waitUntil: 'load' }); await clean(page);
+        assert.equal(await page.locator(`#${panel}`).evaluate(node => !node.hidden && !node.inert), true);
+        assert.equal(new URL(page.url()).hash, '#' + panel);
+      }
       await page.evaluate(() => dispatchEvent(new PageTransitionEvent('pageshow', { persisted: true })));
       assert.equal(await page.locator(`#${panel}`).evaluate(node => !node.closest('[data-content-panel]').hidden), true);
     }
@@ -89,7 +116,7 @@ try {
     await page.goBack({ waitUntil: 'commit' }); await clean(page, 'children.html'); // bfcache restores fire no 'load'
     await page.goForward({ waitUntil: 'commit' }); await clean(page, './');
     await open(page, 'children.html?utm_source=test&utm_medium=site&utm_campaign=launch');
-    await page.locator('a[data-service="children"]:visible').first().click(); await clean(page, 'contact.html'); // the header CTA is hidden on phones
+    await page.locator('a[data-service="children"]:visible').first().click(); await clean(page, 'contact.html');
     assert.equal(new URL(page.url()).search, '');
     for (const [id, value] of [['campaign-source', 'children'], ['traffic-source', 'test'], ['traffic-medium', 'site'], ['campaign-name', 'launch']]) assert.equal(await page.locator('#' + id).inputValue(), value);
     for (const route of ['ielts.html', 'languages.html', 'in-person.html']) { await open(page, route); assert.equal(new URL(page.url()).search, ''); }

@@ -1,4 +1,4 @@
-// BEGIN ENQUIRY RULES (kept identical in contact.js and Code.gs)
+// BEGIN ENQUIRY RULES
 var EnquiryRules = (function () {
   var limits = {
     "Contact name": 120, "Learner": 5, "Age or school year": 40,
@@ -34,11 +34,11 @@ var EnquiryRules = (function () {
     if (data["Preferred format"] === "in-person") required("Town or postcode area", "Enter a town or postcode area.");
     choice("Reply method", ["email", "call", "text", "whatsapp"], "Choose how you would like us to reply.");
     if (data["Reply method"] === "email") required("email", "Enter your email address.");
-    if (["call", "text", "whatsapp"].indexOf(data["Reply method"]) !== -1) required("phone", "Enter your UK phone number.");
+    if (["call", "text", "whatsapp"].indexOf(data["Reply method"]) !== -1) required("phone", "Enter your phone number.");
     if (data.email && !/^[^\s@<>]+@[^\s@<>.]+(?:\.[^\s@<>.]+)+$/.test(data.email)) errors.email = "Enter a valid email address.";
     if (data.phone) {
       var phone = data.phone.replace(/[ ()-]/g, "");
-      if (!/^(?:0[1-9]\d{9}|\+44[1-9]\d{9})$/.test(phone)) errors.phone = "Enter a UK number, starting with 0 or +44.";
+      if (!/^\+?\d{7,15}$/.test(phone)) errors.phone = "Enter 7–15 digits, with an optional + and country code.";
     }
     if (!/^\d{13}$/.test(data.loaded_at || "") || Number(data.loaded_at) > now || now - Number(data.loaded_at) < 3000) {
       errors.loaded_at = "Please wait a few seconds, then send your enquiry.";
@@ -118,7 +118,10 @@ var EnquiryRules = (function () {
     const phone = document.createElement("a");
     phone.href = "tel:+447309639095";
     phone.textContent = "07309 639095";
-    formMessage.replaceChildren(message + " You can email ", email, " or call ", phone, ".");
+    const whatsapp = document.createElement("a");
+    whatsapp.href = "https://wa.me/447307045816";
+    whatsapp.textContent = "WhatsApp 07307 045816";
+    formMessage.replaceChildren(message + " You can email ", email, ", call ", phone, " or use ", whatsapp, ".");
     formMessage.classList.add("is-visible");
   }
   // The optional subject travels inside "Support requested", so the existing form backend needs no change.
@@ -135,7 +138,14 @@ var EnquiryRules = (function () {
     clearErrors();
     syncConditional();
     const body = new URLSearchParams(new FormData(form));
+    const sent = withSubjectInMessage(body);
     const result = EnquiryRules.validate(Object.fromEntries(body), Date.now());
+    const supportLimit = EnquiryRules.limits["Support requested"];
+    if ((sent.get("Support requested") || "").length > supportLimit) {
+      const prefixLength = (sent.get("Support requested") || "").length - (body.get("Support requested") || "").length;
+      result.ok = false;
+      result.errors["Support requested"] = "Please keep your message within " + (supportLimit - prefixLength) + " characters (1000 including the selected subject).";
+    }
     if (!result.ok) {
       showMessage("Please check your enquiry. " + Object.values(result.errors).join(" "));
       Object.keys(result.errors).forEach((key) => {
@@ -162,12 +172,12 @@ var EnquiryRules = (function () {
       const response = await fetch(formEndpoint, {
         method: "POST", credentials: "omit", redirect: "follow", cache: "no-store",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: withSubjectInMessage(body), signal: requestController.signal
+        body: sent, signal: requestController.signal
       });
       if (!response.ok || (await response.json()).ok !== true) throw new Error("Enquiry failed");
       window.location.assign("thank-you");
     } catch (error) {
-      showMessage("The enquiry could not be sent. Please try again.");
+      showMessage("Your enquiry may not have sent. Please contact us using one of these options.");
       formMessage.focus();
     } finally {
       window.clearTimeout(requestTimeout);

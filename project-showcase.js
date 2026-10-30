@@ -12,7 +12,7 @@ export const projects = [
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
   ] },
-  { id: 'piano', name: 'Piano', label: 'Music', heading: 'Toucan piano', learning: 'Music through play, with no pressure to get it right.', result: 'A piano anyone can play here, with songs to learn.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
+  { id: 'piano', name: 'Piano', label: 'Music · Brain breaks', heading: 'Toucan piano', learning: 'The keyboard, a few minutes at a time in our brain breaks.', result: 'Real songs they can play, and a fresh head for the next task.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261030-forecast-1', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261030-forecast-1', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
 // Only the children's manual carousel includes the text-led introduction.

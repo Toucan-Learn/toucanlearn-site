@@ -201,6 +201,8 @@ const withoutOwnerContent = html => html
   .replace(/<section class="homepage-section team-section"[\s\S]*?<\/section>/, '<!-- team section: owner-managed -->')
   // 30 Oct owner: trust pages added Terms and a sole-trader line to every footer.
   .replace(/<footer class="site-footer">[\s\S]*?<\/footer>/, '<!-- footer: owner-managed -->')
+  // 30 Oct owner: the in-person area is Oxfordshire, not Henley.
+  .replace(/Henley-on-Thames|Henley/g, 'Oxfordshire')
   // 29 Oct owner edits: text-only reviews (no autoplay/pause/art) and the showcase label's two corners.
   .replace(/<section class="homepage-section proof-section" id="reviews">[\s\S]*?<\/section>/, '<!-- reviews: owner-managed -->')
   .replace(/reviews-carousel\.js\?v=[^"]+/, 'reviews-carousel.js?v=TOKEN')
@@ -216,7 +218,7 @@ const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(h
   .replace("frame-src 'self' https://joshtoucanlearn.github.io;", "frame-src 'self';");
 assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the caption, showcase tokens, DARTY frame origin and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
-assert.equal(homeNavigationMarkup(heroCopy(after)), homeNavigationMarkup(heroCopy(before)), 'Homepage copy, buttons and benefits stay untouched');
+assert.equal(homeNavigationMarkup(heroCopy(after)), homeNavigationMarkup(heroCopy(before)).replace(/Henley-on-Thames|Henley/g, 'Oxfordshire'), 'Homepage copy, buttons and benefits stay untouched');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
 assert.equal(withoutOwnerContent(homeNavigationMarkup(belowHero(after))), withoutOwnerContent(homeNavigationMarkup(belowHero(before))), 'Homepage content below the hero (outside the owner-managed team section) is preserved through the URL migration');
 

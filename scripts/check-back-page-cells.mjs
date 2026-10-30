@@ -18,7 +18,8 @@ const csp = html => html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>
 // 30 Oct: the owner asked for every subject panel to be reworked (1817511), then Art & DT by level (e6c2404) and panel CTAs (692b636).
 const copyBase = { 'subjects.html': '1ebe50a', 'children.html': 'f837bd2', 'adults.html': '614ad05', 'approach.html': '614ad05' };
 function approvedCopy(file) {
-  let copy = words(original(file, copyBase[file] || copyBefore));
+  // Owner, 30 Oct: the in-person area is Oxfordshire, not Henley.
+  let copy = words(original(file, copyBase[file] || copyBefore)).replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');
   // Owner, 30 Oct: no "UK only" wording for online lessons.
   if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
   // A copyBase entry already contains every approved change below.
@@ -81,7 +82,7 @@ for (const file of files) {
       .replace('with a tutor matched to you wherever you live.</p>', 'with a tutor matched to you wherever you live in the UK.</p>')
       .replace('<div class="section-head"><h2 id="where-heading">Where we teach</h2><p class="approach-swash">One-to-one lessons online wherever you live, with in-person sessions in selected areas, subject to tutor availability.</p></div>',
         '<div class="section-head"><div class="eyebrow">Online and in person</div><h2 id="where-heading">Where we teach</h2><p>One-to-one lessons online across the UK, with in-person sessions in selected areas, subject to tutor availability.</p></div>');
-    assert.equal(whereHead(where(html)), where(original(file, copyBefore)), 'Where we teach: preserve the rest of the section exactly');
+    assert.equal(whereHead(where(html)), where(original(file, copyBefore)).replace(/Henley-on-Thames|Henley/g, 'Oxfordshire'), 'Where we teach: preserve the rest of the section exactly');
     const panels = ['steps-to-success', 'our-lessons', 'weekly-reports'];
     for (const id of panels) {
       const panel = html.match(new RegExp(`<section id="${id}"[\\s\\S]*?<\\/section>`))?.[0];

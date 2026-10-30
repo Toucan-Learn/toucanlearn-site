@@ -25,7 +25,9 @@ const expected = baseline('contact.html').replace(footer(baseline('contact.html'
   .replace('aria-describedby="support-needed-error"', 'aria-describedby="support-needed-privacy support-needed-error"')
   .replace('</textarea>', '</textarea>\n<small id="support-needed-privacy">' + help + '</small>')
   .replace('Use a UK number, starting with 0 or +44.', 'Use 7–15 digits; include + and the country code for international numbers.')
-  .replace('>WhatsApp us<', '>WhatsApp 07307 045816<');
+  .replace('>WhatsApp us<', '>WhatsApp 07307 045816<')
+  // Owner, 30 Oct: the in-person area is Oxfordshire, not Henley.
+  .replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');
 const untokened = page => page.replace(/\?v=[^"']+/g, '?v=T'); // stylesheet/script cache tokens change with every release
 // Owner, 30 Oct: the age field sits at the top of the details column, so choosing
 // "child" pushes Subject down instead of opening a gap beside the name. Compare

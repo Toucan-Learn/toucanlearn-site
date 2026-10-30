@@ -78,8 +78,9 @@
     const kind = body.get('Learner') || '';
     const teacher = body.get('Preferred teacher') || 'Chưa chắc, hãy tư vấn giúp tôi';
     const contact = body.get('phone') || '';
-    body.set('Learner', kind === 'Học sinh' ? 'child' : 'adult');
-    if (kind === 'Học sinh' && !body.get('Age or school year')) body.set('Age or school year', 'Chưa ghi');
+    const child = kind === 'Học sinh' || kind.includes('SEN');
+    body.set('Learner', child ? 'child' : 'adult');
+    if (child && !body.get('Age or school year')) body.set('Age or school year', 'Chưa ghi');
     body.delete('Subject');
     body.delete('Preferred teacher');
     body.delete('phone');

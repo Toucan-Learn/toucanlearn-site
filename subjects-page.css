@@ -136,3 +136,13 @@ body.subjects-page .framework-panels .photo-cell p { margin: 0; font-size: .95re
 body.subjects-page .framework-panels .learning-links > .subject-cta { border-color: transparent; background: #f3ece2; color: #0b3f51; box-shadow: 0 6px 18px #00000033; }
 body.subjects-page .framework-panels .learning-links > .subject-cta:hover { background: #fffaf3; color: #0b3f51; }
 body.subjects-page .framework-panels .learning-links > .subject-cta:focus-visible { outline: 3px solid #f2a57a; outline-offset: 3px; }
+/* Owner, 30 Oct: each panel's CTA text takes a deep shade of its own subject colour. */
+body.subjects-page #english { --cta-ink: #6b2a5e; }
+body.subjects-page #maths { --cta-ink: #0b5e5a; }
+body.subjects-page #science { --cta-ink: #1f5640; }
+body.subjects-page #languages { --cta-ink: #8a4b0b; }
+body.subjects-page #psychology { --cta-ink: #3b2f7a; }
+body.subjects-page #art { --cta-ink: #8a2450; }
+body.subjects-page #send-support { --cta-ink: #1d3a6b; }
+body.subjects-page .framework-panels .learning-links > .subject-cta,
+body.subjects-page .framework-panels .learning-links > .subject-cta:hover { color: var(--cta-ink, #0b3f51); font-weight: 800; }

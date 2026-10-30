@@ -30,10 +30,11 @@
 // Keep its internal pickups. Move only the loop-boundary pickup to the start.
 // Transpose the whole melody down one octave; never fold independent chunks.
 // Its noteBeats follows the published ties and attack onsets at a chosen 100 BPM.
-// Maple Leaf: upper-staff melody, bars 1-8, including bar 4's final Eb5 attack.
+// Maple Leaf: full first A strain, bars 1-16, first ending, upper-staff melody.
+// Keep bar 4's final Eb5 attack and hold the ties across bars 9-15.
 // Bar 7 crosses to the lower staff and is silent in this upper-staff excerpt.
 // Keep the published onset gaps at the existing 100 BPM practice pace; wrap
-// the opening sixteenth rest into the final gap for exactly eight 2/4 bars.
+// the opening sixteenth rest into the final gap for exactly sixteen 2/4 bars.
 // Both transcriptions and bar boundaries are in tests/fixtures/joplin-openings.json.
 // Sharp spellings are enharmonic MIDI names (e.g. G# = Ab, D# = Eb).
 // Provenance links above are comments; exported data has no runtime URLs.
@@ -142,7 +143,7 @@ export const songs = [
     "title": "Maple Leaf Rag",
     "composer": "Scott Joplin",
     "year": 1899,
-    "source": "Opening eight bars, upper-staff melody only (Mutopia-2011/11/13-23, maple.ly, bars 1-8). Bar 7's cross-staff lower-staff notes are omitted, with their time retained as silence. Tied continuations are held; bar 4's separate final D#5 attack is retained. C-flat and F-flat are spelled B and E. Original pitches G4-G#6; keyboard shifted up one octave. Published onset gaps at the existing chosen practice tempo, quarter note = 100. The opening sixteenth rest wraps into the final gap, making the loop exactly eight bars of 2/4 (16 quarter-note beats).",
+    "source": "Full first A strain, printed bars 1-16 (first ending), upper-staff melody only (Mutopia-2011/11/13-23, maple.ly and maple.mid, treble track 1, MIDI channel 1). Bar 7's cross-staff lower-staff notes are omitted, with their time retained as silence. Highest new pitch per onset; tied continuations are held, including the ties across bars 9-15. Bar 4's separate final D#5 attack is retained. C-flat and F-flat are spelled B and E. Original pitches G4-G#6; keyboard shifted up one octave. Published onset gaps at the existing chosen practice tempo, quarter note = 100. The opening sixteenth rest wraps into the final gap after the first-ending G#4 cadence, making the loop exactly sixteen bars of 2/4 (32 quarter-note beats).",
     "licence": "Public Domain",
     "keyboardOctave": 1,
     "tempo": 100,
@@ -154,7 +155,15 @@ export const songs = [
       0.25, 0.25, 0.25, 1, 0.5,
       0.25, 0.25, 0.5, 0.5, 0.5,
       0.25, 0.25, 0.5, 3,
-      0.25, 0.25, 0.5, 0.25, 0.25, 0.5
+      0.25, 0.25, 0.5, 0.25, 0.25, 0.25,
+      0.5, 0.5, 0.5, 0.25, 0.5,
+      0.25, 0.25, 0.25, 0.25, 0.5, 0.5,
+      0.25, 0.25, 0.25, 0.25, 0.5, 0.25,
+      0.25, 0.25, 0.5, 0.75, 0.75,
+      0.5, 0.5, 0.25, 0.5,
+      0.25, 0.25, 0.25, 0.25, 0.5, 0.5,
+      0.25, 0.25, 0.25, 0.25, 0.5, 0.25,
+      0.25, 0.25, 0.5, 1.25
     ],
     "notes": [
       "G#4",
@@ -192,7 +201,49 @@ export const songs = [
       "G#5",
       "G#5",
       "B5",
-      "G#6"
+      "G#6",
+      "G#6",
+      "G#6",
+      "G#6",
+      "G#6",
+      "G#6",
+      "D#6",
+      "F6",
+      "C6",
+      "D#6",
+      "F6",
+      "G#5",
+      "A#5",
+      "B5",
+      "G#5",
+      "A#5",
+      "C6",
+      "G#5",
+      "C6",
+      "G#5",
+      "A#5",
+      "G#5",
+      "G#5",
+      "G#5",
+      "G#5",
+      "G#5",
+      "G#5",
+      "D#5",
+      "F5",
+      "C5",
+      "D#5",
+      "F5",
+      "G#4",
+      "A#4",
+      "B4",
+      "G#4",
+      "A#4",
+      "C5",
+      "G#4",
+      "C5",
+      "G#4",
+      "A#4",
+      "G#4"
     ]
   },
   {

@@ -32,9 +32,9 @@ assert.deepEqual(fixtures.entertainer.bars.map(bar => bar.number), Array.from({ 
 const entertainer = seed.songs.find(song => song.id === 'entertainer');
 assert.equal(entertainer.notes.length, 77, 'Full strain plus its boundary pickup, with ties counted once');
 const maple = seed.songs.find(song => song.id === 'maple-leaf-rag');
-assert.deepEqual(fixtures[maple.id].bars.map(bar => bar.number), Array.from({ length: 8 }, (_, i) => i + 1),
-  'Maple includes all eight printed bars through the answering phrase');
-assert.equal(maple.notes.length, 36, 'Upper-staff attacks only, with ties counted once and the lower-staff bar 7 silent');
+assert.deepEqual(fixtures[maple.id].bars.map(bar => bar.number), Array.from({ length: 16 }, (_, i) => i + 1),
+  'Maple includes the full first A strain through the bar-16 first-ending cadence');
+assert.equal(maple.notes.length, 78, 'Upper-staff attacks only, with ties counted once and the lower-staff bar 7 silent');
 for (const [id, reference] of Object.entries(fixtures)) {
   const sourceNotes = [...(reference.pickup || []), ...reference.bars.flatMap(bar => bar.attacks)];
   if (reference.pickup) {
@@ -67,20 +67,27 @@ for (const [id, reference] of Object.entries(fixtures)) {
     const gaps = onsets.map((beat, i) => (onsets[i + 1] ?? reference.totalBeats + onsets[0]) - beat);
     assert.deepEqual(Array.from(maple.noteBeats), gaps, 'Maple preserves score onset gaps, ties, rests and the loop-boundary rest');
     assert.equal(maple.noteBeats.length, maple.notes.length);
-    assert.equal(maple.noteBeats.reduce((a, b) => a + b), 16, 'Maple loops in exactly eight 2/4 bars');
+    assert.equal(maple.noteBeats.reduce((a, b) => a + b), 32, 'Maple loops in exactly sixteen 2/4 bars');
     assert.equal(maple.tempo, reference.tempo);
     assert.equal(maple.tempo, 100, 'Retain Maple\'s existing 100 BPM practice pace');
     assert.ok(gaps.every(gap => gap > 0));
   }
 }
-assert.deepEqual(Array.from(maple.notes.slice(21)), [
+assert.deepEqual(Array.from(maple.notes.slice(21, 36)), [
   'G#4', 'B4', 'E5', 'D#5', 'D#5', 'G#4', 'B4', 'E5', 'D#5',
   'G#4', 'B4', 'G#5', 'G#5', 'B5', 'G#6',
 ], 'Maple adds the exact answering phrase: C-flat is B, F-flat is E, and the rising octaves are retained');
 assert.equal(fixtures[maple.id].bars[6].staff, 'down');
 assert.deepEqual(fixtures[maple.id].bars[6].attacks, [], 'Bar 7 is written on the lower staff, outside this upper-staff melody');
 assert.equal(maple.noteBeats[29], 3, 'Hold the last bar-6 attack through the lower-staff bar and the bar-8 opening rest');
-assert.equal(maple.noteBeats.at(-1), .5, 'The final sixteenth and the opening sixteenth rest complete the loop');
+assert.equal(maple.noteBeats[35], .25, 'Bar 8 now leads directly into bar 9 without the former loop-boundary rest');
+assert.deepEqual(fixtures[maple.id].bars.slice(8).map(bar => bar.attacks.length), [5, 6, 6, 5, 4, 6, 6, 4],
+  'Bars 9-16 count each cross-bar tie once and retain separate repeated attacks');
+for (const number of [10, 11, 13, 14, 15]) {
+  assert.ok(fixtures[maple.id].bars[number - 1].onsets[0] > 0, `Bar ${number}: the opening tie is held, not re-attacked`);
+}
+assert.deepEqual(Array.from(maple.notes.slice(-4)), ['C5', 'G#4', 'A#4', 'G#4'], 'The first ending resolves before the repeat');
+assert.equal(maple.noteBeats.at(-1), 1.25, 'The final eighth, ending eighth rest and opening sixteenth rest complete the loop');
 assert.equal(maple.keyboardOctave, 1, 'Shift the keyboard to C4-C7 for the upper-staff answer');
 assert.deepEqual(Array.from(entertainer.notes.slice(0, 18)), [
   'D3', 'D#3', 'E3', 'C4', 'E3', 'C4', 'E3', 'C4', 'C5', 'D5', 'D#5', 'E5', 'C5', 'D5', 'E5', 'B4', 'D5', 'C5',
@@ -107,7 +114,7 @@ assert.equal(gymnopedie.tempo, undefined, 'Retain its existing practice tempo ra
 const pitchMidi = note => (Number(note.at(-1)) + 1) * 12
   + { C: 0, D: 2, E: 4, F: 5, G: 7, A: 9, B: 11 }[note[0]] + Number(note.includes('#'));
 assert.deepEqual([Math.min(...entertainer.notes.map(pitchMidi)), Math.max(...entertainer.notes.map(pitchMidi))], [50, 76], 'The complete Entertainer strain fits D3-E5');
-assert.deepEqual([Math.min(...maple.notes.map(pitchMidi)), Math.max(...maple.notes.map(pitchMidi))], [67, 92], 'The eight-bar upper-staff Maple melody spans G4-G#6');
+assert.deepEqual([Math.min(...maple.notes.map(pitchMidi)), Math.max(...maple.notes.map(pitchMidi))], [67, 92], 'The full first A strain of the upper-staff Maple melody spans G4-G#6');
 assert.deepEqual([Math.min(...gymnopedie.notes.map(pitchMidi)), Math.max(...gymnopedie.notes.map(pitchMidi))], [54, 69], 'The shortened Gymnopedie fits F#3-A4');
 assert.deepEqual(Array.from(seed.api.currentSong().notes), [
   'E6', 'E6', 'E6', 'E5', 'D#6', 'D#6', 'D#6', 'D#5',
@@ -117,6 +124,9 @@ assert.equal(seed.api.currentSong().tempo, 85, 'Runaway plays at the owner tempo
 const songResults = [];
 const html = await readFile(new URL('project-showcase.js', root), 'utf8');
 const keyboard = await readFile(new URL('hero-keyboard.js', root), 'utf8');
+const sky = await readFile(new URL('hero-sky.js', root), 'utf8');
+assert.equal(sky.match(/from '(\.\/hero-piano\.js[^']+)'/)[1], keyboard.match(/from '(\.\/hero-piano\.js[^']+)'/)[1],
+  'Sky and keyboard share the identical piano URL and one song/audio singleton');
 const css = await readFile(new URL('hero.css', root), 'utf8');
 assert.match(css, /--piano-now-green:\s*#63c47b;/, 'The note to play is green');
 assert.match(css, /--piano-next-violet:\s*#7b6fd6;/, 'The note after is blue-violet');

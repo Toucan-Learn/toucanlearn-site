@@ -308,7 +308,7 @@
     "licence": "Public Domain",
     "timeSignature": "2/4",
     "transposeSemitones": 0,
-    "loop": "Printed bars 1-8, upper-staff melody only. The top voice crosses to the lower staff in bar 7; omit those lower-staff attacks and retain that bar as upper-staff silence. Do not expand the repeat. Wrap the initial sixteenth rest into the last onset gap so the loop remains eight complete 2/4 bars.",
+    "loop": "Full first A strain, printed bars 1-16 with the first ending, upper-staff melody only. The top voice crosses to the lower staff in bar 7; omit those lower-staff attacks and retain that bar as upper-staff silence. Tied continuations across bars 9-10, 10-11, 12-13, 13-14 and 14-15 are held, not new attacks. Do not expand the repeat. Wrap the initial sixteenth rest into the last onset gap so the loop remains sixteen complete 2/4 bars.",
     "bars": [
       {
         "number": 1,
@@ -453,11 +453,159 @@
           1.5,
           1.75
         ]
+      },
+      {
+        "number": 9,
+        "lilypond": "<as as,>8-\\mf \\< <as as,> <as as,> <as as,>16 <as as,> ~",
+        "attacks": [
+          "G#6",
+          "G#6",
+          "G#6",
+          "G#6",
+          "G#6"
+        ],
+        "onsets": [
+          0,
+          0.5,
+          1,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 10,
+        "lilypond": "<as as,> \\! es f c es <f as,>8 <as, fes>16 ~",
+        "attacks": [
+          "D#6",
+          "F6",
+          "C6",
+          "D#6",
+          "F6",
+          "G#5"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.25,
+          1.75
+        ]
+      },
+      {
+        "number": 11,
+        "lilypond": "<as fes!> bes <ces fes,> as bes <c es,>8 as16",
+        "attacks": [
+          "A#5",
+          "B5",
+          "G#5",
+          "A#5",
+          "C6",
+          "G#5"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.25,
+          1.75
+        ]
+      },
+      {
+        "number": 12,
+        "lilypond": "<c es,> as <bes es,>8 <as es> r16 <as as,> ~",
+        "attacks": [
+          "C6",
+          "G#5",
+          "A#5",
+          "G#5",
+          "G#5"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          1,
+          1.75
+        ]
+      },
+      {
+        "number": 13,
+        "lilypond": "<as as,>8 <as as,> <as as,> <as as,>16 <as as,> ~",
+        "attacks": [
+          "G#5",
+          "G#5",
+          "G#5",
+          "G#5"
+        ],
+        "onsets": [
+          0.5,
+          1,
+          1.5,
+          1.75
+        ]
+      },
+      {
+        "number": 14,
+        "lilypond": "<as as,> es <f as,> c es <f as,>8 <as, fes>16 ~",
+        "attacks": [
+          "D#5",
+          "F5",
+          "C5",
+          "D#5",
+          "F5",
+          "G#4"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.25,
+          1.75
+        ]
+      },
+      {
+        "number": 15,
+        "lilypond": "<as fes> bes <ces fes,> as bes <c es,>8 as16",
+        "attacks": [
+          "A#4",
+          "B4",
+          "G#4",
+          "A#4",
+          "C5",
+          "G#4"
+        ],
+        "onsets": [
+          0.25,
+          0.5,
+          0.75,
+          1,
+          1.25,
+          1.75
+        ]
+      },
+      {
+        "number": 16,
+        "lilypond": "<c es,> as <bes es,>8 <as es> r8",
+        "attacks": [
+          "C5",
+          "G#4",
+          "A#4",
+          "G#4"
+        ],
+        "onsets": [
+          0,
+          0.25,
+          0.5,
+          1
+        ]
       }
     ],
     "tempo": 100,
     "tempoSource": "Retain the existing chosen quarter note = 100 practice pace; the printed Tempo di marcia is not a numeric metronome mark.",
     "initialRestBeats": 0.25,
-    "totalBeats": 16
+    "totalBeats": 32
   }
 }

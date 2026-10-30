@@ -1,4 +1,4 @@
-import { songs } from './hero-songs.js?v=20261029-maple-8-bars-1';
+import { songs } from './hero-songs.js?v=20261029-maple-16-bars-1';
 import { createPianoSynth, voicePresetFor } from './hero-piano-voices.js?v=20261029-voices-3';
 
 // One fresh choice per page load, independent of the sky. The query parameter

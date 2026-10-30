@@ -1,5 +1,5 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261029-condensation-1';
-import { initHeroSky } from './hero-sky.js?v=20261029-match-1';
+import { initHeroSky } from './hero-sky.js?v=20261029-maple-16-bars-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 

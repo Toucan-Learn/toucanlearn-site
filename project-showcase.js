@@ -1,4 +1,4 @@
-import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261030-fizzy-clear-1';
+import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261030-fizzy-drops-1';
 import { initHeroSky } from './hero-sky.js?v=20261030-ios-audio-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';

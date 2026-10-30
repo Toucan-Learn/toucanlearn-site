@@ -51,3 +51,5 @@
 }
 /* Owner, 30 Oct: each teacher's hourly price on their card. */
 .vietnam-teacher .vietnam-teacher-price { margin-top: 6px; color: var(--heading); font-weight: 800; }
+/* Owner, 30 Oct: SEN support at the same price, led by Josh. */
+.vietnam-price .vietnam-sen { margin-top: 8px; font-weight: 700; }

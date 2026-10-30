@@ -1,5 +1,5 @@
 // Compare contact content and behaviour hooks while allowing layout wrappers,
-// cache bumps, the optional Subject field, the shorter textarea and removed hint.
+// cache bumps, Subject enhancement hooks, the shorter textarea and removed hint.
 import { navigationMarkup } from './navigation-markup.mjs';
 export function contactMarkup(source) {
   const divs = [];
@@ -7,8 +7,10 @@ export function contactMarkup(source) {
     .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/contact\.css\?v=[^"]+/g, 'contact.css')
     .replace(/contact\.js\?v=[^"]+/g, 'contact.js')
-    .replace(/<label for="subject">Subject \(optional\)<\/label>\s*<select id="subject"[^>]*>[\s\S]*?<\/select>\s*<span class="field-error" id="subject-error"><\/span>/g, '')
-    .replace(/<fieldset class="form-choice subject-choice"[^>]*>[\s\S]*?<\/fieldset>/g, '')
+    .replace('id="subject-label" ', '')
+    .replace(/<div data-subject-control hidden>[\s\S]*?<\/div>/g, '')
+    .replace(/<script src="subject-select\.js[^"]*"><\/script>/g, '')
+    .replace('<div class="subject-dropdown" data-subject-dropdown>', '<div>')
     .replace(/<small id="support-needed-hint">[\s\S]*?<\/small>/g, '')
     .replace('support-needed-hint support-needed-error', 'support-needed-error')
     .replace(/<textarea id="support-needed"[^>]*>/g, tag => tag.replace(/ rows="\d+"/, ''))

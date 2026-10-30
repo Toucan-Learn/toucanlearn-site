@@ -88,13 +88,20 @@ var EnquiryRules = (function () {
       maths: "Maths", languages: "Languages", "english-work": "English",
       ielts: "English", qualifications: "Exam preparation"
     }[requestedService || campaignSource.value];
-    if (subject && !form.querySelector('input[name="Subject"]:checked')) {
-      const radio = form.querySelector('input[name="Subject"][value="' + subject + '"]');
-      if (radio) radio.checked = true;
+    const select = document.getElementById("subject");
+    if (typeof subject === "string" && !select.value && !subjectChanged) {
+      select.value = subject;
+      select.dispatchEvent(new Event("change", { bubbles: true }));
     }
   }
+  let subjectChanged = false;
+  document.getElementById("subject").addEventListener("change", () => { subjectChanged = true; });
   prefillSubject();
   document.addEventListener("DOMContentLoaded", prefillSubject, { once: true });
+  function errorControl(id) {
+    const control = document.getElementById(id);
+    return id === "subject" && control.hidden ? document.getElementById("subject-button") : control;
+  }
   function clearErrors() {
     Object.keys(controls).forEach((key) => {
       const control = document.getElementById(controls[key]);
@@ -166,9 +173,10 @@ var EnquiryRules = (function () {
         if (!id) return;
         document.getElementById(id + "-error").textContent = result.errors[key];
         form.querySelectorAll('[name="' + key + '"]').forEach((control) => control.setAttribute("aria-invalid", "true"));
+        errorControl(id).setAttribute("aria-invalid", "true");
       });
       const first = Object.keys(controls).find((key) => result.errors[key]);
-      (first ? document.getElementById(controls[first]) : formMessage).focus();
+      (first ? errorControl(controls[first]) : formMessage).focus();
       return;
     }
     if (!endpointPattern.test(formEndpoint)) {

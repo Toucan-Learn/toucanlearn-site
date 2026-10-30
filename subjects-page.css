@@ -105,6 +105,15 @@ body.subjects-page #languages { --subject-tint: linear-gradient(120deg, #3d1f0ce
 body.subjects-page #psychology { --subject-tint: linear-gradient(120deg, #1f1340ed, #3a2675c9 55%, #102a4ce6); --sky-pos: 55% 40%; }
 body.subjects-page #art { --subject-tint: linear-gradient(120deg, #3d0f2aed, #6b1f45c9 55%, #2a1838e6); --sky-pos: 20% 60%; }
 body.subjects-page #send-support { --subject-tint: linear-gradient(120deg, #0f2147ed, #1d3a6bc9 55%, #12304ae6); --sky-pos: 70% 12%; }
+/* Owner, 30 Oct: SEND swash in the blue-green pixel sky (the social posts' sky). */
+body.subjects-page #send-support > .section-head > :is(h2, p) {
+  background: linear-gradient(120deg, #0a3446d9, #0d5a5e8c 55%, #0a3a4cc4), #0b3f51 url("assets/teal-pixel-sky.webp") 40% 45% / cover;
+}
+@media screen and (min-width: 1000px) {
+  body.subjects-page[data-page-frame] #send-support > .section-head > :is(h2, p) {
+    background: linear-gradient(120deg, #0a3446d9, #0d5a5e8c 55%, #0a3a4cc4) fixed, #0b3f51 url("assets/teal-pixel-sky.webp") 40% 45% / cover fixed;
+  }
+}
 /* Owner, 30 Oct: every subject panel ends with a proper CTA beside its links. */
 body.subjects-page .framework-panels > [data-content-panel] > .learning-links { align-items: center; }
 body.subjects-page .framework-panels .learning-links > .subject-cta { min-height: 44px; margin-right: 8px; text-decoration: none; line-height: 1.3; }

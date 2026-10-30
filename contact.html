@@ -24,7 +24,7 @@
   <script src="campaigns.js?v=20261029-clean-url-2"></script>
   <link rel="stylesheet" href="style.css?v=20261028-toggle-4" />
   <link rel="stylesheet" href="campaigns.css?v=20261030-trust-footer-1" />
-  <link rel="stylesheet" href="contact.css?v=20261030-calm-form-4" />
+  <link rel="stylesheet" href="contact.css?v=20261030-subject-icons-1" />
   <script src="menu.js?v=20261029-clean-url-2" defer></script>
   <link rel="stylesheet" href="framework.css?v=20261030-nav-span-1" />
 </head>
@@ -168,11 +168,6 @@
             </div>
             <span class="field-error" id="learner-child-error"></span>
           </fieldset>
-          <div class="field conditional-field" id="age-year-field" hidden inert>
-            <label for="age-year">Age or school year</label>
-            <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
-            <span class="field-error" id="age-year-error"></span>
-          </div>
           </div>
           </div>
           <div class="fields-two enquiry-details">
@@ -183,22 +178,65 @@
             <span class="field-error" id="support-needed-error"></span>
           </div>
           <div class="field-stack">
-          <div class="field">
-            <label for="subject">Subject (optional)</label>
-            <select id="subject" name="Subject" aria-describedby="subject-error">
-              <option value="">Choose a subject</option>
-              <option value="English">English</option>
-              <option value="Maths">Maths</option>
-              <option value="Science">Science</option>
-              <option value="Languages">Languages</option>
-              <option value="Psychology">Psychology</option>
-              <option value="Art &amp; design">Art &amp; design</option>
-              <option value="Exam preparation">Exam preparation</option>
-              <option value="SEN support">SEN support</option>
-              <option value="Other">Other</option>
-            </select>
-            <span class="field-error" id="subject-error"></span>
+          <div class="field conditional-field" id="age-year-field" hidden inert>
+            <label for="age-year">Age or school year</label>
+            <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
+            <span class="field-error" id="age-year-error"></span>
           </div>
+          <fieldset class="form-choice subject-choice" aria-describedby="subject-error">
+            <legend>Subject (optional)</legend>
+            <div class="subject-options">
+              <label class="subject-chip subject-chip--english" for="subject">
+                <input id="subject" name="Subject" type="radio" value="English" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 5c-3-2-6-2-9-1v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-3-1-6-1-9 1Zm0 0v15M6 8h3M6 12h3M15 8h3M15 12h3"/></svg>
+                <span>English</span>
+              </label>
+              <label class="subject-chip subject-chip--maths" for="subject-maths">
+                <input id="subject-maths" name="Subject" type="radio" value="Maths" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M7 6h10M8 11h1M15 11h1M8 15h1M15 15h1M8 19h1M15 19h1"/></svg>
+                <span>Maths</span>
+              </label>
+              <label class="subject-chip subject-chip--science" for="subject-science">
+                <input id="subject-science" name="Subject" type="radio" value="Science" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 3h8M10 3v6L4 19a1.4 1.4 0 0 0 1.2 2h13.6a1.4 1.4 0 0 0 1.2-2L14 9V3M7 15h10M10 18h.1M14 17h.1"/></svg>
+                <span>Science</span>
+              </label>
+              <label class="subject-chip subject-chip--languages" for="subject-languages">
+                <input id="subject-languages" name="Subject" type="radio" value="Languages" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18M5 6.5h14M5 17.5h14"/></svg>
+                <span>Languages</span>
+              </label>
+              <label class="subject-chip subject-chip--psychology" for="subject-psychology">
+                <input id="subject-psychology" name="Subject" type="radio" value="Psychology" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 21v-5H5v-5H3l3-6a7 7 0 0 1 13 4c0 3-2 5-3 6v6M11 5v8M8 8h6M11 10l3 3"/></svg>
+                <span>Psychology</span>
+              </label>
+              <label class="subject-chip subject-chip--art" for="subject-art">
+                <input id="subject-art" name="Subject" type="radio" value="Art &amp; design" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m4 16-1 5 5-1L20 8l-4-4L4 16Zm9-9 4 4M4 16l4 4M17 3l2-2 4 4-2 2"/></svg>
+                <span>Art &amp; design</span>
+              </label>
+              <label class="subject-chip" for="subject-exams">
+                <input id="subject-exams" name="Subject" type="radio" value="Exam preparation" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/><rect x="9" y="2" width="6" height="4" rx="1"/><path d="m8 13 3 3 5-6"/></svg>
+                <span>Exam preparation</span>
+              </label>
+              <label class="subject-chip subject-chip--sen" for="subject-sen">
+                <input id="subject-sen" name="Subject" type="radio" value="SEN support" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 20S3 14.5 3 8.5A4.5 4.5 0 0 1 12 7a4.5 4.5 0 0 1 9 1.5C21 14.5 12 20 12 20Z"/><path d="m8 12 2.5 2.5L16 9"/></svg>
+                <span>SEN support</span>
+              </label>
+              <label class="subject-chip" for="subject-other">
+                <input id="subject-other" name="Subject" type="radio" value="Other" aria-describedby="subject-error" />
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 3 2.5 6.5L21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z"/></svg>
+                <span>Other</span>
+              </label>
+            </div>
+            <div class="radio-options subject-reset">
+              <label for="subject-none"><input id="subject-none" name="Subject" type="radio" value="" aria-describedby="subject-error" /> No preference</label>
+            </div>
+            <span class="field-error" id="subject-error"></span>
+          </fieldset>
           <div class="field">
             <label for="desired-lesson-rate">What's your desired lesson rate?</label>
             <input id="desired-lesson-rate" name="Desired lesson rate" type="text" inputmode="text" maxlength="60" aria-describedby="desired-lesson-rate-hint desired-lesson-rate-error" />
@@ -315,6 +353,6 @@
 
   <script src="site.js"></script>
   <script src="launch-offer.js?v=20261029-clean-url-2"></script>
-  <script src="contact.js?v=20261030-ad-landing-1"></script>
+  <script src="contact.js?v=20261030-subject-icons-1"></script>
 </body>
 </html>

@@ -8,6 +8,7 @@ export function contactMarkup(source) {
     .replace(/contact\.css\?v=[^"]+/g, 'contact.css')
     .replace(/contact\.js\?v=[^"]+/g, 'contact.js')
     .replace(/<label for="subject">Subject \(optional\)<\/label>\s*<select id="subject"[^>]*>[\s\S]*?<\/select>\s*<span class="field-error" id="subject-error"><\/span>/g, '')
+    .replace(/<fieldset class="form-choice subject-choice"[^>]*>[\s\S]*?<\/fieldset>/g, '')
     .replace(/<small id="support-needed-hint">[\s\S]*?<\/small>/g, '')
     .replace('support-needed-hint support-needed-error', 'support-needed-error')
     .replace(/<textarea id="support-needed"[^>]*>/g, tag => tag.replace(/ rows="\d+"/, ''))
@@ -22,11 +23,12 @@ export function contactMarkup(source) {
     .trim();
 }
 
-// All existing validation, conditional logic and submission code stays intact.
+// All non-subject validation, conditional logic and submission code stays intact.
 // Dedicated contact tests exercise the optional Subject additions separately.
 export function contactScript(source) {
   return source
     .replace('"Subject": 40, ', '')
     .replace(/^    choice\("Subject",[^\n]+\n/m, '')
-    .replace('"Subject": "subject", ', '');
+    .replace('"Subject": "subject", ', '')
+    .replace(/^  function prefillSubject\(\) \{[\s\S]*?^  document.addEventListener\("DOMContentLoaded", prefillSubject, \{ once: true \}\);\n/m, '');
 }

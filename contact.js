@@ -82,6 +82,19 @@ var EnquiryRules = (function () {
     const checked = form.querySelector('input[name="' + name + '"]:checked');
     return checked ? checked.value : "";
   }
+  function prefillSubject() {
+    // campaigns.js captures data-service links before navigation cleans the URL.
+    const subject = {
+      maths: "Maths", languages: "Languages", "english-work": "English",
+      ielts: "English", qualifications: "Exam preparation"
+    }[requestedService || campaignSource.value];
+    if (subject && !form.querySelector('input[name="Subject"]:checked')) {
+      const radio = form.querySelector('input[name="Subject"][value="' + subject + '"]');
+      if (radio) radio.checked = true;
+    }
+  }
+  prefillSubject();
+  document.addEventListener("DOMContentLoaded", prefillSubject, { once: true });
   function clearErrors() {
     Object.keys(controls).forEach((key) => {
       const control = document.getElementById(controls[key]);

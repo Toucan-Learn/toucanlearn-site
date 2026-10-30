@@ -13,6 +13,23 @@
 .radio-options label { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; font-size: .9rem; line-height: 1.35; cursor: pointer; }
 .radio-options input { width: 20px; height: 20px; margin: 0; accent-color: var(--field-focus); }
 .radio-options input:focus-visible { outline: 3px solid var(--orange-text); outline-offset: 3px; }
+/* Native radios retain arrow-key/Space behaviour; their labels are the visible chips. */
+.subject-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.subject-chip { position: relative; display: grid; grid-template-columns: 24px minmax(0, 1fr); align-items: center; gap: 5px; min-height: 44px; padding: 5px 6px; border: 1px solid var(--field-border); border-radius: 10px; color: var(--ink); background: var(--field-surface); font-size: .82rem; line-height: 1.25; overflow-wrap: anywhere; cursor: pointer; }
+.subject-chip input { position: absolute; width: 1px; height: 1px; padding: 0; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.subject-chip svg { width: 24px; height: 24px; padding: 2px; border-radius: 5px; color: var(--subject-ink, var(--brand-green)); background: #f6f1e9; }
+.subject-chip--english { --subject-ink: #6b2a5e; }
+.subject-chip--maths { --subject-ink: #0b5e5a; }
+.subject-chip--science { --subject-ink: #1f5640; }
+.subject-chip--languages { --subject-ink: #8a4b0b; }
+.subject-chip--psychology { --subject-ink: #3b2f7a; }
+.subject-chip--art { --subject-ink: #8a2450; }
+.subject-chip--sen { --subject-ink: #1d3a6b; }
+.subject-chip:has(input:checked) { border-color: var(--field-focus); background: rgba(var(--field-focus-rgb), .12); box-shadow: inset 0 0 0 1px var(--field-focus); }
+.subject-chip:has(input:focus-visible) { outline: 3px solid var(--field-focus); outline-offset: 2px; }
+.subject-chip:has(input[aria-invalid="true"]) { border-color: var(--error-ink); }
+.subject-reset { margin-top: 4px; }
+@media (forced-colors: active) { .subject-chip:has(input:checked) { outline: 2px solid Highlight; outline-offset: -4px; } }
 /* Round 66 (Joshua, 18 Oct 2026: "the enquiries form is spaced out strangely"):
    hidden follow-up questions take no space until a choice reveals them. They
    stay inert and disabled, so they are out of focus and the accessibility tree. */
@@ -82,6 +99,7 @@
   .enquiry-form .fields-two { grid-template-columns: minmax(0, 1fr); }
   .enquiry-form .field :is(input, select) { min-height: 44px; }
   .radio-options label { min-height: 40px; }
+  .subject-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 /* Pricing shares the existing cell tokens and occupies the spare right column,

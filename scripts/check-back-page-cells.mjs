@@ -9,7 +9,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const site = fileURLToPath(new URL('../', import.meta.url));
-const before = process.env.CELLS_BASE || '951cb4a'; // The clean worktree supplied for this task (CELLS_BASE: the merged site it now sits on), never a moving HEAD.
+const before = process.env.CELLS_BASE || '29d9f4b'; // 30 Oct: the owner-approved live site after his panel, copy and layout notes (CELLS_BASE overrides), never a moving HEAD.
 const copyBefore = '770f23d'; // Approved merged copy before the owner's 29 Oct Approach notes.
 const files = ['approach.html', 'children.html', 'adults.html', 'subjects.html'];
 const original = (file, revision = before) => execFileSync('git', ['show', `${revision}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });

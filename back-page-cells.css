@@ -332,3 +332,7 @@ body.cell-art-page.approach-page #where-we-teach { --sky-pos: 92% 78%; }
 :root[data-theme="dark"] body.cell-art-page.approach-page #weekly-reports .report-parts strong { color: #4c1130; }
 :root[data-theme="dark"] .learning-page .framework-shell .approach-report .report-example { color: #294c59; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .learning-page .framework-shell .approach-report .report-example { color: #294c59; } }
+/* Short laptops (1280x720): the tallest panels ran a few pixels off screen; trim the frame's own padding. */
+@media screen and (min-width: 1000px) and (max-height: 740px) {
+  body.cell-art-page[data-page-frame] .framework-panels { padding-block: 10px; }
+}

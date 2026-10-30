@@ -15,8 +15,8 @@ const files = ['approach.html', 'children.html', 'adults.html', 'subjects.html']
 const original = (file, revision = before) => execFileSync('git', ['show', `${revision}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 const words = html => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 const csp = html => html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)?.[0];
-// 30 Oct: the owner asked for every subject panel to be reworked (1817511).
-const copyBase = { 'subjects.html': '1817511' };
+// 30 Oct: the owner asked for every subject panel to be reworked (1817511), then Art & DT by level (e6c2404).
+const copyBase = { 'subjects.html': 'e6c2404' };
 function approvedCopy(file) {
   let copy = words(original(file, copyBase[file] || copyBefore));
   // Owner, 30 Oct: no "UK only" wording for online lessons.

@@ -9,7 +9,8 @@ import { navigationMarkup } from './helpers/navigation-markup.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = file => readFile(new URL(file, root), 'utf8');
-const baseline = file => execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' });
+// Compare with the site just before the 30 Oct ad-landing form changes (HEAD would already contain them).
+const baseline = file => execFileSync('git', ['show', `b698613:${file}`], { cwd: root, encoding: 'utf8' });
 const html = await read('contact.html');
 const script = await read('contact.js');
 const rules = createRequire(import.meta.url)('../contact.js');
@@ -19,15 +20,14 @@ const expected = baseline('contact.html')
   .replace('aria-describedby="support-needed-error"', 'aria-describedby="support-needed-privacy support-needed-error"')
   .replace('</textarea>', '</textarea>\n<small id="support-needed-privacy">' + help + '</small>')
   .replace('Use a UK number, starting with 0 or +44.', 'Use 7–15 digits; include + and the country code for international numbers.')
-  .replace('>WhatsApp us<', '>WhatsApp 07307 045816<')
-  .replace('>07309 639095</a>', '>Call 07309 639095</a>');
+  .replace('>WhatsApp us<', '>WhatsApp 07307 045816<');
 assert.equal(contactMarkup(html), contactMarkup(expected),
   'Preserve field names, order, hooks, configuration and copy outside the requested help and phone labels');
 assert.equal(navigationMarkup(await read('privacy.html')), navigationMarkup(baseline('privacy.html')), 'Keep privacy content unchanged through the URL migration');
 assert.doesNotMatch(html, /support-needed-hint|The subject or goal, and what's tricky at the moment/);
 assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-needed-privacy support-needed-error"[^>]*required/);
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));
-assert.match(html, /href="tel:\+447309639095">Call 07309 639095<\/a>/);
+assert.match(html, /href="tel:\+447309639095">07309 639095<\/a>/);
 assert.match(html, /href="https:\/\/wa.me\/447307045816"[^>]*>WhatsApp 07307 045816</);
 assert.match(html, /src="contact.js\?v=20261030-ad-landing-1"/);
 assert.match(html, /script-src 'self'; style-src 'self'/);

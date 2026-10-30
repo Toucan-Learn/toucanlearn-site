@@ -157,6 +157,8 @@
   .framework-shell { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 12px 36px; }
   .framework-section-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .framework-section-nav a { padding: 12px; }
+  /* Owner, 30 Oct: an odd last item spans the row instead of sitting at half width. */
+  .framework-section-nav > a:last-child:nth-child(odd) { grid-column: 1 / -1; }
 }
 @media (max-width: 620px) {
   .framework-intro { padding-top: 30px; }

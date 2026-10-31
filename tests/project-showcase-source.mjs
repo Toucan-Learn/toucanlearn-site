@@ -86,7 +86,7 @@ await import('./darty-title-lifecycle.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 export const homepageCaptions = [
   ['English · Journalism', 'Football newspaper', 'Using a discouraged student’s interests and insights to practise English.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
-  ['English · Game design', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
+  ['SEN support', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
   ['SEN & English', 'Drink design', 'One student often regains his creative and working flow through designing drinks.', 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.'],
   ['SEN · Music brain breaks', 'Toucan piano', 'A tool for a student, a few minutes at a time for productive brain breaks.', 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.'],
 ];
@@ -188,7 +188,8 @@ for (const page of ['index.html', 'children.html']) {
   const csp = html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)[1];
   assert.equal(csp.split(';').map(directive => directive.trim()).find(directive => directive.startsWith('frame-src ')), "frame-src 'self' https://joshtoucanlearn.github.io", `${page}: allow only this additional frame origin`);
   assert.equal(csp.split('https://joshtoucanlearn.github.io').length - 1, 1, `${page}: the game origin belongs only in frame-src`);
-  assert(!/\sstyle=|\son\w+=|<style\b|<script\b(?![^>]*\bsrc=)/i.test(html), `${page}: no inline code`);
+  // JSON-LD is data for search engines, never run, so the CSP still holds (owner, 31 Oct).
+  assert(!/\sstyle=|\son\w+=|<style\b|<script\b(?![^>]*\b(?:src=|type="application\/ld\+json"))/i.test(html), `${page}: no inline code`);
   assert(!/unsafe-inline|unsafe-eval|projects\/piano/.test(html));
 }
 await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.url)), 'Retire the alternate piano implementation');
@@ -217,6 +218,8 @@ const withoutOwnerContent = html => html
   // 30 Oct owner: the showcase label moved below the window, so compare without its position.
   .replace(/\n\s*<p class="eyebrow light[^"]*">[\s\S]*?<\/p>/, '')
   .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js|style\.css|hero\.css|theme\.js|launch-offer\.js|campaigns\.js|consent\.js|route-photos\.js|step-art\.js))(?:\?v=[^"']+)?/g, '$1?v=TOKEN')
+  // Owner, 31 Oct: structured data naming every learner project, for search summaries.
+  .replace(/\n  <!-- Owner, 31 Oct: search summaries[\s\S]*?<script type="application\/ld\+json">[\s\S]*?<\/script>/, '')
   // Owner, 31 Oct: every page links to its full copies in other languages (menu switch and hreflang links).
   .replace(/<details class="[^"]*language-switch[^"]*"[^>]*>[\s\S]*?<\/details>/g, '')
   .replace(/\n\s*<link rel="alternate" hreflang[^>]*>/g, '').replace(/\n\s*<(?:link|script)[^>]*language-(?:switch|text)\.(?:css|js)[^>]*>(?:<\/script>)?/g, '');

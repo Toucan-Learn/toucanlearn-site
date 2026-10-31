@@ -26,6 +26,8 @@ function approvedCopy(file) {
   let copy = words(original(file, copyBase[file] || copyBefore)).replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');
   // Owner, 30 Oct: no "UK only" wording for online lessons.
   if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
+  // Owner, 31 Oct: DARTY's label is just "SEN support".
+  if (file === 'children.html') copy = copy.replace('English · Game design', 'SEN support');
   // A copyBase entry already contains every approved change below.
   if (file !== 'approach.html' || copyBase[file]) return copy;
   const changes = [

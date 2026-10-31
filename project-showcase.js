@@ -1,7 +1,7 @@
-import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261031-language-paths-1';
-import { initHeroSky } from './hero-sky.js?v=20261031-language-paths-1';
-import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261031-language-paths-1';
-import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
+import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261031-language-merge-1';
+import { initHeroSky } from './hero-sky.js?v=20261031-language-merge-1';
+import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261031-language-merge-1';
+import { dartyMatchURL } from './darty-match.js?v=20261031-darty-night-1';
 
 // One media cell for the opening and Projects. Full section copy stays in HTML for no-JS/print.
 export const projects = [

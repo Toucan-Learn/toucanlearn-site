@@ -15,15 +15,16 @@ const spinURL = `data:text/javascript;base64,${Buffer.from(spinSource).toString(
 const matchSource = await readFile(new URL('../darty-match.js', import.meta.url), 'utf8');
 const matchModule = `data:text/javascript;base64,${Buffer.from(matchSource).toString('base64')}`;
 const { dartyMatchURL } = await import(matchModule);
-assert.equal(Buffer.byteLength(dartyMatchURL), 64513, 'Preserve the complete owner-approved match URL');
-assert.equal(createHash('sha256').update(dartyMatchURL).digest('hex'), 'ec050c4f3a828ae371ebcd1e9c84f601314450df099d8f79752930990ddcd32b', 'Preserve the owner-approved match URL with volume 30 and a fresh random seed');
+// Owner, 31 Oct: the card plays the night match (weather=night, was overcast).
+assert.equal(Buffer.byteLength(dartyMatchURL), 64510, 'Preserve the complete owner-approved match URL');
+assert.equal(createHash('sha256').update(dartyMatchURL).digest('hex'), '31e8e403422e307ab857929d3065aa932c8be349e5971a5bc9cd8b9da218a18d', 'Preserve the owner-approved match URL with volume 30 and a fresh random seed');
 const matchURL = new URL(dartyMatchURL);
 assert.equal(matchURL.origin, 'https://joshtoucanlearn.github.io');
 assert.equal(matchURL.pathname, '/darty/match-engine/match.html');
 assert.deepEqual(matchURL.searchParams.getAll('autoplay'), ['1'], 'DARTY requires exactly one autoplay=1');
 assert.deepEqual(matchURL.searchParams.getAll('simulationSeed'), ['random'], 'Each DARTY load requests a fresh random match');
 assert.equal(createHash('sha256').update(matchURL.hash.slice(1)).digest('hex'), '23ae1c7f971bd722b9830a21820ebbae41f4984829846425c1981e8f2a5f7724', 'Keep the complete flMatch fragment byte-identical');
-for (const [key, value] of Object.entries({ volume: '30', weather: 'overcast', matchMinutes: '6', clean: '1', director: 'showcase', commentary: '0' })) assert.equal(matchURL.searchParams.get(key), value);
+for (const [key, value] of Object.entries({ volume: '30', weather: 'night', matchMinutes: '6', clean: '1', director: 'showcase', commentary: '0' })) assert.equal(matchURL.searchParams.get(key), value);
 assert.match(source, /matchMedia\('\(max-width: 767px\), \(pointer: coarse\) and \(hover: none\)'\)/, 'Keep the device query for newspaper prefetch and breakpoint teardown');
 assert.match(source, /const interactive = '[^']*iframe/, 'The iframe keeps its own input');
 const liveMatch = source.split("project.type === 'match'")[1].split("else if (project.type === 'drinks')")[0];

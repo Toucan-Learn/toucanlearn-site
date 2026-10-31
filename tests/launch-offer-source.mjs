@@ -106,7 +106,8 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   pages.push(file);
   check(`${file}: original HTML preserved except approved contact changes`, () => {
     assert.equal((text.match(/src="launch-offer\.js\?/g) || []).length, 1);
-    assert.match(text, /script-src 'self'; style-src 'self'/);
+    // Owner, 31 Oct: Microsoft Clarity is the only outside script.
+    assert.match(text, /script-src 'self' https:\/\/www\.clarity\.ms https:\/\/scripts\.clarity\.ms; style-src 'self'/);
     const original = execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' });
     if (file === 'contact.html') {
       assert.equal(contactMarkup(text), contactMarkup(original));

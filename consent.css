@@ -1,0 +1,11 @@
+/* Owner, 31 Oct: the privacy page's switch for Microsoft Clarity, styled like the site's text links. */
+.consent-reset {
+  padding: 0 0 2px;
+  border: 0;
+  border-bottom: 2px solid var(--orange);
+  background: none;
+  color: var(--heading, var(--ink));
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}

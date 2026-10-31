@@ -10,7 +10,8 @@ assert(section, 'Missing Projects & learning section');
 assert(!/football phrase/i.test(html), 'Do not attribute Ground Pinch to a football phrase');
 assert(!/\b(?:harry|joe|baker|psychologist|joshua)\b/i.test(section), 'Private or disallowed name in project copy');
 assert(!/<script\b(?![^>]*\bsrc=)|<style\b|\sstyle\s*=|\son\w+\s*=/i.test(html), 'Inline code violates the CSP');
-assert(html.includes("script-src 'self'; style-src 'self'") && !/unsafe-inline|unsafe-eval/.test(html), 'Strict CSP changed');
+// Owner, 31 Oct: Microsoft Clarity loads from its own origin after cookie consent; nothing else may run.
+assert(html.includes("script-src 'self' https://www.clarity.ms https://scripts.clarity.ms; style-src 'self'") && !/unsafe-inline|unsafe-eval/.test(html), 'Strict CSP changed');
 assert(!/See how our lessons work|See the Toucan approach/.test(html), 'Retired approach links must be removed');
 const gettingStarted = html.split('<section id="getting-started"')[1]?.split('</section>')[0];
 assert(gettingStarted?.includes('<a class="button" href="contact" data-service="children">Tell us your child’s goal <span aria-hidden="true">→</span></a>'), 'Getting started uses the children enquiry button and exact owner label');

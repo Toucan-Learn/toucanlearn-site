@@ -28,6 +28,9 @@ const expected = baseline('contact.html').replace(footer(baseline('contact.html'
   .replace('>WhatsApp us<', '>WhatsApp 07307 045816<')
   // Owner, 30 Oct: the in-person area is Oxfordshire, not Henley.
   .replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');
+// Owner, 31 Oct: Microsoft Clarity (after cookie consent) adds its sources to the CSP and two consent tags; compare without them.
+const withoutClarity = page => page.replace(" https://www.clarity.ms https://scripts.clarity.ms", "").replace(" https://*.clarity.ms https://c.bing.com", "").replace(" https://*.clarity.ms", "")
+  .replace(/\n\s*<script src="consent\.js[^"]*"><\/script>/, "").replace(/\n\s*<link rel="stylesheet" href="consent\.css[^"]*" \/>/, "");
 const untokened = page => page.replace(/\?v=[^"']+/g, '?v=T'); // stylesheet/script cache tokens change with every release
 // Owner, 30 Oct: the age field sits at the top of the details column, so choosing
 // "child" pushes Subject down instead of opening a gap beside the name. Compare
@@ -38,9 +41,13 @@ const ageBack = page => {
   return block ? page.replace(block, '').replace(/(<span class="field-error" id="learner-child-error"><\/span>\s*<\/fieldset>)/, `$1${block}`) : page;
 };
 assert.ok(html.indexOf('id="age-year-field"') > html.indexOf('id="support-needed"') && html.indexOf('id="age-year-field"') < html.indexOf('id="subject"'), 'Age sits above Subject in the details column');
-assert.equal(contactMarkup(untokened(ageBack(html))), contactMarkup(untokened(expected)),
+assert.equal(contactMarkup(untokened(ageBack(withoutClarity(html)))), contactMarkup(untokened(expected)),
   'Preserve field names, order, hooks, configuration and copy outside the requested help and phone labels');
-assert.equal(navigationMarkup(untokened(await read('privacy.html'))), navigationMarkup(untokened(execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' }))), 'Privacy matches the owner-approved 30 Oct notice');
+// Owner, 31 Oct: the "Website visits" section now describes Microsoft Clarity; everything else stays as approved.
+const visits = page => page.replace(/<section(?: id="website-visits")?>\s*<h2>Website visits and changes<\/h2>[\s\S]*?<\/section>/, '<!-- website visits: owner-managed -->');
+const privacy = await read('privacy.html');
+assert.match(privacy, /Microsoft Clarity[\s\S]*data-clarity-toggle/, 'Privacy explains Clarity and offers the switch');
+assert.equal(navigationMarkup(untokened(visits(withoutClarity(privacy)))), navigationMarkup(untokened(visits(execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' })))), 'Privacy matches the owner-approved 30 Oct notice');
 assert.doesNotMatch(html, /support-needed-hint|The subject or goal, and what's tricky at the moment/);
 assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-needed-privacy support-needed-error"[^>]*required/);
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));
@@ -48,7 +55,8 @@ assert.match(html, /href="tel:\+447309639095">07309 639095<\/a>/);
 assert.match(html, /href="https:\/\/wa.me\/447307045816"[^>]*>WhatsApp 07307 045816</);
 assert.match(html, /src="contact.js\?v=20261030-subject-sep-1"/);
 assert.match(html, /href="contact.css\?v=20261030-subject-dropdown-3"/);
-assert.match(html, /script-src 'self'; style-src 'self'/);
+// Owner, 31 Oct: Microsoft Clarity is the only outside script.
+assert.match(html, /script-src 'self' https:\/\/www\.clarity\.ms https:\/\/scripts\.clarity\.ms; style-src 'self'/);
 assert.doesNotMatch(html, /\s(?:style|on\w+)\s*=/i);
 for (const [, attrs, body] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/g)) {
   assert.match(attrs, /\bsrc="[^"]+"/);

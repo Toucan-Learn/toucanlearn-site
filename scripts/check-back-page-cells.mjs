@@ -14,6 +14,9 @@ const copyBefore = '770f23d'; // Approved merged copy before the owner's 29 Oct 
 const files = ['approach.html', 'children.html', 'adults.html', 'subjects.html'];
 const original = (file, revision = before) => execFileSync('git', ['show', `${revision}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 const words = html => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+// Owner, 31 Oct: Microsoft Clarity (after cookie consent) adds its sources to the CSP and two consent tags; compare without them.
+const withoutClarity = page => page.replace(" https://www.clarity.ms https://scripts.clarity.ms", "").replace(" https://*.clarity.ms https://c.bing.com", "").replace(" https://*.clarity.ms", "")
+  .replace(/\n\s*<script src="consent\.js[^"]*"><\/script>/, "").replace(/\n\s*<link rel="stylesheet" href="consent\.css[^"]*" \/>/, "");
 const csp = html => html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)?.[0];
 // 30 Oct: the owner asked for every subject panel to be reworked (1817511), then Art & DT by level (e6c2404) and panel CTAs (692b636).
 const copyBase = { 'subjects.html': '1ebe50a', 'children.html': 'f837bd2', 'adults.html': '614ad05', 'approach.html': '614ad05' };
@@ -60,7 +63,7 @@ for (const file of files) {
   const html = await readFile(path.join(site, file), 'utf8');
   const prior = original(file, copyBefore);
   assert.equal(words(html), approvedCopy(file), `${file}: copy must match the approved wording`);
-  assert.equal(csp(html), csp(prior), `${file}: CSP must stay unchanged`);
+  assert.equal(csp(withoutClarity(html)), csp(prior), `${file}: CSP must stay unchanged`);
   assert.match(html, /back-page-cells\.css/);
   assert.doesNotMatch(html, /\sstyle\s*=|<script\b(?![^>]*\bsrc=)[^>]*>\s*\S/i, `${file}: no inline styles/scripts`);
   if (file === 'approach.html' || file === 'children.html') {

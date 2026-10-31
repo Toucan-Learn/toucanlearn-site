@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'none'; frame-src 'none'; worker-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' https://www.clarity.ms https://scripts.clarity.ms; style-src 'self'; img-src 'self' data: https://*.clarity.ms https://c.bing.com; font-src 'self' data:; connect-src 'self' https://*.clarity.ms; form-action 'none'; frame-src 'none'; worker-src 'none'" />
   <meta name="robots" content="noindex, nofollow" />
   <title>Privacy notice | Toucan Learn</title>
   <meta name="description" content="How Toucan Learn handles personal information for tutoring enquiries and services." />
@@ -21,6 +21,7 @@
   <link rel="stylesheet" href="campaigns.css?v=20261030-trust-footer-1" />
   <script src="menu.js?v=20261029-clean-url-2" defer></script>
   <link rel="stylesheet" href="framework.css?v=20261030-nav-span-1" />
+  <link rel="stylesheet" href="consent.css?v=20261031-clarity-1" />
 </head>
 <body class="campaign-page policy-page" data-release-status="draft">
   <a class="skip-link" href="#main">Skip to main content</a>
@@ -175,10 +176,12 @@
         <p><strong>You can object to use of your information based on legitimate interests.</strong> Tell us your circumstances and we will consider the request and explain our response. You can also object to direct marketing at any time.</p>
         <p>If you are unhappy with how we handle your information, you can contact us and you can <a href="https://ico.org.uk/make-a-complaint/">complain to the Information Commissioner's Office</a>.</p>
       </section>
-      <section>
+      <section id="website-visits">
         <h2>Website visits and changes</h2>
-        <p>This website uses no analytics, advertising trackers or cookies. Our hosting provider may process technical request logs, such as IP addresses and requested pages, to deliver and secure the site. Opening an email link does not send information until you choose to send the email.</p>
-        <p>We use sessionStorage to remember campaign source and enquiry context during your browsing session. We use localStorage to remember your theme choice and, when the launch offer is active, when it was last shown so it is not repeated within 14 days.</p>
+        <p>We use Microsoft Clarity to see how visitors use the site, such as which pages they open, where they click and how far they scroll, so we can improve it. Clarity runs without cookies, records each page on its own and hides anything typed into forms. Microsoft provides Clarity and handles this information under its <a href="https://privacy.microsoft.com/privacystatement">privacy statement</a>. We use no advertising trackers or cookies.</p>
+        <p><button type="button" class="consent-reset" data-clarity-toggle>Turn off Clarity on this browser</button></p>
+        <p>Our hosting provider may process technical request logs, such as IP addresses and requested pages, to deliver and secure the site. Opening an email link does not send information until you choose to send the email.</p>
+        <p>We use sessionStorage to remember campaign source and enquiry context during your browsing session, and Clarity uses it for a temporary tab ID. We use localStorage to remember your theme choice, whether you turned off Clarity and, when the launch offer is active, when it was last shown so it is not repeated within 14 days.</p>
         <p>We do not make decisions about you solely by automated processing or use automated profiling. We keep this notice up to date and tell existing clients directly about material changes affecting them.</p>
       </section>
     </article>
@@ -186,6 +189,7 @@
 
   <footer class="site-footer"><div class="container footer-grid"><div><p class="footer-slogan">Who can learn? You can learn. <a href="https://www.instagram.com/toucan_learn/" target="_blank" rel="noopener">@toucan_learn</a></p><span class="footer-copy">© <span id="year">2026</span> Toucan Learn</span><p class="footer-copy footer-business">Toucan Learn is run by Joshua Gordon Jones, sole trader, Bristol.</p></div><nav class="footer-links" aria-label="Policies"><a href="privacy">Privacy</a><a href="terms">Terms</a><a href="safeguarding">Safeguarding</a><a href="complaints">Complaints</a><a href="./">Home</a><a href="contact">Enquire</a><a href="tel:+447309639095">07309 639095</a></nav></div></footer>
   <script src="site.js"></script>
+  <script src="consent.js?v=20261031-clarity-1"></script>
   <script src="launch-offer.js?v=20261029-clean-url-2"></script>
 </body>
 </html>

@@ -16,9 +16,10 @@
 .language-page .hero-actions .button { white-space: normal; }
 @media (min-width: 900px) {
   .language-page .language-grid, .language-page .language-reviews { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .language-page .language-profiles { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
 }
 @media (max-width: 600px) {
   .language-page .language-main { padding-block: 24px; }
   .language-page .framework-card { padding: 20px; }
 }
+/* Owner, 31 Oct: Avenir has no full Vietnamese set, so accented letters fell back to another font mid-word. Vietnamese pages use the system font in the hero too, like /hoc-tieng-anh. */
+html:lang(vi) :is(.living-hero, .toucan-opening-header, .piano-world) { --hero-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }

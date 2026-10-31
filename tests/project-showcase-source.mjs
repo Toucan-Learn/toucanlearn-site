@@ -84,7 +84,7 @@ await import('./drink-spin-source.mjs');
 await import('./darty-title-lifecycle.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 export const homepageCaptions = [
-  ['English · Journalism', 'Football newspaper', 'Exploring a discouraged student’s interests and insights to practise English.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
+  ['English · Journalism', 'Football newspaper', 'Using a discouraged student’s interests and insights to practise English.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
   ['English · Game design', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
   ['SEN & English', 'Drink design', 'One SEN student often regains his creative and working flow through designing drinks.', 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.'],
   ['SEN · Music brain breaks', 'Toucan piano', 'A tool for a student, a few minutes at a time for productive brain breaks.', 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.'],

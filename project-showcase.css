@@ -282,3 +282,6 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 /* 1250–1320px: the captions fit on fewer lines now, so the cell only reserves what the tallest needs. */
 @media (min-width: 1250px) and (max-width: 1269px) { .living-hero .hero-project-caption { min-height: 121px; } }
 @media (min-width: 1270px) and (max-width: 1320px) { .living-hero .hero-project-caption { min-height: 103px; } }
+/* Owner, 31 Oct: the caption's top lines up with the top of the "L" in the heading, not the heading's line box
+   (cap top ≈ 0.17em of the hero title, whose size is 4.583vw clamped between 2.625rem and 4.5rem). */
+@media (min-width: 900px) { .living-hero .hero-world > .hero-project-caption { margin-top: clamp(7px, .78vw, 12px); } }

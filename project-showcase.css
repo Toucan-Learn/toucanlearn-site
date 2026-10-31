@@ -273,3 +273,12 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 /* Owner, 31 Oct: the caption starts level with the hero heading and hugs its text (tallest caption only);
    the window follows straight under it. */
 @media (min-width: 900px) { .living-hero .hero-world { align-self: stretch; } }
+/* Owner, 31 Oct: the caption's top sits level with the hero heading, and the spare height goes to the project window. */
+@media (min-width: 900px) {
+  .living-hero .hero-world { justify-content: flex-start; }
+  .living-hero .hero-world > [data-showcase-mode="auto"] { display: flex; flex: 1 0 auto; flex-direction: column; }
+  .living-hero .hero-world > [data-showcase-mode="auto"] > .showcase-cell { flex: 1 0 auto; }
+}
+/* 1250–1320px: the captions fit on fewer lines now, so the cell only reserves what the tallest needs. */
+@media (min-width: 1250px) and (max-width: 1269px) { .living-hero .hero-project-caption { min-height: 121px; } }
+@media (min-width: 1270px) and (max-width: 1320px) { .living-hero .hero-project-caption { min-height: 103px; } }

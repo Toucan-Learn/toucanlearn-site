@@ -1,6 +1,6 @@
 /* Equal media dimensions let browser tests compare intrinsic piano ratios and
    appearance. This external test sheet preserves the production CSP. */
-.showcase-cell { width: 560px !important; height: 338px !important; }
+.showcase-cell { flex: none !important; width: 560px !important; height: 338px !important; }
 /* Projects navigation is in the section header; equalise the sky, rather than
    adding the opening's 38px caption height to the section's media area. */
 #learner-projects .showcase-cell { height: 300px !important; }

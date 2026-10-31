@@ -44,7 +44,7 @@ const approved = [
     'A playable football game shaped by his written requests, from player movement to goalkeeper reactions. We build the code; he directs it.'],
   ['Drink design', 'SEN &amp; English',
     'Writing for an audience: knowing who you’re selling to, and choosing words that land.',
-    'Slogans, word choice and persuasive language. “Fizzy, extreme.”, “When you’re in a rush, have some Skids.” and Ground Pinch’s motto, “Designed for everyone.”, are all his.',
+    'Slogans, word choice and persuasive language. “Light, bright red. Fizzy Extreme.”, “When you’re in a rush, have some Skids.” and Ground Pinch’s pitch, “It’s sweet, fast, cheap, and will help you destroy your enemies.”, are all his.',
     'Designing drinks he’d actually want to buy, so the names, labels and adverts mattered to him. His pitch: “It’s sweet, fast, cheap, and will help you destroy your enemies.”',
     'Three drinks, from his pencil drawings and labels to 3D renders you can spin.'],
   ['Piano', 'Music',
@@ -78,7 +78,7 @@ for (const [index, { html: slide }] of slides.slice(1).entries()) {
 for (const [index, quotes] of [
   [1, ['disgraceful', 'controversial']],
   [2, ['the defenders keep passing back and forth, needs fixing']],
-  [3, ['Fizzy, extreme.', 'When you’re in a rush, have some Skids.', 'Designed for everyone.', 'It’s sweet, fast, cheap, and will help you destroy your enemies.']],
+  [3, ['Light, bright red. Fizzy Extreme.', 'When you’re in a rush, have some Skids.', 'It’s sweet, fast, cheap, and will help you destroy your enemies.']],
 ]) {
   for (const quote of quotes) assert(slides[index].html.includes(`“${quote}”`), `Changed learner quote: ${quote}`);
 }

@@ -211,7 +211,7 @@ const withoutOwnerContent = html => html
   .replace(/reviews-carousel\.js\?v=[^"]+/, 'reviews-carousel.js?v=TOKEN')
   // 30 Oct owner: the showcase label moved below the window, so compare without its position.
   .replace(/\n\s*<p class="eyebrow light[^"]*">[\s\S]*?<\/p>/, '')
-  .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
+  .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js|style\.css))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
 const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html))
   .replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN')
   // 30 Oct: one homepage-only caption directly below the media window.

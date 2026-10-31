@@ -31,6 +31,8 @@ try {
     await page.emulateMediaFeatures([{ name: 'prefers-reduced-motion', value: 'no-preference' }]);
     await page.evaluateOnNewDocument(() => { try { localStorage.setItem('toucan-launch-offer-last-shown', String(Date.now())); } catch {} });
     await page.goto(`${base}/${route}?project=${id}${sky ? `&sky=${sky}` : ''}`, { waitUntil: 'networkidle0' });
+    // The home carousel moves on after 8s idle; a slow newspaper load once captured DARTY as the football poster.
+    await page.$eval('[data-showcase]', root => setInterval(() => root.dispatchEvent(new PointerEvent('pointermove')), 2000));
     if (mode === 'section') await page.$eval('[data-panel-link][href="#learner-projects"]', link => link.click());
     await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center', behavior: 'instant' }));
     await page.waitForSelector('.showcase-stage > .showcase-live[data-showcase-revealed], .showcase-newspaper-layer[data-showcase-revealed]', { timeout: 30000 });
@@ -50,6 +52,8 @@ try {
     // Only the stage is captured; the piano toggle sits over it on its own.
     await page.$$eval('.showcase-piano-control', nodes => nodes.forEach(node => { node.style.visibility = 'hidden'; }));
     await page.$$eval('.site-header, header', nodes => nodes.forEach(node => { node.style.visibility = 'hidden'; }));
+    const shown = await page.$eval('[data-showcase]', root => root.dataset.project);
+    if (shown !== id) throw new Error(`${route}: expected the ${id} project on screen, found ${shown}`);
     const stage = await page.$('.showcase-stage');
     const clip = await stage.boundingBox();
     const name = [id === 'piano' ? 'toucan-piano' : id, mode, size, sky].filter(Boolean).join('-');

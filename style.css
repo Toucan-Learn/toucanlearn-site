@@ -68,7 +68,7 @@
       z-index: 50;
     }
 
-    .skip-link:focus { left: 12px; }
+    .skip-link:focus-visible { left: 12px; }
 
     header {
       position: sticky;

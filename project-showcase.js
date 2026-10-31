@@ -429,6 +429,10 @@ export function initShowcase(root) {
       controls.setAttribute('role', 'group');
       controls.setAttribute('aria-label', 'Drink designs');
       let viewer = null;
+      // Owner, 31 Oct: Fizzy and Ground Pinch lagged on their first click while
+      // their views loaded. Warm every drink while this slide is showing.
+      const warm = project.drinks.map(drink => prefetchDrink(drink));
+      const setWarm = value => warm.forEach(entry => entry.setActive(value && !motion.matches));
       function select(drink) {
         viewer?.destroy();
         controls.querySelectorAll('button').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.drink === drink.id)));
@@ -451,8 +455,9 @@ export function initShowcase(root) {
       drinks.append(controls, screen, info);
       stage.replaceChildren(drinks);
       select(project.drinks[0]);
-      dispose = () => viewer?.destroy();
-      dispose.setActive = value => viewer?.setActive(value);
+      setWarm(inView && visible());
+      dispose = () => { setWarm(false); viewer?.destroy(); };
+      dispose.setActive = value => { setWarm(value); viewer?.setActive(value); };
       dispose.setReduced = value => viewer?.setReduced(value);
       dispose.isDragging = () => viewer?.isDragging();
     }

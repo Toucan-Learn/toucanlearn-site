@@ -8,7 +8,7 @@ const root = new URL('../', import.meta.url);
 const read = file => fs.readFileSync(new URL(file, root), 'utf8');
 // Tag names and every non-text attribute, in order: the page's skeleton.
 const keep = new Set(['class', 'id', 'type', 'role', 'width', 'height', 'loading', 'decoding', 'data-project', 'aria-hidden']);
-const skeleton = html => [...html.replace(/<script src="\/language-text\.js[^"]*" defer><\/script>/, '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '<script></script>').replace(/<details class="[^"]*language-switch[\s\S]*?<\/details>/g, '').replace(/<link rel="alternate" hreflang[^>]*>/g, '')
+const skeleton = html => [...html.replace(/<script src="\/language-text-\w+\.js[^"]*"><\/script>/, '').replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, '<script></script>').replace(/<details class="[^"]*language-switch[\s\S]*?<\/details>/g, '').replace(/<link rel="alternate" hreflang[^>]*>/g, '')
   .matchAll(/<(\/?)([a-zA-Z][\w-]*)([^>]*)>/g)].map(([, close, name, attrs]) => close + name + [...attrs.matchAll(/([\w-]+)="([^"]*)"/g)].filter(([, key]) => keep.has(key)).map(([, key, value]) => ` ${key}=${value}`).join('')).join('\n');
 const text = html => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const projects = html => [...html.matchAll(/<article class="framework-project" data-project-slide data-project="(?!intro)[\s\S]*?<\/article>/g)].map(match => text(match[0]));
@@ -34,5 +34,5 @@ for (const page of pages) {
     checks++;
   }
 }
-assert.equal(read('language-text.js'), scriptText(), 'language-text.js is generated from the current translations');
+for (const lang of Object.keys(languages)) assert.equal(read(`language-text-${lang}.js`), scriptText(lang), `language-text-${lang}.js is generated from the current translations`);
 console.log(`PASS: ${checks} language copies match their English pages.`);

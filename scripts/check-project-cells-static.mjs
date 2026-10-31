@@ -31,27 +31,28 @@ assert.equal((intro.match(/<img\b/g) || []).length, 1, 'Exactly one intro image'
 assert(intro.includes('class="project-intro-image"') && intro.includes('src="assets/projects/intro-learning.jpg" alt=""'), 'The image slot accepts the replacement photo without copy changes');
 const introJPEG = await readFile(path.join(site, 'assets/projects/intro-learning.jpg'));
 assert(introJPEG.length > 0 && introJPEG[0] === 0xff && introJPEG[1] === 0xd8, 'A real local JPEG placeholder prevents a broken image');
+// Owner, 31 Oct: the back-page cards follow the homepage captions (Mission and Result), and the piano keys are green now, purple next.
 const approved = [
-  ['Sports journalism', 'English',
+  ['Sports journalism', 'English · Journalism',
     'Confident, persuasive writing: making a clear case, backing it up, and knowing your reader.',
     'Telling fact from opinion, and writing both: objective match reports and previews, then subjective opinion pieces where he argues his corner. Word choice mattered too. Is a fan’s view “disgraceful”, or just “controversial”?',
     'Football. He already had strong opinions about Leeds, tactics and the modern game, so every lesson started with something he wanted to say.',
-    'His own newspaper of match previews, a full match report, analysis and opinion pieces, from hydration breaks to how football has changed since 1970. Written by him, with our support on the editing.'],
+    'His own growing sports journalism website, full of his previews, analysis and reports, from hydration breaks to how football has changed since 1970. Written by him, with our support on the editing.'],
   ['DARTY', 'English · Game design',
     'Writing clear, precise instructions, and writing because there’s a real reason to.',
     'Writing with purpose, cause and effect, and intrinsic motivation. When he writes “the defenders keep passing back and forth, needs fixing”, he sees exactly what his words change.',
     'He loves football games. When we started, writing was the last thing he wanted to do. Now every change to his game starts with him writing it down.',
     'A playable football game shaped by his written requests, from player movement to goalkeeper reactions. We build the code; he directs it.'],
   ['Drink design', 'SEN &amp; English',
-    'Writing for an audience: knowing who you’re selling to, and choosing words that land.',
+    'Regaining his creative and working flow, through designing drinks.',
     'Slogans, word choice and persuasive language. “Light, bright red. Fizzy Extreme.”, “When you’re in a rush, have some Skids.” and Ground Pinch’s pitch, “It’s sweet, fast, cheap, and will help you destroy your enemies.”, are all his.',
-    'Designing drinks he’d actually want to buy, so the names, labels and adverts mattered to him. His pitch: “It’s sweet, fast, cheap, and will help you destroy your enemies.”',
-    'Three drinks, from his pencil drawings and labels to 3D renders you can spin.'],
-  ['Piano', 'Music',
-    'A way into music through play, with no pressure to get it right first time.',
-    'Listening, spotting patterns and keeping time. Orange shows the note to play now and green the one after, while the tempo bar keeps the beat.',
-    'Hear a note, play it back, try again. Short wins build into real songs like The Entertainer.',
-    'A piano anyone can play, right here on the site, with songs to learn and sounds to try.'],
+    'Designing drinks he’d actually want to buy, so the names, labels and adverts mattered to him.',
+    'A collection of drinks brands, from his sketches, label designs and slogans to 3D renders you can spin.'],
+  ['Piano', 'SEN · Music brain breaks',
+    'Productive brain breaks: a few minutes of music at a time, then back to work with a fresh head.',
+    'Listening, spotting patterns and keeping time. Green shows the note to play now and purple the one after, while the tempo bar keeps the beat.',
+    'Hear a note, play it back, try again. Short wins on songs he asks for, like The Entertainer.',
+    'A custom keyboard, songs they can request and learn, and a fresh head for the next task.'],
 ];
 for (const [index, { html: slide }] of slides.slice(1).entries()) {
   const [heading, label, goal, skills, link, result] = approved[index];

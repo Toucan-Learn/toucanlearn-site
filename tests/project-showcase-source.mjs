@@ -294,7 +294,8 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
     // Cache tokens on its piano imports change with each piano fix (30 Oct: iOS audio).
     .replace(/(hero-(?:keyboard|piano)\.js\?v=)[^'"]+/g, '$1TOKEN');
   // 30 Oct: base moved to 90e02ba, the owner-requested Maple Leaf bars 1-16.
-  const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || '90e02ba'}:${file}`], { cwd: site, encoding: 'utf8' });
+  // 31 Oct: base moved to b3979e3, the owner-requested song bar on the sky.
+  const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || 'b3979e3'}:${file}`], { cwd: site, encoding: 'utf8' });
   const untoken = text => text.replace(/(hero-(?:keyboard|piano|sky)\.js\?v=)[^'"]+/g, '$1TOKEN');
   assert.equal(untoken(normalise(current)), untoken(normalise(approved)), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }

@@ -1,5 +1,5 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261031-language-merge-1';
-import { initHeroSky } from './hero-sky.js?v=20261031-language-merge-1';
+import { initHeroSky } from './hero-sky.js?v=20261031-mobile-speed-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261031-language-merge-1';
 import { dartyMatchURL } from './darty-match.js?v=20261031-darty-night-1';
 
@@ -59,7 +59,7 @@ const pianoMarkup = `<div class="piano-world">
             <button class="world-art" id="ripple-button" type="button" aria-label="Toucan pixel sky: click or press Enter to make ripples and play a note">
               <canvas id="sky-canvas" aria-hidden="true"></canvas>
               <canvas id="flock-canvas" aria-hidden="true"></canvas>
-              <img class="hero-mascot" src="/assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
+              <img class="hero-mascot" src="/assets/toucan-logo-outline-800.webp" alt="" width="1200" height="1200" />
             </button>
             <div class="piano-song-controls" aria-hidden="true" inert>
               <p class="piano-credit" aria-live="polite" aria-atomic="true"></p>

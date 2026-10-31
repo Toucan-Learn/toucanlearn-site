@@ -35,6 +35,8 @@ const untokened = page => page.replace(/\?v=[^"']+/g, '?v=T'); // stylesheet/scr
 // Owner, 31 Oct: menus carry data-nosnippet so Google stops quoting them as the site description.
 const withoutNosnippet = page => page.replace(/<nav data-nosnippet/g, '<nav');
 // Owner, 31 Oct: every page links to its full copies in other languages (menu switch and hreflang links).
+// Owner, 31 Oct: phones load small WebP copies of the logo and art; the pictures are unchanged.
+const lightImages = page => page.replace(/toucan-logo-(outline|flat)-(?:256|800)\.webp/g, 'toucan-logo-$1.png').replace(/art\/([a-z0-9-]+)\.webp/g, 'art/$1.png');
 const withoutLanguages = page => page.replace(/<details class="[^"]*language-switch[^"]*"[^>]*>[\s\S]*?<\/details>/g, '')
   .replace(/\n\s*<link rel="alternate" hreflang[^>]*>/g, '').replace(/\n\s*<(?:link|script)[^>]*language-(?:switch|text)\.(?:css|js)[^>]*>(?:<\/script>)?/g, '');
 // Owner, 30 Oct: the age field sits at the top of the details column, so choosing
@@ -46,13 +48,13 @@ const ageBack = page => {
   return block ? page.replace(block, '').replace(/(<span class="field-error" id="learner-child-error"><\/span>\s*<\/fieldset>)/, `$1${block}`) : page;
 };
 assert.ok(html.indexOf('id="age-year-field"') > html.indexOf('id="support-needed"') && html.indexOf('id="age-year-field"') < html.indexOf('id="subject"'), 'Age sits above Subject in the details column');
-assert.equal(contactMarkup(untokened(ageBack(withoutClarity(withoutNosnippet(withoutLanguages(html)))))), contactMarkup(untokened(withoutNosnippet(expected))),
+assert.equal(contactMarkup(untokened(ageBack(withoutClarity(withoutNosnippet(withoutLanguages(lightImages(html))))))), contactMarkup(untokened(withoutNosnippet(expected))),
   'Preserve field names, order, hooks, configuration and copy outside the requested help and phone labels');
 // Owner, 31 Oct: the "Website visits" section now describes Microsoft Clarity; everything else stays as approved.
 const visits = page => page.replace(/<section(?: id="website-visits")?>\s*<h2>Website visits and changes<\/h2>[\s\S]*?<\/section>/, '<!-- website visits: owner-managed -->');
 const privacy = await read('privacy.html');
 assert.match(privacy, /Microsoft Clarity[\s\S]*data-clarity-toggle/, 'Privacy explains Clarity and offers the switch');
-assert.equal(navigationMarkup(untokened(visits(withoutClarity(withoutNosnippet(privacy))))), navigationMarkup(untokened(visits(execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' })))), 'Privacy matches the owner-approved 30 Oct notice');
+assert.equal(navigationMarkup(untokened(visits(withoutClarity(withoutNosnippet(lightImages(privacy)))))), navigationMarkup(untokened(visits(execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' })))), 'Privacy matches the owner-approved 30 Oct notice');
 assert.doesNotMatch(html, /support-needed-hint|The subject or goal, and what's tricky at the moment/);
 assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-needed-privacy support-needed-error"[^>]*required/);
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));

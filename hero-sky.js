@@ -358,7 +358,8 @@ intersection.observe(art);
 listen(document, 'visibilitychange', sync);
 drawFallback();
 renderer = createSky();
-['/assets/toucan-logo-flat.png', '/assets/toucan-logo-outline.png'].forEach((path, index) => {
+// Small copies: each sprite is drawn at 100px (owner, 31 Oct: the 1200px PNGs held up phones).
+['/assets/toucan-logo-flat-256.webp', '/assets/toucan-logo-outline-256.webp'].forEach((path, index) => {
   const image = new Image();
   spriteImages.push(image);
   image.onload = () => {

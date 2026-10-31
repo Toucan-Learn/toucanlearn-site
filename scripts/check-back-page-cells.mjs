@@ -76,7 +76,8 @@ for (const file of files) {
   if (file === 'approach.html' || file === 'children.html') {
     const steps = html.match(/<ol class="learning-steps">[\s\S]*?<\/ol>/)?.[0];
     assert.ok(steps, `${file}: missing steps`);
-    for (let i = 1; i <= 4; i++) assert.equal(steps.split(`assets/art/step-0${i}.png`).length - 1, 1);
+    // Owner, 31 Oct: the same step art, as small WebP copies for phones.
+    for (let i = 1; i <= 4; i++) assert.equal(steps.split(`assets/art/step-0${i}.webp`).length - 1, 1);
   }
   if (file === 'children.html') {
     const header = html.match(/id="getting-started"[\s\S]*?<div class="section-head">([\s\S]*?)<\/div>/)?.[1];

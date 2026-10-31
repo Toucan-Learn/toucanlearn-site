@@ -218,6 +218,9 @@ const withoutOwnerContent = html => html
   // 30 Oct owner: the showcase label moved below the window, so compare without its position.
   .replace(/\n\s*<p class="eyebrow light[^"]*">[\s\S]*?<\/p>/, '')
   .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js|style\.css|hero\.css|theme\.js|launch-offer\.js|campaigns\.js|consent\.js|route-photos\.js|step-art\.js))(?:\?v=[^"']+)?/g, '$1?v=TOKEN')
+  // Owner, 31 Oct: phones load small WebP copies of the logo, art and Sara's photo; the pictures are unchanged.
+  .replace(/toucan-logo-(outline|flat)-(?:256|800)\.webp/g, 'toucan-logo-$1.png').replace(/art\/([a-z0-9-]+)\.webp/g, 'art/$1.png')
+  .replace('sara-portrait-600.webp?v=20261031-mobile-1" alt="Sara Sharra" width="600" height="800"', 'sara-portrait.jpg?v=20261028-photos-2" alt="Sara Sharra" width="900" height="1200"')
   // Owner, 31 Oct: structured data naming every learner project, for search summaries.
   .replace(/\n  <!-- Owner, 31 Oct: search summaries[\s\S]*?<script type="application\/ld\+json">[\s\S]*?<\/script>/, '')
   // Owner, 31 Oct: every page links to its full copies in other languages (menu switch and hreflang links).
@@ -303,7 +306,9 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
     .replace('  // Showcase readiness only: report a fully sized draw once the live sky (not its still fallback) shows.\n  if (!firstFrame && sized && fallbackImage.complete && fallbackImage.naturalWidth && (!renderer || !sky.hidden)) {\n    firstFrame = true;\n    onFirstFrame?.();\n  }\n', '')
     .replace('  sized = rect.width > 0 && rect.height > 0;\n', '')
     // Cache tokens on its piano imports change with each piano fix (30 Oct: iOS audio).
-    .replace(/(hero-(?:keyboard|piano)\.js\?v=)[^'"]+/g, '$1TOKEN');
+    .replace(/(hero-(?:keyboard|piano)\.js\?v=)[^'"]+/g, '$1TOKEN')
+    // Owner, 31 Oct: the flock sprites load small WebP copies of the same two logos.
+    .replace("// Small copies: each sprite is drawn at 100px (owner, 31 Oct: the 1200px PNGs held up phones).\n['/assets/toucan-logo-flat-256.webp', '/assets/toucan-logo-outline-256.webp']", "['/assets/toucan-logo-flat.png', '/assets/toucan-logo-outline.png']");
   // 30 Oct: base moved to 90e02ba, the owner-requested Maple Leaf bars 1-16.
   // 31 Oct: base moved to b3979e3, the owner-requested song bar on the sky.
   const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || 'b3979e3'}:${file}`], { cwd: site, encoding: 'utf8' });

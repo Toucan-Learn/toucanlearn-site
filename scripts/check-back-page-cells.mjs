@@ -19,7 +19,7 @@ const withoutClarity = page => page.replace(" https://www.clarity.ms https://scr
   .replace(/\n\s*<script src="consent\.js[^"]*"><\/script>/, "").replace(/\n\s*<link rel="stylesheet" href="consent\.css[^"]*" \/>/, "");
 const csp = html => html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)?.[0];
 // 30 Oct: the owner asked for every subject panel to be reworked (1817511), then Art & DT by level (e6c2404) and panel CTAs (692b636).
-const copyBase = { 'subjects.html': '1ebe50a', 'children.html': 'f837bd2', 'adults.html': '614ad05', 'approach.html': '614ad05' };
+const copyBase = { 'subjects.html': '1ebe50a', 'children.html': 'dd1da7e', 'adults.html': '614ad05', 'approach.html': '614ad05' };
 function approvedCopy(file) {
   // Owner, 30 Oct: the in-person area is Oxfordshire, not Henley.
   let copy = words(original(file, copyBase[file] || copyBefore)).replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');

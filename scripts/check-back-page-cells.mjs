@@ -27,7 +27,10 @@ function approvedCopy(file) {
   // Owner, 30 Oct: no "UK only" wording for online lessons.
   if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
   // Owner, 31 Oct: DARTY's label is just "SEN support".
-  if (file === 'children.html') copy = copy.replace('English · Game design', 'SEN support');
+  if (file === 'children.html') copy = copy.replace('English · Game design', 'SEN support')
+    // Owner, 31 Oct: DARTY's goal and result match the homepage caption, expanded.
+    .replace('Writing clear, precise instructions, and writing because there’s a real reason to.', 'Getting an avoidant learner excited to practise writing clear, precise instructions, because there’s a real reason to write them.')
+    .replace('A playable football game shaped by his written requests, from player movement to goalkeeper reactions. We build the code; he directs it.', 'A playable 3D football game built from his written requests: he directs, we code. Player movement, passing and goalkeeper reactions each began as a request he wrote.');
   // Owner, 31 Oct: the SEND intro names the specialist and the wider team, not Joshua's titles.
   if (file === 'subjects.html') copy = copy.replace('Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.', 'Start with what the learner enjoys with our SEN specialist &amp; wider team.')
     // Owner, 31 Oct: Psychology names Joshua as psychology graduate and SEN specialist.

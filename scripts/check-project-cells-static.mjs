@@ -38,12 +38,12 @@ const approved = [
     'Telling fact from opinion, and writing both: objective match reports and previews, then subjective opinion pieces where he argues his corner. Word choice mattered too. Is a fan’s view “disgraceful”, or just “controversial”?',
     'Football. He already had strong opinions about Leeds, tactics and the modern game, so every lesson started with something he wanted to say.',
     'His own growing sports journalism website, full of his previews, analysis and reports, from hydration breaks to how football has changed since 1970. Written by him, with our support on the editing.'],
-  // Owner, 31 Oct: DARTY's label is just "SEN support".
+  // Owner, 31 Oct: DARTY's label is just "SEN support"; its goal and result match the homepage, expanded.
   ['DARTY', 'SEN support',
-    'Writing clear, precise instructions, and writing because there’s a real reason to.',
+    'Getting an avoidant learner excited to practise writing clear, precise instructions, because there’s a real reason to write them.',
     'Writing with purpose, cause and effect, and intrinsic motivation. When he writes “the defenders keep passing back and forth, needs fixing”, he sees exactly what his words change.',
     'He loves football games. When we started, writing was the last thing he wanted to do. Now every change to his game starts with him writing it down.',
-    'A playable football game shaped by his written requests, from player movement to goalkeeper reactions. We build the code; he directs it.'],
+    'A playable 3D football game built from his written requests: he directs, we code. Player movement, passing and goalkeeper reactions each began as a request he wrote.'],
   ['Drink design', 'SEN &amp; English',
     'Regaining his creative and working flow, through designing drinks.',
     'Slogans, word choice and persuasive language. “Light, bright red. Fizzy Extreme.”, “When you’re in a rush, have some Skids.” and Ground Pinch’s pitch, “It’s sweet, fast, cheap, and will help you destroy your enemies.”, are all his.',

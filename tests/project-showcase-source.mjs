@@ -198,6 +198,10 @@ const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 // The team section and site-wide asset tokens carry owner-approved edits from other lanes (29 Oct: team copy, Sara's order,
 // framework/menu/favicon tokens), so these guards compare the showcase-owned markup only.
 const withoutOwnerContent = html => html
+  // Owner, 31 Oct: menus carry data-nosnippet, and the homepage title and description were rewritten after Google quoted the menu.
+  .replace(/<nav data-nosnippet/g, '<nav')
+  .replace(/<title>[^<]*<\/title>/, '<title>TITLE</title>')
+  .replace(/(<meta (?:name="description"|property="og:description") content=")[^"]*"/g, '$1DESCRIPTION"')
   // Owner, 31 Oct: Microsoft Clarity adds its sources to the CSP and two tags.
   .replace(" https://www.clarity.ms https://scripts.clarity.ms", "").replace(" https://*.clarity.ms https://c.bing.com", "").replace(" https://*.clarity.ms", "")
   .replace(/\n\s*<script src="consent\.js[^"]*"><\/script>/, "").replace(/\n\s*<link rel="stylesheet" href="consent\.css[^"]*" \/>/, "")

@@ -1,0 +1,24 @@
+/* Only translated pages: existing cards and typography, with room for longer copy. */
+.language-page .language-main { padding-block: 40px; }
+.language-page .language-main > h1 { max-width: 24ch; }
+.language-page .language-main > p { max-width: 80ch; }
+.language-page .language-grid, .language-page .language-profiles, .language-page .language-reviews { display: grid; gap: 24px; margin-block: 24px; }
+.language-page .framework-card { display: flow-root; min-width: 0; padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-xl); background: var(--paper); }
+.language-page .framework-card h2 { margin-top: 0; font-size: 1.5rem; }
+.language-page .framework-card p { line-height: 1.55; }
+.language-page .framework-card p:last-child { margin-bottom: 0; }
+.language-page .language-profiles .team-biography + .team-biography { margin-top: 0; }
+.language-page .team-biography-role { font-weight: 700; color: var(--orange-text); }
+.language-page .language-art { float: right; width: min(32%, 160px); height: auto; margin: 0 0 16px 16px; border-radius: 14px; }
+.language-page .language-reviews .review-quote { margin: 0; }
+.language-page .language-reviews blockquote { padding: 0; border: 0; }
+.language-page .footer-slogan { white-space: normal; }
+.language-page .hero-actions .button { white-space: normal; }
+@media (min-width: 900px) {
+  .language-page .language-grid, .language-page .language-reviews { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .language-page .language-profiles { grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; }
+}
+@media (max-width: 600px) {
+  .language-page .language-main { padding-block: 24px; }
+  .language-page .framework-card { padding: 20px; }
+}

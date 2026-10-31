@@ -54,8 +54,8 @@ const darty = projects.find(project => project.id === 'darty');
 assert.equal(darty.type, 'match');
 assert(!('images' in darty), 'There is no gallery image list');
 const stillURL = n => `assets/projects/darty-still-${String(n).padStart(2, '0')}.webp?v=20261029-darty-title-5`;
-assert.equal(darty.poster, stillURL(1), 'Keep the no-JS fallback poster');
-assert.equal(darty.titleStill, stillURL(7), 'All devices use the number 2 floodlit still');
+assert.equal(darty.poster.replace(/^\//, ''), stillURL(1), 'Keep the no-JS fallback poster; runtime URLs also work below /vi/');
+assert.equal(darty.titleStill.replace(/^\//, ''), stillURL(7), 'All devices use the number 2 floodlit still');
 assert(!source.includes('showcase-darty-stills') && !showcaseStyles.includes('showcase-darty-still'), 'Remove the title slideshow code and styles');
 const zoom = showcaseStyles.match(/@keyframes showcase-darty-zoom\s*\{\s*from\s*\{([^}]+)\}\s*to\s*\{([^}]+)\}\s*\}/);
 assert(zoom && zoom.slice(1).every(frame => /^\s*transform:\s*scale\([\d.]+\);\s*$/.test(frame)), 'Title zoom animates only CSS transforms');
@@ -230,7 +230,7 @@ const belowHero = html => html.slice(html.indexOf('<section class="homepage-sect
 assert.equal(withoutOwnerContent(homeNavigationMarkup(belowHero(after))), withoutOwnerContent(homeNavigationMarkup(belowHero(before))), 'Homepage content below the hero (outside the owner-managed team section) is preserved through the URL migration');
 
 const children = await readFile(new URL('../children.html', import.meta.url), 'utf8');
-assert(children.includes(`src="${darty.poster}" alt="${darty.alt}" width="1600" height="900"`), 'Children fallback uses the new poster, night alt text and real dimensions');
+assert(children.includes(`src="${darty.poster.replace(/^\//, '')}" alt="${darty.alt}" width="1600" height="900"`), 'Children fallback uses the new poster, night alt text and real dimensions');
 assert.deepEqual([...children.matchAll(/data-project-slide data-project="([^"]+)"/g)].map(match => match[1]), sectionProjects.map(project => project.id), 'The intro precedes all four matching copy cards');
 assert(!/data-project="intro"|Learning is easier when you enjoy it\./.test(after), 'The homepage has no intro slide');
 assert.equal((after.match(/data-project-caption\b/g) || []).length, 1, 'The homepage has one caption');
@@ -300,7 +300,9 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
   // 30 Oct: base moved to 90e02ba, the owner-requested Maple Leaf bars 1-16.
   // 31 Oct: base moved to b3979e3, the owner-requested song bar on the sky.
   const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || 'b3979e3'}:${file}`], { cwd: site, encoding: 'utf8' });
-  const untoken = text => text.replace(/(hero-(?:keyboard|piano|sky)\.js\?v=)[^'"]+/g, '$1TOKEN');
+  // Nested language homes need root-relative media; asset identity and renderer logic stay pinned.
+  const untoken = text => text.replace(/(["'`])\/assets\//g, '$1assets/')
+    .replace(/(hero-(?:keyboard|piano|sky|sky-shaders)\.js\?v=)[^'"]+/g, '$1TOKEN');
   assert.equal(untoken(normalise(current)), untoken(normalise(approved)), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }
 console.log('Shared showcase checks passed: exact DARTY URL/hash/single autoplay, click-only iframe on all devices, teardown, children-only intro, four unchanged homepage projects, cache tokens, exact idle deadline, resets, focus/playing/held input, hidden pause, reduced motion, manual mode and CSP.');

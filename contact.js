@@ -56,6 +56,15 @@ var EnquiryRules = (function () {
   }
   const form = document.getElementById("enquiry-form");
   if (!form) return;
+  const messages = window.toucanFormMessages;
+  const translate = message => {
+    if (!messages) return message;
+    if (messages[message]) return messages[message];
+    const limit = message.match(/^Please keep (?:this field|your message) within (\d+) characters/);
+    if (limit) return messages[message.replace(limit[1], '{limit}')].replace('{limit}', limit[1]);
+    return message;
+  };
+  let submitted = false;
   const formFields = document.getElementById("enquiry-fields");
   const submitButton = document.getElementById("submit-button");
   const formMessage = document.getElementById("form-message");
@@ -141,7 +150,7 @@ var EnquiryRules = (function () {
     const whatsapp = document.createElement("a");
     whatsapp.href = "https://wa.me/447307045816";
     whatsapp.textContent = "WhatsApp 07307 045816";
-    formMessage.replaceChildren(message + " You can email ", email, ", call ", phone, " or use ", whatsapp, ".");
+    formMessage.replaceChildren(message + " " + translate("You can email") + " ", email, translate(", call") + " ", phone, " " + translate("or use") + " ", whatsapp, ".");
     formMessage.classList.add("is-visible");
   }
   // The optional subject travels inside "Support requested", so the existing form backend needs no change.
@@ -155,7 +164,7 @@ var EnquiryRules = (function () {
   }
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
-    if (form.getAttribute("aria-busy") === "true") return;
+    if (submitted || form.getAttribute("aria-busy") === "true") return;
     clearErrors();
     syncConditional();
     const body = new URLSearchParams(new FormData(form));
@@ -168,11 +177,11 @@ var EnquiryRules = (function () {
       result.errors["Support requested"] = "Please keep your message within " + (supportLimit - prefixLength) + " characters (1000 including the selected subject).";
     }
     if (!result.ok) {
-      showMessage("Please check your enquiry. " + Object.values(result.errors).join(" "));
+      showMessage(translate("Please check your enquiry.") + " " + Object.values(result.errors).map(translate).join(" "));
       Object.keys(result.errors).forEach((key) => {
         const id = controls[key];
         if (!id) return;
-        document.getElementById(id + "-error").textContent = result.errors[key];
+        document.getElementById(id + "-error").textContent = translate(result.errors[key]);
         form.querySelectorAll('[name="' + key + '"]').forEach((control) => control.setAttribute("aria-invalid", "true"));
         errorControl(id).setAttribute("aria-invalid", "true");
       });
@@ -181,12 +190,12 @@ var EnquiryRules = (function () {
       return;
     }
     if (!endpointPattern.test(formEndpoint)) {
-      showMessage("The enquiry form is being set up; no information has been sent.");
+      showMessage(translate("The enquiry form is being set up; no information has been sent."));
       formMessage.focus();
       return;
     }
     submitButton.disabled = true;
-    submitButton.textContent = "Sending…";
+    submitButton.textContent = translate("Sending…");
     form.setAttribute("aria-busy", "true");
     const requestController = new AbortController();
     const requestTimeout = window.setTimeout(() => requestController.abort(), 20000);
@@ -197,15 +206,25 @@ var EnquiryRules = (function () {
         body: sent, signal: requestController.signal
       });
       if (!response.ok || (await response.json()).ok !== true) throw new Error("Enquiry failed");
-      window.location.assign("thank-you");
+      if (form.dataset.successMessage) {
+        submitted = true;
+        formFields.disabled = true;
+        formMessage.textContent = form.dataset.successMessage;
+        formMessage.classList.add("is-visible");
+        formMessage.setAttribute("role", "status");
+        formMessage.setAttribute("aria-live", "polite");
+        formMessage.focus();
+      } else {
+        window.location.assign("thank-you");
+      }
     } catch (error) {
-      showMessage("Your enquiry may not have sent. Please contact us using one of these options.");
+      showMessage(translate("Your enquiry may not have sent. Please contact us using one of these options."));
       formMessage.focus();
     } finally {
       window.clearTimeout(requestTimeout);
       form.removeAttribute("aria-busy");
-      submitButton.disabled = false;
-      submitButton.textContent = "Send my enquiry";
+      submitButton.disabled = submitted;
+      submitButton.textContent = translate("Send my enquiry");
     }
   });
 })();

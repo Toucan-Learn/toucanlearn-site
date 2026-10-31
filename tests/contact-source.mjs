@@ -194,7 +194,7 @@ assert.match(script, /new URLSearchParams\(new FormData\(form\)\)/, 'All named f
 const now = 1793275200000;
 const valid = { 'Contact name': 'Synthetic Test', Learner: 'adult', 'Support requested': 'Help with a course.',
   'Reply method': 'email', email: 'test@example.invalid', loaded_at: String(now - 5000) };
-function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced = true } = {}) {
+function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced = true, markup = html, languageMessages } = {}) {
   const elements = new Map(), listeners = new Map(), documentListeners = new Map(), requests = [], redirects = [], timers = new Map();
   let focused;
   function node(id = '', attrs = {}) {
@@ -217,7 +217,7 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
       focus() { focused = id; }
     };
   }
-  for (const [, tag] of html.matchAll(/(<[\w-]+\b[^>]*\bid="[^"]+"[^>]*>)/g)) {
+  for (const [, tag] of markup.matchAll(/(<[\w-]+\b[^>]*\bid="[^"]+"[^>]*>)/g)) {
     const attrs = Object.fromEntries([...tag.matchAll(/([\w-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value.replaceAll('&amp;', '&')]));
     elements.set(attrs.id, node(attrs.id, attrs));
   }
@@ -228,7 +228,7 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
   elements.get('subject').hidden = enhanced;
   if (campaignSource) elements.get('campaign-source').value = campaignSource;
   const form = elements.get('enquiry-form');
-  form.dataset = { formEndpoint: form.attrs['data-form-endpoint'] };
+  form.dataset = { formEndpoint: form.attrs['data-form-endpoint'], successMessage: form.attrs['data-success-message'] };
   form.addEventListener = (type, fn) => listeners.set(type, fn);
   form.querySelector = selector => {
     const name = selector.match(/name="([^"]+)"/)[1];
@@ -251,7 +251,7 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
     } },
     document: { getElementById: id => elements.get(id), createElement: () => node(),
       addEventListener: (type, fn) => documentListeners.set(type, fn) },
-    window: { location: { search, assign: value => redirects.push(value) },
+    window: { toucanFormMessages: languageMessages, location: { search, assign: value => redirects.push(value) },
       setTimeout: fn => { timers.set(1, fn); return 1; }, clearTimeout: id => timers.delete(id) },
     fetch: async (url, options) => {
       requests.push({ url, ...options });
@@ -383,3 +383,47 @@ for (const outcome of ['network', 'timeout', 'http-error', 'rejected']) {
 }
 assert.equal(await read('hoc-tieng-anh.js'), execFileSync('git', ['show', '330fef9:hoc-tieng-anh.js'], { cwd: root, encoding: 'utf8' }), 'Vietnamese form stays separate (owner-approved 30 Oct version with the SEN option)');
 console.log('PASS: Original Subject select, progressive enhancement, keyboard/focus events, Lucide icons, clearing, URL/data-service pre-fill, native/custom error focus, payload compatibility, combined message limits, UK/international phones, uncertain-send alternatives, accessibility and CSP. Browser layout and server deployment unverified.');
+
+// The same production form handler with each translated form: no live requests.
+const languageScript = await read('language-forms.js');
+for (const lang of ['es', 'fr', 'it']) {
+  const markup = await read(`${lang}/contact.html`);
+  const dictionary = { window: {}, document: { documentElement: { lang } } };
+  vm.runInNewContext(languageScript, dictionary);
+  const languageMessages = dictionary.window.toucanFormMessages;
+  const options = { markup, languageMessages };
+  const success = enquiry({ ...valid, Subject: 'English' }, 'ok', options);
+  await success.submit();
+  assert.equal(success.requests.length, 1);
+  assert.equal(success.requests[0].body.get('Support requested'), 'Subject: English | Help with a course.');
+  assert.equal(success.requests[0].url, enquiry(valid).elements.get('enquiry-form').dataset.formEndpoint);
+  assert.equal(success.redirects.length, 0, 'Translated success stays in the selected language');
+  assert.equal(success.elements.get('form-message').textContent, success.elements.get('enquiry-form').dataset.successMessage);
+  assert.equal(success.elements.get('form-message').attrs.role, 'status');
+  assert.equal(success.elements.get('enquiry-fields').disabled, true);
+  await success.submit(); assert.equal(success.requests.length, 1, 'Success prevents duplicate requests');
+  for (const outcome of ['network','http-error','rejected','timeout']) {
+    const failed = enquiry(valid, outcome, options);
+    await failed.submit();
+    assert.equal(failed.redirects.length, 0);
+    assert(failed.elements.get('form-message').parts[0].startsWith(languageMessages['Your enquiry may not have sent. Please contact us using one of these options.']));
+    assert.equal(failed.elements.get('submit-button').textContent, languageMessages['Send my enquiry']);
+    assert.equal(failed.elements.get('submit-button').disabled, false);
+    assert.equal(failed.timers.size, 0);
+    await failed.submit(); assert.equal(failed.requests.length, 2, 'Translated errors allow retry');
+  }
+  for (const [bad,key,message] of [
+    [{...valid,'Contact name':''},'contact-name','Enter your name.'],
+    [{...valid,email:'invalid'},'email','Enter a valid email address.'],
+    [{...valid,'Desired lesson rate':'x'.repeat(61)},'desired-lesson-rate','Please keep this field within {limit} characters.']
+  ]) {
+    const page = enquiry(bad,'ok',options); await page.submit();
+    assert.equal(page.requests.length,0);
+    assert.equal(page.elements.get(key+'-error').textContent,languageMessages[message].replace('{limit}','60'));
+    assert.equal(page.focused,key);
+  }
+  const long = enquiry({...valid,Subject:'English','Support requested':'x'.repeat(1000)},'ok',options);
+  await long.submit(); assert.equal(long.requests.length,0);
+  assert.equal(long.elements.get('support-needed-error').textContent,languageMessages['Please keep your message within {limit} characters (1000 including the selected subject).'].replace('{limit}','981'));
+}
+console.log('PASS: Spanish, French and Italian form validation, payloads, translated success/errors, timeout, retry and duplicate protection.');

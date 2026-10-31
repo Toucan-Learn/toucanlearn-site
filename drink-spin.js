@@ -112,7 +112,7 @@ function drinkImage(drink, file) {
   // instead of showing nothing (owner, 29 Oct: drinks vanished on flicks).
   image.decoding = 'sync';
   image.fetchPriority = 'low';
-  image.src = `assets/projects/drinks/${drink.id}/${file}?v=${assetVersion}`;
+  image.src = `/assets/projects/drinks/${drink.id}/${file}?v=${assetVersion}`;
   return image;
 }
 
@@ -183,7 +183,7 @@ function createFrameSequence(drink, clock) {
     const controller = new AbortController();
     request = controller;
     try {
-      const response = await fetch(`assets/projects/drinks/${drink.id}/manifest.json?v=${assetVersion}`, { signal: controller.signal, priority: 'low' });
+      const response = await fetch(`/assets/projects/drinks/${drink.id}/manifest.json?v=${assetVersion}`, { signal: controller.signal, priority: 'low' });
       if (!response.ok) throw new Error('Unavailable frame manifest');
       const data = await response.json();
       if (!Number.isInteger(data.frameCount) || data.frameCount < 2 || data.frameCount > 1000 || ![-1, 1].includes(data.dragDirection ?? -1)) throw new Error('Invalid frame manifest');

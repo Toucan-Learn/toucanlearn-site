@@ -1,18 +1,18 @@
-import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261031-skids-drops-1';
-import { initHeroSky } from './hero-sky.js?v=20261031-song-bar-1';
-import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
+import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261031-language-paths-1';
+import { initHeroSky } from './hero-sky.js?v=20261031-language-paths-1';
+import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261031-language-paths-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
 // One media cell for the opening and Projects. Full section copy stays in HTML for no-JS/print.
 export const projects = [
-  { id: 'football', name: 'Sports journalism', label: 'English · Journalism', heading: 'Football newspaper', learning: 'Using a discouraged student’s interests and insights to practise English.', result: 'His own growing sports journalism website, full of his previews, analysis and reports.', poster: 'assets/projects/football-home{size}.webp?v=20261031-window-3', sectionPoster: 'assets/projects/football-section{size}.webp?v=20261031-window-3', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: 'projects/football-journalism/' },
-  { id: 'darty', name: 'DARTY', label: 'English · Game design', heading: 'DARTY (football game)', learning: 'Getting an avoidant learner excited to practise writing clear, precise instructions.', result: 'A playable 3D football game built from his written requests: he directs, we code.', poster: 'assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: 'assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
-  { id: 'drinks', name: 'Drink design', label: 'SEN & English', heading: 'Drink design', learning: 'One SEN student often regains his creative and working flow through designing drinks.', result: 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.', poster: 'assets/projects/drinks/skids/poster.webp?v=20261031-skids-drops-1', alt: 'Skids drink design', type: 'drinks', drinks: [
+  { id: 'football', name: 'Sports journalism', label: 'English · Journalism', heading: 'Football newspaper', learning: 'Using a discouraged student’s interests and insights to practise English.', result: 'His own growing sports journalism website, full of his previews, analysis and reports.', poster: '/assets/projects/football-home{size}.webp?v=20261031-window-3', sectionPoster: '/assets/projects/football-section{size}.webp?v=20261031-window-3', alt: 'A football newspaper front page with analysis pieces', type: 'newspaper', src: '/projects/football-journalism/' },
+  { id: 'darty', name: 'DARTY', label: 'English · Game design', heading: 'DARTY (football game)', learning: 'Getting an avoidant learner excited to practise writing clear, precise instructions.', result: 'A playable 3D football game built from his written requests: he directs, we code.', poster: '/assets/projects/darty-still-01.webp?v=20261029-darty-title-5', titleStill: '/assets/projects/darty-still-07.webp?v=20261029-darty-title-5', alt: 'DARTY night football match with stylised players on a green pitch', type: 'match' },
+  { id: 'drinks', name: 'Drink design', label: 'SEN & English', heading: 'Drink design', learning: 'One SEN student often regains his creative and working flow through designing drinks.', result: 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.', poster: '/assets/projects/drinks/skids/poster.webp?v=20261031-skids-drops-1', alt: 'Skids drink design', type: 'drinks', drinks: [
     { id: 'skids', name: 'Skids', lines: ["When you're in a rush, have some Skids."] },
     { id: 'fizzy', name: 'Fizzy', lines: ['Light, bright red. Fizzy Extreme.'] },
     { id: 'ground-pinch', name: 'Ground Pinch', lines: ['It’s sweet, fast, cheap, and will help you destroy your enemies.'] },
   ] },
-  { id: 'piano', name: 'Piano', label: 'SEN · Music brain breaks', heading: 'Toucan piano', learning: 'A tool for a student, a few minutes at a time for productive brain breaks.', result: 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.', poster: 'assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261031-window-3', sectionPoster: 'assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261031-window-3', alt: 'Toucan piano and pixel sky', type: 'piano' },
+  { id: 'piano', name: 'Piano', label: 'SEN · Music brain breaks', heading: 'Toucan piano', learning: 'A tool for a student, a few minutes at a time for productive brain breaks.', result: 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.', poster: '/assets/projects/toucan-piano-home{size}-{sky}.webp?v=20261031-window-3', sectionPoster: '/assets/projects/toucan-piano-section{size}-{sky}.webp?v=20261031-window-3', alt: 'Toucan piano and pixel sky', type: 'piano' },
 ];
 
 // Only the children's manual carousel includes the text-led introduction.
@@ -59,7 +59,7 @@ const pianoMarkup = `<div class="piano-world">
             <button class="world-art" id="ripple-button" type="button" aria-label="Toucan pixel sky: click or press Enter to make ripples and play a note">
               <canvas id="sky-canvas" aria-hidden="true"></canvas>
               <canvas id="flock-canvas" aria-hidden="true"></canvas>
-              <img class="hero-mascot" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
+              <img class="hero-mascot" src="/assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
             </button>
             <div class="piano-song-controls" aria-hidden="true" inert>
               <p class="piano-credit" aria-live="polite" aria-atomic="true"></p>

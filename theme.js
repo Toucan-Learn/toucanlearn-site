@@ -15,7 +15,9 @@
       const dark = isDark();
       toggles.forEach(toggle => {
         toggle.setAttribute('aria-pressed', String(dark));
-        toggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+        toggle.setAttribute('aria-label', dark
+          ? (toggle.dataset.themeLightLabel || 'Switch to light mode')
+          : (toggle.dataset.themeDarkLabel || 'Switch to dark mode'));
       });
     };
 

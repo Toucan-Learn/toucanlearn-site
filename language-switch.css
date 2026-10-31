@@ -1,0 +1,8 @@
+/* Native disclosure, using the existing nav dropdown colours and links. */
+.language-switch > summary { display: inline-flex; align-items: center; gap: 6px; list-style: none; cursor: pointer; font-size: .9375rem; font-weight: 800; white-space: nowrap; }
+.language-switch > summary::-webkit-details-marker { display: none; }
+.language-switch > summary:focus-visible { outline: 3px solid currentColor; outline-offset: 3px; }
+.nav-links .language-switch:not([open]) > .nav-dropdown { display: none; }
+.nav-links .language-switch[open] > .nav-dropdown { display: block; width: 12rem; }
+.language-switch a[aria-current] { text-decoration: underline; text-underline-offset: 4px; }
+.mobile-menu .language-switch > summary { display: flex; justify-content: flex-start; min-height: 48px; padding: 12px 16px; }

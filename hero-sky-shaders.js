@@ -175,7 +175,7 @@ export const SKY_PRESETS = [
   },
   {
     "id": "pixel",
-    "image": "assets/loading-pixel-sky.png",
+    "image": "/assets/loading-pixel-sky.png",
     "ink": [
       0.23,
       1,

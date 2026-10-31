@@ -1,4 +1,4 @@
-import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261017-ripple-1';
+import { vertexSource, pixelFragmentSource, SKY_PRESETS, MAX_PIXEL_RIPPLES, PIXEL_RIPPLE_SPEED, PIXEL_RIPPLE_TAIL } from './hero-sky-shaders.js?v=20261031-language-paths-1';
 import { playNextNote, noteWavePosition, stopPiano, isPianoPlaying } from './hero-piano.js?v=20261030-ios-audio-1';
 import { initHeroKeyboard } from './hero-keyboard.js?v=20261031-song-bar-1';
 import { getSkyFrame, SKY_CELL_SIZE } from './sky-framing.js?v=20261019-ctasky-1';
@@ -32,7 +32,7 @@ art.insertBefore(fallback, sky);
 const fallbackCtx = fallback.getContext('2d');
 const fallbackImage = new Image();
 fallbackImage.onload = () => { drawFallback(); renderer?.loadPixel?.(); draw(); };
-fallbackImage.src = preset.image || 'assets/loading-pixel-sky.png';
+fallbackImage.src = preset.image || '/assets/loading-pixel-sky.png';
 function drawFallback() {
   if (disposed || !fallbackCtx) return;
   fallback.width = sky.width;
@@ -243,7 +243,7 @@ function createSky() {
     sky.hidden = Boolean(preset.image && !pixelLoaded);
     draw();
   };
-  noise.src = 'assets/galaxy-noise.png';
+  noise.src = '/assets/galaxy-noise.png';
   sky.hidden = true;
   return {
     loadPixel,
@@ -358,7 +358,7 @@ intersection.observe(art);
 listen(document, 'visibilitychange', sync);
 drawFallback();
 renderer = createSky();
-['assets/toucan-logo-flat.png', 'assets/toucan-logo-outline.png'].forEach((path, index) => {
+['/assets/toucan-logo-flat.png', '/assets/toucan-logo-outline.png'].forEach((path, index) => {
   const image = new Image();
   spriteImages.push(image);
   image.onload = () => {

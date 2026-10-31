@@ -24,12 +24,14 @@ export function initHeroKeyboard(ripple, root = document) {
   const toggle = root.querySelector('#piano-toggle');
   const panel = root.querySelector('#hero-keyboard');
   if (!toggle || !panel) return;
+  // Owner, 31 Oct: the song title and Next song sit on the sky itself, so the keyboard below is just the keys.
+  const songBar = root.querySelector('.piano-song-controls');
   const keys = panel.querySelector('.piano-keys');
   const scroll = panel.querySelector('.piano-scroll');
   const buttons = [...keys.querySelectorAll('[data-note]')];
   const byNote = new Map();
   const names = new Map();
-  const credit = panel.querySelector('.piano-credit');
+  const credit = (songBar || panel).querySelector('.piano-credit');
   const timers = new Map();
   const pointers = new Map();
   const held = new Set();
@@ -93,7 +95,7 @@ export function initHeroKeyboard(ripple, root = document) {
     }
   }
   mapSong();
-  listen(panel.querySelector('.piano-next'), 'click', () => {
+  listen((songBar || panel).querySelector('.piano-next'), 'click', () => {
     nextSong();
     if (open) revealInViewport();
   });
@@ -180,10 +182,13 @@ export function initHeroKeyboard(ripple, root = document) {
     open = value;
     toggle.setAttribute('aria-expanded', String(open));
     toggle.setAttribute('aria-label', `${open ? 'Hide' : 'Show'} piano keyboard`);
-    if (!open && panel.contains(document.activeElement)) toggle.focus({ preventScroll: true });
-    panel.setAttribute('aria-hidden', String(!open));
-    panel.inert = !open;
-    panel.classList.toggle('is-open', open);
+    if (!open && [panel, songBar].some(node => node?.contains(document.activeElement))) toggle.focus({ preventScroll: true });
+    for (const node of [panel, songBar]) {
+      if (!node) continue;
+      node.setAttribute('aria-hidden', String(!open));
+      node.inert = !open;
+      node.classList.toggle('is-open', open);
+    }
     if (!open) { pointers.clear(); held.clear(); stopTempo(); }
     else renderTempo();
     keepInView();

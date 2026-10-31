@@ -147,6 +147,9 @@
 /* The section keyboard opens inside its media cell so the section footer stays clear. */
 #learner-projects .showcase-stage .piano-world { overflow: clip; min-height: 0; }
 #learner-projects .showcase-cell .piano-panel { inset: auto -1px 0; max-height: 100%; }
+/* Owner, 31 Oct: here the keys sit inside the sky, so the song bar rests on top of them (keys 71px + 19px panel padding and edge). */
+#learner-projects .piano-world > .piano-song-controls { bottom: 90px; }
+@media (max-width: 760px) { #learner-projects .piano-world > .piano-song-controls { bottom: 83px; } }
 #learner-projects .project-note { grid-column: 1 / -1; }
 /* Two separate cards fill the copy column, with the payoff anchored at its foot. */
 #learner-projects .project-copy-column { display: grid; grid-template-rows: 1fr auto; gap: 12px; min-width: 0; align-self: stretch; }

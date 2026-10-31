@@ -1,5 +1,5 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261030-fizzy-drops-1';
-import { initHeroSky } from './hero-sky.js?v=20261030-ios-audio-1';
+import { initHeroSky } from './hero-sky.js?v=20261031-song-bar-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261017-ripple-1';
 import { dartyMatchURL } from './darty-match.js?v=20261029-darty-title-4';
 
@@ -61,12 +61,12 @@ const pianoMarkup = `<div class="piano-world">
               <canvas id="flock-canvas" aria-hidden="true"></canvas>
               <img class="hero-mascot" src="assets/toucan-logo-outline.png" alt="" width="1200" height="1200" />
             </button>
+            <div class="piano-song-controls" aria-hidden="true" inert>
+              <p class="piano-credit" aria-live="polite" aria-atomic="true"></p>
+              <button class="piano-next" type="button">Next song</button>
+            </div>
             <div class="piano-panel" id="hero-keyboard" role="group" aria-label="Piano keyboard" aria-hidden="true" inert>
               <div class="piano-panel-inner">
-                <div class="piano-song-controls">
-                  <p class="piano-credit" aria-live="polite" aria-atomic="true"></p>
-                  <button class="piano-next" type="button">Next song</button>
-                </div>
                 <div class="piano-scroll">
                   <div class="piano-keys">
                   <button class="piano-key piano-key--white" type="button" data-note="C3" aria-label="C3"></button>

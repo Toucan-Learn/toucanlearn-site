@@ -398,7 +398,10 @@ body.is-calm :is(.living-hero, .piano-world) *, body.is-calm :is(.living-hero, .
 /* Round 76: a one-line keyboard hint above the keys, and each key's computer
    key in small type, shown only where there is a mouse and keyboard. */
 :is(.living-hero, .piano-world) .piano-hint { margin: 0; padding: 8px 12px 0; color: #c1d2c4; font-size: 12px; line-height: 1.4; text-align: center; }
-:is(.living-hero, .piano-world) .piano-song-controls { display: flex; align-items: center; gap: 8px; padding: 6px 12px 0; }
+/* Owner, 31 Oct: the song title and Next song sit on the bottom edge of the sky while the piano is open,
+   so the keyboard that drops below the window is just the keys. */
+:is(.living-hero, .piano-world) .piano-song-controls { position: absolute; inset: auto 0 0; z-index: 4; display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 3px 12px; background: #0b2228cc; visibility: hidden; opacity: 0; pointer-events: none; transition: opacity 280ms, visibility 280ms; }
+:is(.living-hero, .piano-world) .piano-song-controls.is-open { visibility: visible; opacity: 1; pointer-events: auto; }
 :is(.living-hero, .piano-world) .piano-credit { flex: 1; min-width: 0; margin: 0; color: #c1d2c4; font-size: 11px; line-height: 1.4; }
 :is(.living-hero, .piano-world) .piano-next { flex: none; min-height: 30px; padding: 4px 8px; border: 1px solid #adc4b566; border-radius: 6px; color: var(--hero-cream); background: transparent; font-size: 11px; }
 :is(.living-hero, .piano-world) .piano-next:hover { color: var(--hero-peach); border-color: var(--hero-peach); }

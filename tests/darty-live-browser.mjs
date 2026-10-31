@@ -10,7 +10,8 @@ const { dartyMatchURL } = await import(`data:text/javascript;base64,${Buffer.fro
 const matchOrigin = new URL(dartyMatchURL).origin;
 const matchRequestURL = dartyMatchURL.split('#')[0];
 const live = process.env.DARTY_LIVE === '1';
-const stillURL = n => `assets/projects/darty-still-${String(n).padStart(2, '0')}.webp?v=20261029-darty-title-5`;
+// Shared scripts use root paths so the translated pages under /vi/ etc. load the same assets.
+const stillURL = n => `/assets/projects/darty-still-${String(n).padStart(2, '0')}.webp?v=20261029-darty-title-5`;
 
 export async function checkDartyLive({ open, load, project, selected, views, wait, base, output, report }) {
   assert.notEqual(new URL(base).origin, matchOrigin, 'Exercise a cross-origin iframe');

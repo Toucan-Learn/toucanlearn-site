@@ -58,10 +58,10 @@ try {
         assert.equal(await page.evaluate(() => history.length), initial);
       }
       if (viewport.width < 1000) {
-        await page.locator('.mobile-menu summary').click();
+        await page.locator('.mobile-menu > summary').click();
         await page.keyboard.press('Escape');
         assert.equal(await page.locator('.mobile-menu').evaluate(menu => menu.open), false);
-        assert.equal(await page.locator('.mobile-menu summary').evaluate(summary => document.activeElement === summary), true);
+        assert.equal(await page.locator('.mobile-menu > summary').evaluate(summary => document.activeElement === summary), true);
       }
     }
     for (const [route, panel] of [['children.html#learner-projects', 'learner-projects'], ['approach.html#online-sessions', 'where-we-teach'], ['subjects.html#science', 'science']]) {

@@ -245,7 +245,7 @@ try {
   for (const colour of ['light', 'dark']) await run(`mobile-menu-defers-both-triggers-${colour}`, async () => {
     const { context, page } = await setup({ viewport: viewports[2], colour });
     try {
-      await open(page, 'index.html'); await page.locator('.mobile-menu summary').click(); await elapsed(page, 6000);
+      await open(page, 'index.html'); await page.locator('.mobile-menu > summary').click(); await elapsed(page, 6000);
       assert.equal(await page.locator('.launch-offer-dialog').count(), 0);
       await page.evaluate(() => { const root = document.scrollingElement; root.scrollTop = (root.scrollHeight - root.clientHeight) * .5; dispatchEvent(new Event('scroll')); });
       assert.equal(await page.locator('.launch-offer-dialog').count(), 0);

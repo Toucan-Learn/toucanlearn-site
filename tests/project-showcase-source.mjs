@@ -86,7 +86,7 @@ assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'dri
 export const homepageCaptions = [
   ['English · Journalism', 'Football newspaper', 'Getting a discouraged student excited to practise English through his interests and insight.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
   ['English · Game design', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
-  ['SEN & English', 'Drink design', 'We found a dysregulated SEN student often regains his creative and working flow designing drinks.', 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.'],
+  ['SEN & English', 'Drink design', 'One of our SEN students often regains his creative and working flow through designing drinks.', 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.'],
   ['SEN · Music brain breaks', 'Toucan piano', 'A tool for a student, a few minutes at a time for productive brain breaks.', 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.'],
 ];
 assert.deepEqual(projects.map(({ label, heading, learning, result }) => [label, heading, learning, result]), homepageCaptions, 'Each caption has the approved subject, heading, learning and result');

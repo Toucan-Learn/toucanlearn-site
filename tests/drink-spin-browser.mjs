@@ -252,6 +252,9 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
   for (const view of views) for (const theme of ['light', 'dark']) {
     const { context, page } = await open(view, theme, false);
     await auditDecodedImages(page);
+    // The drinks slide warms Fizzy in the background. Hold its decodes from the
+    // start, so the switch check below still meets an undecoded drink.
+    await page.evaluateOnNewDocument(() => { window.spinDecodeHold = 'fizzy'; });
     const requested = new Set();
     page.on('request', request => {
       const pathname = new URL(request.url()).pathname;
@@ -280,7 +283,10 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
       await page.waitForFunction(count => window.spinFrameDecodes.size === count, {}, count);
       await page.waitForNetworkIdle({ idleTime: 100 });
       await assertDrinkLayout(page, 'skids');
-      assert([...requested].every(url => url.includes('/skids/')), 'Only Skids is requested before a drink switch');
+      // Owner, 31 Oct: Fizzy and Ground Pinch lagged on their first click. While the drinks
+      // slide shows, the other drinks warm their manifest and coarse quarter only.
+      const coarse = url => !/\/\d{3}\.webp$/.test(url) || Number(url.match(/(\d{3})\.webp$/)[1]) % 4 === 0;
+      assert([...requested].filter(url => !url.includes('/skids/')).every(url => /\/(manifest\.json|\d{3}\.webp)$/.test(url) && coarse(url)), 'Before a switch, other drinks warm only their manifest and coarse quarter');
       assert(![...requested].some(url => /\.(mp4|webm)$/.test(url)), 'Drink videos are never requested');
       const button = await page.$('.drink-spin');
       await button.focus();

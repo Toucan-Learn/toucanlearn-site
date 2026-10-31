@@ -1,0 +1,1929 @@
+{
+ "<a class=\"skip-link\" href=\"#main\">Skip to main content</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<span class=\"brand-lockup\"> <strong>Tou<span class=\"brand-can\">can</span></strong> <span>Learn</span> </span> <span class=\"mobile-home\">Home</span>": [
+  "index",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"#team\">Our team</a>": [
+  "index"
+ ],
+ "<a href=\"#support-routes\">Who we help <span class=\"nav-chevron\" aria-hidden=\"true\">▾</span></a>": [
+  "index"
+ ],
+ "Ages": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"children\">Children and young people</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"adults\">Adults</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "Subjects": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"subjects#english\">English</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"subjects#maths\">Maths</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"subjects#science\">Science</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"subjects#languages\">Languages</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"subjects#psychology\">Psychology</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"subjects#art\">Art &amp; design</a>": [
+  "index",
+  "children",
+  "adults",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"subjects#send-support\">SEND support</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"#how-it-works\">Our approach <span class=\"nav-chevron\" aria-hidden=\"true\">▾</span></a>": [
+  "index"
+ ],
+ "How we teach": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"approach#steps-to-success\">Getting started</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"approach#our-lessons\">Our lessons</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"approach#weekly-reports\">Weekly reports</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "Where we teach": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"approach#online-sessions\">Online 1-1 sessions</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"approach#in-person-sessions\">In-person sessions</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"#reviews\">Reviews</a>": [
+  "index"
+ ],
+ "<a class=\"button trial-button\" href=\"contact\">Book a free trial</a>": [
+  "index"
+ ],
+ "<span class=\"menu-icon\" aria-hidden=\"true\">☰</span> Menu": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"#support-routes\">Who we help</a>": [
+  "index"
+ ],
+ "<a href=\"#how-it-works\">Our approach</a>": [
+  "index"
+ ],
+ "<a href=\"#reviews\">Reviews</a> <a class=\"button trial-button\" href=\"contact\">Book a free trial</a>": [
+  "index"
+ ],
+ "Learning built around <em>you.</em>": [
+  "index"
+ ],
+ "Learning support for children and adults. We use <span class=\"keep-together\">psychology-informed</span> practices and the best tools available to make the most effective lessons for you.": [
+  "index"
+ ],
+ "<a class=\"button trial-button\" href=\"contact\">Book a free trial <span aria-hidden=\"true\">→</span></a> <a class=\"button approach-button\" href=\"#team\">Find out more <span aria-hidden=\"true\">↓</span></a>": [
+  "index"
+ ],
+ "<span aria-hidden=\"true\">✓</span>Free first session": [
+  "index"
+ ],
+ "<span aria-hidden=\"true\">✓</span>Weekly lesson reports": [
+  "index"
+ ],
+ "<span aria-hidden=\"true\">✓</span>Online, or in person in Bristol, London and Oxfordshire (for now)": [
+  "index"
+ ],
+ "<span>A different way into learning</span><span>Check out some of our student projects and class tools</span>": [
+  "index"
+ ],
+ "Your team": [
+  "index"
+ ],
+ "A team behind every learner, not just a tutor.": [
+  "index",
+  "team"
+ ],
+ "We're not a tutor marketplace, so nobody gets left on their own. Your tutor works with our founder (qualified SEN &amp; education specialist) and the wider Toucan team. Our tutors are trained and write weekly reports, and we review and refine every learner's plan each week.": [
+  "index",
+  "team"
+ ],
+ "Joshua Gordon Jones": [
+  "index",
+  "team"
+ ],
+ "Founder · Psychology graduate, qualified SEN &amp; education specialist": [
+  "index",
+  "team"
+ ],
+ "“Hello, my name is Josh. I started Toucan Learn after seeing too many students forgotten about, or handed worksheets and left to get on with it. We’re here so every student can have a team behind them. I provide English, Psychology and SEN support, and I oversee every lesson at Toucan Learn.”": [
+  "index",
+  "team"
+ ],
+ "Aaron Gelsthorpe": [
+  "index",
+  "team"
+ ],
+ "English, Maths, Science &amp; Art tutor · Art &amp; design lead": [
+  "index",
+  "team"
+ ],
+ "“Hi, I’m Aaron. I graduated with a degree in design and moved to Russia with my lovely wife. I have just received my CELTA qualification and am passionate about supporting students with their English, Maths and Art skills!”": [
+  "index",
+  "team"
+ ],
+ "Connor Wright": [
+  "index",
+  "team"
+ ],
+ "Primary tutor · TA and 1-1 specialist": [
+  "index",
+  "team"
+ ],
+ "“Hello, Connor here! I’m currently a teaching assistant and one-to-one SEN specialist in schools, with several years of experience working with children. I am an avid Chelsea fan and really enjoy making positive impacts and facilitating growth for my students.”": [
+  "index",
+  "team"
+ ],
+ "Sara Sharra": [
+  "index",
+  "team"
+ ],
+ "Italian tutor · Interior Design at UWE": [
+  "index",
+  "team"
+ ],
+ "“Ciao! My name is Sara, I’m 21, and I’m really excited to meet some new students! I’m currently studying Interior Design in Bristol, and looking for students who need Italian or English language lessons! Non vedo l’ora di conoscerti!”": [
+  "index",
+  "team"
+ ],
+ "Joan Miquel Serra": [
+  "index",
+  "team"
+ ],
+ "Spanish &amp; SEN tutor · Psychology graduate and SEN specialist": [
+  "index",
+  "team"
+ ],
+ "“Hi guys! My name is Joan! I am a psychology graduate, with a few years experience in SEN schools! I love music, I love making people smile, and I love helping my students discover their potential!": [
+  "index",
+  "team"
+ ],
+ "Hồ Thị Yến Như (Sam)": [
+  "index",
+  "team"
+ ],
+ "Maths, English &amp; Vietnamese tutor · Finance student": [
+  "index",
+  "team"
+ ],
+ "“Xin chào! I’m Như, but you can call me Sam. I study finance in Ho Chi Minh City, and I teach maths, English to Vietnamese speakers, and Vietnamese to English speakers. I love breaking big problems into small steps until everything clicks.": [
+  "index",
+  "team"
+ ],
+ "Owen Young": [
+  "index",
+  "team"
+ ],
+ "French tutor · Sports Science at Uni of Loughborough": [
+  "index",
+  "team"
+ ],
+ "“Hi there, I’m Owen, I’m a former student of Toucan Learn, and now I’m at Uni of Loughborough doing a degree in Sports Science. I’m bilingual and I’m ready to help you learn French! Si tu veux apprendre l’anglais, je peux t’aider.”": [
+  "index",
+  "team"
+ ],
+ "Amin Gharbi": [
+  "index",
+  "team"
+ ],
+ "Arabic &amp; English tutor · Entrepreneur": [
+  "index",
+  "team"
+ ],
+ "“Hi, Amin here! I’m passionate about helping people learn, understand themselves and become the best version of who they can be. In my lessons, we set clear goals together in a supportive, engaging space, so learning feels natural and growth feels achievable.": [
+  "index",
+  "team"
+ ],
+ "<a class=\"framework-profile-link\" href=\"team\">More about the team <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "<span data-profile-status aria-live=\"polite\" aria-atomic=\"true\">1 of 6</span>": [
+  "index"
+ ],
+ "<a class=\"button framework-team-cta\" href=\"contact\">Book a free trial <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "Who do we support?": [
+  "index"
+ ],
+ "We make learning accessible to all ages.": [
+  "index"
+ ],
+ "For parents and carers": [
+  "index"
+ ],
+ "Support for a child or young person.": [
+  "index"
+ ],
+ "<a class=\"button audience-button\" href=\"children\">Explore support for a child <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "For adult learners": [
+  "index"
+ ],
+ "IELTS, English and languages for your goals.": [
+  "index"
+ ],
+ "<a class=\"button audience-button\" href=\"adults\">Explore adult learning <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface\" href=\"contact\">Book a free trial <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "Our approach": [
+  "index",
+  "approach"
+ ],
+ "Every learner gets their own unique plan.": [
+  "index",
+  "approach"
+ ],
+ "<a class=\"how-step-link\" href=\"approach#learn-about-you\">Learn about you</a>": [
+  "index"
+ ],
+ "We use the first free-trial as a live-diagnostic session to get to know you and the best ways we can support you.": [
+  "index"
+ ],
+ "<a class=\"how-step-link\" href=\"approach#skill-building\">Develop your skills</a>": [
+  "index"
+ ],
+ "Our way is to start planning effective and tailored skill-building tasks at a calibrated selected pace to your needs.": [
+  "index"
+ ],
+ "<a class=\"how-step-link\" href=\"approach#projects-and-goals\">Long-term goals and projects</a>": [
+  "index"
+ ],
+ "At Toucan Learn we like to use short-term skill building exercises alongside long-term objectives, like exam preparation and meaningful personal or commercial projects.": [
+  "index"
+ ],
+ "We send weekly lesson reports so you're always up to date, and our team works together to bring out the best in every session.": [
+  "index"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface\" href=\"contact\">Book a free trial <span aria-hidden=\"true\">→</span></a> <a class=\"button secondary\" href=\"approach\">Find out more about our approach <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "Reviews": [
+  "index"
+ ],
+ "Kind words from our clients.": [
+  "index"
+ ],
+ "<a class=\"button secondary review-leave\" href=\"https://search.google.com/local/writereview?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Leave a review on Google <span aria-hidden=\"true\">↗</span><span class=\"visually-hidden\"> (opens in a new tab)</span></a>": [
+  "index"
+ ],
+ "“As a struggling IB Psychology HL student… Josh was incredibly flexible with meeting times and made me genuinely look forward to every session. He taught me how to write academically, approach assignments with a clear plan, and adopt a better mindset. Josh didn’t just help me in Psychology, he transformed my overall academic performance, helping me score 31% more IB points than I was predicted.”": [
+  "index"
+ ],
+ "<span class=\"review-google-meta\">Former student · IB Diploma, 37 points · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": [
+  "index"
+ ],
+ "“Great tutor experience. Joshua is very communicative with me. My daughter really enjoys the tutor sessions with Joshua and Aaron. Joshua has really focussed on the things my daughter enjoys and is interested in, which has meant she is fully engaged. She has gone from complaining about having a tutor to looking forward to seeing her tutor since working with Joshua.”": [
+  "index"
+ ],
+ "<span class=\"review-google-meta\">Parent · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": [
+  "index"
+ ],
+ "“Josh has been supporting me with my Vietnamese speaking and reading for two years and I am extremely happy with my progress. Josh has a great way of helping me understand tricky words using phonetics and we have a lot of fun in our sessions.”": [
+  "index"
+ ],
+ "<span class=\"review-google-meta\">Adult learner · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": [
+  "index"
+ ],
+ "“My son hates learning but Joshua manages to get him to engage. His approach with him is very fun, he has taken his time to get to know him and work out what makes him tick. Would 100% recommend.”": [
+  "index"
+ ],
+ "<span class=\"review-recommends\">✓ Recommends</span><span class=\"review-google-meta\">Year 7 · SEN support · Parent · Facebook review</span>": [
+  "index"
+ ],
+ "“My son has been very motivated to attend the sessions and we have been impressed by the preparation Joshua has put in. In addition to working on core IB topics, he has also helped enormously with the Extended Essay. Grateful for his professionalism and encouragement every week.”": [
+  "index"
+ ],
+ "<span class=\"review-google-meta\">IB · Extended Essay · Parent review</span>": [
+  "index"
+ ],
+ "Your first session and diagnostic report are free.": [
+  "index",
+  "children",
+  "subjects",
+  "approach"
+ ],
+ "<a class=\"button trial-button\" href=\"contact\">Book a free trial <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "Who can learn? You can learn. <a href=\"https://www.instagram.com/toucan_learn/\" target=\"_blank\" rel=\"noopener\">@toucan_learn</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<span class=\"footer-copy\">© <span id=\"year\">2026</span> Toucan Learn</span>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "Toucan Learn is run by Joshua Gordon Jones, sole trader, Bristol.": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"privacy\">Privacy</a> <a href=\"terms\">Terms</a> <a href=\"safeguarding\">Safeguarding</a> <a href=\"complaints\">Complaints</a> <a href=\"contact\">Enquire</a> <a href=\"tel:+447309639095\">07309 639095</a>": [
+  "index",
+  "thank-you"
+ ],
+ "Toucan Learn | One-to-one tutoring for children and adults": [
+  "index"
+ ],
+ "Learning support for children and adults: one-to-one lessons, psychology-informed practices, weekly reports and a free first session. Online, or in Bristol, London and Oxfordshire.": [
+  "index"
+ ],
+ "Tutoring in Bristol, London, Oxfordshire & online | Toucan Learn": [
+  "index"
+ ],
+ "Toucan Learn home": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "Primary": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "Switch to dark mode": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "Menu": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "Project showcase": [
+  "index"
+ ],
+ "Toucan piano and pixel sky; enable JavaScript to explore our projects": [
+  "index"
+ ],
+ "Meet your Toucan Learn team": [
+  "index"
+ ],
+ "Hồ Thị Yến Như": [
+  "index",
+  "team"
+ ],
+ "Previous team member": [
+  "index",
+  "team"
+ ],
+ "Next team member": [
+  "index",
+  "team"
+ ],
+ "A smiling child holding up a colourful puzzle": [
+  "index"
+ ],
+ "A man with a coffee working on his laptop in a café": [
+  "index"
+ ],
+ "carousel": [
+  "index"
+ ],
+ "Reviews from Toucan Learn families": [
+  "index"
+ ],
+ "Rated 5 out of 5": [
+  "index"
+ ],
+ "Toucan pixel sky: click or press Enter to make waves": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team"
+ ],
+ "Policies and contact": [
+  "index",
+  "thank-you"
+ ],
+ "<span class=\"brand-lockup\"><strong>Tou<span class=\"brand-can\">can</span></strong><span>Learn</span></span><span class=\"mobile-home\">Home</span>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team"
+ ],
+ "<a href=\"./#team\">Our team</a>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"./#support-routes\">Who we help <span class=\"nav-chevron\" aria-hidden=\"true\">▾</span></a>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"./#how-it-works\">Our approach <span class=\"nav-chevron\" aria-hidden=\"true\">▾</span></a>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"./#reviews\">Reviews</a>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface\" href=\"contact\" data-service=\"children\">Book a free trial</a>": [
+  "children"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface phone-book\" href=\"contact\" data-service=\"children\">Book</a>": [
+  "children"
+ ],
+ "<a href=\"./#support-routes\">Who we help</a>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"./#how-it-works\">Our approach</a>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact",
+  "thank-you"
+ ],
+ "<a href=\"./#reviews\">Reviews</a> <a class=\"button trial-button trial-button--light-surface\" href=\"contact\" data-service=\"children\">Book a free trial</a>": [
+  "children"
+ ],
+ "Children &amp; young people": [
+  "children"
+ ],
+ "Tutoring built around your child<span>.</span>": [
+  "children"
+ ],
+ "<a href=\"#getting-started\" data-panel-link>Getting started</a> <a href=\"#learner-projects\" data-panel-link>Projects &amp; learning</a> <a href=\"#qualifications\" data-panel-link>Exams &amp; qualifications</a>": [
+  "children"
+ ],
+ "An easy sign-up process.": [
+  "children"
+ ],
+ "Tell us the broad goal and current difficulty. We will take it from there.": [
+  "children"
+ ],
+ "Start with a free session": [
+  "children",
+  "approach"
+ ],
+ "Your free first session is a live diagnostic: we get to know you and how best to support you.": [
+  "children"
+ ],
+ "Agree the next steps": [
+  "children",
+  "approach"
+ ],
+ "We use the diagnostic report to choose the skills to practise and a pace that suits the learner.": [
+  "children"
+ ],
+ "Work towards your goal": [
+  "children",
+  "approach"
+ ],
+ "Sessions can combine focused skill-building, exam preparation and meaningful longer-term projects.": [
+  "children"
+ ],
+ "Review the plan each week": [
+  "children",
+  "approach"
+ ],
+ "Your tutor writes a weekly lesson report, and our founder reads it. We review what is working and adjust the learner’s plan.": [
+  "children"
+ ],
+ "<a class=\"button\" href=\"contact\" data-service=\"children\">Tell us your child’s goal <span aria-hidden=\"true\">→</span></a>": [
+  "children"
+ ],
+ "More than an hour a week.": [
+  "children"
+ ],
+ "Real projects and tools, made for students.": [
+  "children"
+ ],
+ "<a class=\"button\" data-project-enquiry href=\"contact\" data-service=\"children\">Tell us what they love <span aria-hidden=\"true\">→</span></a>": [
+  "children"
+ ],
+ "Learning is easier when you enjoy it.": [
+  "children"
+ ],
+ "So we start with what each learner already loves and build the lessons around it. The right environment does the heavy lifting: they grow by doing, with support pitched just beyond what they can do alone. Have a look through all four.": [
+  "children"
+ ],
+ "Shared with each family’s permission, with names removed.": [
+  "children"
+ ],
+ "GCSE, A-level and IB preparation.": [
+  "children"
+ ],
+ "Tell us the subject, exam board and date so we can match the right tutor.": [
+  "children"
+ ],
+ "GCSEs": [
+  "children"
+ ],
+ "English, Maths Foundation and Higher, Science (with Aaron), Art and French. For other language exams, we confirm the course and tutor fit before booking.": [
+  "children"
+ ],
+ "<a href=\"subjects\">Explore subjects →</a>": [
+  "children"
+ ],
+ "A-level and IB": [
+  "children"
+ ],
+ "Psychology (A-level and IB) with Joshua. English, Maths, Biology, Chemistry, Physics, Art and DT, and select languages, including A-level Spanish with Joan.": [
+  "children"
+ ],
+ "We use focused practice and exam-condition work to see where support is needed. Other subjects and levels are discussed individually.": [
+  "children"
+ ],
+ "<a class=\"button\" href=\"contact\" data-service=\"children\">Tell us what subject support your child needs <span aria-hidden=\"true\">→</span></a>": [
+  "children"
+ ],
+ "<a class=\"button\" href=\"contact\" data-service=\"children\">Book a free first session <span aria-hidden=\"true\">→</span></a>": [
+  "children"
+ ],
+ "<a href=\"privacy\">Privacy</a><a href=\"terms\">Terms</a><a href=\"safeguarding\">Safeguarding</a><a href=\"complaints\">Complaints</a><a href=\"./#support-routes\">All support</a><a href=\"contact\">Enquire</a><a href=\"tel:+447309639095\">07309 639095</a>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team"
+ ],
+ "SEND tutors: Bristol, London, Oxfordshire &amp; online | Toucan Learn": [
+  "children"
+ ],
+ "SEND-informed tutoring for children online UK-wide or in Bristol, London and Oxfordshire, subject to tutor availability. First session free.": [
+  "children"
+ ],
+ "SEND tutors: Bristol, London, Oxfordshire & online | Toucan Learn": [
+  "children"
+ ],
+ "Children and young people": [
+  "children"
+ ],
+ "The Toucan sitting an exam with paper and pencil": [
+  "children"
+ ],
+ "The Toucan revising with books, highlighters and notes": [
+  "children"
+ ],
+ "Policies and support": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface\" href=\"contact\">Book a free trial</a>": [
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "thank-you"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface phone-book\" href=\"contact\">Book</a>": [
+  "adults",
+  "subjects"
+ ],
+ "<a href=\"./#reviews\">Reviews</a> <a class=\"button trial-button trial-button--light-surface\" href=\"contact\">Book a free trial</a>": [
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "thank-you"
+ ],
+ "Adults": [
+  "adults"
+ ],
+ "English, qualifications and languages<span>.</span>": [
+  "adults"
+ ],
+ "<a href=\"#how-lessons-work\" data-panel-link>How lessons work</a> <a href=\"#english-for-work\" data-panel-link>English for work</a> <a href=\"#qualifications\" data-panel-link>Qualifications</a> <a href=\"#languages\" data-panel-link>Languages</a>": [
+  "adults"
+ ],
+ "Work &amp; qualifications": [
+  "adults"
+ ],
+ "English for work and qualifications.": [
+  "adults"
+ ],
+ "Prepare for a qualification, or build the English you need.": [
+  "adults"
+ ],
+ "Jobs and training in the UK": [
+  "adults"
+ ],
+ "Functional Skills English, Entry levels to Level 2.": [
+  "adults"
+ ],
+ "Visas and work permits": [
+  "adults"
+ ],
+ "Prepare for SELT / IELTS for UKVI at the level you need, usually B1 or B2.": [
+  "adults"
+ ],
+ "University and international work": [
+  "adults"
+ ],
+ "IELTS Academic, TOEFL and Cambridge English: B2 First, C1 Advanced and C2 Proficiency.": [
+  "adults"
+ ],
+ "Everyday and workplace English": [
+  "adults"
+ ],
+ "Build confidence with emails, calls, interviews and job applications.": [
+  "adults"
+ ],
+ "Learn English with a tutor who speaks Arabic, Spanish, French, Italian, Vietnamese, Korean or Mandarin Chinese.": [
+  "adults"
+ ],
+ "<a href=\"#qualifications\">See every qualification we prepare for →</a>": [
+  "adults"
+ ],
+ "<a class=\"button\" href=\"contact\" data-service=\"english-work\">Tell us your work or study goal <span aria-hidden=\"true\">→</span></a>": [
+  "adults"
+ ],
+ "Functional Skills, IELTS, TOEFL, Cambridge and SELT": [
+  "adults"
+ ],
+ "English qualifications, with a tutor who speaks your language.": [
+  "adults"
+ ],
+ "Online one-to-one preparation, at flexible times. Your first session and diagnostic report are free.": [
+  "adults"
+ ],
+ "Which qualification do I need?": [
+  "adults"
+ ],
+ "Functional Skills English": [
+  "adults"
+ ],
+ "Entry Level to Level 2, for jobs, training and apprenticeships in the UK.": [
+  "adults"
+ ],
+ "IELTS": [
+  "adults"
+ ],
+ "Academic or General Training, for universities, employers and migration.": [
+  "adults"
+ ],
+ "TOEFL": [
+  "adults"
+ ],
+ "For universities and international employers.": [
+  "adults"
+ ],
+ "Cambridge English": [
+  "adults"
+ ],
+ "B2 First, C1 Advanced and C2 Proficiency.": [
+  "adults"
+ ],
+ "SELT for UK visas": [
+  "adults"
+ ],
+ "IELTS for UKVI and other approved tests, usually at B1 or B2.": [
+  "adults"
+ ],
+ "How we prepare": [
+  "adults"
+ ],
+ "Your starting point": [
+  "adults"
+ ],
+ "A free first session and diagnostic report, with your current level.": [
+  "adults"
+ ],
+ "Your plan": [
+  "adults"
+ ],
+ "Focused on your target score and test date.": [
+  "adults"
+ ],
+ "Speaking": [
+  "adults"
+ ],
+ "Practice with feedback on your answers.": [
+  "adults"
+ ],
+ "Writing": [
+  "adults"
+ ],
+ "Marked against the official criteria for your test.": [
+  "adults"
+ ],
+ "Reading &amp; Listening": [
+  "adults"
+ ],
+ "Strategies for each question type and managing your time.": [
+  "adults"
+ ],
+ "Mock tests": [
+  "adults"
+ ],
+ "Practise under test conditions and review what to work on next.": [
+  "adults"
+ ],
+ "Your tutor": [
+  "adults"
+ ],
+ "<a href=\"team#aaron\">Aaron</a>": [
+  "adults"
+ ],
+ "CELTA-qualified<br />Leads our exam preparation": [
+  "adults"
+ ],
+ "<a href=\"team\">Our language tutors</a>": [
+  "adults"
+ ],
+ "Prepare with a tutor who<br />also speaks your language": [
+  "adults"
+ ],
+ "<a href=\"contact\" data-service=\"qualifications\">Matched for you</a>": [
+  "adults"
+ ],
+ "We pair you with the right<br />tutor when you enquire": [
+  "adults"
+ ],
+ "Languages our tutors speak": [
+  "adults"
+ ],
+ "<span aria-hidden=\"true\">🇸🇦</span> Arabic": [
+  "adults"
+ ],
+ "<span aria-hidden=\"true\">🇪🇸</span> Spanish": [
+  "adults"
+ ],
+ "<span aria-hidden=\"true\">🇫🇷</span> French": [
+  "adults"
+ ],
+ "<span aria-hidden=\"true\">🇮🇹</span> Italian": [
+  "adults"
+ ],
+ "<span aria-hidden=\"true\">🇻🇳</span> Vietnamese": [
+  "adults"
+ ],
+ "<span aria-hidden=\"true\">🇨🇳</span> Mandarin Chinese": [
+  "adults"
+ ],
+ "<span aria-hidden=\"true\">🇰🇷</span> Korean": [
+  "adults"
+ ],
+ "<a class=\"button\" href=\"contact\" data-service=\"qualifications\">Tell us your test and target date <span aria-hidden=\"true\">→</span></a>": [
+  "adults"
+ ],
+ "Build confidence in your language.": [
+  "adults"
+ ],
+ "Online lessons for adults at flexible times, for work, travel, family or relocation.": [
+  "adults"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇪🇸</span> Spanish": [
+  "adults",
+  "subjects"
+ ],
+ "Vocabulary, comprehension and communication for your level and goal.": [
+  "adults"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇫🇷</span> French": [
+  "adults",
+  "subjects"
+ ],
+ "French up to GCSE, plus conversation for travel and everyday life.": [
+  "adults",
+  "subjects"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇮🇹</span> Italian": [
+  "adults",
+  "subjects"
+ ],
+ "Italian for your level and goal. Qualification scope confirmed at enquiry.": [
+  "adults",
+  "subjects"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇩🇪</span> German": [
+  "adults",
+  "subjects"
+ ],
+ "From first phrases to confident conversation, for work, travel or a move abroad.": [
+  "adults"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇻🇳</span> Vietnamese": [
+  "adults",
+  "subjects"
+ ],
+ "Everyday Vietnamese for family, travel and heritage learners, from first words up.": [
+  "adults",
+  "subjects"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇰🇷</span> Korean": [
+  "adults",
+  "subjects"
+ ],
+ "Hangul and everyday conversation, from complete beginner to fluent.": [
+  "adults"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇨🇳</span> Mandarin Chinese": [
+  "adults",
+  "subjects"
+ ],
+ "Pinyin, characters and speaking practice, for work or travel.": [
+  "adults"
+ ],
+ "<span class=\"language-flag\" aria-hidden=\"true\">🇸🇦</span> Arabic": [
+  "adults",
+  "subjects"
+ ],
+ "Arabic from beginner to advanced, plus English for Arabic speakers.": [
+  "adults",
+  "subjects"
+ ],
+ "We match you with a tutor when you <a href=\"contact\">enquire</a>. <a href=\"subjects#languages\">See language coverage</a>.": [
+  "adults"
+ ],
+ "<strong>Good to know:</strong> We confirm the suitable tutor and exact scope before booking. No particular qualification result or language level is guaranteed.": [
+  "adults"
+ ],
+ "<a class=\"button\" href=\"contact\" data-service=\"languages\">Tell us your language goal <span aria-hidden=\"true\">→</span></a>": [
+  "adults"
+ ],
+ "A useful starting point": [
+  "adults"
+ ],
+ "A lesson built around your goal.": [
+  "adults"
+ ],
+ "We agree the goal, tutor and price before anything is booked.": [
+  "adults"
+ ],
+ "Tell us what you need": [
+  "adults"
+ ],
+ "Share your starting point, goal and timing. We confirm the level and the right tutor.": [
+  "adults"
+ ],
+ "Try a first session": [
+  "adults"
+ ],
+ "Your first session and diagnostic report are free, and show what to work on next.": [
+  "adults"
+ ],
+ "Practise, review and refine": [
+  "adults"
+ ],
+ "Practise at your pace, with a plan we review and refine every week.": [
+  "adults"
+ ],
+ "Online or in person": [
+  "adults"
+ ],
+ "Online on Google Meet with shared Slides (or sometimes Pencil Spaces), or in person with your own course materials.": [
+  "adults"
+ ],
+ "Online wherever you live, or in person in Bristol, London and Oxfordshire, subject to tutor availability. <a href=\"approach#where-we-teach\">Check where we teach</a>.": [
+  "adults"
+ ],
+ "Pay weekly, with flexible cancelling": [
+  "adults"
+ ],
+ "<a href=\"approach#our-lessons\">More about our lessons</a> · <a href=\"approach#weekly-reports\">Weekly reports</a>": [
+  "adults"
+ ],
+ "<a class=\"button\" href=\"contact\" data-service=\"adults\">Tell us your goal <span aria-hidden=\"true\">→</span></a>": [
+  "adults"
+ ],
+ "Tell us what you want to do.": [
+  "adults"
+ ],
+ "Share the goal, your current starting point and when you would like support.": [
+  "adults"
+ ],
+ "<a class=\"button\" href=\"contact\">Start an enquiry <span aria-hidden=\"true\">→</span></a>": [
+  "adults"
+ ],
+ "Adult tutoring: English, IELTS, qualifications &amp; languages | Toucan Learn": [
+  "adults"
+ ],
+ "One-to-one tutoring for adults, online or in Bristol, London and Oxfordshire: English for work, Functional Skills, IELTS, TOEFL, Cambridge English and SELT, plus eight languages. First session free.": [
+  "adults"
+ ],
+ "Adult tutoring: English, IELTS, qualifications & languages | Toucan Learn": [
+  "adults"
+ ],
+ "Adult learning": [
+  "adults"
+ ],
+ "Your tutors": [
+  "adults"
+ ],
+ "Tutor languages": [
+  "adults"
+ ],
+ "An adult learner working on a laptop with headphones": [
+  "adults"
+ ],
+ "<a href=\"subjects#art\">Art &amp; DT</a>": [
+  "subjects"
+ ],
+ "Start with the skill you want to build.": [
+  "subjects"
+ ],
+ "English, maths, science, languages, Psychology, Art and DT, and SEN support, with the level, goal and tutor agreed before lessons begin.": [
+  "subjects"
+ ],
+ "<strong>Your first session and diagnostic report are free.</strong>": [
+  "subjects",
+  "contact"
+ ],
+ "<a href=\"#english\" data-panel-link>English</a><a href=\"#maths\" data-panel-link>Maths</a><a href=\"#science\" data-panel-link>Science</a><a href=\"#languages\" data-panel-link>Languages</a><a href=\"#psychology\" data-panel-link>Psychology</a><a href=\"#art\" data-panel-link>Art &amp; DT</a><a href=\"#send-support\" data-panel-link>SEND support</a>": [
+  "subjects"
+ ],
+ "English": [
+  "subjects",
+  "contact"
+ ],
+ "Build reading, writing, speaking and listening around the learner’s interests and goals.": [
+  "subjects"
+ ],
+ "Spelling, sentences and reading, through stories, games and practical writing.": [
+  "subjects"
+ ],
+ "KS3": [
+  "subjects"
+ ],
+ "Build reading comprehension and turn ideas into clear, structured writing.": [
+  "subjects"
+ ],
+ "GCSE, A-level &amp; IB": [
+  "subjects"
+ ],
+ "Language and Literature: choose evidence, build an argument and practise past papers.": [
+  "subjects"
+ ],
+ "Adults &amp; qualifications": [
+  "subjects"
+ ],
+ "Workplace English, Functional Skills, IELTS, TOEFL and Cambridge English, with focused practice and feedback.": [
+  "subjects"
+ ],
+ "Joshua and Aaron teach English; Connor also supports primary learners.": [
+  "subjects"
+ ],
+ "<a class=\"button subject-cta\" href=\"contact\">Book a free English session <span aria-hidden=\"true\">→</span></a><a href=\"adults#qualifications\">Explore adult qualifications →</a>": [
+  "subjects"
+ ],
+ "Maths": [
+  "subjects",
+  "contact"
+ ],
+ "Find the gap, make the method clear and build confidence through practice.": [
+  "subjects"
+ ],
+ "Number skills, time, money and measures, with clear examples and practice.": [
+  "subjects"
+ ],
+ "Rebuild missing concepts and practise methods in manageable steps.": [
+  "subjects"
+ ],
+ "GCSE Foundation &amp; Higher": [
+  "subjects"
+ ],
+ "Work through the curriculum, then apply methods to exam questions.": [
+  "subjects"
+ ],
+ "Everyday numeracy": [
+  "subjects"
+ ],
+ "Practise useful calculations for work and daily life.": [
+  "subjects"
+ ],
+ "Aaron teaches up to GCSE and Connor supports primary. We also teach A-level and university maths.": [
+  "subjects"
+ ],
+ "<a class=\"button subject-cta\" href=\"contact\" data-service=\"maths\">Book a free maths session <span aria-hidden=\"true\">→</span></a><a href=\"adults\">Explore adult learning →</a>": [
+  "subjects"
+ ],
+ "Science": [
+  "subjects",
+  "contact"
+ ],
+ "GCSE, A-level and IB sciences, at the learner’s pace.": [
+  "subjects"
+ ],
+ "Biology": [
+  "subjects"
+ ],
+ "Make sense of course topics, then practise explaining them clearly.": [
+  "subjects"
+ ],
+ "Chemistry": [
+  "subjects"
+ ],
+ "Break tricky topics into steps, with explanations and question practice.": [
+  "subjects"
+ ],
+ "Physics": [
+  "subjects"
+ ],
+ "Work through ideas with clear examples, then apply them to questions.": [
+  "subjects"
+ ],
+ "Exam technique": [
+  "subjects"
+ ],
+ "Use past papers and mark schemes to build precise, relevant answers.": [
+  "subjects"
+ ],
+ "Bring your course details, current topics and any questions you are finding difficult.": [
+  "subjects"
+ ],
+ "<a class=\"button subject-cta\" href=\"contact\">Book a free science session <span aria-hidden=\"true\">→</span></a><a href=\"team#aaron\">Explore the team →</a>": [
+  "subjects"
+ ],
+ "Languages": [
+  "subjects",
+  "contact"
+ ],
+ "Languages for children and adults: school, work, travel, family or relocation.": [
+  "subjects"
+ ],
+ "Vocabulary, comprehension and communication for all ages, up to A-level.": [
+  "subjects"
+ ],
+ "From first phrases to confident conversation, for school, exams, work or travel.": [
+  "subjects"
+ ],
+ "Hangul, everyday conversation and school or exam support, at any level.": [
+  "subjects"
+ ],
+ "Pinyin, characters and speaking practice, for school, work or travel.": [
+  "subjects"
+ ],
+ "We match the tutor to your level and goal when you <a href=\"contact\">enquire</a>.": [
+  "subjects"
+ ],
+ "<a class=\"button subject-cta\" href=\"contact\" data-service=\"languages\">Book a free language session <span aria-hidden=\"true\">→</span></a><a href=\"team\">Explore the language tutors →</a><a href=\"adults#languages\">Explore adult language learning →</a>": [
+  "subjects"
+ ],
+ "Psychology": [
+  "subjects",
+  "contact"
+ ],
+ "A-level and IB Psychology with Joshua, our founder and a psychology graduate.": [
+  "subjects"
+ ],
+ "IB Papers 1, 2 &amp; 3": [
+  "subjects"
+ ],
+ "Connect studies to the question, plan answers and practise exam technique.": [
+  "subjects"
+ ],
+ "IB Internal Assessment (IA)": [
+  "subjects"
+ ],
+ "Plan your investigation and review your draft against the course requirements.": [
+  "subjects"
+ ],
+ "IB Extended Essay": [
+  "subjects"
+ ],
+ "Shape a focused question, organise your argument and refine your writing.": [
+  "subjects"
+ ],
+ "A-level Psychology": [
+  "subjects"
+ ],
+ "Build topic knowledge, evaluate studies and practise short and extended answers.": [
+  "subjects"
+ ],
+ "In under a year, one IB learner went from a predicted 29 to 37 points, with Psychology HL up from a 3 to a 5.": [
+  "subjects"
+ ],
+ "<a class=\"button subject-cta\" href=\"contact\">Book a free psychology session <span aria-hidden=\"true\">→</span></a><a href=\"team#joshua\">Explore Joshua’s profile →</a><a href=\"approach#our-lessons\">Explore our lessons →</a>": [
+  "subjects"
+ ],
+ "Art &amp; DT": [
+  "subjects"
+ ],
+ "Make, experiment and develop your ideas with Aaron, our art and design lead.": [
+  "subjects"
+ ],
+ "Art &amp; Design": [
+  "subjects"
+ ],
+ "GCSE Art &amp; Design, A-level Art and IB Visual Arts: portfolio, practical skills and coursework.": [
+  "subjects"
+ ],
+ "Creative projects at any age, too, with no exam attached.": [
+  "subjects"
+ ],
+ "Design &amp; Technology": [
+  "subjects"
+ ],
+ "GCSE and A-level DT, and IB Design Technology: design ideas, prototypes and coursework that meets the brief.": [
+  "subjects"
+ ],
+ "Tell us what you enjoy making and bring your course requirements or current project.": [
+  "subjects"
+ ],
+ "<a class=\"button subject-cta\" href=\"contact\">Book a free art or DT session <span aria-hidden=\"true\">→</span></a>": [
+  "subjects"
+ ],
+ "SEND support": [
+  "subjects"
+ ],
+ "Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.": [
+  "subjects"
+ ],
+ "Enjoy the learning": [
+  "subjects"
+ ],
+ "Start with their interests, so the activity matters in its own right.": [
+  "subjects"
+ ],
+ "A setting that works": [
+  "subjects"
+ ],
+ "Adapt the space and pace, with breaks and no pressure early on.": [
+  "subjects"
+ ],
+ "Notice the way in": [
+  "subjects"
+ ],
+ "A joke, an interest or a pause often shows us how they learn best.": [
+  "subjects"
+ ],
+ "Their ideas, their words": [
+  "subjects"
+ ],
+ "We help shape the thought; the opinion and the work stay theirs.": [
+  "subjects"
+ ],
+ "The next step, together": [
+  "subjects"
+ ],
+ "Work just beyond what they can do alone, then gradually step back.": [
+  "subjects"
+ ],
+ "Long-term goals and projects": [
+  "subjects"
+ ],
+ "Review progress towards goals, develop skills through hands-on, real-world projects.": [
+  "subjects"
+ ],
+ "Our SEN team is Team Teach qualified in positive behaviour support. Weekly reports keep families informed; we work with schools too.": [
+  "subjects"
+ ],
+ "<a class=\"button subject-cta\" href=\"contact\">We’d love to hear what you or your child needs <span aria-hidden=\"true\">→</span></a><a class=\"send-projects-link\" href=\"children#learner-projects\">Check out our projects and custom tools →</a>": [
+  "subjects"
+ ],
+ "<a class=\"button\" href=\"contact\">Book a free first session <span aria-hidden=\"true\">→</span></a>": [
+  "subjects",
+  "approach",
+  "team"
+ ],
+ "English, maths, science, languages, Psychology, Art &amp; DT | Toucan Learn": [
+  "subjects"
+ ],
+ "English, maths, GCSE Science, eight languages, A-level and IB Psychology, Art and Design Technology, and SEN support. Your first session and diagnostic report are free.": [
+  "subjects"
+ ],
+ "English, maths, science, languages, Psychology, Art & DT | Toucan Learn": [
+  "subjects"
+ ],
+ "A child reading a picture book": [
+  "subjects"
+ ],
+ "A student thinking over her notebook": [
+  "subjects"
+ ],
+ "A student annotating a novel": [
+  "subjects"
+ ],
+ "An adult writing a test beside an English dictionary": [
+  "subjects"
+ ],
+ "A child working through a maths worksheet": [
+  "subjects"
+ ],
+ "A student solving problems with a calculator": [
+  "subjects"
+ ],
+ "Algebra worked out on paper": [
+  "subjects"
+ ],
+ "Checking a bill with a calculator": [
+  "subjects"
+ ],
+ "A student using a microscope": [
+  "subjects"
+ ],
+ "A student in goggles running a chemistry experiment": [
+  "subjects"
+ ],
+ "Two students testing a Newton’s cradle": [
+  "subjects"
+ ],
+ "A student filling in an exam answer sheet": [
+  "subjects"
+ ],
+ "A student reading in a library": [
+  "subjects"
+ ],
+ "A student reviewing charts beside a laptop": [
+  "subjects"
+ ],
+ "A student writing at a desk by a window": [
+  "subjects"
+ ],
+ "A model of the human brain": [
+  "subjects"
+ ],
+ "Two art students painting at easels in a bright studio": [
+  "subjects"
+ ],
+ "A student marking out a cardboard design at a workbench": [
+  "subjects"
+ ],
+ "<a href=\"#steps-to-success\" data-panel-link>Getting started</a> <a href=\"#our-lessons\" data-panel-link>Our lessons</a> <a href=\"#weekly-reports\" data-panel-link>Weekly reports</a> <a href=\"#where-we-teach\" data-panel-link>Where we teach</a>": [
+  "approach"
+ ],
+ "Getting started": [
+  "approach"
+ ],
+ "A starting point, useful practice and a longer-term direction. We keep adjusting the plan around the learner.": [
+  "approach"
+ ],
+ "A free diagnostic session helps us get to know you.": [
+  "approach"
+ ],
+ "Choose skills to practise and a pace that suits you.": [
+  "approach"
+ ],
+ "Combine skill-building, exam preparation and meaningful projects.": [
+  "approach"
+ ],
+ "Your tutor reports each week, helping us review and adjust your plan.": [
+  "approach"
+ ],
+ "<a class=\"button\" href=\"contact\">Book a free first session</a>": [
+  "approach"
+ ],
+ "Our lessons": [
+  "approach"
+ ],
+ "A familiar shape, adapted to you": [
+  "approach"
+ ],
+ "Settle in and set the aim": [
+  "approach"
+ ],
+ "A warm-up to get thinking, a quick look back at last week, and a clear aim for today’s lesson.": [
+  "approach"
+ ],
+ "Learn something new": [
+  "approach"
+ ],
+ "New ideas explained and modelled step by step, building on what the learner already knows.": [
+  "approach"
+ ],
+ "Practise it their way": [
+  "approach"
+ ],
+ "Guided practice through games, projects, websites or real texts they enjoy. Support steps back as their confidence grows.": [
+  "approach"
+ ],
+ "Review and refine": [
+  "approach"
+ ],
+ "We reflect on the work we’ve done together, assess feedback, and make the changes that really reinforce the purpose of what we’re learning.": [
+  "approach"
+ ],
+ "Example lesson outline · illustrative": [
+  "approach"
+ ],
+ "Writing through a game": [
+  "approach"
+ ],
+ "For a younger primary learner practising English.": [
+  "approach"
+ ],
+ "Goal": [
+  "approach"
+ ],
+ "Practise writing clear sentences.": [
+  "approach"
+ ],
+ "What we do in the session": [
+  "approach"
+ ],
+ "Type a catch-up, then write instructions for a game they enjoy.": [
+  "approach"
+ ],
+ "Skill practised": [
+  "approach"
+ ],
+ "Sentence building, spelling and putting ideas in order.": [
+  "approach"
+ ],
+ "Next step": [
+  "approach"
+ ],
+ "Read the instructions together and choose one sentence to refine.": [
+  "approach"
+ ],
+ "Working through an exam question": [
+  "approach"
+ ],
+ "For an older student preparing for GCSE or IB exams.": [
+  "approach"
+ ],
+ "Practise an answer that addresses the question.": [
+  "approach"
+ ],
+ "Use a worked example, try a past-paper question and review the mark scheme.": [
+  "approach"
+ ],
+ "Planning an answer and applying exam technique.": [
+  "approach"
+ ],
+ "Refine the answer and choose a question for further practice.": [
+  "approach"
+ ],
+ "English for a work qualification": [
+  "approach"
+ ],
+ "For an adult working towards Functional Skills English for work.": [
+  "approach"
+ ],
+ "Practise clear, practical writing for work.": [
+  "approach"
+ ],
+ "Read a workplace message, use a worked example and draft a reply.": [
+  "approach"
+ ],
+ "Reading for meaning and choosing clear words and sentences.": [
+  "approach"
+ ],
+ "Review the reply and choose a Functional Skills practice task.": [
+  "approach"
+ ],
+ "<a class=\"button\" href=\"contact\">Try a free first lesson</a>": [
+  "approach"
+ ],
+ "Weekly reports": [
+  "approach"
+ ],
+ "Your tutor writes you a report every week, in their own words, and our founder reads every one.": [
+  "approach"
+ ],
+ "Each report covers:": [
+  "approach"
+ ],
+ "<strong>What we worked on</strong> <span>What we did, and why it matters for the learner.</span> <em class=\"report-example\">Example: \"We used the maths behind a drinks can, its circumference and height, to design a label that fits it.\"</em>": [
+  "approach"
+ ],
+ "<strong>What stood out</strong> <span>A specific moment of progress, so it gets noticed.</span> <em class=\"report-example\">Example: \"She beat me at our word game for the first time, a sign her spelling and word recognition are getting quicker.\"</em>": [
+  "approach"
+ ],
+ "<strong>We'll keep working at</strong> <span>The skills we'll keep practising over the coming weeks.</span> <em class=\"report-example\">Example: \"Turning what he understands into answers that match the exact exam question, using past papers and mark schemes.\"</em>": [
+  "approach"
+ ],
+ "<strong>The plan for next session</strong> <span>What comes next, so nothing is a surprise.</span> <em class=\"report-example\">Example: \"Drafting and publishing a short review of a film she loved on her own website, then editing it together.\"</em>": [
+  "approach"
+ ],
+ "You always know what's happening and why, and we adjust the plan each week.": [
+  "approach"
+ ],
+ "<a class=\"button\" href=\"contact\">Start with a free session</a>": [
+  "approach"
+ ],
+ "One-to-one lessons online wherever you live, with in-person sessions in selected areas, subject to tutor availability.": [
+  "approach"
+ ],
+ "Online 1-1 sessions": [
+  "approach"
+ ],
+ "Most lessons happen online, with a tutor matched to you wherever you live.": [
+  "approach"
+ ],
+ "We use Google Meet and shared Google Slides (or sometimes Pencil Spaces), ready to build on each week.": [
+  "approach"
+ ],
+ "Bring a laptop or tablet with a camera. We send the link before each session.": [
+  "approach"
+ ],
+ "<a class=\"teaching-format-link\" href=\"contact\">Book a free online session →</a>": [
+  "approach"
+ ],
+ "In-person sessions": [
+  "approach"
+ ],
+ "Bristol, London and Oxfordshire, subject to tutor availability.": [
+  "approach"
+ ],
+ "We confirm the location, tutor and price first.": [
+  "approach"
+ ],
+ "The same free first session and weekly written reports.": [
+  "approach"
+ ],
+ "<a class=\"teaching-format-link\" href=\"contact\" data-service=\"in-person\">Check in-person availability →</a>": [
+  "approach"
+ ],
+ "Approach: Bristol, London, Oxfordshire &amp; online | Toucan Learn": [
+  "approach"
+ ],
+ "One-to-one learning planned around you, online UK-wide or in Bristol, London and Oxfordshire, subject to tutor availability. First session free.": [
+  "approach"
+ ],
+ "Approach: Bristol, London, Oxfordshire & online | Toucan Learn": [
+  "approach"
+ ],
+ "An adult learner showing their notebook during a video lesson at home": [
+  "approach"
+ ],
+ "A tutor and student working through a book together at a table": [
+  "approach"
+ ],
+ "We teach online, with in-person sessions in Bristol, London and Oxfordshire, subject to tutor availability. Each tutor's subjects and local availability are set out below.": [
+  "team"
+ ],
+ "I have a 2:1 in BSc Psychology, with a first-class mark (80) in neurodevelopmental disorders. I’ve spent over seven years working with children and young people, specialising in one-to-one SEN support, and now lead the team at Toucan Learn. I also have over five years of professional writing experience and am currently preparing for a PhD in Educational Psychology. I’m also Team Teach qualified. I’ve been teaching learners with ADHD, autism, dyslexia, PDA and DLD since day one. I oversee every lesson and work closely with our team to provide the most effective support possible.": [
+  "team"
+ ],
+ "Online": [
+  "team",
+  "contact"
+ ],
+ "In person · Bristol": [
+  "team"
+ ],
+ "Aaron is a star tutor, creating strong dynamics with students and producing fantastic results. Creative, sharp and hard-working, and you can see it in every lesson he plans. Aaron provides English and Art tutoring for all ages and needs, alongside brilliant Maths sessions up to GCSE level and GCSE Science. Aaron has SEN experience and is a great pick if you need a creative, fun and hardworking online tutor.": [
+  "team"
+ ],
+ "Connor is a patient, steady tutor and brilliant with younger learners. His several years working in SEN environments and one-to-one experience in mainstream settings have given him invaluable hands-on experience that university degrees do not provide, and he is as reliable as they come. Connor is Team Teach qualified and tutors primary-age students and subjects, both online and in person in Oxfordshire.": [
+  "team"
+ ],
+ "In person · Oxfordshire": [
+  "team"
+ ],
+ "Joan is a Team Teach qualified psychology graduate with years of SEN experience in schools. Funny, warm and great at getting learners talking, Joan’s approach is strengthened by his psychology degree and work with SEN students. Joan provides SEN support and Spanish ↔ English lessons for all ages and levels, both online and in person in Bristol.": [
+  "team"
+ ],
+ "Như is a bright, driven and determined finance student at Foreign Trade University in Ho Chi Minh City, and studied at Le Hong Phong High School for the Gifted. Kind, warm and endlessly hardworking, Như teaches maths up to university level, including probability and statistics, English to Vietnamese speakers, and Vietnamese to children, heritage learners and English speakers.": [
+  "team"
+ ],
+ "Owen is a former Toucan learner and showed a brilliant eye for knowledge and incredible persistence to improve his IB grades substantially in a year. Owen is a calm, friendly young lad with lots of energy and enthusiasm, and is easy to learn with. He’s fluent in both French and English, and provides English ↔ French sessions online and in person in London, for all ages and for SEN students under our founder’s supervision.": [
+  "team"
+ ],
+ "In person · London": [
+  "team"
+ ],
+ "Amin is a bright young man working as an entrepreneur in Algeria, and has recently started tutoring for Toucan Learn. He is one of the most outgoing, personable and hardworking tutors you’ll ever meet. Warm, funny, confident, and has an excellent grasp of language, which we are excited for you to discover. Amin provides one-to-one sessions online and is a superb choice for any Arabic speakers needing to strengthen their English skills, or vice versa.": [
+  "team"
+ ],
+ "Sara is a lovely, driven university student who grew up in Italy and is keen to help students with their language skills. She is warm, bright and will be exceptional for students looking for Italian ↔ English support, whether it be for school or for work qualifications. Sara provides online one-to-one sessions and in-person sessions in Bristol.": [
+  "team"
+ ],
+ "<span data-team-status aria-live=\"polite\">1 of 6</span>": [
+  "team"
+ ],
+ "Find the right tutor for you.": [
+  "team"
+ ],
+ "Tell us what you want to learn and the support you are looking for.": [
+  "team"
+ ],
+ "Our team | Toucan Learn": [
+  "team"
+ ],
+ "Meet the team behind every Toucan Learn learner: trained tutors, plans refined each week, and a founder who is a psychology graduate and SEN specialist.": [
+  "team"
+ ],
+ "Meet the Toucan Learn team": [
+  "team"
+ ],
+ "Where they teach": [
+  "team"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface\" href=\"#email-enquiry\">Book a free trial</a>": [
+  "contact"
+ ],
+ "<a href=\"./#reviews\">Reviews</a> <a class=\"button trial-button trial-button--light-surface\" href=\"#email-enquiry\">Book a free trial</a>": [
+  "contact"
+ ],
+ "Enquire about tutoring": [
+  "contact"
+ ],
+ "Tell us what you need<span>.</span>": [
+  "contact"
+ ],
+ "Tell us who it's for and what you'd like help with, and we'll reply the way that suits you.": [
+  "contact"
+ ],
+ "Send us a short enquiry.": [
+  "contact"
+ ],
+ "Tutoring enquiry details": [
+  "contact"
+ ],
+ "Leave this field empty": [
+  "contact"
+ ],
+ "Your name": [
+  "contact"
+ ],
+ "Who is the tutoring for?": [
+  "contact"
+ ],
+ "A child or young person": [
+  "contact"
+ ],
+ "Me (an adult)": [
+  "contact"
+ ],
+ "What would you like help with?": [
+  "contact"
+ ],
+ "<small id=\"support-needed-privacy\">Please don't include diagnoses or medical records; we'll talk through needs together.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": [
+  "contact"
+ ],
+ "Age or school year": [
+  "contact"
+ ],
+ "Subject (optional)": [
+  "contact"
+ ],
+ "Choose a subject": [
+  "contact"
+ ],
+ "Art &amp; design": [
+  "contact"
+ ],
+ "Exam preparation": [
+  "contact"
+ ],
+ "SEN support": [
+  "contact"
+ ],
+ "Other": [
+  "contact"
+ ],
+ "<span id=\"subject-value\">Choose a subject</span>": [
+  "contact"
+ ],
+ "What's your desired lesson rate?": [
+  "contact"
+ ],
+ "<small id=\"desired-lesson-rate-hint\">Optional. A rough figure per session is fine.</small> <span class=\"field-error\" id=\"desired-lesson-rate-error\"></span>": [
+  "contact"
+ ],
+ "Online or in person? <small>(optional)</small>": [
+  "contact"
+ ],
+ "In person": [
+  "contact"
+ ],
+ "Not sure": [
+  "contact"
+ ],
+ "Town or postcode area": [
+  "contact"
+ ],
+ "How would you like us to reply?": [
+  "contact"
+ ],
+ "Email": [
+  "contact"
+ ],
+ "Phone call": [
+  "contact"
+ ],
+ "Text": [
+  "contact"
+ ],
+ "WhatsApp": [
+  "contact"
+ ],
+ "Email address": [
+  "contact"
+ ],
+ "Phone number": [
+  "contact"
+ ],
+ "<small id=\"phone-hint\">Use 7–15 digits; include + and the country code for international numbers.</small> <span class=\"field-error\" id=\"phone-error\"></span>": [
+  "contact"
+ ],
+ "Send my enquiry <span aria-hidden=\"true\">→</span>": [
+  "contact"
+ ],
+ "We'll only use these details to reply to you. Read our <a href=\"privacy\">privacy notice</a>.": [
+  "contact"
+ ],
+ "Please <a href=\"mailto:hello@toucanlearn.co.uk\">email hello@toucanlearn.co.uk</a> or <a href=\"tel:+447309639095\">call 07309 639095</a> to enquire without JavaScript.": [
+  "contact"
+ ],
+ "Or email us at <a href=\"mailto:hello@toucanlearn.co.uk?subject=Tutoring%20enquiry%20%E2%80%94%20Toucan%20Learn\">hello@toucanlearn.co.uk</a>.": [
+  "contact"
+ ],
+ "Pricing": [
+  "contact"
+ ],
+ "<span>From £25/hr</span> · Emerging": [
+  "contact"
+ ],
+ "Our emerging tutors, trained and overseen by our founder. Great-value support across all of our subjects.": [
+  "contact"
+ ],
+ "<span>From £40/hr</span> · Academic": [
+  "contact"
+ ],
+ "Experienced tutors and more intensive support for all ages and subjects, exams, and expert SEN support.": [
+  "contact"
+ ],
+ "<span>From £65/hr</span> · Specialist": [
+  "contact"
+ ],
+ "Complex SEN needs, critical exam prep, and extra hours of lesson planning and custom resources built for you.": [
+  "contact"
+ ],
+ "We agree the price before you book. No fees or subscriptions. Detailed weekly reports at every band.": [
+  "contact"
+ ],
+ "What happens next": [
+  "contact"
+ ],
+ "<strong>We reply your way.</strong> Email, call, text or WhatsApp.": [
+  "contact"
+ ],
+ "<strong>A free first session.</strong> A proper lesson to get to know you.": [
+  "contact"
+ ],
+ "<strong>Your plan.</strong> Built around you, and reviewed every week.": [
+  "contact"
+ ],
+ "Prefer to talk?": [
+  "contact"
+ ],
+ "<a class=\"button\" href=\"tel:+447309639095\">Call 07309 639095</a> <a class=\"button secondary\" href=\"https://wa.me/447307045816\" target=\"_blank\" rel=\"noopener\">WhatsApp 07307 045816<span class=\"visually-hidden\"> (opens WhatsApp in a new tab)</span></a>": [
+  "contact"
+ ],
+ "<a href=\"privacy\">Privacy</a> <a href=\"terms\">Terms</a> <a href=\"safeguarding\">Safeguarding</a> <a href=\"complaints\">Complaints</a> <a href=\"./\">Home</a> <a href=\"contact\">Enquire</a> <a href=\"tel:+447309639095\">07309 639095</a>": [
+  "contact"
+ ],
+ "Enquire: Bristol, London, Oxfordshire &amp; online | Toucan Learn": [
+  "contact"
+ ],
+ "Ask about a free first tutoring session online UK-wide or in Bristol, London and Oxfordshire, subject to tutor availability.": [
+  "contact"
+ ],
+ "Enquire: Bristol, London, Oxfordshire & online | Toucan Learn": [
+  "contact"
+ ],
+ "Policies and navigation": [
+  "contact"
+ ],
+ "Your next step": [
+  "thank-you"
+ ],
+ "Thank you<span>.</span>": [
+  "thank-you"
+ ],
+ "Thanks, we'll reply the way you asked, usually within a day.": [
+  "thank-you"
+ ],
+ "<a class=\"button\" href=\"./\"> Return to the homepage </a>": [
+  "thank-you"
+ ],
+ "Your next step | Toucan Learn": [
+  "thank-you"
+ ],
+ "How to contact Toucan Learn about your first session.": [
+  "thank-you"
+ ]
+}

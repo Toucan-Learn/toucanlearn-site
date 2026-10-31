@@ -43,7 +43,9 @@ for (const [, file] of markup.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^"]*)?"/g))
   if (/\.(?:css|js|png|jpe?g)$/.test(file)) await access(new URL(file, root));
 }
 const header = source => source.match(/<header>[\s\S]*?<\/header>/)[0];
-assert.equal(header(html).replaceAll('Đăng ký học thử', 'Book a free trial'), header(contact), 'Shared menu, theme toggle and local trial CTA');
+// 31 Oct: the site pages carry a language switch; this ad landing keeps its own menu without one.
+const withoutSwitch = source => source.replace(/<details class="[^"]*language-switch[^"]*"[^>]*>[\s\S]*?<\/details>/g, '');
+assert.equal(header(html).replaceAll('Đăng ký học thử', 'Book a free trial'), withoutSwitch(header(contact)), 'Shared menu, theme toggle and local trial CTA');
 const footer = source => source.match(/<footer\b[\s\S]*?<\/footer>/)[0];
 assert.equal(footer(html), footer(contact));
 const endpoint = source => source.match(/data-form-endpoint="([^"]+)"/)[1];

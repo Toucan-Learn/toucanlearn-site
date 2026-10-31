@@ -6,6 +6,8 @@
    and each of those pages is shown at the same height too. */
 (() => {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
   const body = document.body;
   const main = document.getElementById('main');
   const viewport = main && main.querySelector('.framework-panels');
@@ -22,7 +24,7 @@
     if (pages.length < 2) return;
     const controls = document.createElement('nav');
     controls.className = 'framework-page-controls';
-    controls.setAttribute('aria-label', 'Examples in this section');
+    controls.setAttribute('aria-label', t('Examples in this section'));
     controls.innerHTML = '<button type="button">← Previous</button><span aria-live="polite" aria-atomic="true"></span><button type="button">Next →</button>';
     const [previous, status, next] = controls.children;
     pages[pages.length - 1].after(controls);

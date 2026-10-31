@@ -1,16 +1,18 @@
 (function () {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
 
   // Keep each photo's file, intrinsic dimensions and alt text together.
   const ROUTE_PHOTOS = {
     "children": [
-      { "file": "assets/photos/route-children-1.jpg", "width": 800, "height": 1200, "alt": "A smiling child holding up a colourful puzzle" },
-      { "file": "assets/photos/route-children-2.jpg", "width": 800, "height": 1067, "alt": "A child drawing a house with coloured pencils" },
-      { "file": "assets/photos/route-children-3.jpg", "width": 800, "height": 1199, "alt": "A young boy drawing at a white table" }
+      { "file": "/assets/photos/route-children-1.jpg", "width": 800, "height": 1200, "alt": "A smiling child holding up a colourful puzzle" },
+      { "file": "/assets/photos/route-children-2.jpg", "width": 800, "height": 1067, "alt": "A child drawing a house with coloured pencils" },
+      { "file": "/assets/photos/route-children-3.jpg", "width": 800, "height": 1199, "alt": "A young boy drawing at a white table" }
     ],
     "adults": [
-      { "file": "assets/photos/route-adults-1.jpg", "width": 800, "height": 1200, "alt": "A man with a coffee working on his laptop in a café" },
-      { "file": "assets/photos/route-adults-3.jpg", "width": 800, "height": 1199, "alt": "A woman writing in a notebook at a desk by a window" }
+      { "file": "/assets/photos/route-adults-1.jpg", "width": 800, "height": 1200, "alt": "A man with a coffee working on his laptop in a café" },
+      { "file": "/assets/photos/route-adults-3.jpg", "width": 800, "height": 1199, "alt": "A woman writing in a notebook at a desk by a window" }
     ]
   };
 
@@ -31,9 +33,9 @@
     const photo = photos[index];
     image.width = photo.width;
     image.height = photo.height;
-    image.alt = photo.alt;
+    image.alt = t(photo.alt);
     // Name each photo after its file, so its crop rule follows it if the list changes.
     image.dataset.routePhoto = photo.file.replace(/^.*route-|\.jpg$/g, '');
-    if (image.getAttribute('src') !== photo.file) image.src = photo.file;
+    if (image.src !== new URL(photo.file, location.href).href) image.src = photo.file;
   }
 })();

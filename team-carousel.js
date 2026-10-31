@@ -1,6 +1,8 @@
 /* Manual team viewers and the original scrolling team track, 20261026-final-4. */
 (() => {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
   const interactive = 'a, button, input, textarea, select, video, audio, summary, [contenteditable]:not([contenteditable="false"]), [role="slider"]';
   const pause = root => root.querySelectorAll('video, audio').forEach(media => media.pause());
   document.querySelectorAll('[data-profile-viewer]').forEach(viewer => {
@@ -17,11 +19,11 @@
     let gesture;
     if (!viewer.hasAttribute('tabindex')) viewer.tabIndex = 0;
     if (!viewer.hasAttribute('role')) viewer.setAttribute('role', 'region');
-    if (!viewer.hasAttribute('aria-label') && !viewer.hasAttribute('aria-labelledby')) viewer.setAttribute('aria-label', 'Our team');
+    if (!viewer.hasAttribute('aria-label') && !viewer.hasAttribute('aria-labelledby')) viewer.setAttribute('aria-label', t('Our team'));
     viewer.setAttribute('aria-roledescription', 'carousel');
     previous.type = next.type = 'button';
-    if (!previous.hasAttribute('aria-label')) previous.setAttribute('aria-label', 'Previous team member');
-    if (!next.hasAttribute('aria-label')) next.setAttribute('aria-label', 'Next team member');
+    if (!previous.hasAttribute('aria-label')) previous.setAttribute('aria-label', t('Previous team member'));
+    if (!next.hasAttribute('aria-label')) next.setAttribute('aria-label', t('Next team member'));
     status.setAttribute('aria-live', 'polite');
     status.setAttribute('aria-atomic', 'true');
     const show = requested => {
@@ -34,7 +36,7 @@
         slide.hidden = position !== index;
         slide.inert = position !== index;
       });
-      status.textContent = `${index + 1} of ${slides.length}`;
+      status.textContent = t('{n} of {count}', { n: index + 1, count: slides.length });
       jumpLinks.forEach(link => {
         if (link.getAttribute('href') === `#${slides[index].id}`) link.setAttribute('aria-current', 'true');
         else link.removeAttribute('aria-current');

@@ -1,5 +1,7 @@
 (function () {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
 
   // Owner, 29 Oct: text-only cards that turn only when asked (no autoplay, pause or drawings).
   const carousel = document.querySelector('[data-reviews-carousel]');
@@ -24,7 +26,7 @@
   cards.forEach((card, index) => {
     card.setAttribute('role', 'group');
     card.setAttribute('aria-roledescription', 'slide');
-    card.setAttribute('aria-label', `Review ${index + 1} of ${count}`);
+    card.setAttribute('aria-label', t('Review {n} of {count}', { n: index + 1, count }));
     card.tabIndex = 0;
   });
 
@@ -64,7 +66,7 @@
       else card.removeAttribute('aria-hidden');
     });
     ring.style.height = `${height}px`;
-    status.textContent = `Review ${modulo(position) + 1} of ${count}`;
+    status.textContent = t('Review {n} of {count}', { n: modulo(position) + 1, count });
   }
 
   function turn(delta) {

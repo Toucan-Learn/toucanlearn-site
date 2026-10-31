@@ -1,6 +1,8 @@
 /* Shared section navigation, 20261026-framework-1. */
 (() => {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
   const pause = root => root.querySelectorAll('video, audio').forEach(media => media.pause());
   const hashTarget = () => {
     try { return document.getElementById(decodeURIComponent(location.hash.slice(1))); }
@@ -25,7 +27,7 @@
     if (viewport) {
       viewport.tabIndex = 0;
       viewport.setAttribute('role', 'region');
-      viewport.setAttribute('aria-label', 'Selected section');
+      viewport.setAttribute('aria-label', t('Selected section'));
     }
     let current;
     let scrollFrame;

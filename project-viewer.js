@@ -1,6 +1,8 @@
 /* Manual project viewer, 20261026-framework-1. */
 (() => {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
   const interactive = 'a, button, input, textarea, select, video, audio, iframe, summary, [contenteditable]:not([contenteditable="false"]), [role="slider"], [data-screenshot-gallery]';
   const pause = root => root.querySelectorAll('video, audio').forEach(media => media.pause());
   document.querySelectorAll('[data-project-viewer]').forEach(viewer => {
@@ -14,11 +16,11 @@
     let gesture;
     if (!viewer.hasAttribute('tabindex')) viewer.tabIndex = 0;
     if (!viewer.hasAttribute('role')) viewer.setAttribute('role', 'region');
-    if (!viewer.hasAttribute('aria-label') && !viewer.hasAttribute('aria-labelledby')) viewer.setAttribute('aria-label', 'Learner projects');
+    if (!viewer.hasAttribute('aria-label') && !viewer.hasAttribute('aria-labelledby')) viewer.setAttribute('aria-label', t('Learner projects'));
     viewer.setAttribute('aria-roledescription', 'carousel');
     previous.type = next.type = 'button';
-    if (!previous.hasAttribute('aria-label')) previous.setAttribute('aria-label', 'Previous project');
-    if (!next.hasAttribute('aria-label')) next.setAttribute('aria-label', 'Next project');
+    if (!previous.hasAttribute('aria-label')) previous.setAttribute('aria-label', t('Previous project'));
+    if (!next.hasAttribute('aria-label')) next.setAttribute('aria-label', t('Next project'));
     status.setAttribute('aria-live', 'polite');
     status.setAttribute('aria-atomic', 'true');
     const show = requested => {

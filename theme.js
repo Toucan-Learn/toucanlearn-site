@@ -1,6 +1,7 @@
 // Apply only an explicit choice before styles paint; otherwise CSS follows the device.
 (() => {
   const root = document.documentElement;
+  const t = text => window.toucanText?.[text] ?? text;
   try {
     const saved = localStorage.getItem('toucan-theme');
     if (saved === 'dark' || saved === 'light') root.dataset.theme = saved;
@@ -16,8 +17,8 @@
       toggles.forEach(toggle => {
         toggle.setAttribute('aria-pressed', String(dark));
         toggle.setAttribute('aria-label', dark
-          ? (toggle.dataset.themeLightLabel || 'Switch to light mode')
-          : (toggle.dataset.themeDarkLabel || 'Switch to dark mode'));
+          ? (toggle.dataset.themeLightLabel || t('Switch to light mode'))
+          : (toggle.dataset.themeDarkLabel || t('Switch to dark mode')));
       });
     };
 

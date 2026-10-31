@@ -216,7 +216,10 @@ const withoutOwnerContent = html => html
   .replace(/reviews-carousel\.js\?v=[^"]+/, 'reviews-carousel.js?v=TOKEN')
   // 30 Oct owner: the showcase label moved below the window, so compare without its position.
   .replace(/\n\s*<p class="eyebrow light[^"]*">[\s\S]*?<\/p>/, '')
-  .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js|style\.css|hero\.css))(?:\?v=[^"']+)?/g, '$1?v=TOKEN');
+  .replace(/((?:framework\.css|menu\.js|team-carousel\.js|toucan-favicon\.png|campaigns\.css|reviews-enquiry-sky\.js|style\.css|hero\.css|theme\.js|launch-offer\.js|campaigns\.js|consent\.js|route-photos\.js|step-art\.js))(?:\?v=[^"']+)?/g, '$1?v=TOKEN')
+  // Owner, 31 Oct: every page links to its full copies in other languages (menu switch and hreflang links).
+  .replace(/<details class="[^"]*language-switch[^"]*"[^>]*>[\s\S]*?<\/details>/g, '')
+  .replace(/\n\s*<link rel="alternate" hreflang[^>]*>/g, '').replace(/\n\s*<(?:link|script)[^>]*language-(?:switch|text)\.(?:css|js)[^>]*>(?:<\/script>)?/g, '');
 const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(html))
   .replace(/(project-showcase\.(?:css|js)\?v=)[^"']+/g, '$1CACHE_TOKEN')
   // 30 Oct: one homepage-only caption directly below the media window.

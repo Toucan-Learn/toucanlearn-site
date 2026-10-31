@@ -1,6 +1,8 @@
 /* Team-only adaptation of the existing Reviews 3D ring, 20261026-team-deck-2. */
 (() => {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
   const interactive = 'a, button, input, textarea, select, video, audio, summary, [contenteditable]:not([contenteditable="false"])';
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   const desktop = matchMedia('(min-width: 900px)');
@@ -66,7 +68,7 @@
         card.inert = !visible;
         card.tabIndex = visible ? 0 : -1;
         card.setAttribute('role', current ? 'group' : 'button');
-        card.setAttribute('aria-label', current ? `${names[index]}, ${index + 1} of ${count}` : `Show ${names[index]}`);
+        card.setAttribute('aria-label', current ? t('{name}, {n} of {count}', { name: names[index], n: index + 1, count }) : t('Show {name}', { name: names[index] }));
         if (current) {
           card.setAttribute('aria-current', 'true');
           card.setAttribute('aria-roledescription', 'slide');
@@ -90,7 +92,7 @@
       ring.style.setProperty('--team-card-height', `${height}px`);
       deck.closest('.team-page-layout')?.style.setProperty('--team-card-height', `${height}px`);
       ring.style.height = `${height}px`;
-      status.textContent = `${modulo(position) + 1} of ${count}`;
+      status.textContent = t('{n} of {count}', { n: modulo(position) + 1, count });
     }
     function turn(delta) {
       const focusedCard = cards.find(card => card.contains(document.activeElement));

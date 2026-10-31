@@ -1,6 +1,8 @@
 /* One switch for the launch pop-up. Existing page content is never changed. */
 (() => {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
   const config = { active: false, spotsTotal: 5, closes: '2026-11-30' };
   function isActive(now = new Date()) {
     if (!config.active) return false;
@@ -48,23 +50,23 @@
     dialog.setAttribute('aria-describedby', 'launch-offer-summary launch-offer-terms');
     const closeButton = element('button', 'launch-offer-dialog__close', '×');
     closeButton.type = 'button';
-    closeButton.setAttribute('aria-label', 'Close launch offer');
-    const eyebrow = element('p', 'launch-offer-dialog__eyebrow', 'Launch offer');
-    const heading = element('h2', 'launch-offer-dialog__heading', `The next ${config.spotsTotal} new learners get their first 3 sessions free`);
+    closeButton.setAttribute('aria-label', t('Close launch offer'));
+    const eyebrow = element('p', 'launch-offer-dialog__eyebrow', t('Launch offer'));
+    const heading = element('h2', 'launch-offer-dialog__heading', t('The next {spots} new learners get their first 3 sessions free', { spots: config.spotsTotal }));
     heading.id = 'launch-offer-heading';
-    const closes = new Intl.DateTimeFormat('en-GB', {
+    const closes = new Intl.DateTimeFormat(document.documentElement.lang || 'en-GB', {
       timeZone: 'Europe/London', day: 'numeric', month: 'long'
     }).format(new Date(`${config.closes}T12:00:00Z`));
-    const summary = element('p', 'launch-offer-dialog__summary', `Book by ${closes}.`);
+    const summary = element('p', 'launch-offer-dialog__summary', t('Book by {date}.', { date: closes }));
     summary.id = 'launch-offer-summary';
-    const claim = element('a', 'button launch-offer-dialog__claim', 'Claim a free spot');
+    const claim = element('a', 'button launch-offer-dialog__claim', t('Claim a free spot'));
     claim.setAttribute('href', 'contact');
     claim.setAttribute('data-offer', 'launch');
-    const later = element('button', 'launch-offer-dialog__later', 'Maybe later');
+    const later = element('button', 'launch-offer-dialog__later', t('Maybe later'));
     later.type = 'button';
     const actions = element('div', 'launch-offer-dialog__actions');
     actions.append(claim, later);
-    const terms = element('p', 'launch-offer-dialog__terms', 'New learners only, one per family. Sessions used within 6 weeks; after that, the agreed band applies.');
+    const terms = element('p', 'launch-offer-dialog__terms', t('New learners only, one per family. Sessions used within 6 weeks; after that, the agreed band applies.'));
     terms.id = 'launch-offer-terms';
     dialog.append(closeButton, eyebrow, heading, summary, actions, terms);
     const previousFocus = document.activeElement;

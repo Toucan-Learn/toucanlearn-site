@@ -2,6 +2,8 @@
    recording), so there is no cookie banner; visitors can switch it off on the privacy page. */
 (() => {
   'use strict';
+  // Language copies: words from language-text.js; English is the fallback and the key.
+  const t = (text, values = {}) => (window.toucanText?.[text] ?? text).replace(/\{(\w+)\}/g, (all, key) => key in values ? values[key] : all);
   const projectId = 'z68bw8zawq';
   const storageKey = 'toucan-clarity-off';
 
@@ -10,7 +12,7 @@
   }
 
   document.querySelectorAll('[data-clarity-toggle]').forEach(button => {
-    button.textContent = isOff() ? 'Turn Clarity back on' : 'Turn off Clarity on this browser';
+    button.textContent = t(isOff() ? 'Turn Clarity back on' : 'Turn off Clarity on this browser');
   });
   document.addEventListener('click', event => {
     if (!event.target.closest('[data-clarity-toggle]')) return;

@@ -4,7 +4,8 @@ import { readdir, readFile } from 'node:fs/promises';
 import { fixture } from './helpers/navigation-dom.mjs';
 import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 const root = new URL('../', import.meta.url);
-const token = '20261029-clean-url-2';
+// 31 Oct: language copies route script text through language-text.js; one shared release token.
+const token = '20261031-clones-1';
 const home = await readFile(new URL('index.html', root), 'utf8');
 const showcaseToken = home.match(/src="project-showcase\.js\?v=([^"]+)"/)[1];
 // Homepage captions refresh this entry point without changing the manual section.

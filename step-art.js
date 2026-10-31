@@ -3,9 +3,9 @@
 
   // The only art choices, shared by selection and screenshot overrides.
   const STEP_ART = {
-    "step1": { "a": "assets/art/how-step1-a.png", "b": "assets/art/how-step1-b.png" },
-    "step2": { "a": "assets/art/how-step2-a.png", "b": "assets/art/how-step2-b.png" },
-    "step3": { "a": "assets/art/how-step3-a.png", "b": "assets/art/how-step3-b.png" }
+    "step1": { "a": "/assets/art/how-step1-a.png", "b": "/assets/art/how-step1-b.png" },
+    "step2": { "a": "/assets/art/how-step2-a.png", "b": "/assets/art/how-step2-b.png" },
+    "step3": { "a": "/assets/art/how-step3-a.png", "b": "/assets/art/how-step3-b.png" }
   };
 
   // Classic script immediately after the steps, before lazy images are laid out.

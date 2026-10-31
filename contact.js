@@ -56,7 +56,7 @@ var EnquiryRules = (function () {
   }
   const form = document.getElementById("enquiry-form");
   if (!form) return;
-  const messages = window.toucanFormMessages;
+  const messages = window.toucanText;
   const translate = message => {
     if (!messages) return message;
     if (messages[message]) return messages[message];

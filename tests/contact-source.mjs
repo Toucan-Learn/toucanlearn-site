@@ -34,6 +34,9 @@ const withoutClarity = page => page.replace(" https://www.clarity.ms https://scr
 const untokened = page => page.replace(/\?v=[^"']+/g, '?v=T'); // stylesheet/script cache tokens change with every release
 // Owner, 31 Oct: menus carry data-nosnippet so Google stops quoting them as the site description.
 const withoutNosnippet = page => page.replace(/<nav data-nosnippet/g, '<nav');
+// Owner, 31 Oct: every page links to its full copies in other languages (menu switch and hreflang links).
+const withoutLanguages = page => page.replace(/<details class="[^"]*language-switch[^"]*"[^>]*>[\s\S]*?<\/details>/g, '')
+  .replace(/\n\s*<link rel="alternate" hreflang[^>]*>/g, '').replace(/\n\s*<(?:link|script)[^>]*language-(?:switch|text)\.(?:css|js)[^>]*>(?:<\/script>)?/g, '');
 // Owner, 30 Oct: the age field sits at the top of the details column, so choosing
 // "child" pushes Subject down instead of opening a gap beside the name. Compare
 // everything else with the age field back in its original place.
@@ -43,7 +46,7 @@ const ageBack = page => {
   return block ? page.replace(block, '').replace(/(<span class="field-error" id="learner-child-error"><\/span>\s*<\/fieldset>)/, `$1${block}`) : page;
 };
 assert.ok(html.indexOf('id="age-year-field"') > html.indexOf('id="support-needed"') && html.indexOf('id="age-year-field"') < html.indexOf('id="subject"'), 'Age sits above Subject in the details column');
-assert.equal(contactMarkup(untokened(ageBack(withoutClarity(withoutNosnippet(html))))), contactMarkup(untokened(withoutNosnippet(expected))),
+assert.equal(contactMarkup(untokened(ageBack(withoutClarity(withoutNosnippet(withoutLanguages(html)))))), contactMarkup(untokened(withoutNosnippet(expected))),
   'Preserve field names, order, hooks, configuration and copy outside the requested help and phone labels');
 // Owner, 31 Oct: the "Website visits" section now describes Microsoft Clarity; everything else stays as approved.
 const visits = page => page.replace(/<section(?: id="website-visits")?>\s*<h2>Website visits and changes<\/h2>[\s\S]*?<\/section>/, '<!-- website visits: owner-managed -->');
@@ -55,7 +58,7 @@ assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));
 assert.match(html, /href="tel:\+447309639095">07309 639095<\/a>/);
 assert.match(html, /href="https:\/\/wa.me\/447307045816"[^>]*>WhatsApp 07307 045816</);
-assert.match(html, /src="contact.js\?v=20261030-subject-sep-1"/);
+assert.match(html, /src="contact.js\?v=20261031-clones-1"/);
 assert.match(html, /href="contact.css\?v=20261030-subject-dropdown-3"/);
 // Owner, 31 Oct: Microsoft Clarity is the only outside script.
 assert.match(html, /script-src 'self' https:\/\/www\.clarity\.ms https:\/\/scripts\.clarity\.ms; style-src 'self'/);

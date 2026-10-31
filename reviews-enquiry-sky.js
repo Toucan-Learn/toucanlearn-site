@@ -265,7 +265,7 @@ if (
       sky.hidden = Boolean(renderPreset.image && !pixelLoaded);
       draw();
     };
-    noise.src = 'assets/galaxy-noise.png';
+    noise.src = '/assets/galaxy-noise.png';
 
     return {
       loadPixel,
@@ -413,7 +413,7 @@ if (
       renderer?.loadPixel?.();
       draw();
     };
-    image.src = preset.image || 'assets/loading-pixel-sky.png';
+    image.src = preset.image || '/assets/loading-pixel-sky.png';
     resizeSky();
     renderer = createSky();
     draw();

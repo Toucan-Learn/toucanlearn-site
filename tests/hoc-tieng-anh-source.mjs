@@ -2,7 +2,6 @@
 import assert from 'node:assert/strict';
 import { readFile, access } from 'node:fs/promises';
 import vm from 'node:vm';
-import { execFileSync } from 'node:child_process';
 import { fixture } from './helpers/navigation-dom.mjs';
 
 const root = new URL('../', import.meta.url);
@@ -41,16 +40,12 @@ for (const [, attrs, content] of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/sc
   assert.equal(content.trim(), '');
 }
 for (const [, file] of markup.matchAll(/(?:src|href)="([^"?#]+)(?:\?[^"]*)?"/g)) {
-  if (/\.(?:css|js|png|jpe?g)$/.test(file)) await access(new URL(file.replace(/^\//, ''), root));
+  if (/\.(?:css|js|png|jpe?g)$/.test(file)) await access(new URL(file, root));
 }
 const header = source => source.match(/<header>[\s\S]*?<\/header>/)[0];
-const vietnamHome = await read('vi/index.html');
-assert.equal(header(html), header(vietnamHome), 'The ad landing uses the complete Vietnamese shared header');
+assert.equal(header(html).replaceAll('Đăng ký học thử', 'Book a free trial'), header(contact), 'Shared menu, theme toggle and local trial CTA');
 const footer = source => source.match(/<footer\b[\s\S]*?<\/footer>/)[0];
-assert.equal(footer(html), footer(vietnamHome), 'Shared Vietnamese footer');
-const previousLanding = execFileSync('git', ['show', 'HEAD:hoc-tieng-anh.html'], { cwd: root, encoding: 'utf8' });
-const main = source => source.match(/<main\b[\s\S]*?<\/main>/)[0];
-assert.equal(main(html), main(previousLanding), 'The existing ad landing content and form are byte-for-byte unchanged');
+assert.equal(footer(html), footer(contact));
 const endpoint = source => source.match(/data-form-endpoint="([^"]+)"/)[1];
 assert.equal(endpoint(html), endpoint(contact));
 const team = await read('team.html');

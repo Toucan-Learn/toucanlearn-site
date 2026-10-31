@@ -13,7 +13,8 @@ const before = process.env.CELLS_BASE || '29d9f4b'; // 30 Oct: the owner-approve
 const copyBefore = '770f23d'; // Approved merged copy before the owner's 29 Oct Approach notes.
 const files = ['approach.html', 'children.html', 'adults.html', 'subjects.html'];
 const original = (file, revision = before) => execFileSync('git', ['show', `${revision}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-const words = html => html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+// Owner, 31 Oct: the language switch (English, Tiếng Việt, Español, Français, Italiano) is navigation, not page copy.
+const words = html => html.replace(/<details class="[^"]*\blanguage-switch\b[^"]*">[\s\S]*?<\/details>/g, '').replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 // Owner, 31 Oct: Microsoft Clarity (after cookie consent) adds its sources to the CSP and two consent tags; compare without them.
 const withoutClarity = page => page.replace(" https://www.clarity.ms https://scripts.clarity.ms", "").replace(" https://*.clarity.ms https://c.bing.com", "").replace(" https://*.clarity.ms", "")
   .replace(/\n\s*<script src="consent\.js[^"]*"><\/script>/, "").replace(/\n\s*<link rel="stylesheet" href="consent\.css[^"]*" \/>/, "");

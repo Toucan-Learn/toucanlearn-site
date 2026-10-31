@@ -270,10 +270,6 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
   .living-hero .hero-project-caption { min-height: 139px; }
   .living-hero .hero-world > [data-showcase-mode="auto"] { --showcase-height: 297px; }
 }
-/* Owner, 30 Oct: the project caption starts level with the hero heading; the window and its labels stay put. */
-@media (min-width: 900px) {
-  .living-hero .hero-world { align-self: stretch; }
-  .living-hero .hero-world > .hero-project-caption { flex: 1 0 auto; }
-}
-@media (min-width: 1550px) { .living-hero .hero-world > .hero-project-caption { min-height: 121px; } }
-@media (min-width: 768px) and (max-width: 899px) { .living-hero .hero-project-caption { min-height: 157px; } }
+/* Owner, 31 Oct: the caption starts level with the hero heading and hugs its text (tallest caption only);
+   the window follows straight under it. */
+@media (min-width: 900px) { .living-hero .hero-world { align-self: stretch; } }

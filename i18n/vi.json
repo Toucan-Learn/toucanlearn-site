@@ -328,7 +328,6 @@
   "We match the tutor to your level and goal when you <a href=\"contact\">enquire</a>.": "Chúng tôi chọn giáo viên phù hợp với trình độ và mục tiêu của bạn khi bạn <a href=\"contact\">liên hệ</a>.",
   "<a class=\"button subject-cta\" href=\"contact\" data-service=\"languages\">Book a free language session <span aria-hidden=\"true\">→</span></a><a href=\"team\">Explore the language tutors →</a><a href=\"adults#languages\">Explore adult language learning →</a>": "<a class=\"button subject-cta\" href=\"contact\" data-service=\"languages\">Đăng ký buổi học ngoại ngữ miễn phí <span aria-hidden=\"true\">→</span></a><a href=\"team\">Khám phá giáo viên ngoại ngữ →</a><a href=\"adults#languages\">Khám phá ngoại ngữ cho người lớn →</a>",
   "Psychology": "Tâm lý học",
-  "A-level and IB Psychology with Joshua, our founder and a psychology graduate.": "Tâm lý học A-level và IB với Joshua, người sáng lập, tốt nghiệp ngành tâm lý học.",
   "IB Papers 1, 2 &amp; 3": "IB Paper 1, 2 &amp; 3",
   "Connect studies to the question, plan answers and practise exam technique.": "Liên hệ các nghiên cứu với câu hỏi, lập dàn ý câu trả lời và luyện kỹ năng làm bài thi.",
   "IB Internal Assessment (IA)": "IB Internal Assessment (IA)",
@@ -349,7 +348,6 @@
   "Tell us what you enjoy making and bring your course requirements or current project.": "Hãy cho chúng tôi biết bạn thích làm gì và mang theo yêu cầu khóa học hoặc dự án hiện tại.",
   "<a class=\"button subject-cta\" href=\"contact\">Book a free art or DT session <span aria-hidden=\"true\">→</span></a>": "<a class=\"button subject-cta\" href=\"contact\">Đăng ký buổi học Mỹ thuật hoặc DT miễn phí <span aria-hidden=\"true\">→</span></a>",
   "SEND support": "Hỗ trợ nhu cầu giáo dục đặc biệt",
-  "Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.": "Bắt đầu từ điều học viên yêu thích, cùng Joshua, người sáng lập, tốt nghiệp ngành tâm lý học và chuyên về nhu cầu giáo dục đặc biệt.",
   "Enjoy the learning": "Tận hưởng việc học",
   "Start with their interests, so the activity matters in its own right.": "Bắt đầu từ sở thích của các em, để bản thân hoạt động đã có ý nghĩa.",
   "A setting that works": "Môi trường phù hợp",
@@ -538,7 +536,9 @@
   "<a class=\"button\" href=\"./\"> Return to the homepage </a>": "<a class=\"button\" href=\"./\"> Quay lại trang chủ </a>",
   "Your next step | Toucan Learn": "Bước tiếp theo của bạn | Toucan Learn",
   "How to contact Toucan Learn about your first session.": "Cách liên hệ Toucan Learn về buổi học đầu tiên của bạn.",
-  "[aria-label] Primary": "Menu chính"
+  "[aria-label] Primary": "Menu chính",
+  "Start with what the learner enjoys with our SEN specialist &amp; wider team.": "Bắt đầu từ điều học viên yêu thích, cùng chuyên gia về nhu cầu giáo dục đặc biệt &amp; cả đội ngũ của chúng tôi.",
+  "A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.": "Tâm lý học A-level và IB với Joshua, người sáng lập, tốt nghiệp ngành tâm lý học &amp; chuyên về nhu cầu giáo dục đặc biệt."
  },
  "script": {
   "Please use only the enquiry fields provided.": "Vui lòng chỉ dùng các ô thông tin có sẵn.",

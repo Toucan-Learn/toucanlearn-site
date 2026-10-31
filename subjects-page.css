@@ -169,3 +169,8 @@ body.subjects-page #send-support .learning-links > .send-projects-link { margin-
   :root:not([data-theme="light"]) body.subjects-page.cell-art-page #send-support .send-points > .picture-cell { background: #204653; }
 }
 :root[data-theme="dark"] body.subjects-page.cell-art-page #send-support .send-points > .picture-cell { background: #204653; }
+/* Owner, 31 Oct: the language cells take the same height as the English, Maths and Science
+   cells (their photo's clamp(104px, 21vh, 170px) plus the 1px card border), so the panels line up. */
+@media screen and (min-width: 1000px) {
+  body.subjects-page.cell-art-page[data-page-frame] .framework-panels .learning-languages > .subject-card { min-height: calc(clamp(104px, 21vh, 170px) + 2px); }
+}

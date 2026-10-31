@@ -28,6 +28,10 @@ function approvedCopy(file) {
   if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
   // Owner, 31 Oct: DARTY's label is just "SEN support".
   if (file === 'children.html') copy = copy.replace('English · Game design', 'SEN support');
+  // Owner, 31 Oct: the SEND intro names the specialist and the wider team, not Joshua's titles.
+  if (file === 'subjects.html') copy = copy.replace('Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.', 'Start with what the learner enjoys with our SEN specialist &amp; wider team.')
+    // Owner, 31 Oct: Psychology names Joshua as psychology graduate and SEN specialist.
+    .replace('A-level and IB Psychology with Joshua, our founder and a psychology graduate.', 'A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.');
   // A copyBase entry already contains every approved change below.
   if (file !== 'approach.html' || copyBase[file]) return copy;
   const changes = [

@@ -328,7 +328,6 @@
   "We match the tutor to your level and goal when you <a href=\"contact\">enquire</a>.": "Abbiniamo l’insegnante al tuo livello e obiettivo quando ci <a href=\"contact\">contatti</a>.",
   "<a class=\"button subject-cta\" href=\"contact\" data-service=\"languages\">Book a free language session <span aria-hidden=\"true\">→</span></a><a href=\"team\">Explore the language tutors →</a><a href=\"adults#languages\">Explore adult language learning →</a>": "<a class=\"button subject-cta\" href=\"contact\" data-service=\"languages\">Prenota una lezione gratuita di lingua <span aria-hidden=\"true\">→</span></a><a href=\"team\">Scopri gli insegnanti di lingue →</a><a href=\"adults#languages\">Scopri le lingue per adulti →</a>",
   "Psychology": "Psicologia",
-  "A-level and IB Psychology with Joshua, our founder and a psychology graduate.": "Psicologia A-level e IB con Joshua, il nostro fondatore, laureato in psicologia.",
   "IB Papers 1, 2 &amp; 3": "IB Papers 1, 2 e 3",
   "Connect studies to the question, plan answers and practise exam technique.": "Collega gli studi alla domanda, pianifica le risposte ed esercita la tecnica d’esame.",
   "IB Internal Assessment (IA)": "IB Internal Assessment (IA)",
@@ -349,7 +348,6 @@
   "Tell us what you enjoy making and bring your course requirements or current project.": "Raccontaci cosa ti piace creare e porta i requisiti del corso o il progetto attuale.",
   "<a class=\"button subject-cta\" href=\"contact\">Book a free art or DT session <span aria-hidden=\"true\">→</span></a>": "<a class=\"button subject-cta\" href=\"contact\">Prenota una lezione gratuita di arte o DT <span aria-hidden=\"true\">→</span></a>",
   "SEND support": "Supporto BES",
-  "Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.": "Partiamo da ciò che piace allo studente, con Joshua, il nostro fondatore, laureato in psicologia e specialista BES.",
   "Enjoy the learning": "Imparare con piacere",
   "Start with their interests, so the activity matters in its own right.": "Partiamo dai suoi interessi, così l’attività ha valore di per sé.",
   "A setting that works": "Un ambiente che funziona",
@@ -538,7 +536,9 @@
   "<a class=\"button\" href=\"./\"> Return to the homepage </a>": "<a class=\"button\" href=\"./\"> Torna alla home </a>",
   "Your next step | Toucan Learn": "Il tuo prossimo passo | Toucan Learn",
   "How to contact Toucan Learn about your first session.": "Come contattare Toucan Learn per la tua prima lezione.",
-  "[aria-label] Primary": "Menu principale"
+  "[aria-label] Primary": "Menu principale",
+  "Start with what the learner enjoys with our SEN specialist &amp; wider team.": "Partiamo da ciò che piace allo studente, con il nostro specialista BES e tutto il team.",
+  "A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.": "Psicologia A-level e IB con Joshua, il nostro fondatore, laureato in psicologia e specialista BES."
  },
  "script": {
   "Please use only the enquiry fields provided.": "Usa solo i campi del modulo disponibili.",

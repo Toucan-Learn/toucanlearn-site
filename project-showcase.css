@@ -285,3 +285,14 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 /* Owner, 31 Oct: the caption's top lines up with the top of the "L" in the heading, not the heading's line box
    (cap top ≈ 0.17em of the hero title, whose size is 4.583vw clamped between 2.625rem and 4.5rem). */
 @media (min-width: 900px) { .living-hero .hero-world > .hero-project-caption { margin-top: clamp(7px, .78vw, 12px); } }
+/* Owner, 31 Oct: the project label sits top right, on the heading's row, so the window gets that line. */
+@media (min-width: 1000px) {
+  .living-hero .hero-project-caption { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; align-content: center; }
+  .living-hero .hero-project-caption .project-label { grid-row: 1; grid-column: 2; align-self: center; margin: 0; }
+  .living-hero .hero-project-caption h2 { grid-row: 1; grid-column: 1; }
+  .living-hero .hero-project-caption > .project-caption-detail { grid-column: 1 / -1; }
+}
+/* Reserved caption heights with the label on the heading row (tallest caption at each width). */
+@media (min-width: 1000px) and (max-width: 1248px) { .living-hero .hero-project-caption { min-height: 122px; } }
+@media (min-width: 1249px) and (max-width: 1269px) { .living-hero .hero-project-caption { min-height: 104px; } }
+@media (min-width: 1270px) { .living-hero .hero-project-caption { min-height: 86px; } }

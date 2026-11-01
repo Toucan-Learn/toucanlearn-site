@@ -2976,3 +2976,8 @@ body:not(.team-page) footer.site-footer .footer-links > a:focus-visible { color:
 .review-recommends { display: inline-flex; align-items: center; padding: 1px 8px; border-radius: 999px; background: #f4b40026; color: #f4b400; font-weight: 800; font-size: .85em; line-height: 1.6; }
 :root:not([data-theme="dark"]) .review-recommends { color: #8a5a00; background: #f4b40033; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .review-recommends { color: #f4b400; background: #f4b40026; } }
+/* Owner, 1 Nov: the official Google "G" and Facebook "f" mark each review, on a white badge so they read on any card. */
+.review-source { display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; box-shadow: 0 1px 3px #0000002e; }
+.review-source svg { width: 15px; height: 15px; }
+.review-source--facebook svg { width: 24px; height: 24px; }
+.review-source--button { width: 22px; height: 22px; margin-right: 8px; vertical-align: -6px; box-shadow: none; }

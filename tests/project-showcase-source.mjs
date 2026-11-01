@@ -4,6 +4,7 @@ import { readFile, access } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
+import { runInNewContext } from 'node:vm';
 import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 import '../scripts/check-project-cells-static.mjs';
 const source = await readFile(new URL('../project-showcase.js', import.meta.url), 'utf8');
@@ -86,7 +87,7 @@ await import('./darty-title-lifecycle.mjs');
 assert.deepEqual(projects.map(project => project.id), ['football', 'darty', 'drinks', 'piano']);
 export const homepageCaptions = [
   ['English · Journalism', 'Football newspaper', 'Using a discouraged student’s interests and insights to practise English.', 'His own growing sports journalism website, full of his previews, analysis and reports.'],
-  ['SEN support', 'DARTY (football game)', 'Getting an avoidant learner excited to practise writing clear, precise instructions.', 'A playable 3D football game built from his written requests: he directs, we code.'],
+  ['SEN support', 'DARTY (football game)', 'Turning writing from the last thing he wanted to do into how he builds his own game.', 'A playable 3D football game built from his written requests: he directs, we code.'],
   ['SEN & English', 'Drink design', 'One student often regains his creative and working flow through designing drinks.', 'A collection of drinks brands from his sketches, label designs and slogans into 3D renders.'],
   ['SEN · Music brain breaks', 'Toucan piano', 'A tool for a student, a few minutes at a time for productive brain breaks.', 'A custom keyboard, songs they can request and learn, and a fresh head for the next task.'],
 ];
@@ -252,13 +253,23 @@ const captionParts = ['label', 'heading', 'learning', 'result'];
 assert.deepEqual(captionParts.map(part => captionMarkup.match(new RegExp(`data-project-${part}>([^<]+)<`))?.[1]), homepageCaptions[3], 'The no-JS caption shows the complete piano story');
 assert.deepEqual([...captionMarkup.matchAll(/<p class="project-caption-detail"><strong>(Mission:|Result:)<\/strong> <span data-project-(learning|result)>[^<]+<\/span><\/p>/g)].map(([, lead, field]) => [lead, field]), [['Mission:', 'learning'], ['Result:', 'result']], 'Two paragraphs retain bold lead words outside the changing text spans');
 const captionUpdate = source.match(/if \(caption\) \{([\s\S]*?)\n    \}/)[1];
-for (const part of captionParts) assert(captionUpdate.includes(`caption.querySelector('[data-project-${part}]').textContent = entries[index].${part};`), `${part}: update only textContent`);
+for (const part of captionParts) assert(captionUpdate.includes(`caption.querySelector('[data-project-${part}]').textContent = ${part === 'learning' ? 'globalThis.toucanText?.[entries[index].learning] || ' : ''}entries[index].${part};`), `${part}: update only textContent`);
 assert(!/innerHTML|outerHTML|insertAdjacentHTML/.test(captionUpdate), 'Caption updates never parse HTML');
+for (const lang of ['en', 'vi', 'es', 'fr', 'it']) {
+  const toucanText = lang === 'en' ? undefined : JSON.parse(await readFile(new URL(`../i18n/${lang}.json`, import.meta.url), 'utf8')).script;
+  const fields = Object.fromEntries(captionParts.map(part => [`[data-project-${part}]`, {}]));
+  const caption = { setAttribute() {}, querySelector: selector => fields[selector] };
+  for (const project of projects) {
+    runInNewContext(captionUpdate, { caption, entries: [project], index: 0, userAction: false, globalThis: { toucanText } });
+    for (const part of captionParts) assert.equal(fields[`[data-project-${part}]`].textContent, part === 'learning' && project.id === 'darty' && toucanText ? toucanText[project.learning] : project[part], `${lang}/${project.id}/${part}: translate only the DARTY mission, with an English fallback`);
+  }
+}
 assert.match(source, /name\.textContent = entries\[index\]\.name;/, 'The window bar uses the unchanged name field');
 for (const asset of ['css', 'js']) {
   const token = html => html.match(new RegExp(`project-showcase\\.${asset}\\?v=([^"']+)`))?.[1];
   assert(token(children), `${asset}: the Children page retains its existing asset reference`);
-  assert.match(token(after), /^20261030-captions-\d+$/, `${asset}: the homepage uses a caption release token`);
+  assert.match(token(after), asset === 'js' ? /^20261101-darty-mission-1$/ : /^20261030-captions-\d+$/, `${asset}: the homepage uses the current release token`);
+  if (asset === 'js') assert.equal(token(children), token(after), 'Both English pages load the current showcase script');
   assert.notEqual(token(after), token(before), `${asset}: bump the changed asset’s cache token`);
 }
 

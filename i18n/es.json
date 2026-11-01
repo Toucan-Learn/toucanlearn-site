@@ -539,7 +539,8 @@
   "Mandarin Chinese": "Chino mandarín",
   "Arabic": "Árabe",
   "Leave a review on Google <span aria-hidden=\"true\">↗</span><span class=\"visually-hidden\"> (opens in a new tab)</span>": "Deja una reseña en Google <span aria-hidden=\"true\">↗</span><span class=\"visually-hidden\"> (se abre en una pestaña nueva)</span>",
-  "<span class=\"review-google-meta\">Former IB student · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": "<span class=\"review-google-meta\">Exestudiante del IB · Reseña de Google</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Lee la reseña completa en Google <span aria-hidden=\"true\">↗</span></a>"
+  "<span class=\"review-google-meta\">Former IB student · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": "<span class=\"review-google-meta\">Exestudiante del IB · Reseña de Google</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Lee la reseña completa en Google <span aria-hidden=\"true\">↗</span></a>",
+  "Turning writing from the last thing he wanted to do into how he builds his own game.": "Convertir la escritura, lo último que le apetecía hacer, en su forma de crear su propio videojuego."
  },
  "script": {
   "Please use only the enquiry fields provided.": "Usa solo los campos de consulta disponibles.",
@@ -593,6 +594,7 @@
   "A child drawing a house with coloured pencils": "Un niño dibuja una casa con lápices de colores",
   "A young boy drawing at a white table": "Un niño pequeño dibuja en una mesa blanca",
   "A man with a coffee working on his laptop in a café": "Un hombre con un café trabaja con su portátil en una cafetería",
-  "A woman writing in a notebook at a desk by a window": "Una mujer escribe en un cuaderno en un escritorio junto a la ventana"
+  "A woman writing in a notebook at a desk by a window": "Una mujer escribe en un cuaderno en un escritorio junto a la ventana",
+  "Turning writing from the last thing he wanted to do into how he builds his own game.": "Convertir la escritura, lo último que le apetecía hacer, en su forma de crear su propio videojuego."
  }
 }

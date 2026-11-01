@@ -539,7 +539,8 @@
   "Mandarin Chinese": "Tiếng Trung Quan Thoại",
   "Arabic": "Tiếng Ả Rập",
   "Leave a review on Google <span aria-hidden=\"true\">↗</span><span class=\"visually-hidden\"> (opens in a new tab)</span>": "Viết đánh giá trên Google <span aria-hidden=\"true\">↗</span><span class=\"visually-hidden\"> (mở trong thẻ mới)</span>",
-  "<span class=\"review-google-meta\">Former IB student · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": "<span class=\"review-google-meta\">Cựu học viên IB · Đánh giá trên Google</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Đọc toàn bộ đánh giá trên Google <span aria-hidden=\"true\">↗</span></a>"
+  "<span class=\"review-google-meta\">Former IB student · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": "<span class=\"review-google-meta\">Cựu học viên IB · Đánh giá trên Google</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Đọc toàn bộ đánh giá trên Google <span aria-hidden=\"true\">↗</span></a>",
+  "Turning writing from the last thing he wanted to do into how he builds his own game.": "Biến việc viết từ điều bạn ấy ngại làm nhất thành cách bạn ấy xây dựng trò chơi của riêng mình."
  },
  "script": {
   "Please use only the enquiry fields provided.": "Vui lòng chỉ dùng các ô thông tin có sẵn.",
@@ -593,6 +594,7 @@
   "A child drawing a house with coloured pencils": "Một em bé đang vẽ ngôi nhà bằng bút chì màu",
   "A young boy drawing at a white table": "Một cậu bé đang vẽ bên chiếc bàn trắng",
   "A man with a coffee working on his laptop in a café": "Một người đàn ông cùng tách cà phê làm việc trên máy tính xách tay trong quán cà phê",
-  "A woman writing in a notebook at a desk by a window": "Một người phụ nữ đang viết vào sổ tay bên bàn cạnh cửa sổ"
+  "A woman writing in a notebook at a desk by a window": "Một người phụ nữ đang viết vào sổ tay bên bàn cạnh cửa sổ",
+  "Turning writing from the last thing he wanted to do into how he builds his own game.": "Biến việc viết từ điều bạn ấy ngại làm nhất thành cách bạn ấy xây dựng trò chơi của riêng mình."
  }
 }

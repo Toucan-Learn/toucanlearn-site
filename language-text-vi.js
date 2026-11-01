@@ -52,5 +52,6 @@ window.toucanText = {
  "A child drawing a house with coloured pencils": "Một em bé đang vẽ ngôi nhà bằng bút chì màu",
  "A young boy drawing at a white table": "Một cậu bé đang vẽ bên chiếc bàn trắng",
  "A man with a coffee working on his laptop in a café": "Một người đàn ông cùng tách cà phê làm việc trên máy tính xách tay trong quán cà phê",
- "A woman writing in a notebook at a desk by a window": "Một người phụ nữ đang viết vào sổ tay bên bàn cạnh cửa sổ"
+ "A woman writing in a notebook at a desk by a window": "Một người phụ nữ đang viết vào sổ tay bên bàn cạnh cửa sổ",
+ "Turning writing from the last thing he wanted to do into how he builds his own game.": "Biến việc viết từ điều bạn ấy ngại làm nhất thành cách bạn ấy xây dựng trò chơi của riêng mình."
 };

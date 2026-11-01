@@ -1,6 +1,7 @@
 // Builds the full-site language copies in /vi/ /es/ /fr/ /it/ from the English pages.
 // Owner, 31 Oct: every language is a clone of the whole site (same layout, sections and
-// pictures) with only the words translated. Learner projects stay in English.
+// pictures) with only the words translated. Learner projects stay in English,
+// except the DARTY mission requested in every language on 1 Nov.
 // English HTML is the only layout source; i18n/<lang>.json maps each English unit to its words.
 //   node scripts/build-language-pages.mjs            write the clones (fails on any missing words)
 //   node scripts/build-language-pages.mjs --lang vi  build one language
@@ -19,6 +20,8 @@ export const languages = {
 };
 const origin = 'https://toucanlearn.co.uk';
 const switchVersion = '20261101-flags-4';
+const textVersion = '20261101-darty-mission-1';
+const dartyMission = 'Turning writing from the last thing he wanted to do into how he builds his own game.';
 
 // Lossless tokens: tag spelling, attribute order and whitespace are kept; script/style stay raw.
 const voidTags = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
@@ -115,6 +118,12 @@ function units(html) {
   };
   const top = tree(html);
   visit(top);
+  // Owner, 1 Nov: translate this mission even inside the otherwise-English project slides.
+  for (const token of tokens(html)) {
+    if (token.kind === 'text' && token.skip && normalise(token.raw) === dartyMission) {
+      found.push({ start: token.start, end: token.end, key: dartyMission });
+    }
+  }
   // The head's title is the only head text that is read aloud or shown.
   const title = html.match(/<title>([\s\S]*?)<\/title>/);
   if (title) found.push({ start: title.index + 7, end: title.index + 7 + title[1].length, key: normalise(title[1]) });
@@ -158,7 +167,7 @@ function alternates(page, lang) {
   const link = (tag, code) => `  <link rel="alternate" hreflang="${tag}" href="${origin}${pagePath(page, code)}" />\n`;
   return link('en-GB', 'en') + Object.keys(languages).map(code => link(code, code)).join('') + link('x-default', 'en')
     // Not deferred: the page's own scripts at the end of the body read it as they run.
-    + (lang === 'en' ? '' : `  <script src="/language-text-${lang}.js?v=${switchVersion}"></script>\n`);
+    + (lang === 'en' ? '' : `  <script src="/language-text-${lang}.js?v=${textVersion}"></script>\n`);
 }
 const switchAssets = `  <link rel="stylesheet" href="/language-switch.css?v=${switchVersion}" />\n  <script src="/language-switch.js?v=${switchVersion}" defer></script>\n`;
 const switchPattern = /<details class="[^"]*language-switch[^"]*"[^>]*>[\s\S]*?<\/details>/g;

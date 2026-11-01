@@ -52,5 +52,6 @@ window.toucanText = {
  "A child drawing a house with coloured pencils": "Un enfant dessine une maison aux crayons de couleur",
  "A young boy drawing at a white table": "Un petit garçon dessine à une table blanche",
  "A man with a coffee working on his laptop in a café": "Un homme, un café à la main, travaille sur son ordinateur portable dans un café",
- "A woman writing in a notebook at a desk by a window": "Une femme écrit dans un carnet à un bureau près d’une fenêtre"
+ "A woman writing in a notebook at a desk by a window": "Une femme écrit dans un carnet à un bureau près d’une fenêtre",
+ "Turning writing from the last thing he wanted to do into how he builds his own game.": "Faire de l’écriture, la dernière chose qu’il avait envie de faire, le moyen de créer son propre jeu."
 };

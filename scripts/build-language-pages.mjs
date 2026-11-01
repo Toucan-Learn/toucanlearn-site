@@ -12,13 +12,13 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const pages = ['index', 'children', 'adults', 'subjects', 'approach', 'team', 'contact', 'thank-you'];
 export const languages = {
-  vi: { name: 'Tiếng Việt', locale: 'vi_VN', flag: '🇻🇳' },
-  es: { name: 'Español', locale: 'es_ES', flag: '🇪🇸' },
-  fr: { name: 'Français', locale: 'fr_FR', flag: '🇫🇷' },
-  it: { name: 'Italiano', locale: 'it_IT', flag: '🇮🇹' },
+  vi: { name: 'Tiếng Việt', locale: 'vi_VN', flag: 'vn' },
+  es: { name: 'Español', locale: 'es_ES', flag: 'es' },
+  fr: { name: 'Français', locale: 'fr_FR', flag: 'fr' },
+  it: { name: 'Italiano', locale: 'it_IT', flag: 'it' },
 };
 const origin = 'https://toucanlearn.co.uk';
-const switchVersion = '20261101-flags-1';
+const switchVersion = '20261101-flags-3';
 
 // Lossless tokens: tag spelling, attribute order and whitespace are kept; script/style stay raw.
 const voidTags = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
@@ -146,11 +146,13 @@ const urlAttributes = ['href', 'src', 'poster', 'action'];
 
 // The switch links each page to the same page in every language.
 // Owner, 1 Nov: the menu shows the current language's flag; each choice shows its flag and name.
+// SVG flags from flag-icons (MIT; assets/flags): emoji flags differ by device and show as letters on Windows.
+const flag = code => `<img class="language-flag" src="/assets/flags/${code}.svg?v=20261101-2" alt="" width="20" height="15">`;
 function languageSwitch(page, lang, mobile) {
-  const all = [['en', 'English', 'en-GB', '🇬🇧'], ...Object.entries(languages).map(([code, { name, flag }]) => [code, name, code, flag])];
+  const all = [['en', 'English', 'en-GB', 'gb'], ...Object.entries(languages).map(([code, { name, flag }]) => [code, name, code, flag])];
   const current = all.find(([code]) => code === lang);
-  const links = all.map(([code, name, tag, flag]) => `<li><a href="${pagePath(page, code)}" lang="${tag}" hreflang="${tag}"${code === lang ? ' aria-current="true"' : ''}><span class="language-flag" aria-hidden="true">${flag}</span> ${name}</a></li>`).join('');
-  return `<details class="${mobile ? 'mobile-nav-item' : 'nav-item'} language-switch" data-i18n-switch><summary><span class="language-flag" aria-hidden="true">${current[3]}</span><span class="visually-hidden">${current[1]}</span> <span class="nav-chevron" aria-hidden="true">▾</span></summary><ul class="${mobile ? 'mobile-sub-links' : 'nav-dropdown'}">${links}</ul></details>`;
+  const links = all.map(([code, name, tag, flagCode]) => `<li><a href="${pagePath(page, code)}" lang="${tag}" hreflang="${tag}"${code === lang ? ' aria-current="true"' : ''}>${flag(flagCode)} ${name}</a></li>`).join('');
+  return `<details class="${mobile ? 'mobile-nav-item' : 'nav-item'} language-switch" data-i18n-switch><summary>${flag(current[3])}<span class="visually-hidden">${current[1]}</span> <span class="nav-chevron" aria-hidden="true">▾</span></summary><ul class="${mobile ? 'mobile-sub-links' : 'nav-dropdown'}">${links}</ul></details>`;
 }
 function alternates(page, lang) {
   const link = (tag, code) => `  <link rel="alternate" hreflang="${tag}" href="${origin}${pagePath(page, code)}" />\n`;

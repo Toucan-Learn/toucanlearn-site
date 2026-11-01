@@ -97,3 +97,5 @@
   #qualifications > p:last-child { width: max-content; max-width: 52%; margin: -56px 0 0; }
   #qualifications > p:last-child .button { border-color: transparent; background: #f3ece2; color: #0b3f51; }
 }
+/* Owner, 1 Nov: chip flags are SVG images; the chip gap already spaces them. */
+#qualifications .ielts-language-chips .language-flag { margin-right: 0; }

@@ -24,6 +24,8 @@ const copyBase = { 'subjects.html': '1ebe50a', 'children.html': '2b37029', 'adul
 function approvedCopy(file) {
   // Owner, 30 Oct: the in-person area is Oxfordshire, not Henley.
   let copy = words(original(file, copyBase[file] || copyBefore)).replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');
+  // Owner, 1 Nov: language flags are SVG images, not emoji text.
+  copy = copy.replace(/[\u{1F1E6}-\u{1F1FF}]{2} ?/gu, '');
   // Owner, 30 Oct: no "UK only" wording for online lessons.
   if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
   // Owner, 31 Oct: DARTY's label is just "SEN support".

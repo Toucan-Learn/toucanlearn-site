@@ -972,26 +972,33 @@
  "Languages our tutors speak": [
   "adults"
  ],
- "<span aria-hidden=\"true\">🇸🇦</span> Arabic": [
-  "adults"
+ "Arabic": [
+  "adults",
+  "subjects"
  ],
- "<span aria-hidden=\"true\">🇪🇸</span> Spanish": [
-  "adults"
+ "Spanish": [
+  "adults",
+  "subjects"
  ],
- "<span aria-hidden=\"true\">🇫🇷</span> French": [
-  "adults"
+ "French": [
+  "adults",
+  "subjects"
  ],
- "<span aria-hidden=\"true\">🇮🇹</span> Italian": [
-  "adults"
+ "Italian": [
+  "adults",
+  "subjects"
  ],
- "<span aria-hidden=\"true\">🇻🇳</span> Vietnamese": [
-  "adults"
+ "Vietnamese": [
+  "adults",
+  "subjects"
  ],
- "<span aria-hidden=\"true\">🇨🇳</span> Mandarin Chinese": [
-  "adults"
+ "Mandarin Chinese": [
+  "adults",
+  "subjects"
  ],
- "<span aria-hidden=\"true\">🇰🇷</span> Korean": [
-  "adults"
+ "Korean": [
+  "adults",
+  "subjects"
  ],
  "<a class=\"button\" href=\"contact\" data-service=\"qualifications\">Tell us your test and target date <span aria-hidden=\"true\">→</span></a>": [
   "adults"
@@ -1002,22 +1009,10 @@
  "Online lessons for adults at flexible times, for work, travel, family or relocation.": [
   "adults"
  ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇪🇸</span> Spanish": [
-  "adults",
-  "subjects"
- ],
  "Vocabulary, comprehension and communication for your level and goal.": [
   "adults"
  ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇫🇷</span> French": [
-  "adults",
-  "subjects"
- ],
  "French up to GCSE, plus conversation for travel and everyday life.": [
-  "adults",
-  "subjects"
- ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇮🇹</span> Italian": [
   "adults",
   "subjects"
  ],
@@ -1025,38 +1020,22 @@
   "adults",
   "subjects"
  ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇩🇪</span> German": [
+ "German": [
   "adults",
   "subjects"
  ],
  "From first phrases to confident conversation, for work, travel or a move abroad.": [
   "adults"
  ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇻🇳</span> Vietnamese": [
-  "adults",
-  "subjects"
- ],
  "Everyday Vietnamese for family, travel and heritage learners, from first words up.": [
-  "adults",
-  "subjects"
- ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇰🇷</span> Korean": [
   "adults",
   "subjects"
  ],
  "Hangul and everyday conversation, from complete beginner to fluent.": [
   "adults"
  ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇨🇳</span> Mandarin Chinese": [
-  "adults",
-  "subjects"
- ],
  "Pinyin, characters and speaking practice, for work or travel.": [
   "adults"
- ],
- "<span class=\"language-flag\" aria-hidden=\"true\">🇸🇦</span> Arabic": [
-  "adults",
-  "subjects"
  ],
  "Arabic from beginner to advanced, plus English for Arabic speakers.": [
   "adults",

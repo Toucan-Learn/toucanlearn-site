@@ -19,6 +19,8 @@ const css = await read('contact.css');
 const rules = createRequire(import.meta.url)('../contact.js');
 
 const help = "Please don't include diagnoses or medical records; we'll talk through needs together.";
+const oldPricingFooter = 'We agree the price before you book. No fees or subscriptions. Detailed weekly reports at every band.';
+const guarantee = "If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.";
 // 30 Oct: the owner-approved footer (Terms link, sole-trader line) replaces the old one.
 const footer = html => html.match(/<footer class="site-footer">[\s\S]*?<\/footer>/)[0];
 const expected = baseline('contact.html').replace(footer(baseline('contact.html')), footer(html))
@@ -26,6 +28,8 @@ const expected = baseline('contact.html').replace(footer(baseline('contact.html'
   .replace('</textarea>', '</textarea>\n<small id="support-needed-privacy">' + help + '</small>')
   .replace('Use a UK number, starting with 0 or +44.', 'Use 7–15 digits; include + and the country code for international numbers.')
   .replace('>WhatsApp us<', '>WhatsApp 07307 045816<')
+  // Owner, 1 Nov: append only the approved first-paid-lesson guarantee.
+  .replace(oldPricingFooter, `${oldPricingFooter} ${guarantee}`)
   // Owner, 30 Oct: the in-person area is Oxfordshire, not Henley.
   .replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');
 // Owner, 31 Oct: Microsoft Clarity (after cookie consent) adds its sources to the CSP and two consent tags; compare without them.
@@ -49,7 +53,10 @@ const ageBack = page => {
 };
 assert.ok(html.indexOf('id="age-year-field"') > html.indexOf('id="support-needed"') && html.indexOf('id="age-year-field"') < html.indexOf('id="subject"'), 'Age sits above Subject in the details column');
 assert.equal(contactMarkup(untokened(ageBack(withoutClarity(withoutNosnippet(withoutLanguages(lightImages(html))))))), contactMarkup(untokened(withoutNosnippet(expected))),
-  'Preserve field names, order, hooks, configuration and copy outside the requested help and phone labels');
+  'Preserve field names, order, hooks, configuration and copy outside the approved help, phone labels and guarantee');
+assert.equal(html.match(/<p class="pricing-footer">([^<]+)<\/p>/)[1], `${oldPricingFooter} ${guarantee}`);
+const terms = await read('terms.html');
+assert.ok(terms.includes(`<section><h2>Our first-lesson guarantee</h2><p>${guarantee} Tell us within 48 hours of the lesson. This guarantee applies once per learner.</p></section>\n\n      <section><h2>Contact</h2>`));
 // Owner, 31 Oct: the "Website visits" section now describes Microsoft Clarity; everything else stays as approved.
 const visits = page => page.replace(/<section(?: id="website-visits")?>\s*<h2>Website visits and changes<\/h2>[\s\S]*?<\/section>/, '<!-- website visits: owner-managed -->');
 const privacy = await read('privacy.html');

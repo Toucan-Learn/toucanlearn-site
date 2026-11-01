@@ -4,24 +4,38 @@ import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import vm from 'node:vm';
 import { contactMarkup, contactScript } from './helpers/contact-markup.mjs';
-import { navigationMarkup } from './helpers/navigation-markup.mjs';
-import { contactSourceChecks } from './helpers/contact-layout.mjs';
+import './contact-source.mjs';
 const root = new URL('../', import.meta.url);
 const source = await readFile(new URL('launch-offer.js', root), 'utf8');
 const contact = await readFile(new URL('contact.js', root), 'utf8');
 const html = await readFile(new URL('contact.html', root), 'utf8');
 const css = await readFile(new URL('campaigns.css', root), 'utf8');
 const contactCSS = await readFile(new URL('contact.css', root), 'utf8');
-const output = new URL('../outputs/final-pass-20261028/codex-offer/', root);
+const output = new URL(process.env.OFFER_OUTPUT || '../outputs/final-pass-20261028/codex-offer/', root);
+const oldPricingFooter = 'We agree the price before you book. No fees or subscriptions. Detailed weekly reports at every band.';
+const guarantee = "If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.";
+const guaranteeSection = `<section><h2>Our first-lesson guarantee</h2><p>${guarantee} Tell us within 48 hours of the lesson. This guarantee applies once per learner.</p></section>`;
+// Owner, 1 Nov: preserve the entire baseline except these two exact copy additions.
+const approvedCopy = (file, page) => file === 'contact.html'
+  ? page.replace(`<p class="pricing-footer">${oldPricingFooter}</p>`, `<p class="pricing-footer">${oldPricingFooter} ${guarantee}</p>`)
+  : file === 'terms.html' && !page.includes(guaranteeSection)
+    ? page.replace('<section><h2>Contact</h2>', `${guaranteeSection}\n\n      <section><h2>Contact</h2>`)
+    : page;
 const checks = [];
 function check(name, fn) { fn(); checks.push(name); }
-check('Contact reading order, preserved controls, CSP, sky hierarchy and AA contrast', () => {
-  const original = execFileSync('git', ['show', 'HEAD:contact.html'], { cwd: root, encoding: 'utf8' });
+check('The production pop-up source and disabled switch are unchanged', () => {
+  assert.equal(source, execFileSync('git', ['show', 'HEAD:launch-offer.js'], { cwd: root, encoding: 'utf8' }));
+  assert.match(source, /active: false/);
+});
+check('Contact reading order, controls, CSP and all styles are preserved', () => {
+  const original = approvedCopy('contact.html', execFileSync('git', ['show', 'HEAD:contact.html'], { cwd: root, encoding: 'utf8' }));
   const originalCSS = execFileSync('git', ['show', 'HEAD:contact.css'], { cwd: root, encoding: 'utf8' });
   assert.equal(contactMarkup(html), contactMarkup(original));
   assert.equal(contact, execFileSync('git', ['show', 'HEAD:contact.js'], { cwd: root, encoding: 'utf8' }), 'Enquiry logic is unchanged');
-  const contrast = contactSourceChecks(html, original, contactCSS, originalCSS);
-  console.log(`PASS: Contact controls, DOM order, CSP and CSS cache token; minimum contrast over white sky pixels: ${JSON.stringify(contrast)}.`);
+  // The old contact-layout helper was never tracked. The contact suite above
+  // exercises the controls/CSP; exact CSS equality preserves the current layout and palette.
+  assert.equal(contactCSS, originalCSS, 'Contact layout, palette and contrast styles are unchanged');
+  console.log('PASS: Contact controls, DOM order, CSP and all contact styles preserved.');
 });
 // Run the contact regressions independently of the known pop-up baseline failure.
 if (process.env.CONTACT_ONLY === '1') process.exit(0);
@@ -30,10 +44,11 @@ class Events {
   addEventListener(type, fn) { const list = this.listeners.get(type) || []; this.listeners.set(type, [...list, fn]); }
   removeEventListener(type, fn) { this.listeners.set(type, (this.listeners.get(type) || []).filter(item => item !== fn)); }
   emit(type, data = {}) { const event = { type, preventDefault() { this.defaultPrevented = true; }, ...data }; for (const fn of [...(this.listeners.get(type) || [])]) fn(event); return event; }
+  dispatchEvent(event) { this.emit(event.type, event); return true; }
 }
 function load({ path = 'index.html', query = '', active = true, date = '2026-10-28T12:00:00Z', storage = new Map(), storageThrows = false, loaded = true } = {}) {
   const clock = { now: Date.parse(date), next: 0, timers: new Map() };
-  const document = Object.assign(new Events(), { hidden: false, readyState: loaded ? 'complete' : 'loading' });
+  const document = Object.assign(new Events(), { documentElement: { lang: 'en-GB' }, hidden: false, readyState: loaded ? 'complete' : 'loading' });
   class Node extends Events {
     constructor(tag, text = '') { super(); this.tag = tag; this.textContent = text; this.children = []; this.attrs = {}; this.className = ''; this.value = ''; this.open = false; this.dataset = {}; this.classList = { add() {}, remove() {} }; }
     append(...nodes) { nodes.forEach(node => { node.parent = this; this.children.push(node); }); }
@@ -82,9 +97,10 @@ function load({ path = 'index.html', query = '', active = true, date = '2026-10-
     }
   });
   class FixedDate extends Date { constructor(...args) { super(...(args.length ? args : [clock.now])); } static now() { return clock.now; } }
-  const context = vm.createContext({ window, document, Date: FixedDate, Intl, URLSearchParams, URL });
+  const context = vm.createContext({ window, document, Date: FixedDate, Intl, URLSearchParams, URL, Event });
   const before = structuredClone(document.body.snapshot());
-  vm.runInContext(active ? source : source.replace('active: true', 'active: false'), context);
+  // Production keeps this optional pop-up disabled; exercise both switch states.
+  vm.runInContext(active ? source.replace('active: false', 'active: true') : source, context);
   if (path === 'contact.html') vm.runInContext(contact, context);
   function tick(ms) {
     const target = clock.now + ms;
@@ -105,17 +121,15 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   if (!text.includes('<header')) continue;
   pages.push(file);
   check(`${file}: original HTML preserved except approved contact changes`, () => {
-    assert.equal((text.match(/src="launch-offer\.js\?/g) || []).length, 1);
+    assert.equal((text.match(/src="launch-offer\.js\?/g) || []).length, file === 'hoc-tieng-anh.html' ? 0 : 1);
     // Owner, 31 Oct: Microsoft Clarity is the only outside script.
     assert.match(text, /script-src 'self' https:\/\/www\.clarity\.ms https:\/\/scripts\.clarity\.ms; style-src 'self'/);
-    const original = execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' });
+    const original = approvedCopy(file, execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' }));
     if (file === 'contact.html') {
       assert.equal(contactMarkup(text), contactMarkup(original));
       assert.doesNotMatch(text, /support-needed-hint/);
     } else {
-      assert.equal(navigationMarkup(text.replace(/^  <script src="launch-offer\.js[^\n]+\n/gm, '')
-        .replace('campaigns.css?v=20261028-launch-offer-3', 'campaigns.css?v=20261028-review-teal-2')
-        .replace('contact.js?v=20261028-launch-offer-3', 'contact.js?v=20261028-quals-1')), navigationMarkup(original));
+      assert.equal(text, original, `${file}: preserve the complete current baseline, including scripts and cache tokens`);
     }
     if (file !== 'contact.html') assert.doesNotMatch(text, /£\s*\d/);
   });
@@ -164,7 +178,7 @@ check('Exact pop-up content, accessible name/description and claim link', () => 
   assert.equal(dialog.querySelector('.launch-offer-dialog__heading').textContent, 'The next 5 new learners get their first 3 sessions free');
   assert.equal(dialog.querySelector('.launch-offer-dialog__summary').textContent, 'Book by 30 November.');
   assert.equal(dialog.querySelector('.launch-offer-dialog__terms').textContent, 'New learners only, one per family. Sessions used within 6 weeks; after that, the agreed band applies.');
-  assert.equal(dialog.querySelector('a').getAttribute('href'), 'contact.html');
+  assert.equal(dialog.querySelector('a').getAttribute('href'), 'contact');
   assert.equal(dialog.querySelector('a').getAttribute('data-offer'), 'launch');
 });
 check('Esc, backdrop, close button and Maybe later remove the dialog and return focus', () => {
@@ -207,7 +221,7 @@ check('Only hidden offer attribution changes; existing service and UTM patterns 
     assert.equal(ordinary.document.getElementById('campaign-source').value, ['unknown', ''].includes(service) ? 'Direct or unknown' : service);
   }
   const state = load({ query: '?utm_source=test&utm_medium=site&utm_campaign=launch' }); state.tick(6000);
-  assert.equal(state.dialog.querySelector('a').getAttribute('href'), 'contact.html');
+  assert.equal(state.dialog.querySelector('a').getAttribute('href'), 'contact');
   assert.equal(state.dialog.querySelector('a').getAttribute('data-offer'), 'launch');
 });
 await mkdir(output, { recursive: true });

@@ -541,7 +541,10 @@
   "Arabic": "Arabe",
   "Leave a review on Google <span aria-hidden=\"true\">↗</span><span class=\"visually-hidden\"> (opens in a new tab)</span>": "Laisser un avis sur Google <span aria-hidden=\"true\">↗</span><span class=\"visually-hidden\"> (s’ouvre dans un nouvel onglet)</span>",
   "<span class=\"review-google-meta\">Former IB student · Google review</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Read the full review on Google <span aria-hidden=\"true\">↗</span></a>": "<span class=\"review-google-meta\">Ancien élève de l’IB · Avis Google</span><a class=\"review-google-link\" href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\" target=\"_blank\" rel=\"noopener\">Lire l’avis complet sur Google <span aria-hidden=\"true\">↗</span></a>",
-  "Turning writing from the last thing he wanted to do into how he builds his own game.": "Faire de l’écriture, la dernière chose qu’il avait envie de faire, le moyen de créer son propre jeu."
+  "Turning writing from the last thing he wanted to do into how he builds his own game.": "Faire de l’écriture, la dernière chose qu’il avait envie de faire, le moyen de créer son propre jeu.",
+  "We agree the price before you book. No fees or subscriptions. Detailed weekly reports at every band. If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.": "Nous convenons du tarif avant votre réservation. Sans frais ni abonnement. Des bilans hebdomadaires détaillés pour chaque formule. Si votre première séance payante ne vous convient pas, vous ne la payez pas, ou nous changeons de professeur sans frais.",
+  "Our first-lesson guarantee": "Notre garantie pour la première séance",
+  "If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost. Tell us within 48 hours of the lesson. This guarantee applies once per learner.": "Si votre première séance payante ne vous convient pas, vous ne la payez pas, ou nous changeons de professeur sans frais. Prévenez-nous dans les 48 heures suivant la séance. Cette garantie s’applique une seule fois par élève."
  },
  "script": {
   "Please use only the enquiry fields provided.": "Utilisez uniquement les champs du formulaire.",

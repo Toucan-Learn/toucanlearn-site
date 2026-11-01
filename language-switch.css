@@ -9,4 +9,4 @@
 /* Owner, 31 Oct: Avenir Next lacks some Vietnamese letters, so the opening header falls back mid-word. Use the system font there. */
 html:lang(vi) :is(.living-hero, .toucan-opening-header, .piano-world) { --hero-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
 /* Owner, 1 Nov: the switch shows SVG flags (flag-icons), the same on every device. */
-.language-switch .language-flag { width: 20px; height: 15px; }
+.language-switch .language-flag { width: 21px; height: 16px; }

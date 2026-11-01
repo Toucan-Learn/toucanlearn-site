@@ -18,7 +18,7 @@ export const languages = {
   it: { name: 'Italiano', locale: 'it_IT', flag: 'it' },
 };
 const origin = 'https://toucanlearn.co.uk';
-const switchVersion = '20261101-flags-3';
+const switchVersion = '20261101-flags-4';
 
 // Lossless tokens: tag spelling, attribute order and whitespace are kept; script/style stay raw.
 const voidTags = new Set('area base br col embed hr img input link meta param source track wbr'.split(' '));
@@ -147,7 +147,7 @@ const urlAttributes = ['href', 'src', 'poster', 'action'];
 // The switch links each page to the same page in every language.
 // Owner, 1 Nov: the menu shows the current language's flag; each choice shows its flag and name.
 // SVG flags from flag-icons (MIT; assets/flags): emoji flags differ by device and show as letters on Windows.
-const flag = code => `<img class="language-flag" src="/assets/flags/${code}.svg?v=20261101-2" alt="" width="20" height="15">`;
+const flag = code => `<img class="language-flag" src="/assets/flags/${code}.svg?v=20261101-2" alt="" width="21" height="16">`;
 function languageSwitch(page, lang, mobile) {
   const all = [['en', 'English', 'en-GB', 'gb'], ...Object.entries(languages).map(([code, { name, flag }]) => [code, name, code, flag])];
   const current = all.find(([code]) => code === lang);

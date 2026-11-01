@@ -245,8 +245,10 @@
   :root body > header .nav-links > .nav-item > a { font-size: .9375rem; }
 }
 
-/* Owner, 1 Nov: SVG flags (flag-icons), not emoji, so every device shows the same flag. */
-.language-flag { display: inline-block; width: 1.3em; height: auto; aspect-ratio: 4 / 3; margin-right: .4em; object-fit: cover; border-radius: 3px; vertical-align: -.12em; }
+/* Owner, 1 Nov: SVG flags (flag-icons), not emoji, so every device shows the same flag.
+   Whole-pixel size: at 1.3em (20.8px) one edge fell between pixels and the flag looked lopsided;
+   21px splits tricolours into three equal 7px stripes. */
+.language-flag { display: inline-block; width: 21px; height: 16px; margin-right: 6px; object-fit: cover; border-radius: 3px; vertical-align: -2px; }
 
 /* Seven language options: equal cells, with normal single-column flow on phones. */
 .framework-panels #languages > :is(.learning-languages, .adult-language-list) { display: grid; grid-template-columns: 1fr; grid-auto-rows: 1fr; gap: 12px 20px; margin-block: 16px; }

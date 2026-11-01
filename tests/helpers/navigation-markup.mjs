@@ -19,5 +19,9 @@ export function homeNavigationMarkup(html) {
 // Back-page comparisons also account for the service handoff moving to data attributes.
 export function navigationMarkup(html) {
   return homeNavigationMarkup(html)
+    // Owner, 1 Nov: factual corrections are outside the navigation/offer comparison.
+    .replace('Our SEN team is Team Teach qualified in positive behaviour support.', 'Our SEN leads are Team Teach qualified in positive behaviour support.')
+    .replace(/<article\b[^>]*\bid="nhu"[^>]*>[\s\S]*?<\/article>/, card => card
+      .replace(/(<\/span>)<span class="avail-chip"><svg\b[^>]*>[\s\S]*?<\/svg>In person · Ho Chi Minh City<\/span>/, '$1'))
     .replace(/href="contact\.html" data-service="([^"]*)"/g, 'href="contact.html?service=$1"');
 }

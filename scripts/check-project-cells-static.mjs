@@ -33,8 +33,9 @@ const introJPEG = await readFile(path.join(site, 'assets/projects/intro-learning
 assert(introJPEG.length > 0 && introJPEG[0] === 0xff && introJPEG[1] === 0xd8, 'A real local JPEG placeholder prevents a broken image');
 // Owner, 31 Oct: the back-page cards follow the homepage captions (Mission and Result), and the piano keys are green now, purple next.
 const approved = [
+  // Owner, 31 Oct: the football goal matches the homepage (the expanded line made the panel taller).
   ['Sports journalism', 'English · Journalism',
-    'Confident, persuasive writing: making a clear case, backing it up, and knowing your reader.',
+    'Using a discouraged student’s interests and insights to practise English.',
     'Telling fact from opinion, and writing both: objective match reports and previews, then subjective opinion pieces where he argues his corner. Word choice mattered too. Is a fan’s view “disgraceful”, or just “controversial”?',
     'Football. He already had strong opinions about Leeds, tactics and the modern game, so every lesson started with something he wanted to say.',
     'His own growing sports journalism website, full of his previews, analysis and reports, from hydration breaks to how football has changed since 1970. Written by him, with our support on the editing.'],

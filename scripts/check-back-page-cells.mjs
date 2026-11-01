@@ -28,6 +28,8 @@ function approvedCopy(file) {
   if (file === 'adults.html') return copy.replace('Online across the UK, or in person', 'Online wherever you live, or in person');
   // Owner, 31 Oct: DARTY's label is just "SEN support".
   if (file === 'children.html') copy = copy.replace('English · Game design', 'SEN support')
+    // Owner, 31 Oct: the football goal matches the homepage caption.
+    .replace('Confident, persuasive writing: making a clear case, backing it up, and knowing your reader.', 'Using a discouraged student’s interests and insights to practise English.')
     // Owner, 31 Oct: DARTY's goal and result match the homepage caption, expanded.
     .replace('Writing clear, precise instructions, and writing because there’s a real reason to.', 'Getting an avoidant learner excited to practise writing clear, precise instructions, because there’s a real reason to write them.')
     .replace('A playable football game shaped by his written requests, from player movement to goalkeeper reactions. We build the code; he directs it.', 'A playable 3D football game built from his written requests: he directs, we code. Player movement, passing and goalkeeper reactions each began as a request he wrote.');

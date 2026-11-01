@@ -341,12 +341,16 @@ try {
             assert(newspaperLayout.sideStories >= 2 && newspaperLayout.visibleSideStories >= 1, 'The front page shows its lead and small side stories');
           }
           assert(await page.evaluate(() => document.activeElement !== document.querySelector('iframe')), 'Opening the newspaper must not take focus');
+          // Owner (1 Nov): the section tabs work, but no article opens.
           await frame.click('.news-story-link');
-          await frame.waitForSelector('.news-reader');
-          await frame.waitForFunction(() => document.activeElement?.tagName === 'H1');
-          assert.equal(await selected(page), 'football', 'Reading an article keeps the newspaper selected');
-          await frame.click('.news-back');
+          await new Promise(resolve => setTimeout(resolve, 300));
+          assert.equal(await frame.$('.news-reader'), null, 'Clicking an article does not open it');
+          assert(await frame.$('.news-front'), 'The front page stays after an article click');
+          await frame.click('.news-sections button:nth-child(2)');
+          await frame.waitForFunction(() => document.querySelector('.news-sections button:nth-child(2)').getAttribute('aria-pressed') === 'true' && !document.querySelector('.news-front'));
+          await frame.click('.news-sections button:first-child');
           await frame.waitForSelector('.news-front');
+          assert.equal(await selected(page), 'football', 'Using the newspaper keeps it selected');
         }
         if (id === 'darty') {
           assert.equal(await page.$$eval('[data-darty-play]', buttons => buttons.length), 1);

@@ -1,4 +1,3 @@
-/* Owner, 31 Oct: stories other than the front-page spread are on show, not clickable. */
+/* Owner, 1 Nov: stories are on show, not clickable; the section tabs still work. */
 [data-closed] { cursor: default; }
 .news-story-link[data-closed]:hover h2 { color: inherit; text-decoration: none; }
-.news-sections button[data-closed]:not(.selected):hover { color: var(--muted); }

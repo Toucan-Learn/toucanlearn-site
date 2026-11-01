@@ -96,10 +96,12 @@ try {
     await open(page, 'projects/football-journalism/index.html');
     const article = await page.locator('.news-story-link').first().getAttribute('href');
     const articleHistory = await page.evaluate(() => history.length);
-    await page.locator('.news-story-link').first().click(); await page.locator('.news-reader').waitFor(); await clean(page);
+    // Owner (1 Nov): no article opens, and a typed article address shows the front page.
+    await page.locator('.news-story-link').first().click(); await page.waitForTimeout(300); await clean(page);
+    assert.equal(await page.locator('.news-reader').count(), 0);
     assert.equal(await page.evaluate(() => history.length), articleHistory);
-    await page.locator('.news-back').click(); await page.locator('.news-front').waitFor(); await clean(page);
-    await open(page, 'projects/football-journalism/' + article); await page.locator('.news-reader').waitFor(); await clean(page);
+    await open(page, 'projects/football-journalism/' + article); await page.locator('.news-front').waitFor(); await clean(page);
+    assert.equal(await page.locator('.news-reader').count(), 0);
     await ctx.close();
   }
   assert.deepEqual(errors, [], 'No page exceptions');

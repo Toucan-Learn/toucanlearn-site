@@ -33,6 +33,9 @@ function approvedCopy(file) {
     .replace('A playable football game shaped by his written requests, from player movement to goalkeeper reactions. We build the code; he directs it.', 'A playable 3D football game built from his written requests: he directs, we code. Player movement, passing and goalkeeper reactions each began as a request he wrote.');
   // Owner, 31 Oct: the SEND intro names the specialist and the wider team, not Joshua's titles.
   if (file === 'subjects.html') copy = copy.replace('Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.', 'Start with what the learner enjoys with our SEN specialist &amp; wider team.')
+    // Owner, 31 Oct: English and Maths drop their teacher lines for a practical one, like Science's.
+    .replace('Joshua and Aaron teach English; Connor also supports primary learners.', 'Bring a recent piece of writing, your set texts or the exam you are working towards.')
+    .replace('Aaron teaches up to GCSE and Connor supports primary. We also teach A-level and university maths.', 'Bring your homework, a recent test or any topics that keep tripping you up.')
     // Owner, 31 Oct: Psychology names Joshua as psychology graduate and SEN specialist.
     .replace('A-level and IB Psychology with Joshua, our founder and a psychology graduate.', 'A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.');
   // A copyBase entry already contains every approved change below.

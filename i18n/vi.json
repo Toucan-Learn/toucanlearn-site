@@ -295,7 +295,6 @@
   "Language and Literature: choose evidence, build an argument and practise past papers.": "Ngôn ngữ và Văn học: chọn dẫn chứng, xây dựng lập luận và luyện đề thi cũ.",
   "Adults &amp; qualifications": "Người lớn &amp; chứng chỉ",
   "Workplace English, Functional Skills, IELTS, TOEFL and Cambridge English, with focused practice and feedback.": "Tiếng Anh công sở, Functional Skills, IELTS, TOEFL và Cambridge English, với luyện tập trọng tâm và nhận xét chi tiết.",
-  "Joshua and Aaron teach English; Connor also supports primary learners.": "Joshua và Aaron dạy tiếng Anh; Connor cũng hỗ trợ học sinh tiểu học.",
   "<a class=\"button subject-cta\" href=\"contact\">Book a free English session <span aria-hidden=\"true\">→</span></a><a href=\"adults#qualifications\">Explore adult qualifications →</a>": "<a class=\"button subject-cta\" href=\"contact\">Đăng ký buổi học tiếng Anh miễn phí <span aria-hidden=\"true\">→</span></a><a href=\"adults#qualifications\">Khám phá chứng chỉ cho người lớn →</a>",
   "Maths": "Toán",
   "Find the gap, make the method clear and build confidence through practice.": "Tìm ra lỗ hổng, làm rõ phương pháp và xây dựng sự tự tin qua luyện tập.",
@@ -305,7 +304,6 @@
   "Work through the curriculum, then apply methods to exam questions.": "Học theo chương trình, rồi áp dụng phương pháp vào câu hỏi thi.",
   "Everyday numeracy": "Toán ứng dụng hằng ngày",
   "Practise useful calculations for work and daily life.": "Luyện các phép tính hữu ích cho công việc và cuộc sống hằng ngày.",
-  "Aaron teaches up to GCSE and Connor supports primary. We also teach A-level and university maths.": "Aaron dạy đến trình độ GCSE và Connor hỗ trợ bậc tiểu học. Chúng tôi cũng dạy Toán A-level và đại học.",
   "<a class=\"button subject-cta\" href=\"contact\" data-service=\"maths\">Book a free maths session <span aria-hidden=\"true\">→</span></a><a href=\"adults\">Explore adult learning →</a>": "<a class=\"button subject-cta\" href=\"contact\" data-service=\"maths\">Đăng ký buổi học Toán miễn phí <span aria-hidden=\"true\">→</span></a><a href=\"adults\">Khám phá chương trình cho người lớn →</a>",
   "Science": "Khoa học",
   "GCSE, A-level and IB sciences, at the learner’s pace.": "Các môn khoa học GCSE, A-level và IB, theo nhịp độ của học viên.",
@@ -538,7 +536,9 @@
   "How to contact Toucan Learn about your first session.": "Cách liên hệ Toucan Learn về buổi học đầu tiên của bạn.",
   "[aria-label] Primary": "Menu chính",
   "Start with what the learner enjoys with our SEN specialist &amp; wider team.": "Bắt đầu từ điều học viên yêu thích, cùng chuyên gia về nhu cầu giáo dục đặc biệt &amp; cả đội ngũ của chúng tôi.",
-  "A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.": "Tâm lý học A-level và IB với Joshua, người sáng lập, tốt nghiệp ngành tâm lý học &amp; chuyên về nhu cầu giáo dục đặc biệt."
+  "A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.": "Tâm lý học A-level và IB với Joshua, người sáng lập, tốt nghiệp ngành tâm lý học &amp; chuyên về nhu cầu giáo dục đặc biệt.",
+  "Bring a recent piece of writing, your set texts or the exam you are working towards.": "Hãy mang theo một bài viết gần đây, các tác phẩm bạn đang học hoặc kỳ thi bạn đang hướng tới.",
+  "Bring your homework, a recent test or any topics that keep tripping you up.": "Hãy mang theo bài tập về nhà, một bài kiểm tra gần đây hoặc những chủ đề bạn hay gặp khó khăn."
  },
  "script": {
   "Please use only the enquiry fields provided.": "Vui lòng chỉ dùng các ô thông tin có sẵn.",

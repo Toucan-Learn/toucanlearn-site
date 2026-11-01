@@ -295,7 +295,6 @@
   "Language and Literature: choose evidence, build an argument and practise past papers.": "Langue et littérature : sélectionner des exemples, construire une argumentation et s’entraîner sur des annales.",
   "Adults &amp; qualifications": "Adultes et certifications",
   "Workplace English, Functional Skills, IELTS, TOEFL and Cambridge English, with focused practice and feedback.": "Anglais professionnel, Functional Skills, IELTS, TOEFL et Cambridge English, avec un entraînement ciblé et des retours.",
-  "Joshua and Aaron teach English; Connor also supports primary learners.": "Joshua et Aaron enseignent l’anglais ; Connor accompagne aussi les élèves du primaire.",
   "<a class=\"button subject-cta\" href=\"contact\">Book a free English session <span aria-hidden=\"true\">→</span></a><a href=\"adults#qualifications\">Explore adult qualifications →</a>": "<a class=\"button subject-cta\" href=\"contact\">Réserver une séance d’anglais gratuite <span aria-hidden=\"true\">→</span></a><a href=\"adults#qualifications\">Découvrir les certifications pour adultes →</a>",
   "Maths": "Mathématiques",
   "Find the gap, make the method clear and build confidence through practice.": "Repérer les lacunes, clarifier la méthode et gagner en confiance par la pratique.",
@@ -305,7 +304,6 @@
   "Work through the curriculum, then apply methods to exam questions.": "Avancer dans le programme, puis appliquer les méthodes aux questions d’examen.",
   "Everyday numeracy": "Calcul au quotidien",
   "Practise useful calculations for work and daily life.": "S’entraîner aux calculs utiles pour le travail et la vie quotidienne.",
-  "Aaron teaches up to GCSE and Connor supports primary. We also teach A-level and university maths.": "Aaron enseigne jusqu’au GCSE et Connor accompagne le primaire. Nous enseignons aussi les maths de niveau A-level et universitaire.",
   "<a class=\"button subject-cta\" href=\"contact\" data-service=\"maths\">Book a free maths session <span aria-hidden=\"true\">→</span></a><a href=\"adults\">Explore adult learning →</a>": "<a class=\"button subject-cta\" href=\"contact\" data-service=\"maths\">Réserver une séance de maths gratuite <span aria-hidden=\"true\">→</span></a><a href=\"adults\">Découvrir les cours pour adultes →</a>",
   "Science": "Sciences",
   "GCSE, A-level and IB sciences, at the learner’s pace.": "Les sciences au GCSE, en A-level et à l’IB, au rythme de l’élève.",
@@ -538,7 +536,9 @@
   "How to contact Toucan Learn about your first session.": "Comment contacter Toucan Learn pour votre première séance.",
   "[aria-label] Primary": "Menu principal",
   "Start with what the learner enjoys with our SEN specialist &amp; wider team.": "Partir de ce que l’élève aime, avec notre spécialiste des besoins éducatifs particuliers et toute l’équipe.",
-  "A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.": "La psychologie en A-level et à l’IB avec Joshua, notre fondateur, diplômé en psychologie et spécialiste des besoins éducatifs particuliers."
+  "A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.": "La psychologie en A-level et à l’IB avec Joshua, notre fondateur, diplômé en psychologie et spécialiste des besoins éducatifs particuliers.",
+  "Bring a recent piece of writing, your set texts or the exam you are working towards.": "Apportez un texte récent, vos œuvres au programme ou l’examen que vous préparez.",
+  "Bring your homework, a recent test or any topics that keep tripping you up.": "Apportez vos devoirs, un contrôle récent ou les notions qui vous posent problème."
  },
  "script": {
   "Please use only the enquiry fields provided.": "Utilisez uniquement les champs du formulaire.",

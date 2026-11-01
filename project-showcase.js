@@ -244,8 +244,13 @@ export function initShowcase(root) {
   const visible = () => !printing && !document.hidden && !root.closest('[hidden], [inert]');
   const drinkPrefetch = prefetchDrink(projects.find(project => project.id === 'drinks').drinks[0]);
   let newspaperWarm = 0;
+  // Owner, 31 Oct: phone visitors left before the page settled. Skids' 90 views (1.1 MB)
+  // now warm only on laptops, and only once the page has loaded; phones load them when
+  // the drinks slide opens.
+  let pageLoaded = document.readyState === 'complete';
+  if (!pageLoaded) window.addEventListener('load', () => { pageLoaded = true; syncPrefetch(); }, { once: true });
   const syncPrefetch = () => {
-    drinkPrefetch.setActive(nearView && visible() && !motion.matches);
+    drinkPrefetch.setActive(nearView && visible() && !motion.matches && !compactDevice.matches && pageLoaded);
     // Laptops load the newspaper in the background shortly after the showcase
     // nears view, so even the first switch shows the live page. Phones wait.
     const warm = nearView && visible() && !compactDevice.matches && !newspaper.iframe;
@@ -561,6 +566,7 @@ export function initShowcase(root) {
   });
   phoneCell.addEventListener('change', () => entries.filter(project => project.poster?.includes('{size}')).forEach(project => warmPreview(project, preview(project))));
   compactDevice.addEventListener('change', () => {
+    syncPrefetch();
     if (entries[index].type !== 'match') return;
     if (stage.contains(document.activeElement)) root.focus({ preventScroll: true });
     unmount();

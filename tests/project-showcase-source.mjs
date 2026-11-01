@@ -37,7 +37,7 @@ const beforeClick = liveMatch.split("play.addEventListener('click'")[0];
 assert(!beforeClick.includes("createElement('iframe')") && !beforeClick.includes('dartyMatchURL'), 'No match is created or requested before Play');
 assert.match(liveMatch, /frame\.src = dartyMatchURL/);
 assert.match(liveMatch, /setAttribute\('sandbox', 'allow-scripts allow-same-origin'\)/);
-assert.match(liveMatch, /setAttribute\('allow', 'autoplay; fullscreen'\)/);
+assert.match(liveMatch, /setAttribute\('allow', 'autoplay; fullscreen; gamepad'\)/);
 assert.match(liveMatch, /frame\.loading = 'eager'/);
 assert.match(liveMatch, /frame\.title = 'DARTY CPU vs CPU football match'/);
 assert.match(liveMatch, /dispose = \(\) => \{[^}]*stop\(false\)/, 'Unmount cleanup must not restore outgoing media');
@@ -268,7 +268,7 @@ assert.match(source, /name\.textContent = entries\[index\]\.name;/, 'The window 
 for (const asset of ['css', 'js']) {
   const token = html => html.match(new RegExp(`project-showcase\\.${asset}\\?v=([^"']+)`))?.[1];
   assert(token(children), `${asset}: the Children page retains its existing asset reference`);
-  assert.match(token(after), asset === 'js' ? /^20261101-darty-mission-1$/ : /^20261030-captions-\d+$/, `${asset}: the homepage uses the current release token`);
+  assert.match(token(after), asset === 'js' ? /^20261101-gamepad-1$/ : /^20261030-captions-\d+$/, `${asset}: the homepage uses the current release token`);
   if (asset === 'js') assert.equal(token(children), token(after), 'Both English pages load the current showcase script');
   assert.notEqual(token(after), token(before), `${asset}: bump the changed asset’s cache token`);
 }

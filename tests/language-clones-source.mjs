@@ -14,7 +14,7 @@ const skeleton = html => [...html.replace(/<script src="\/language-text-\w+\.js[
 const text = html => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const projects = html => [...html.matchAll(/<article class="framework-project" data-project-slide data-project="(?!intro)[\s\S]*?<\/article>/g)].map(match => text(match[0]));
 const dartyMission = 'Turning writing from the last thing he wanted to do into how he builds his own game.';
-const showcaseVersion = '20261101-darty-mission-1';
+const showcaseVersion = '20261101-gamepad-1';
 let checks = 0;
 for (const page of pages) {
   const english = read(`${page}.html`);

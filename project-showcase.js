@@ -394,7 +394,7 @@ export function initShowcase(root) {
         frame.className = 'showcase-match showcase-live';
         frame.title = 'DARTY CPU vs CPU football match';
         frame.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-        frame.setAttribute('allow', 'autoplay; fullscreen');
+        frame.setAttribute('allow', 'autoplay; fullscreen; gamepad');
         frame.loading = 'eager';
         const loadingFrame = frame;
         frame.addEventListener('load', () => {

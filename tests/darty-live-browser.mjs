@@ -80,7 +80,7 @@ export async function checkDartyLive({ open, load, project, selected, views, wai
     });
     assert.equal(frame.src, dartyMatchURL, 'Use the complete owner-approved URL, including its fragment');
     assert.equal(frame.sandbox, 'allow-scripts allow-same-origin');
-    assert.equal(frame.allow, 'autoplay; fullscreen');
+    assert.equal(frame.allow, 'autoplay; fullscreen; gamepad');
     assert.equal(frame.loading, 'eager');
     assert.equal(frame.title, 'DARTY CPU vs CPU football match');
     assert(Math.abs(frame.width - before.width) <= 1 && Math.abs(frame.height - before.height) <= 1, 'Iframe fills the existing media cell without resizing it');

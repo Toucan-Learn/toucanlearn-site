@@ -20,7 +20,7 @@ export const languages = {
 };
 const origin = 'https://toucanlearn.co.uk';
 const switchVersion = '20261101-flags-4';
-const textVersion = '20261101-mobile-1';
+const textVersion = '20261102-mobile-calm-1';
 const dartyMission = 'Turning writing from the last thing he wanted to do into how he builds his own game.';
 
 // Lossless tokens: tag spelling, attribute order and whitespace are kept; script/style stay raw.

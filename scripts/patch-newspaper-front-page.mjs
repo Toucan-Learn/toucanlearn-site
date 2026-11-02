@@ -1,9 +1,9 @@
-// Owner, 31 Oct: only the front-page spread opens (projects/football-journalism/front-page-only.js).
-// Reapply after refreshing the newspaper build: the other stories keep their cards, but their
+// Owner, 1 Nov: no story opens; the section tabs still work (projects/football-journalism/front-page-only.js).
+// Reapply after refreshing the newspaper build: the stories keep their cards, but their
 // writing, notes and challenges are left out of the shipped bundle.
 import assert from 'node:assert/strict';
 import { readFile, writeFile } from 'node:fs/promises';
-const open = ['hydration', 'leeds-newcastle', 'football-evolution'];
+const open = [];
 const root = new URL('../projects/football-journalism/', import.meta.url);
 const html = await readFile(new URL('index.html', root), 'utf8');
 const url = new URL(html.match(/src="(\.\/assets\/[^"?]+\.js)/)[1], root);
@@ -24,4 +24,4 @@ const stories = new Function(`return ${source.slice(start, end)}`)();
 assert(open.every(id => stories.some(story => story.id === id)), 'A front-page story is missing from the build.');
 for (const story of stories) if (!open.includes(story.id)) for (const field of ['excerpt', 'note', 'challenge']) story[field] = '';
 await writeFile(url, source.slice(0, start) + JSON.stringify(stories) + source.slice(end));
-console.log(`Front page only: ${open.length} stories open, ${stories.length - open.length} kept as cards without their text.`);
+console.log(`No story opens: ${stories.length} kept as cards without their text.`);

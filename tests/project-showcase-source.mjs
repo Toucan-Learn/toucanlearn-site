@@ -269,7 +269,7 @@ assert.match(source, /name\.textContent = entries\[index\]\.name;/, 'The window 
 for (const asset of ['css', 'js']) {
   const token = html => html.match(new RegExp(`project-showcase${asset === 'js' ? '-loader' : ''}\\.${asset}\\?v=([^"']+)`))?.[1];
   assert(token(children), `${asset}: the Children page retains its existing asset reference`);
-  assert.match(token(after), asset === 'js' ? /^20261101-mobile-1$/ : /^20261101-mobile-1$/, `${asset}: the homepage uses the current release token`);
+  assert.match(token(after), asset === 'js' ? /^20261102-mobile-calm-1$/ : /^20261101-mobile-1$/, `${asset}: the homepage uses the current release token`);
   if (asset === 'js') assert.equal(token(children), token(after), 'Both English pages load the current showcase script');
   assert.notEqual(token(after), token(before), `${asset}: bump the changed asset’s cache token`);
 }

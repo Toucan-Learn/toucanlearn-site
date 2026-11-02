@@ -1,12 +1,12 @@
-// Owner, 31 Oct: only the front-page spread opens. The other stories and the section
-// tabs stay on the page, to show how much he has written, but they don't click, and
-// their text isn't shipped (scripts/patch-newspaper-front-page.mjs).
+// Owner, 1 Nov: the section tabs work, but no story opens. The cards stay on the page,
+// to show how much he has written, and their text isn't shipped
+// (scripts/patch-newspaper-front-page.mjs).
 (() => {
   'use strict';
-  const open = new Set(['hydration', 'leeds-newcastle', 'football-evolution']);
+  const open = new Set();
   const story = href => { try { return decodeURIComponent((href || '').match(/^#football\/(.+)$/)?.[1] ?? ''); } catch { return '?'; } };
   const closedLink = link => { const id = story(link.getAttribute('href')); return id !== '' && !open.has(id); };
-  const closed = element => element.matches('.news-sections button') || (element.matches('a[href]') && closedLink(element));
+  const closed = element => element.matches('a[href]') && closedLink(element);
   // Before the newspaper's own router sees the click or key.
   const stop = event => {
     const target = event.target.closest?.('a[href], button');
@@ -22,7 +22,7 @@
   window.addEventListener('hashchange', guard, true);
   window.addEventListener('popstate', guard, true);
   // React redraws the cards, so mark closed ones as they appear.
-  const mark = () => document.querySelectorAll('.news-sections button, a[href^="#football/"]').forEach(element => {
+  const mark = () => document.querySelectorAll('a[href^="#football/"]').forEach(element => {
     if (!closed(element) || element.dataset.closed) return;
     element.dataset.closed = '';
     element.setAttribute('aria-disabled', 'true');

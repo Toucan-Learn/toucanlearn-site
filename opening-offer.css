@@ -14,6 +14,8 @@ body[data-page-frame] .framework-intro .opening-offer .offer-line { display: blo
 /* Keep the two established buttons on their row; the review link sits beside
    the primary action on the following row without resizing either button. */
 .living-hero .hero-actions .opening-reviews { order: 1; flex-basis: 100%; }
+/* Desktop: the review line under the guarantee already carries the proof; this link overlapped the project window. */
+@media (min-width: 768px) { .living-hero .hero-actions .opening-reviews { display: none; } }
 @media (max-width: 767px) {
   .opening-offer .opening-guarantee { margin-bottom: 12px; }
   .living-hero .hero-actions { gap: 12px; }

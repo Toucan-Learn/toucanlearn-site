@@ -135,6 +135,6 @@
 }
 
 /* Claude, 1 Nov: keep the headline clear of the 64px sticky header on phones. */
-@media (max-width: 700px) {
+@media screen and (max-width: 700px) {
   html body[data-mobile-mock] #main .mobile-mock-offer { padding-top: 16px; }
 }

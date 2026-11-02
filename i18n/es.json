@@ -577,7 +577,9 @@
   "Email or phone": "Correo electrónico o teléfono",
   "What would you like help with? <small>(optional)</small>": "¿Con qué te gustaría recibir ayuda? <small>(opcional)</small>",
   "<a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Facebook recommendations</a>": "<a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Recomendaciones en Facebook</a>",
-  "<q>Great tutor experience.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Parent · Google review</a>": "<q>Una gran experiencia con las tutorías.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Madre o padre · Reseña de Google</a>"
+  "<q>Great tutor experience.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Parent · Google review</a>": "<q>Una gran experiencia con las tutorías.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Madre o padre · Reseña de Google</a>",
+  "Paid lessons: from £25/£40/£65 per hour, agreed before you start.": "Clases de pago: desde £25/£40/£65 por hora, acordado antes de empezar.",
+  "<a href=\"https://wa.me/447307045816\">Prefer WhatsApp? Ask us a question.</a>": "<a href=\"https://wa.me/447307045816\">¿Prefieres WhatsApp? Escríbenos tu pregunta.</a>"
  },
  "script": {
   "Please use only the enquiry fields provided.": "Usa solo los campos de consulta disponibles.",

@@ -204,7 +204,9 @@ export function initHeroKeyboard(ripple, root = document) {
     // Wait until the next section reaches the header, so the small scroll
     // that reveals the keyboard itself cannot immediately close it again.
     // Allow the one-pixel difference between the header and its anchor offset.
-    if (hero.getBoundingClientRect().bottom <= headerBottom + 2) setOpen(false);
+    // The phone homepage lays the hero out as contents (no box); use its project column.
+    const box = hero.getClientRects().length ? hero : toggle.closest('.hero-world') || hero;
+    if (box.getBoundingClientRect().bottom <= headerBottom + 2) setOpen(false);
   }
   listen(window, 'scroll', closeAfterHero, { passive: true });
   listen(window, 'resize', () => {

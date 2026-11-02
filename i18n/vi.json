@@ -577,7 +577,9 @@
   "Email or phone": "Email hoặc số điện thoại",
   "What would you like help with? <small>(optional)</small>": "Bạn muốn được hỗ trợ điều gì? <small>(không bắt buộc)</small>",
   "<a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Facebook recommendations</a>": "<a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Đề xuất trên Facebook</a>",
-  "<q>Great tutor experience.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Parent · Google review</a>": "<q>Trải nghiệm học với gia sư rất tốt.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Phụ huynh · Đánh giá trên Google</a>"
+  "<q>Great tutor experience.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Parent · Google review</a>": "<q>Trải nghiệm học với gia sư rất tốt.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Phụ huynh · Đánh giá trên Google</a>",
+  "Paid lessons: from £25/£40/£65 per hour, agreed before you start.": "Buổi học trả phí: từ £25/£40/£65 mỗi giờ, thống nhất trước khi bắt đầu.",
+  "<a href=\"https://wa.me/447307045816\">Prefer WhatsApp? Ask us a question.</a>": "<a href=\"https://wa.me/447307045816\">Bạn thích dùng WhatsApp? Hãy đặt câu hỏi cho chúng tôi.</a>"
  },
  "script": {
   "Please use only the enquiry fields provided.": "Vui lòng chỉ dùng các ô thông tin có sẵn.",

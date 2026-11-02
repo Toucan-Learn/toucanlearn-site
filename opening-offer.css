@@ -21,3 +21,82 @@ body[data-page-frame] .framework-intro .opening-offer .offer-line { display: blo
 
 /* The original pixel artwork remains visible before the optional sky renderer. */
 .cta .cta-sky .reviews-enquiry-sky, .team-page > .reviews-enquiry-sky { background: #0b131e url("/assets/loading-pixel-sky.png") center / cover; }
+
+/* Calm phone homepage (2 Nov, spec: outputs/mobile-benchmark-20261101 §4–5).
+   Desktop never shows the phone-only blocks; every other rule is phone-only. */
+@media (min-width: 768px) {
+  .home-phone-only { display: none !important; }
+}
+@media (max-width: 767px) {
+  html body.homepage:not([data-mobile-mock]) { --page-gutter: 20px; --section-space: 48px; }
+  /* Order: offer, review, team, project, process, audiences, price and request. */
+  html body.homepage:not([data-mobile-mock]) #main { display: flex; flex-direction: column; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero,
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-layout { display: contents; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-haze { display: none; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-copy { order: 1; }
+  html body.homepage:not([data-mobile-mock]) #main > .phone-review { order: 2; }
+  html body.homepage:not([data-mobile-mock]) #main > #team { order: 3; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-world { order: 4; }
+  html body.homepage:not([data-mobile-mock]) #main > #how-it-works { order: 5; }
+  html body.homepage:not([data-mobile-mock]) #main > #support-routes { order: 6; }
+  html body.homepage:not([data-mobile-mock]) #main > #reviews { order: 7; }
+
+  /* Reading size: body 18px/1.5, section titles 26px, captions stay ≥14px. */
+  html body.homepage:not([data-mobile-mock]) #main :is(p, li, dd, dt) { font-size: 1.125rem !important; line-height: 1.5; }
+  html body.homepage:not([data-mobile-mock]) #main .section-head h2 { font-size: 1.625rem; line-height: 1.2; }
+  html body.homepage:not([data-mobile-mock]) #main > .homepage-section { margin-top: 48px; }
+  html body.homepage:not([data-mobile-mock]) #main .homepage-section .button { min-height: 52px; }
+
+  /* 1. Opening: headline, offer, one button, guarantee caption. */
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-copy {
+    box-sizing: border-box;
+    justify-content: center;
+    gap: 0;
+    min-height: min(calc(100svh - 64px), 560px);
+    padding: 40px var(--page-gutter);
+    background: radial-gradient(ellipse at 90% 10%, #719e7d29, transparent 55%), radial-gradient(ellipse at 0% 100%, #456d6555, transparent 55%), var(--hero-night);
+  }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero #hero-title { margin: 0 0 20px; font-size: clamp(2rem, 9vw, 2.25rem); line-height: 1.08; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .phone-offer { margin: 0; font-weight: 700; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-copy .opening-proof { margin: 0 0 28px; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero :is(.hero-description, .opening-review, .hero-benefits),
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-actions :is(.opening-reviews, .approach-button) { display: none; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-actions { margin: 0; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-actions .trial-button { min-height: 64px; gap: 12px; padding-inline: 20px; font-size: clamp(1rem, 5.4vw, 1.375rem); }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-copy .opening-guarantee { margin: 12px 0 0; font-size: .9375rem !important; line-height: 1.45; opacity: .9; }
+
+  /* 2. One sourced review. */
+  html body.homepage:not([data-mobile-mock]) #main > .phone-review { display: block; padding: 0; }
+  html body.homepage:not([data-mobile-mock]) #main > .phone-review .review-quote { padding: 20px; border-radius: var(--radius-lg); }
+  html body.homepage:not([data-mobile-mock]) #main > .phone-review .review-mark { height: 28px; margin-bottom: 4px; font-size: 3.5rem; }
+  html body.homepage:not([data-mobile-mock]) #main > .phone-review blockquote { margin-bottom: 16px; }
+  html body.homepage:not([data-mobile-mock]) #main > .phone-review figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: .875rem; }
+  html body.homepage:not([data-mobile-mock]) #main > .phone-review .review-google-link { display: inline-flex; align-items: center; min-height: 44px; }
+
+  /* 3. Team: the founder card carries the oversight line. */
+  html body.homepage:not([data-mobile-mock]) #main #team .team-promise { display: none; }
+
+  /* 4. Project: one still with its result line; arrows stay for a tap. */
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-world {
+    display: flex; flex-direction: column;
+    margin: 48px 0 0;
+    padding: 40px var(--page-gutter);
+    background: var(--hero-night);
+  }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-world-eyebrow { order: -1; margin: 0 0 16px; font-size: .875rem; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-project-caption .project-caption-detail:has([data-project-learning]) { display: none; }
+  html body.homepage:not([data-mobile-mock]) #main .living-hero .hero-world-eyebrow > span + span { margin-top: 8px; font-size: 1.125rem; font-weight: 600; letter-spacing: 0; text-transform: none; line-height: 1.4; }
+
+  /* 5–6. Process and routes: one primary action each; secondary stays quiet. */
+  html body.homepage:not([data-mobile-mock]) #main #how-it-works .how-actions .button.secondary { min-height: 44px; border: 0; background: none; box-shadow: none; text-decoration: underline; text-underline-offset: 4px; }
+  html body.homepage:not([data-mobile-mock]) #main #support-routes .section-trial { display: none; }
+  html body.homepage:not([data-mobile-mock]) #main :is(#how-it-works .how-step-link, #team .framework-profile-link) { display: inline-flex; align-items: center; min-height: 44px; }
+
+  /* 7–8. Price line, then the free-session request and a quiet WhatsApp link. */
+  html body.homepage:not([data-mobile-mock]) #main #reviews :is(.section-head, .review-leave, .reviews-orbit) { display: none; }
+  html body.homepage:not([data-mobile-mock]) #main #reviews .phone-price { margin: 0 0 16px; }
+  html body.homepage:not([data-mobile-mock]) #main #reviews .reviews-enquiry { margin-top: 0; }
+  html body.homepage:not([data-mobile-mock]) #main #reviews .phone-whatsapp { margin: 16px 0 0; text-align: center; }
+  html body.homepage:not([data-mobile-mock]) #main #reviews .phone-whatsapp a { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 4px; }
+}

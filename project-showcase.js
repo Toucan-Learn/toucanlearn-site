@@ -1,5 +1,5 @@
 import { createDrinkSpin, renderDrinkInfo, prefetchDrink } from './drink-spin.js?v=20261031-language-merge-1';
-import { initHeroSky } from './hero-sky.js?v=20261031-mobile-speed-1';
+import { initHeroSky } from './hero-sky.js?v=20261102-mobile-calm-1';
 import { SKY_PRESETS } from './hero-sky-shaders.js?v=20261031-language-merge-1';
 import { dartyMatchURL } from './darty-match.js?v=20261031-darty-night-1';
 
@@ -260,7 +260,8 @@ export function initShowcase(root) {
   const timer = idleAdvance({
     advance: () => show(index + 1),
     blocked: () => root.contains(document.activeElement) || pointers.size > 0 || held.size > 0 || Boolean(dispose?.isPlaying?.()) || Boolean(dispose?.isDragging?.()),
-    enabled: () => automatic && inView && visible() && !motion.matches,
+    // Phones (owner brief, 2 Nov: calm): one still, no automatic advance; arrows still work.
+    enabled: () => automatic && inView && visible() && !motion.matches && !phoneCell.matches,
   });
   const activity = () => timer.reset();
   const preview = project => previews.get(project.id);
@@ -564,7 +565,12 @@ export function initShowcase(root) {
     timer.reset();
     sync();
   });
-  phoneCell.addEventListener('change', () => entries.filter(project => project.poster?.includes('{size}')).forEach(project => warmPreview(project, preview(project))));
+  phoneCell.addEventListener('change', () => {
+    entries.filter(project => project.poster?.includes('{size}')).forEach(project => warmPreview(project, preview(project)));
+    // The phone homepage places the showcase lower (2 Nov). Keep a project the visitor
+    // was using in view through a rotation, before visibility is next measured.
+    if (automatic && inView && mounted) cell.scrollIntoView({ block: 'nearest', behavior: 'instant' });
+  });
   compactDevice.addEventListener('change', () => {
     syncPrefetch();
     if (entries[index].type !== 'match') return;

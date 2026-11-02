@@ -12,7 +12,11 @@ let copy = html.replace(/  <meta name="robots"[^>]*>\n/, '')
   .replace(/  <script src="index-mobile-mock\.js[^\n]+\n/, '')
   .replace(' data-mobile-mock>', '>');
 for (const name of ['offer', 'subjects', 'bar']) copy = copy.replace(new RegExp(`^[ \\t]*<!-- mobile-mock-${name}:start -->[\\s\\S]*?<!-- mobile-mock-${name}:end -->\\n`, 'm'), '');
-assert.equal(copy, home, 'Removing the isolated hidden additions exactly reconstructs the current index.html');
+// 2 Nov: the real homepage gained phone-only calm blocks after this mock was cut; compare without them.
+const homeBeforeCalm = home.replace(/^[ \t]*<p class="phone-[a-z]+ home-phone-only">.*<\/p>\n/gm, '')
+  .replace(/^ {4}<section class="[^"]*phone-review home-phone-only"[\s\S]*?<\/section>\n\n/m, '')
+  .replace('opening-offer.css?v=20261102-mobile-calm-1', 'opening-offer.css?v=20261101-mobile-1');
+assert.equal(copy, homeBeforeCalm, 'Removing the isolated hidden additions exactly reconstructs the current index.html (before the phone-only calm blocks)');
 assert.doesNotMatch(home, /index-mobile-mock/);
 assert.doesNotMatch(await read('sitemap.xml'), /index-mobile-mock/);
 for (const sentence of ['One-to-one tutoring for children and adults.', 'Free first session and diagnostic report.', "If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.", 'We usually reply within a couple of hours, especially on WhatsApp.']) assert(html.includes(sentence));

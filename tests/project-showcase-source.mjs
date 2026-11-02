@@ -38,7 +38,7 @@ const beforeClick = liveMatch.split("play.addEventListener('click'")[0];
 assert(!beforeClick.includes("createElement('iframe')") && !beforeClick.includes('dartyMatchURL'), 'No match is created or requested before Play');
 assert.match(liveMatch, /frame\.src = dartyMatchURL/);
 assert.match(liveMatch, /setAttribute\('sandbox', 'allow-scripts allow-same-origin'\)/);
-assert.match(liveMatch, /setAttribute\('allow', 'autoplay; fullscreen'\)/);
+assert.match(liveMatch, /setAttribute\('allow', 'autoplay; fullscreen; gamepad'\)/);
 assert.match(liveMatch, /frame\.loading = 'eager'/);
 assert.match(liveMatch, /frame\.title = 'DARTY CPU vs CPU football match'/);
 assert.match(liveMatch, /dispose = \(\) => \{[^}]*stop\(false\)/, 'Unmount cleanup must not restore outgoing media');
@@ -216,6 +216,8 @@ const withoutOwnerContent = html => withoutMobilePerformance(html)
   .replace(/Henley-on-Thames|Henley/g, 'Oxfordshire')
   // 29 Oct owner edits: text-only reviews (no autoplay/pause/art) and the showcase label's two corners.
   .replace(/<section class="homepage-section proof-section" id="reviews">[\s\S]*?<\/section>/, '<!-- reviews: owner-managed -->')
+  // 2 Nov owner brief: the phone-only calm review block (hidden on desktop).
+  .replace(/\n {4}<section class="[^"]*phone-review home-phone-only"[\s\S]*?<\/section>\n/, '')
   .replace(/reviews-carousel\.js\?v=[^"]+/, 'reviews-carousel.js?v=TOKEN')
   // 30 Oct owner: the showcase label moved below the window, so compare without its position.
   .replace(/\n\s*<p class="eyebrow light[^"]*">[\s\S]*?<\/p>/, '')
@@ -326,6 +328,8 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
   const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || 'b3979e3'}:${file}`], { cwd: site, encoding: 'utf8' });
   // Nested language homes need root-relative media; asset identity and renderer logic stay pinned.
   const untoken = text => text.replace(/(["'`])\/assets\//g, '$1assets/')
+    // 2 Nov: the phone homepage hero is display: contents, so the auto-close measures its project column.
+    .replace("    // The phone homepage lays the hero out as contents (no box); use its project column.\n    const box = hero.getClientRects().length ? hero : toggle.closest('.hero-world') || hero;\n    if (box.getBoundingClientRect()", '    if (hero.getBoundingClientRect()')
     .replace(/(hero-(?:keyboard|piano|sky|sky-shaders)\.js\?v=)[^'"]+/g, '$1TOKEN');
   assert.equal(untoken(normalise(current)), untoken(normalise(approved)), `${file}: preserve the existing hero and owner-confirmed music settings`);
 }

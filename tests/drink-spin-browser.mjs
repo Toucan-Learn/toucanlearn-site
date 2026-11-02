@@ -224,6 +224,8 @@ async function checkDrinkPrefetch({ open, views, base, report }) {
     page.on('requestfailed', request => { if (isFrame(request)) concurrent--; });
     try {
       await page.goto(`${base}/index.html?project=darty`, { waitUntil: 'networkidle0' });
+      await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
+      await page.waitForSelector('[data-showcase-ready]');
       await page.$eval('[data-showcase]', root => { root.focus({ preventScroll: true }); root.scrollIntoView({ block: 'center' }); });
       if (connection) {
         await wait(300);
@@ -262,6 +264,8 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
     });
     try {
       await page.goto(`${base}/children.html?project=drinks#learner-projects`, { waitUntil: 'networkidle0' });
+      await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
+      await page.waitForSelector('[data-showcase-ready]');
       await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
       await page.waitForSelector('.drink-spin[data-frame-count]');
       const count = await page.$eval('.drink-spin', button => Number(button.dataset.frameCount));
@@ -425,6 +429,8 @@ export async function checkDrinkSpin({ open, views, base, output, report }) {
   page.on('request', request => { if (/\/drinks\/.*\d{3}\.webp/.test(request.url())) requested.push(request.url()); });
   try {
     await page.goto(`${base}/index.html?project=drinks`, { waitUntil: 'networkidle0' });
+      await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
+      await page.waitForSelector('[data-showcase-ready]');
     await page.$eval('.showcase-cell', cell => cell.scrollIntoView({ block: 'center' }));
     await page.waitForSelector('.drink-spin');
     await wait(300);

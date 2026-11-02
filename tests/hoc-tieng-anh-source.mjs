@@ -27,7 +27,7 @@ for (const text of [
   'Cách học', 'Buổi đầu miễn phí: giáo viên đánh giá trình độ và mục tiêu của học viên.',
   'Học 1 kèm 1 trực tuyến, vào buổi tối và cuối tuần theo giờ Việt Nam.',
   'Báo cáo hằng tuần: đã học được gì và bước tiếp theo là gì.',
-  '650.000đ / giờ', 'Buổi học đầu tiên miễn phí.',
+  'Từ 500.000đ / giờ', 'Buổi học đầu tiên miễn phí.',
   'Phụ huynh có thể trao đổi bằng tiếng Việt với đội ngũ của chúng tôi.',
   'Đăng ký buổi học thử miễn phí', 'Gửi đăng ký'
 ]) assert.ok(html.includes(`>${text}<`), `Exact copy: ${text}`);
@@ -59,6 +59,8 @@ assert.match(teachers, /aria-labelledby="teachers-heading"/);
 assert.ok(teachers.includes('<h2 id="teachers-heading">Chọn giáo viên</h2>'));
 const teacherCards = [...teachers.matchAll(/<article class="vietnam-teacher"[\s\S]*?<\/article>/g)].map(match => match[0]);
 assert.equal(teacherCards.length, 3);
+assert.doesNotMatch(teachers, /vietnam-teacher-price|[\d.]+đ\s*\/\s*giờ/, 'Owner removed individual tutor prices');
+assert.equal((html.match(/500\.000đ \/ giờ/g) || []).length, 1, 'One starting price, in the pricing panel');
 const teacherCopy = [
   ['Thầy Aaron', 'Giáo viên bản ngữ đến từ Anh, có chứng chỉ CELTA. Bài bản, chuẩn mực và chất lượng.'],
   ['Thầy Josh', 'Người sáng lập Toucan Learn. Thầy hiểu ngữ âm tiếng Việt, nên giúp bạn sửa phát âm từ gốc.'],

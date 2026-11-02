@@ -23,7 +23,8 @@
   ", call",
   "or use",
   "Please keep this field within {limit} characters.",
-  "Please keep your message within {limit} characters (1000 including the selected subject)."
+  "Please keep your message within {limit} characters (1000 including the selected subject).",
+  "Enter a valid email address or phone number."
  ],
  "ui": [
   "Switch to light mode",

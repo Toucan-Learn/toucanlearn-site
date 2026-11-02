@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 // Use the emulated device's real input path. Do not dispatch a scripted click:
 // a passing test must hit the visible control through the page's actual layers.
 export async function activatePianoToggle(page, label = 'Piano toggle') {
+  await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
   await page.waitForSelector('[data-showcase] #hero-keyboard[data-song]');
   const ids = ['piano-toggle', 'hero-keyboard', 'sky-canvas', 'flock-canvas'];
   const counts = await page.evaluate(ids => Object.fromEntries(ids.map(id => [id, document.querySelectorAll(`[id="${id}"]`).length])), ids);

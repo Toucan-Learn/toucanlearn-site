@@ -12,6 +12,7 @@
   if (count < 3 || count > 8) return;
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const laptop = window.matchMedia('(min-width: 900px)');
+  const phone = window.matchMedia('(max-width: 767px)');
   const status = carousel.querySelector('[data-reviews-status]');
   let position = 0;
   let drag = null;
@@ -31,6 +32,19 @@
   });
 
   function render() {
+    if (phone.matches) {
+      ring.style.transform = 'none';
+      ring.style.height = '';
+      cards.forEach(card => {
+        for (const property of ['height', 'transform', 'opacity', 'pointerEvents', 'zIndex']) card.style[property] = '';
+        card.tabIndex = 0;
+        card.removeAttribute('aria-hidden');
+        card.querySelector('blockquote').removeAttribute('aria-hidden');
+        card.querySelector('figcaption').removeAttribute('aria-hidden');
+      });
+      syncScroll();
+      return;
+    }
     // Layout width stays constant while the first card is angled at the side.
     const width = cards[0].offsetWidth || 400;
     const radius = Math.max(width * 1.15, (width + 32) / (2 * Math.tan(Math.PI / count)));
@@ -70,16 +84,23 @@
   }
 
   function turn(delta) {
+    if (phone.matches) {
+      const card = cards[modulo(position + delta)];
+      ring.scrollTo({ left: ring.scrollLeft + card.getBoundingClientRect().left - ring.getBoundingClientRect().left, behavior: motion.matches ? 'instant' : 'smooth' });
+      return;
+    }
     position += delta;
     render();
   }
   function select(index) { turn(relative(index)); }
   cards.forEach((card, index) => {
     card.addEventListener('click', () => {
+      if (phone.matches) return;
       if (suppressClick) { suppressClick = false; return; }
       select(index);
     });
     card.addEventListener('keydown', event => {
+      if (phone.matches) return;
       if (event.key === 'Enter' || event.key === ' ') {
         event.preventDefault();
         select(index);
@@ -87,6 +108,7 @@
     });
   });
   carousel.addEventListener('keydown', event => {
+    if (phone.matches && event.target.closest('a, button, input, textarea, select')) return;
     if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
     event.preventDefault();
     const cardHadFocus = cards.includes(document.activeElement);
@@ -94,7 +116,7 @@
     if (cardHadFocus) cards[modulo(position)].focus({ preventScroll: true });
   });
   ring.addEventListener('pointerdown', event => {
-    if (laptop.matches || event.isPrimary === false || event.button !== 0) return;
+    if (phone.matches || laptop.matches || event.isPrimary === false || event.button !== 0) return;
     suppressClick = false;
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY };
   });
@@ -115,6 +137,19 @@
     }
   });
   ring.addEventListener('pointercancel', () => { drag = null; });
+  function syncScroll() {
+    if (!phone.matches) return;
+    const left = ring.getBoundingClientRect().left;
+    position = cards.reduce((best, card, index) => Math.abs(card.getBoundingClientRect().left - left) < Math.abs(cards[best].getBoundingClientRect().left - left) ? index : best, 0);
+    cards.forEach((card, index) => {
+      card.classList.toggle('is-current', index === position);
+      if (index === position) card.setAttribute('aria-current', 'true');
+      else card.removeAttribute('aria-current');
+    });
+    status.textContent = t('Review {n} of {count}', { n: position + 1, count });
+  }
+  ring.addEventListener('scroll', syncScroll, { passive: true });
+  phone.addEventListener('change', () => { drag = null; render(); });
   motion.addEventListener('change', render);
   laptop.addEventListener('change', render);
   carousel.classList.add('reviews-enhanced');

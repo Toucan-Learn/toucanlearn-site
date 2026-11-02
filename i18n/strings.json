@@ -7,7 +7,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<span class=\"brand-lockup\"> <strong>Tou<span class=\"brand-can\">can</span></strong> <span>Learn</span> </span> <span class=\"mobile-home\">Home</span>": [
   "index",
@@ -28,7 +29,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"children\">Children and young people</a>": [
   "index",
@@ -38,7 +40,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"adults\">Adults</a>": [
   "index",
@@ -48,7 +51,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "Subjects": [
   "index",
@@ -58,7 +62,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"subjects#english\">English</a>": [
   "index",
@@ -68,7 +73,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"subjects#maths\">Maths</a>": [
   "index",
@@ -78,7 +84,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"subjects#science\">Science</a>": [
   "index",
@@ -88,7 +95,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"subjects#languages\">Languages</a>": [
   "index",
@@ -98,7 +106,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"subjects#psychology\">Psychology</a>": [
   "index",
@@ -108,7 +117,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"subjects#art\">Art &amp; design</a>": [
   "index",
@@ -117,7 +127,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"subjects#send-support\">SEND support</a>": [
   "index",
@@ -127,7 +138,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"#how-it-works\">Our approach <span class=\"nav-chevron\" aria-hidden=\"true\">▾</span></a>": [
   "index"
@@ -140,7 +152,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"approach#steps-to-success\">Getting started</a>": [
   "index",
@@ -150,7 +163,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"approach#our-lessons\">Our lessons</a>": [
   "index",
@@ -160,7 +174,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"approach#weekly-reports\">Weekly reports</a>": [
   "index",
@@ -170,7 +185,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "Where we teach": [
   "index",
@@ -180,7 +196,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"approach#online-sessions\">Online 1-1 sessions</a>": [
   "index",
@@ -190,7 +207,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"approach#in-person-sessions\">In-person sessions</a>": [
   "index",
@@ -200,7 +218,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"#reviews\">Reviews</a>": [
   "index"
@@ -216,7 +235,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"#support-routes\">Who we help</a>": [
   "index"
@@ -230,11 +250,38 @@
  "Learning built around <em>you.</em>": [
   "index"
  ],
- "Learning support for children and adults. We use <span class=\"keep-together\">psychology-informed</span> practices and the best tools available to make the most effective lessons for you.": [
+ "One-to-one tutoring for children and adults. Free first session and diagnostic report. Find your starting point and next steps.": [
   "index"
  ],
- "<a class=\"button trial-button\" href=\"contact\">Book a free trial <span aria-hidden=\"true\">→</span></a> <a class=\"button approach-button\" href=\"#team\">Find out more <span aria-hidden=\"true\">↓</span></a>": [
+ "Weekly written reports. Our founder oversees every lesson.": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact"
+ ],
+ "<a class=\"button trial-button\" href=\"contact#enquiry-form\">Book a free session <span aria-hidden=\"true\">→</span></a> <a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Facebook recommendations</a> <a class=\"button approach-button\" href=\"#team\">Find out more <span aria-hidden=\"true\">↓</span></a>": [
   "index"
+ ],
+ "If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact"
+ ],
+ "<q>Great tutor experience.</q> <a href=\"https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8\">Parent · Google review</a>": [
+  "index",
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact"
  ],
  "<span aria-hidden=\"true\">✓</span>Free first session": [
   "index"
@@ -479,7 +526,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<span class=\"footer-copy\">© <span id=\"year\">2026</span> Toucan Learn</span>": [
   "index",
@@ -489,7 +537,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "Toucan Learn is run by Joshua Gordon Jones, sole trader, Bristol.": [
   "index",
@@ -499,7 +548,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"privacy\">Privacy</a> <a href=\"terms\">Terms</a> <a href=\"safeguarding\">Safeguarding</a> <a href=\"complaints\">Complaints</a> <a href=\"contact\">Enquire</a> <a href=\"tel:+447309639095\">07309 639095</a>": [
   "index",
@@ -522,7 +572,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "Primary": [
   "index",
@@ -532,7 +583,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "Switch to dark mode": [
   "index",
@@ -542,7 +594,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "Menu": [
   "index",
@@ -552,7 +605,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "Project showcase": [
   "index"
@@ -607,7 +661,8 @@
   "adults",
   "subjects",
   "approach",
-  "team"
+  "team",
+  "terms"
  ],
  "<a href=\"./#team\">Our team</a>": [
   "children",
@@ -616,7 +671,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"./#support-routes\">Who we help <span class=\"nav-chevron\" aria-hidden=\"true\">▾</span></a>": [
   "children",
@@ -625,7 +681,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"./#how-it-works\">Our approach <span class=\"nav-chevron\" aria-hidden=\"true\">▾</span></a>": [
   "children",
@@ -634,7 +691,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"./#reviews\">Reviews</a>": [
   "children",
@@ -658,7 +716,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"./#how-it-works\">Our approach</a>": [
   "children",
@@ -667,7 +726,8 @@
   "approach",
   "team",
   "contact",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a href=\"./#reviews\">Reviews</a> <a class=\"button trial-button trial-button--light-surface\" href=\"contact\" data-service=\"children\">Book a free trial</a>": [
   "children"
@@ -676,6 +736,17 @@
   "children"
  ],
  "Tutoring built around your child<span>.</span>": [
+  "children"
+ ],
+ "<strong>Your first session and diagnostic report are free.</strong>": [
+  "children",
+  "adults",
+  "subjects",
+  "approach",
+  "team",
+  "contact"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface\" href=\"contact#enquiry-form\" data-service=\"children\">Book a free session <span aria-hidden=\"true\">→</span></a><a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Facebook recommendations</a>": [
   "children"
  ],
  "<a href=\"#getting-started\" data-panel-link>Getting started</a> <a href=\"#learner-projects\" data-panel-link>Projects &amp; learning</a> <a href=\"#qualifications\" data-panel-link>Exams &amp; qualifications</a>": [
@@ -806,7 +877,8 @@
   "subjects",
   "approach",
   "team",
-  "thank-you"
+  "thank-you",
+  "terms"
  ],
  "<a class=\"button trial-button trial-button--light-surface phone-book\" href=\"contact\">Book</a>": [
   "adults",
@@ -824,6 +896,12 @@
  ],
  "English, qualifications and languages<span>.</span>": [
   "adults"
+ ],
+ "<a class=\"button trial-button trial-button--light-surface\" href=\"contact#enquiry-form\">Book a free session <span aria-hidden=\"true\">→</span></a><a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Facebook recommendations</a>": [
+  "adults",
+  "subjects",
+  "approach",
+  "team"
  ],
  "<a href=\"#how-lessons-work\" data-panel-link>How lessons work</a> <a href=\"#english-for-work\" data-panel-link>English for work</a> <a href=\"#qualifications\" data-panel-link>Qualifications</a> <a href=\"#languages\" data-panel-link>Languages</a>": [
   "adults"
@@ -1137,16 +1215,11 @@
  "English, maths, science, languages, Psychology, Art and DT, and SEN support, with the level, goal and tutor agreed before lessons begin.": [
   "subjects"
  ],
- "<strong>Your first session and diagnostic report are free.</strong>": [
-  "subjects",
-  "contact"
- ],
  "<a href=\"#english\" data-panel-link>English</a><a href=\"#maths\" data-panel-link>Maths</a><a href=\"#science\" data-panel-link>Science</a><a href=\"#languages\" data-panel-link>Languages</a><a href=\"#psychology\" data-panel-link>Psychology</a><a href=\"#art\" data-panel-link>Art &amp; DT</a><a href=\"#send-support\" data-panel-link>SEND support</a>": [
   "subjects"
  ],
  "English": [
-  "subjects",
-  "contact"
+  "subjects"
  ],
  "Build reading, writing, speaking and listening around the learner’s interests and goals.": [
   "subjects"
@@ -1179,8 +1252,7 @@
   "subjects"
  ],
  "Maths": [
-  "subjects",
-  "contact"
+  "subjects"
  ],
  "Find the gap, make the method clear and build confidence through practice.": [
   "subjects"
@@ -1210,8 +1282,7 @@
   "subjects"
  ],
  "Science": [
-  "subjects",
-  "contact"
+  "subjects"
  ],
  "GCSE, A-level and IB sciences, at the learner’s pace.": [
   "subjects"
@@ -1247,8 +1318,7 @@
   "subjects"
  ],
  "Languages": [
-  "subjects",
-  "contact"
+  "subjects"
  ],
  "Languages for children and adults: school, work, travel, family or relocation.": [
   "subjects"
@@ -1272,8 +1342,7 @@
   "subjects"
  ],
  "Psychology": [
-  "subjects",
-  "contact"
+  "subjects"
  ],
  "A-level and IB Psychology with Joshua, our founder, psychology graduate &amp; SEN specialist.": [
   "subjects"
@@ -1659,8 +1728,7 @@
   "team"
  ],
  "Online": [
-  "team",
-  "contact"
+  "team"
  ],
  "In person · Bristol": [
   "team"
@@ -1743,88 +1811,19 @@
  "Your name": [
   "contact"
  ],
- "Who is the tutoring for?": [
+ "Email or phone": [
   "contact"
  ],
- "A child or young person": [
-  "contact"
- ],
- "Me (an adult)": [
-  "contact"
- ],
- "What would you like help with?": [
+ "What would you like help with? <small>(optional)</small>": [
   "contact"
  ],
  "<small id=\"support-needed-privacy\">Please don't include diagnoses or medical records; we'll talk through needs together.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": [
   "contact"
  ],
- "Age or school year": [
-  "contact"
- ],
- "Subject (optional)": [
-  "contact"
- ],
- "Choose a subject": [
-  "contact"
- ],
- "Art &amp; design": [
-  "contact"
- ],
- "Exam preparation": [
-  "contact"
- ],
- "SEN support": [
-  "contact"
- ],
- "Other": [
-  "contact"
- ],
- "<span id=\"subject-value\">Choose a subject</span>": [
-  "contact"
- ],
- "What's your desired lesson rate?": [
-  "contact"
- ],
- "<small id=\"desired-lesson-rate-hint\">Optional. A rough figure per session is fine.</small> <span class=\"field-error\" id=\"desired-lesson-rate-error\"></span>": [
-  "contact"
- ],
- "Online or in person? <small>(optional)</small>": [
-  "contact"
- ],
- "In person": [
-  "contact"
- ],
- "Not sure": [
-  "contact"
- ],
- "Town or postcode area": [
-  "contact"
- ],
- "How would you like us to reply?": [
-  "contact"
- ],
- "Email": [
-  "contact"
- ],
- "Phone call": [
-  "contact"
- ],
- "Text": [
-  "contact"
- ],
- "WhatsApp": [
-  "contact"
- ],
- "Email address": [
-  "contact"
- ],
- "Phone number": [
-  "contact"
- ],
- "<small id=\"phone-hint\">Use 7–15 digits; include + and the country code for international numbers.</small> <span class=\"field-error\" id=\"phone-error\"></span>": [
-  "contact"
- ],
  "Send my enquiry <span aria-hidden=\"true\">→</span>": [
+  "contact"
+ ],
+ "<a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Facebook recommendations</a>": [
   "contact"
  ],
  "We'll only use these details to reply to you. Read our <a href=\"privacy\">privacy notice</a>.": [
@@ -1857,7 +1856,7 @@
  "Complex SEN needs, critical exam prep, and extra hours of lesson planning and custom resources built for you.": [
   "contact"
  ],
- "We agree the price before you book. No fees or subscriptions. Detailed weekly reports at every band.": [
+ "We agree the price before you book. No fees or subscriptions. Detailed weekly reports at every band. If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.": [
   "contact"
  ],
  "What happens next": [
@@ -1875,7 +1874,7 @@
  "Prefer to talk?": [
   "contact"
  ],
- "<a class=\"button\" href=\"tel:+447309639095\">Call 07309 639095</a> <a class=\"button secondary\" href=\"https://wa.me/447307045816\" target=\"_blank\" rel=\"noopener\">WhatsApp 07307 045816<span class=\"visually-hidden\"> (opens WhatsApp in a new tab)</span></a>": [
+ "<a class=\"button\" href=\"tel:+447309639095\">Call 07309 639095</a> <a class=\"button secondary\" href=\"https://wa.me/447307045816\" target=\"_blank\" rel=\"noopener\">WhatsApp +44 7307 045816<span class=\"visually-hidden\"> (opens WhatsApp in a new tab)</span></a>": [
   "contact"
  ],
  "<a href=\"privacy\">Privacy</a> <a href=\"terms\">Terms</a> <a href=\"safeguarding\">Safeguarding</a> <a href=\"complaints\">Complaints</a> <a href=\"./\">Home</a> <a href=\"contact\">Enquire</a> <a href=\"tel:+447309639095\">07309 639095</a>": [
@@ -1910,5 +1909,80 @@
  ],
  "How to contact Toucan Learn about your first session.": [
   "thank-you"
+ ],
+ "<a href=\"safeguarding\">Safeguarding</a>": [
+  "terms"
+ ],
+ "<a href=\"safeguarding\">Safeguarding</a> <a class=\"button trial-button trial-button--light-surface\" href=\"contact\">Book a free trial</a>": [
+  "terms"
+ ],
+ "Booking lessons": [
+  "terms"
+ ],
+ "Terms<span>.</span>": [
+  "terms"
+ ],
+ "The basics of learning with Toucan Learn.": [
+  "terms"
+ ],
+ "Your first session": [
+  "terms"
+ ],
+ "Your first session is free and includes a free diagnostic report.": [
+  "terms"
+ ],
+ "Our first-lesson guarantee": [
+  "terms"
+ ],
+ "If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost. Tell us within 48 hours of the lesson. This guarantee applies once per learner.": [
+  "terms"
+ ],
+ "Prices": [
+  "terms"
+ ],
+ "Lesson prices are shown on our <a href=\"contact#pricing-heading\">enquiry page</a>.": [
+  "terms"
+ ],
+ "Paying": [
+  "terms"
+ ],
+ "Lessons are paid for weekly, in advance.": [
+  "terms"
+ ],
+ "Moving or cancelling a lesson": [
+  "terms"
+ ],
+ "Give us 24 hours' notice and you can move or cancel a lesson for free. With less notice we may charge for it, though we'll always try to rearrange.": [
+  "terms"
+ ],
+ "Stopping": [
+  "terms"
+ ],
+ "There is no contract. You can stop lessons at any time.": [
+  "terms"
+ ],
+ "Safeguarding": [
+  "terms"
+ ],
+ "Read our <a href=\"safeguarding\">safeguarding page</a> for our arrangements and how to raise a concern.": [
+  "terms"
+ ],
+ "Contact": [
+  "terms"
+ ],
+ "Email <a href=\"mailto:hello@toucanlearn.co.uk\">hello@toucanlearn.co.uk</a>, call <a href=\"tel:+447309639095\">07309 639095</a> or WhatsApp <a href=\"https://wa.me/447307045816\">+44 7307 045816</a>.": [
+  "terms"
+ ],
+ "<a href=\"privacy\">Privacy</a><a href=\"terms\">Terms</a><a href=\"safeguarding\">Safeguarding</a><a href=\"complaints\">Complaints</a><a href=\"./\">Home</a><a href=\"contact\">Enquire</a><a href=\"tel:+447309639095\">07309 639095</a>": [
+  "terms"
+ ],
+ "Terms | Toucan Learn": [
+  "terms"
+ ],
+ "Simple terms for Toucan Learn lessons, prices, payment and cancellations.": [
+  "terms"
+ ],
+ "Policies": [
+  "terms"
  ]
 }

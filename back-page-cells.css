@@ -161,6 +161,16 @@ body.cell-art-page #getting-started .picture-cell-copy { align-self: center; pad
 @media (max-width: 759px) {
   body.cell-art-page #getting-started .picture-cell-copy { padding: 12px; }
 }
+/* Owner phone review, 1 Nov: let each step fit its own copy, without spare rows. */
+@media (max-width: 767px) {
+  body.cell-art-page #getting-started > .section-head { margin-bottom: 12px; }
+  body.cell-art-page #getting-started > .section-head h2 { margin: 0 0 8px; }
+  body.cell-art-page #getting-started > .section-head p { margin: 0; }
+  body.cell-art-page #getting-started .learning-steps { grid-auto-rows: auto; gap: 12px; margin-block: 12px; }
+  body.cell-art-page #getting-started .picture-cell-media { min-height: 0; }
+  body.cell-art-page #getting-started .picture-cell-copy { padding: 10px; }
+  body.cell-art-page #getting-started .learning-steps h3 { margin-bottom: 6px; }
+}
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) body.cell-art-page #english-for-work .adult-topics--work > article,
   :root:not([data-theme="light"]) body.cell-art-page #qualifications .qualification-cards > article { --heading: #f5f0e6; --ink: #f5f0e6; --line: rgba(245, 240, 230, .25); --orange-text: #ffb486; background: #204653; color: var(--ink); }

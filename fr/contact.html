@@ -18,7 +18,7 @@
   <link rel="alternate" hreflang="fr" href="https://toucanlearn.co.uk/fr/contact" />
   <link rel="alternate" hreflang="it" href="https://toucanlearn.co.uk/it/contact" />
   <link rel="alternate" hreflang="x-default" href="https://toucanlearn.co.uk/contact" />
-  <script src="/language-text-fr.js?v=20261101-darty-mission-1"></script>
+  <script src="/language-text-fr.js?v=20261101-mobile-1"></script>
   <meta property="og:title" content="Nous contacter : Bristol, Londres, Oxfordshire et en ligne | Toucan Learn" />
   <meta property="og:description" content="Demandez une première séance gratuite en ligne partout au Royaume-Uni ou à Bristol, à Londres et dans l’Oxfordshire, selon la disponibilité des professeurs." />
   <meta property="og:type" content="website" />
@@ -29,12 +29,18 @@
   <link rel="icon" href="/assets/toucan-favicon.png?v=20261029-outline-2" type="image/png" />
   <script src="/theme.js?v=20261031-clones-1"></script>
   <script src="/campaigns.js?v=20261031-clones-1"></script>
-  <link rel="stylesheet" href="/style.css?v=20261031-skip-1" />
-  <link rel="stylesheet" href="/campaigns.css?v=20261030-trust-footer-1" />
+  <link rel="stylesheet" href="/assets/css/opening-contact.css?v=20261101-mobile-review-1" />
+  <script src="/deferred-styles.js?v=20261101-mobile-1" defer></script>
+  <link rel="stylesheet" data-deferred-style media="print" href="/style.css?v=20261031-skip-1" />
+  <noscript><link rel="stylesheet" href="/style.css?v=20261031-skip-1" /></noscript>
+  <link rel="stylesheet" data-deferred-style media="print" href="/campaigns.css?v=20261030-trust-footer-1" />
+  <noscript><link rel="stylesheet" href="/campaigns.css?v=20261030-trust-footer-1" /></noscript>
   <link rel="stylesheet" href="/contact.css?v=20261030-subject-dropdown-3" />
   <script src="/menu.js?v=20261031-clones-1" defer></script>
-  <link rel="stylesheet" href="/framework.css?v=20261101-flags-5" />
+  <link rel="stylesheet" data-deferred-style media="print" href="/framework.css?v=20261101-mobile-review-1" />
+  <noscript><link rel="stylesheet" href="/framework.css?v=20261101-mobile-review-1" /></noscript>
   <link rel="stylesheet" href="/consent.css?v=20261031-clarity-1" />
+  <link rel="stylesheet" href="/opening-offer.css?v=20261101-mobile-1" />
   <link rel="stylesheet" href="/language-switch.css?v=20261101-flags-4" />
   <script src="/language-switch.js?v=20261101-flags-4" defer></script>
 </head>
@@ -137,6 +143,7 @@
 
         <p class="lead">Dites-nous à qui s’adressent les cours et quelle aide vous recherchez ; nous vous répondrons par le moyen qui vous convient.</p>
         <p class="contact-offer"><strong>Votre première séance et le bilan diagnostique sont gratuits.</strong></p>
+        <p class="opening-proof">Comptes rendus écrits chaque semaine. Notre fondateur supervise chaque cours.</p>
       </div>
     </section>
 
@@ -145,7 +152,7 @@
         <h2 id="email-heading">Envoyez-nous une courte demande.</h2>
         <!-- Apps Script web app "Toucan Learn enquiry form" (Joshua's Google account), deployed 18 Oct 2026. The only endpoint configuration is data-form-endpoint. -->
         <div class="contact-layout">
-        <form class="enquiry-form" id="enquiry-form" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST">
+        <form class="enquiry-form" id="enquiry-form" data-enquiry-mode="short" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST">
           <p class="form-message" id="form-message" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>
           <fieldset class="enquiry-fields" id="enquiry-fields" disabled>
           <legend class="visually-hidden">Détails de votre demande de cours</legend>
@@ -158,105 +165,25 @@
             <label for="company-website">Laissez ce champ vide</label>
             <input id="company-website" name="website" type="text" maxlength="200" tabindex="-1" autocomplete="off" />
           </div>
-          <div class="fields-two">
-          <div class="field">
-            <label for="contact-name">Votre nom</label>
-            <input id="contact-name" name="Contact name" type="text" maxlength="120" autocomplete="name" aria-describedby="contact-name-error" required />
-            <span class="field-error" id="contact-name-error"></span>
-          </div>
-          <div class="field-stack">
-          <fieldset class="form-choice" aria-describedby="learner-child-error">
-            <legend>À qui s’adressent les cours ?</legend>
-            <div class="radio-options">
-              <label for="learner-child"><input id="learner-child" name="Learner" type="radio" value="child" aria-describedby="learner-child-error" required /> Un enfant ou un adolescent</label>
-              <label for="learner-adult"><input id="learner-adult" name="Learner" type="radio" value="adult" aria-describedby="learner-child-error" required /> Moi (adulte)</label>
-            </div>
-            <span class="field-error" id="learner-child-error"></span>
-          </fieldset>
-          </div>
-          </div>
-          <div class="fields-two enquiry-details">
-          <div class="field field--support">
-            <label for="support-needed">Quelle aide recherchez-vous ?</label>
-            <textarea id="support-needed" name="Support requested" rows="9" maxlength="1000" aria-describedby="support-needed-privacy support-needed-error" required></textarea>
-            <small id="support-needed-privacy">N’indiquez ni diagnostic ni dossier médical ; nous parlerons des besoins ensemble.</small> <span class="field-error" id="support-needed-error"></span>
-          </div>
-          <div class="field-stack">
-          <div class="field conditional-field" id="age-year-field" hidden inert>
-            <label for="age-year">Âge ou classe</label>
-            <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
-            <span class="field-error" id="age-year-error"></span>
-          </div>
-          <div class="field">
-            <label id="subject-label" for="subject">Matière (facultatif)</label>
-            <div class="subject-dropdown" data-subject-dropdown>
-            <select id="subject" name="Subject" aria-describedby="subject-error">
-              <option value="">Choisissez une matière</option>
-              <option value="English">Anglais</option>
-              <option value="Maths">Mathématiques</option>
-              <option value="Science">Sciences</option>
-              <option value="Languages">Langues</option>
-              <option value="Psychology">Psychologie</option>
-              <option value="Art &amp; design">Art et design</option>
-              <option value="Exam preparation">Préparation aux examens</option>
-              <option value="SEN support">Besoins éducatifs particuliers</option>
-              <option value="Other">Autre</option>
-            </select>
-              <div data-subject-control hidden>
-                <button class="subject-button" id="subject-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="subject-listbox" aria-labelledby="subject-label subject-value" aria-describedby="subject-error"><span id="subject-value">Choisissez une matière</span></button>
-                <ul class="subject-listbox" id="subject-listbox" role="listbox" aria-labelledby="subject-label" tabindex="-1" hidden></ul>
+            <div class="fields-two">
+              <div class="field">
+                <label for="contact-name">Votre nom</label>
+                <input id="contact-name" name="Contact name" type="text" maxlength="120" autocomplete="name" aria-describedby="contact-name-error" required />
+                <span class="field-error" id="contact-name-error"></span>
+              </div>
+              <div class="field">
+                <label for="reply-contact">E-mail ou téléphone</label>
+                <input id="reply-contact" name="Email or phone" type="text" maxlength="254" autocomplete="email" aria-describedby="reply-contact-error" required />
+                <span class="field-error" id="reply-contact-error"></span>
               </div>
             </div>
-            <span class="field-error" id="subject-error"></span>
-          </div>
-          <div class="field">
-            <label for="desired-lesson-rate">Quel tarif par cours souhaitez-vous ?</label>
-            <input id="desired-lesson-rate" name="Desired lesson rate" type="text" inputmode="text" maxlength="60" aria-describedby="desired-lesson-rate-hint desired-lesson-rate-error" />
-            <small id="desired-lesson-rate-hint">Facultatif. Un montant approximatif par séance suffit.</small> <span class="field-error" id="desired-lesson-rate-error"></span>
-          </div>
-          <div class="field-stack">
-          <fieldset class="form-choice" aria-describedby="format-online-error">
-            <legend>En ligne ou en présentiel ? <small>(facultatif)</small></legend>
-            <div class="radio-options">
-              <label for="format-online"><input id="format-online" name="Preferred format" type="radio" value="online" aria-describedby="format-online-error" /> En ligne</label>
-              <label for="format-in-person"><input id="format-in-person" name="Preferred format" type="radio" value="in-person" aria-describedby="format-online-error" /> En présentiel</label>
-              <label for="format-not-sure"><input id="format-not-sure" name="Preferred format" type="radio" value="not-sure" aria-describedby="format-online-error" /> Je ne sais pas</label>
+            <div class="field">
+              <label for="support-needed">Pour quoi souhaitez-vous de l’aide ? <small>(facultatif)</small></label>
+              <input id="support-needed" name="Support requested" type="text" maxlength="200" aria-describedby="support-needed-privacy support-needed-error" />
+              <small id="support-needed-privacy">N’indiquez ni diagnostic ni dossier médical ; nous parlerons des besoins ensemble.</small> <span class="field-error" id="support-needed-error"></span>
             </div>
-            <span class="field-error" id="format-online-error"></span>
-          </fieldset>
-          <div class="field conditional-field" id="location-field" hidden inert>
-            <label for="location">Ville ou secteur postal</label>
-            <input id="location" name="Town or postcode area" type="text" maxlength="80" autocomplete="address-level2" aria-describedby="location-error" disabled />
-            <span class="field-error" id="location-error"></span>
-          </div>
-          </div>
-          </div>
-          </div>
-          <div class="fields-two">
-          <fieldset class="form-choice" aria-describedby="reply-email-error">
-            <legend>Comment souhaitez-vous que nous vous répondions ?</legend>
-            <div class="radio-options">
-              <label for="reply-email"><input id="reply-email" name="Reply method" type="radio" value="email" aria-describedby="reply-email-error" required /> E-mail</label>
-              <label for="reply-call"><input id="reply-call" name="Reply method" type="radio" value="call" aria-describedby="reply-email-error" required /> Appel téléphonique</label>
-              <label for="reply-text"><input id="reply-text" name="Reply method" type="radio" value="text" aria-describedby="reply-email-error" required /> SMS</label>
-              <label for="reply-whatsapp"><input id="reply-whatsapp" name="Reply method" type="radio" value="whatsapp" aria-describedby="reply-email-error" required /> WhatsApp</label>
-            </div>
-            <span class="field-error" id="reply-email-error"></span>
-          </fieldset>
-          <div class="reply-contact-slot">
-          <div class="field conditional-field" id="email-field" hidden inert>
-            <label for="email">Adresse e-mail</label>
-            <input id="email" name="email" type="email" maxlength="254" autocomplete="email" aria-describedby="email-error" disabled />
-            <span class="field-error" id="email-error"></span>
-          </div>
-          <div class="field conditional-field" id="phone-field" hidden inert>
-            <label for="phone">Numéro de téléphone</label>
-            <input id="phone" name="phone" type="tel" maxlength="40" autocomplete="tel" inputmode="tel" aria-describedby="phone-hint phone-error" disabled />
-            <small id="phone-hint">Utilisez 7 à 15 chiffres ; ajoutez + et l’indicatif du pays pour les numéros internationaux.</small> <span class="field-error" id="phone-error"></span>
-          </div>
-          </div>
-          </div>
-          <button class="button form-submit form-submit--trial" id="submit-button" type="submit">Envoyer ma demande <span aria-hidden="true">→</span></button>
+          <div class="opening-actions"><button class="button form-submit form-submit--trial" id="submit-button" type="submit">Envoyer ma demande <span aria-hidden="true">→</span></button><a class="opening-reviews" href="/fr/#reviews">Google ★★★★★ · Recommandations Facebook</a></div>
+          <p class="opening-guarantee">Si votre premier cours payant ne vous convient pas, vous ne le payez pas, ou nous changeons de tuteur sans frais.</p><p class="opening-review"><q>Une excellente expérience de soutien scolaire.</q> <a href="https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8">Parent · Avis Google</a></p>
           <p class="form-use-note">Nous utiliserons ces informations uniquement pour vous répondre. Consultez notre <a href="/privacy">politique de confidentialité</a>.</p>
           </fieldset>
         </form>
@@ -285,7 +212,7 @@
             <dd>Besoins éducatifs particuliers complexes, préparation aux examens décisifs, et heures supplémentaires de préparation de cours et de ressources sur mesure conçues pour vous.</dd>
           </div>
         </dl>
-        <p class="pricing-footer">Nous convenons du tarif avant votre réservation. Sans frais ni abonnement. Des bilans hebdomadaires détaillés pour chaque formule.</p>
+        <p class="pricing-footer">Nous convenons du tarif avant votre réservation. Sans frais ni abonnement. Des bilans hebdomadaires détaillés pour chaque formule. Si votre première séance payante ne vous convient pas, vous ne la payez pas, ou nous changeons de professeur sans frais.</p>
       </section>
       <div class="contact-next">
         <h3 id="next-heading">La suite</h3>
@@ -296,7 +223,7 @@
         </ol>
         <p class="contact-next-talk">Vous préférez en parler ?</p>
         <div class="contact-next-actions">
-          <a class="button" href="tel:+447309639095">Appeler le 07309 639095</a> <a class="button secondary" href="https://wa.me/447307045816" target="_blank" rel="noopener">WhatsApp 07307 045816<span class="visually-hidden"> (ouvre WhatsApp dans un nouvel onglet)</span></a>
+          <a class="button" href="tel:+447309639095">Appeler le 07309 639095</a> <a class="button secondary" href="https://wa.me/447307045816" target="_blank" rel="noopener">WhatsApp +44 7307 045816<span class="visually-hidden"> (ouvre WhatsApp dans un nouvel onglet)</span></a>
         </div>
       </div>
     </div>
@@ -309,7 +236,7 @@
       </div>
 
       <nav data-nosnippet class="footer-links" aria-label="Politiques et navigation">
-        <a href="/privacy">Confidentialité</a> <a href="/terms">Conditions</a> <a href="/safeguarding">Protection des apprenants</a> <a href="/complaints">Réclamations</a> <a href="/fr/">Accueil</a> <a href="/fr/contact">Nous contacter</a> <a href="tel:+447309639095">07309 639095</a>
+        <a href="/privacy">Confidentialité</a> <a href="/fr/terms">Conditions</a> <a href="/safeguarding">Protection des apprenants</a> <a href="/complaints">Réclamations</a> <a href="/fr/">Accueil</a> <a href="/fr/contact">Nous contacter</a> <a href="tel:+447309639095">07309 639095</a>
       </nav>
     </div>
   </footer>
@@ -317,7 +244,6 @@
   <script src="/site.js"></script>
   <script src="/consent.js?v=20261031-clones-1"></script>
   <script src="/launch-offer.js?v=20261031-clones-1"></script>
-  <script src="/subject-select.js?v=20261030-subject-dropdown-3"></script>
-  <script src="/contact.js?v=20261031-clones-1"></script>
+  <script src="/contact.js?v=20261101-mobile-1"></script>
 </body>
 </html>

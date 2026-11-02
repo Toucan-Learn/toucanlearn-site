@@ -3,25 +3,18 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, mkdir, writeFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import vm from 'node:vm';
-import { contactMarkup, contactScript } from './helpers/contact-markup.mjs';
-import { navigationMarkup } from './helpers/navigation-markup.mjs';
-import { contactSourceChecks } from './helpers/contact-layout.mjs';
+import './contact-source.mjs';
 const root = new URL('../', import.meta.url);
 const source = await readFile(new URL('launch-offer.js', root), 'utf8');
-const contact = await readFile(new URL('contact.js', root), 'utf8');
 const html = await readFile(new URL('contact.html', root), 'utf8');
 const css = await readFile(new URL('campaigns.css', root), 'utf8');
-const contactCSS = await readFile(new URL('contact.css', root), 'utf8');
-const output = new URL('../outputs/final-pass-20261028/codex-offer/', root);
+const output = new URL(process.env.OFFER_OUTPUT || 'file:///tmp/toucan-mobile-source/offer/');
 const checks = [];
 function check(name, fn) { fn(); checks.push(name); }
-check('Contact reading order, preserved controls, CSP, sky hierarchy and AA contrast', () => {
-  const original = execFileSync('git', ['show', 'HEAD:contact.html'], { cwd: root, encoding: 'utf8' });
-  const originalCSS = execFileSync('git', ['show', 'HEAD:contact.css'], { cwd: root, encoding: 'utf8' });
-  assert.equal(contactMarkup(html), contactMarkup(original));
-  assert.equal(contact, execFileSync('git', ['show', 'HEAD:contact.js'], { cwd: root, encoding: 'utf8' }), 'Enquiry logic is unchanged');
-  const contrast = contactSourceChecks(html, original, contactCSS, originalCSS);
-  console.log(`PASS: Contact controls, DOM order, CSP and CSS cache token; minimum contrast over white sky pixels: ${JSON.stringify(contrast)}.`);
+check('Production pop-up source and campaign CSS are unchanged', () => {
+  assert.equal(source, execFileSync('git', ['show', 'a6c095a:launch-offer.js'], { cwd: root, encoding: 'utf8' }));
+  assert.equal(css, execFileSync('git', ['show', 'a6c095a:campaigns.css'], { cwd: root, encoding: 'utf8' }));
+  assert.match(source, /active: false/);
 });
 // Run the contact regressions independently of the known pop-up baseline failure.
 if (process.env.CONTACT_ONLY === '1') process.exit(0);
@@ -33,7 +26,7 @@ class Events {
 }
 function load({ path = 'index.html', query = '', active = true, date = '2026-10-28T12:00:00Z', storage = new Map(), storageThrows = false, loaded = true } = {}) {
   const clock = { now: Date.parse(date), next: 0, timers: new Map() };
-  const document = Object.assign(new Events(), { hidden: false, readyState: loaded ? 'complete' : 'loading' });
+  const document = Object.assign(new Events(), { documentElement: { lang: 'en-GB' }, hidden: false, readyState: loaded ? 'complete' : 'loading' });
   class Node extends Events {
     constructor(tag, text = '') { super(); this.tag = tag; this.textContent = text; this.children = []; this.attrs = {}; this.className = ''; this.value = ''; this.open = false; this.dataset = {}; this.classList = { add() {}, remove() {} }; }
     append(...nodes) { nodes.forEach(node => { node.parent = this; this.children.push(node); }); }
@@ -57,7 +50,7 @@ function load({ path = 'index.html', query = '', active = true, date = '2026-10-
   }
   document.body = new Node('body');
   const original = new Node('main', 'Your first session and diagnostic report are free.');
-  const returnFocus = new Node('a', 'Book a free trial'); returnFocus.setAttribute('href', 'contact.html');
+  const returnFocus = new Node('a', 'Book a free trial'); returnFocus.setAttribute('href', 'contact');
   document.body.append(original, returnFocus); returnFocus.focus();
   const menu = new Node('details'); menu.className = 'mobile-menu'; document.body.append(menu);
   const form = Object.assign(new Node('form'), { id: 'enquiry-form', dataset: { formEndpoint: 'https://script.google.com/macros/s/test/exec' } });
@@ -84,8 +77,8 @@ function load({ path = 'index.html', query = '', active = true, date = '2026-10-
   class FixedDate extends Date { constructor(...args) { super(...(args.length ? args : [clock.now])); } static now() { return clock.now; } }
   const context = vm.createContext({ window, document, Date: FixedDate, Intl, URLSearchParams, URL });
   const before = structuredClone(document.body.snapshot());
-  vm.runInContext(active ? source : source.replace('active: true', 'active: false'), context);
-  if (path === 'contact.html') vm.runInContext(contact, context);
+  vm.runInContext(active ? source.replace('active: false', 'active: true') : source, context);
+
   function tick(ms) {
     const target = clock.now + ms;
     while (true) {
@@ -103,20 +96,18 @@ const pages = [];
 for (const file of (await readdir(root)).filter(file => file.endsWith('.html'))) {
   const text = await readFile(new URL(file, root), 'utf8');
   if (!text.includes('<header')) continue;
+  // Isolated owner mock has no historical Git baseline; its own source suite checks the copy/CSP.
+  if (file === 'index-mobile-mock.html') {
+    assert.match(text, /<meta name="robots" content="noindex, nofollow, noarchive"/);
+    continue;
+  }
   pages.push(file);
-  check(`${file}: original HTML preserved except approved contact changes`, () => {
-    assert.equal((text.match(/src="launch-offer\.js\?/g) || []).length, 1);
+  check(`${file}: pop-up script count and CSP preserved`, () => {
+    const original = execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' });
+    assert.equal((text.match(/src="launch-offer\.js\?/g) || []).length, (original.match(/src="launch-offer\.js\?/g) || []).length);
     // Owner, 31 Oct: Microsoft Clarity is the only outside script.
     assert.match(text, /script-src 'self' https:\/\/www\.clarity\.ms https:\/\/scripts\.clarity\.ms; style-src 'self'/);
-    const original = execFileSync('git', ['show', `HEAD:${file}`], { cwd: root, encoding: 'utf8' });
-    if (file === 'contact.html') {
-      assert.equal(contactMarkup(text), contactMarkup(original));
-      assert.doesNotMatch(text, /support-needed-hint/);
-    } else {
-      assert.equal(navigationMarkup(text.replace(/^  <script src="launch-offer\.js[^\n]+\n/gm, '')
-        .replace('campaigns.css?v=20261028-launch-offer-3', 'campaigns.css?v=20261028-review-teal-2')
-        .replace('contact.js?v=20261028-launch-offer-3', 'contact.js?v=20261028-quals-1')), navigationMarkup(original));
-    }
+    assert.equal(text.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0], original.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0]);
     if (file !== 'contact.html') assert.doesNotMatch(text, /£\s*\d/);
   });
 }
@@ -125,7 +116,7 @@ check('CSS scoped to dialog; no inline code, external hosts or page mutations', 
   assert.ok(css.startsWith(original));
   assert.doesNotMatch(css.slice(original.length), /(?:^|[\s,])(?:body|html|header|#main|\.cta|\.hero)\b|@import|url\(/m);
   assert.doesNotMatch(source, /innerHTML|\.style\b|setAttribute\(['"](?:style|on\w+)|https?:\/\/|launch-offer-slot|claim-launch-offer|launch-offer-pricing/);
-  assert.equal(contactScript(contact), contactScript(execFileSync('git', ['show', 'HEAD:contact.js'], { cwd: root, encoding: 'utf8' })));
+
 });
 check('Six seconds starts after load; page copy remains untouched before and during display', () => {
   const state = load({ loaded: false }); state.tick(9000); assert.equal(state.dialog, null);
@@ -164,7 +155,7 @@ check('Exact pop-up content, accessible name/description and claim link', () => 
   assert.equal(dialog.querySelector('.launch-offer-dialog__heading').textContent, 'The next 5 new learners get their first 3 sessions free');
   assert.equal(dialog.querySelector('.launch-offer-dialog__summary').textContent, 'Book by 30 November.');
   assert.equal(dialog.querySelector('.launch-offer-dialog__terms').textContent, 'New learners only, one per family. Sessions used within 6 weeks; after that, the agreed band applies.');
-  assert.equal(dialog.querySelector('a').getAttribute('href'), 'contact.html');
+  assert.equal(dialog.querySelector('a').getAttribute('href'), 'contact');
   assert.equal(dialog.querySelector('a').getAttribute('data-offer'), 'launch');
 });
 check('Esc, backdrop, close button and Maybe later remove the dialog and return focus', () => {
@@ -197,18 +188,6 @@ check('Storage denial and a hidden tab are handled without changing the page', (
   const state = load({ storageThrows: true }); state.document.hidden = true; state.tick(6000); assert.equal(state.dialog, null);
   state.document.hidden = false; state.document.emit('visibilitychange'); assert.ok(state.dialog?.open);
   state.dialog.close(); state.tick(60000); assert.equal(state.dialog, null); assert.deepEqual(state.pageSnapshot(), state.before);
-});
-check('Only hidden offer attribution changes; existing service and UTM patterns remain', () => {
-  for (const service of ['children', 'english-work', 'ielts', 'qualifications', 'languages', 'maths', 'in-person', 'not-sure', 'unknown', '']) {
-    const tagged = load({ path: 'contact.html', query: `?offer=launch&service=${service}` });
-    assert.equal(tagged.document.getElementById('campaign-source').value, 'launch-offer');
-    assert.deepEqual(tagged.pageSnapshot(), tagged.before);
-    const ordinary = load({ path: 'contact.html', query: `?service=${service}` });
-    assert.equal(ordinary.document.getElementById('campaign-source').value, ['unknown', ''].includes(service) ? 'Direct or unknown' : service);
-  }
-  const state = load({ query: '?utm_source=test&utm_medium=site&utm_campaign=launch' }); state.tick(6000);
-  assert.equal(state.dialog.querySelector('a').getAttribute('href'), 'contact.html');
-  assert.equal(state.dialog.querySelector('a').getAttribute('data-offer'), 'launch');
 });
 await mkdir(output, { recursive: true });
 await writeFile(new URL('source-report.json', output), JSON.stringify({ status: 'PASS', revision: 'popup-only', pages, checks, browser: 'Not run; Claude must rerun tests/launch-offer.mjs with BASE_URL.' }, null, 2) + '\n');

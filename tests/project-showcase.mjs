@@ -15,7 +15,11 @@ const require = createRequire(import.meta.url);
 const puppeteer = require(process.env.PUPPETEER_MODULE || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/website/node_modules/puppeteer-core');
 const base = process.env.BASE_URL || process.env.SHOWCASE_URL || 'http://127.0.0.1:4206';
 const output = process.env.SHOWCASE_SCREENSHOTS || path.resolve(site, '../outputs/drink-spin-20261028/showcase');
-const originalHome = execFileSync('git', ['show', `${process.env.PROJECT_COPY_BASE || process.env.SHOWCASE_BASE || 'd40ecf2'}:index.html`], { cwd: site, encoding: 'utf8' });
+let originalHome = execFileSync('git', ['show', `${process.env.PROJECT_COPY_BASE || process.env.SHOWCASE_BASE || 'd40ecf2'}:index.html`], { cwd: site, encoding: 'utf8' });
+// Only the owner-approved opening copy is rebased; media geometry keeps the old baseline.
+const approvedOpening = await (await import('node:fs/promises')).readFile(new URL('fixtures/mobile-home-opening.html', import.meta.url), 'utf8');
+originalHome = originalHome.replace(/(<div class="hero-copy">)[\s\S]*?(<div class="hero-world">)/, '$1' + approvedOpening + '$2')
+  .replace('</head>', '<link rel="stylesheet" href="opening-offer.css?v=20261101-mobile-1" /></head>');
 const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 390, height: 844, isMobile: true, hasTouch: true }, { width: 320, height: 740, isMobile: true, hasTouch: true }];
 const ids = ['football', 'darty', 'drinks', 'piano'];
 const sectionIds = ['intro', ...ids];
@@ -56,6 +60,9 @@ async function open(view, theme, reduced = true, options = {}) {
 }
 async function load(page, route) {
   await page.goto(`${base}/${route}`, { waitUntil: 'networkidle0' });
+  await page.evaluate(() => window.toucanStylesReady);
+  if (route.startsWith('index')) await page.screenshot({ path: path.join(output, `opening-${page.viewport().width}-${await page.evaluate(() => document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'))}.png`) });
+  await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
   await page.waitForSelector('[data-showcase-ready]');
   await page.evaluate(() => document.fonts.ready);
 }
@@ -70,16 +77,27 @@ async function checkGettingStarted(page, label) {
     };
     const copy = cell.querySelector('.picture-cell-copy');
     const art = cell.querySelector('.picture-cell-media');
-    return { cell: rect(cell), copy: rect(copy), art: rect(art), padding: getComputedStyle(copy).padding,
-      fits: copy.scrollWidth <= copy.clientWidth + 1 && copy.scrollHeight <= copy.clientHeight + 1 };
+    const heading = cell.querySelector('h3');
+    const paragraph = cell.querySelector('p');
+    const compact = getComputedStyle(copy).display === 'contents';
+    return { cell: rect(cell), copy: rect(copy), art: rect(art), heading: rect(heading), paragraph: rect(paragraph), compact, bodySize: parseFloat(getComputedStyle(paragraph).fontSize), padding: getComputedStyle(copy).padding,
+      fits: [heading, paragraph].every(node => node.scrollWidth <= node.clientWidth + 1 && node.scrollHeight <= node.clientHeight + 1) };
   }));
   assert.equal(cells.length, 4);
   const reference = cells[0];
-  for (const { cell, copy, art, padding, fits } of cells) {
-    assert(fits && art.right <= copy.x + 1, `${label}: each step keeps its art left and unclipped copy right`);
-    assert(Math.abs(copy.y + copy.height / 2 - art.y - art.height / 2) <= 1, `${label}: copy is vertically centred against its art`);
-    assert(art.width / cell.width >= .37 && art.width / cell.width <= .39, `${label}: balanced art/copy split`);
-    assert(Math.abs(cell.height - reference.cell.height) <= 1 && Math.abs(cell.width - reference.cell.width) <= 1 && padding === reference.padding, `${label}: all four cells have consistent framing`);
+  for (const { cell, copy, art, heading, paragraph, compact, bodySize, padding, fits } of cells) {
+    assert(fits, `${label}: all step copy fits`);
+    if (page.viewport().width <= 767) {
+      assert(compact && art.width <= 72 && art.height <= 45, `${label}: phone art is a compact heading illustration`);
+      assert(art.right <= heading.x + 1 && art.y + art.height <= paragraph.y + 1, `${label}: illustration stays beside the heading, above its explanation`);
+      assert(paragraph.width >= cell.width - 26 && bodySize >= 16, `${label}: explanation uses the full padded width at readable size`);
+    } else {
+      assert(art.right <= copy.x + 1, `${label}: desktop art stays left of the copy`);
+      assert(Math.abs(copy.y + copy.height / 2 - art.y - art.height / 2) <= 1, `${label}: desktop copy stays centred against art`);
+      assert(art.width / cell.width >= .37 && art.width / cell.width <= .39, `${label}: desktop art/copy split is unchanged`);
+      assert(Math.abs(cell.height - reference.cell.height) <= 1, `${label}: desktop steps keep equal heights`);
+    }
+    assert(Math.abs(cell.width - reference.cell.width) <= 1 && padding === reference.padding, `${label}: steps keep consistent widths and padding`);
   }
   const enquiry = await page.$eval('#getting-started > p:last-child > a', link => ({
     label: link.firstChild.textContent.trim(), href: link.getAttribute('href'), service: link.dataset.service, button: link.classList.contains('button'),
@@ -411,6 +429,8 @@ try {
   const { context, page } = await open(views[0], 'system-dark', false, { fast: true });
   // Prevent networkidle0 consuming an accelerated idle period before assertions.
   await page.goto(`${base}/index.html?project=darty`, { waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => window.toucanStylesReady);
+  await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
   await page.waitForSelector('[data-showcase-ready]');
   await page.$eval('[data-showcase]', root => root.dispatchEvent(new Event('pointermove')));
   await wait(450);

@@ -7,12 +7,20 @@ import { createRequire } from 'node:module';
 import { contactMarkup } from './helpers/contact-markup.mjs';
 import { navigationMarkup } from './helpers/navigation-markup.mjs';
 import { fixture } from './helpers/navigation-dom.mjs';
+import { withoutMobilePerformance } from './helpers/mobile-audit-markup.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = file => readFile(new URL(file, root), 'utf8');
 // Compare with the site just before the 30 Oct ad-landing form changes (HEAD would already contain them).
 const baseline = file => execFileSync('git', ['show', `b698613:${file}`], { cwd: root, encoding: 'utf8' });
-const html = await read('contact.html');
+const currentHtml = await read('contact.html');
+const approvedShortHtml = await read('tests/fixtures/contact-short-approved.html');
+// Retain the long-form regression suite for the still-supported legacy mode.
+// The current three-field form is exercised below with its own real markup.
+// The historical snapshot predates the owner's +44 display label. Translate
+// that exact legacy label only; the live page must match +44 without this step.
+const html = execFileSync('git', ['show', 'a6c095a:contact.html'], { cwd: root, encoding: 'utf8' })
+  .replaceAll('WhatsApp 07307 045816', 'WhatsApp +44 7307 045816');
 const script = await read('contact.js');
 const dropdownScript = await read('subject-select.js');
 const css = await read('contact.css');
@@ -25,13 +33,38 @@ const expected = baseline('contact.html').replace(footer(baseline('contact.html'
   .replace('aria-describedby="support-needed-error"', 'aria-describedby="support-needed-privacy support-needed-error"')
   .replace('</textarea>', '</textarea>\n<small id="support-needed-privacy">' + help + '</small>')
   .replace('Use a UK number, starting with 0 or +44.', 'Use 7–15 digits; include + and the country code for international numbers.')
-  .replace('>WhatsApp us<', '>WhatsApp 07307 045816<')
+  .replace('>WhatsApp us<', '>WhatsApp +44 7307 045816<')
   // Owner, 30 Oct: the in-person area is Oxfordshire, not Henley.
   .replace(/Henley-on-Thames|Henley/g, 'Oxfordshire');
 // Owner, 31 Oct: Microsoft Clarity (after cookie consent) adds its sources to the CSP and two consent tags; compare without them.
 const withoutClarity = page => page.replace(" https://www.clarity.ms https://scripts.clarity.ms", "").replace(" https://*.clarity.ms https://c.bing.com", "").replace(" https://*.clarity.ms", "")
   .replace(/\n\s*<script src="consent\.js[^"]*"><\/script>/, "").replace(/\n\s*<link rel="stylesheet" href="consent\.css[^"]*" \/>/, "");
 const untokened = page => page.replace(/\?v=[^"']+/g, '?v=T'); // stylesheet/script cache tokens change with every release
+// Approved 1 Nov reference: three fields, international WhatsApp label and the
+// guarantee. Retain all copy, field attributes, CSP and endpoint configuration;
+// allow only the existing layout/cache and performance-discovery normalisers.
+const currentContactMarkup = page => contactMarkup(untokened(withoutMobilePerformance(page)));
+assert.equal(currentContactMarkup(currentHtml), currentContactMarkup(approvedShortHtml),
+  'Preserve the approved short contact page, +44 WhatsApp label and first-lesson guarantee');
+const guarantee = "If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.";
+assert(currentHtml.includes(`<p class="opening-guarantee">${guarantee}</p>`));
+assert.equal(currentHtml.match(/<p class="pricing-footer">([^<]+)<\/p>/)[1],
+  `We agree the price before you book. No fees or subscriptions. Detailed weekly reports at every band. ${guarantee}`);
+assert.match(currentHtml, /href="https:\/\/wa.me\/447307045816"[^>]*>WhatsApp \+44 7307 045816</);
+assert.doesNotMatch(currentHtml, /07307 045816/);
+// These approved changes must stay visible to the preservation comparison.
+for (const [from, to] of [
+  ['WhatsApp +44 7307 045816', 'WhatsApp 07307 045816'],
+  [guarantee, 'Changed guarantee.'],
+  ['name="Email or phone"', 'name="Changed reply field"'],
+  ['data-enquiry-mode="short"', 'data-enquiry-mode="long"'],
+  ['data-form-endpoint="https://script.google.com/', 'data-form-endpoint="https://example.invalid/'],
+  ["style-src 'self'", "style-src 'self' 'unsafe-inline'"],
+]) {
+  assert(currentHtml.includes(from), `Preservation mutation target exists: ${from}`);
+  assert.notEqual(currentContactMarkup(currentHtml.replace(from, to)), currentContactMarkup(approvedShortHtml),
+    `Normalisers must preserve ${from}`);
+}
 // Owner, 31 Oct: menus carry data-nosnippet so Google stops quoting them as the site description.
 const withoutNosnippet = page => page.replace(/<nav data-nosnippet/g, '<nav');
 // Owner, 31 Oct: every page links to its full copies in other languages (menu switch and hreflang links).
@@ -59,7 +92,7 @@ assert.doesNotMatch(html, /support-needed-hint|The subject or goal, and what's t
 assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-needed-privacy support-needed-error"[^>]*required/);
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));
 assert.match(html, /href="tel:\+447309639095">07309 639095<\/a>/);
-assert.match(html, /href="https:\/\/wa.me\/447307045816"[^>]*>WhatsApp 07307 045816</);
+assert.match(html, /href="https:\/\/wa.me\/447307045816"[^>]*>WhatsApp \+44 7307 045816</);
 assert.match(html, /src="contact.js\?v=20261031-clones-1"/);
 assert.match(html, /href="contact.css\?v=20261030-subject-dropdown-3"/);
 // Owner, 31 Oct: Microsoft Clarity is the only outside script.
@@ -199,7 +232,7 @@ assert.match(script, /new URLSearchParams\(new FormData\(form\)\)/, 'All named f
 const now = 1793275200000;
 const valid = { 'Contact name': 'Synthetic Test', Learner: 'adult', 'Support requested': 'Help with a course.',
   'Reply method': 'email', email: 'test@example.invalid', loaded_at: String(now - 5000) };
-function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced = true } = {}) {
+function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced = true, markup = html } = {}) {
   const elements = new Map(), listeners = new Map(), documentListeners = new Map(), requests = [], redirects = [], timers = new Map();
   let focused;
   function node(id = '', attrs = {}) {
@@ -222,18 +255,20 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
       focus() { focused = id; }
     };
   }
-  for (const [, tag] of html.matchAll(/(<[\w-]+\b[^>]*\bid="[^"]+"[^>]*>)/g)) {
+  for (const [, tag] of markup.matchAll(/(<[\w-]+\b[^>]*\bid="[^"]+"[^>]*>)/g)) {
     const attrs = Object.fromEntries([...tag.matchAll(/([\w-]+)="([^"]*)"/g)].map(([, key, value]) => [key, value.replaceAll('&amp;', '&')]));
     elements.set(attrs.id, node(attrs.id, attrs));
   }
   for (const element of elements.values()) {
     if (element.attrs.type === 'radio') element.checked = Object.hasOwn(input, element.attrs.name) && input[element.attrs.name] === element.value;
   }
-  elements.get('subject').value = input.Subject || '';
-  elements.get('subject').hidden = enhanced;
+  if (elements.has('subject')) {
+    elements.get('subject').value = input.Subject || '';
+    elements.get('subject').hidden = enhanced;
+  }
   if (campaignSource) elements.get('campaign-source').value = campaignSource;
   const form = elements.get('enquiry-form');
-  form.dataset = { formEndpoint: form.attrs['data-form-endpoint'] };
+  form.dataset = { formEndpoint: form.attrs['data-form-endpoint'], enquiryMode: form.attrs['data-enquiry-mode'] };
   form.addEventListener = (type, fn) => listeners.set(type, fn);
   form.querySelector = selector => {
     const name = selector.match(/name="([^"]+)"/)[1];
@@ -250,8 +285,10 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
     Event: class { constructor(type, options) { this.type = type; Object.assign(this, options); } },
     FormData: class { constructor() {
       const body = new URLSearchParams(input);
-      body.delete('Subject');
-      body.set('Subject', elements.get('subject').value);
+      if (elements.has('subject')) {
+        body.delete('Subject');
+        body.set('Subject', elements.get('subject').value);
+      }
       return body;
     } },
     document: { getElementById: id => elements.get(id), createElement: () => node(),
@@ -387,4 +424,37 @@ for (const outcome of ['network', 'timeout', 'http-error', 'rejected']) {
   if (outcome === 'timeout') assert.equal(page.requests[0].signal.aborted, true);
 }
 assert.equal(await read('hoc-tieng-anh.js'), execFileSync('git', ['show', '330fef9:hoc-tieng-anh.js'], { cwd: root, encoding: 'utf8' }), 'Vietnamese form stays separate (owner-approved 30 Oct version with the SEN option)');
-console.log('PASS: Original Subject select, progressive enhancement, keyboard/focus events, Lucide icons, clearing, URL/data-service pre-fill, native/custom error focus, payload compatibility, combined message limits, UK/international phones, uncertain-send alternatives, accessibility and CSP. Browser layout and server deployment unverified.');
+console.log('PASS: Short contact form plus legacy Subject select, progressive enhancement, keyboard/focus events, Lucide icons, clearing, URL/data-service pre-fill, native/custom error focus, payload compatibility, combined message limits, UK/international phones, uncertain-send alternatives, accessibility and CSP. Browser layout and server deployment unverified.');
+
+// Owner, 1 Nov: short form replaces learner/budget/format questions on Contact.
+const shortFields = [...currentHtml.matchAll(/<(input|textarea|select)\b([^>]+)>/g)]
+  .filter(([, , attrs]) => !/type="hidden"|name="website"/.test(attrs))
+  .map(([, , attrs]) => attrs.match(/name="([^"]+)"/)?.[1]).filter(Boolean);
+assert.deepEqual(shortFields, ['Contact name', 'Email or phone', 'Support requested']);
+assert.match(currentHtml, /id="support-needed"[^>]*type="text"[^>]*maxlength="200"/);
+assert.doesNotMatch(currentHtml.match(/<input id="support-needed"[^>]+>/)[0], /required/);
+assert.equal(currentHtml.match(/data-form-endpoint="([^"]+)"/)[1], html.match(/data-form-endpoint="([^"]+)"/)[1]);
+for (const contact of ['test@example.invalid', '+84 901 234 567', '07309 639095']) {
+  for (const goal of ['', 'Help with English.', 'x'.repeat(200)]) {
+    const input = { 'Contact name': 'Synthetic Test', 'Email or phone': contact, 'Support requested': goal, loaded_at: String(now - 5000), 'Campaign source': 'children' };
+    const page = enquiry(input, 'ok', { markup: currentHtml }); await page.submit();
+    assert.equal(page.requests.length, 1);
+    const sent = page.requests[0].body;
+    assert.equal(sent.has('Email or phone'), false);
+    assert.equal(sent.has('Learner'), false, 'Do not invent learner details before the reply');
+    assert.equal(sent.get(contact.includes('@') ? 'email' : 'phone'), contact);
+    assert.equal(sent.get('Support requested'), goal);
+    assert.equal(sent.get('Campaign source'), 'children');
+    assert.deepEqual(page.redirects, ['thank-you']);
+  }
+}
+for (const [field, value, focus] of [['Contact name', '', 'contact-name'], ['Email or phone', '', 'reply-contact'], ['Email or phone', 'invalid', 'reply-contact'], ['Email or phone', 'a@b', 'reply-contact'], ['Email or phone', '+1234567890123456', 'reply-contact'], ['Support requested', 'x'.repeat(201), 'support-needed']]) {
+  const page = enquiry({ 'Contact name': 'Synthetic Test', 'Email or phone': 'test@example.invalid', 'Support requested': '', loaded_at: String(now - 5000), [field]: value }, 'ok', { markup: currentHtml });
+  await page.submit(); assert.equal(page.requests.length, 0); assert.equal(page.focused, focus);
+}
+for (const outcome of ['network', 'timeout', 'http-error', 'rejected']) {
+  const page = enquiry({ 'Contact name': 'Synthetic Test', 'Email or phone': 'test@example.invalid', 'Support requested': '', loaded_at: String(now - 5000) }, outcome, { markup: currentHtml });
+  await page.submit(); assert.equal(page.requests.length, 1); assert.equal(page.redirects.length, 0);
+  assert.equal(page.elements.get('submit-button').disabled, false);
+  assert.equal(page.focused, 'form-message'); assert.equal(page.timers.size, 0);
+}

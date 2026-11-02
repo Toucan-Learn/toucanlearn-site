@@ -17,6 +17,10 @@
     );
     let index = 0;
     let gesture;
+    const phone = window.matchMedia('(max-width: 767px)');
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const row = viewer.querySelector('.framework-profiles');
+    const nativeRow = () => phone.matches && !!viewer.closest('.homepage') && !!row;
     if (!viewer.hasAttribute('tabindex')) viewer.tabIndex = 0;
     if (!viewer.hasAttribute('role')) viewer.setAttribute('role', 'region');
     if (!viewer.hasAttribute('aria-label') && !viewer.hasAttribute('aria-labelledby')) viewer.setAttribute('aria-label', t('Our team'));
@@ -26,16 +30,17 @@
     if (!next.hasAttribute('aria-label')) next.setAttribute('aria-label', t('Next team member'));
     status.setAttribute('aria-live', 'polite');
     status.setAttribute('aria-atomic', 'true');
-    const show = requested => {
+    const show = (requested, scroll = true) => {
       index = (requested + slides.length) % slides.length;
       slides.forEach((slide, position) => {
-        if (position !== index) {
+        if (!nativeRow() && position !== index) {
           if (slide.contains(document.activeElement)) viewer.focus({ preventScroll: true });
           pause(slide);
         }
-        slide.hidden = position !== index;
-        slide.inert = position !== index;
+        slide.hidden = !nativeRow() && position !== index;
+        slide.inert = !nativeRow() && position !== index;
       });
+      if (nativeRow() && scroll) row.scrollTo({ left: row.scrollLeft + slides[index].getBoundingClientRect().left - row.getBoundingClientRect().left, behavior: motion.matches ? 'instant' : 'smooth' });
       status.textContent = t('{n} of {count}', { n: index + 1, count: slides.length });
       jumpLinks.forEach(link => {
         if (link.getAttribute('href') === `#${slides[index].id}`) link.setAttribute('aria-current', 'true');
@@ -72,6 +77,7 @@
     });
     viewer.addEventListener('touchstart', event => {
       gesture = null;
+      if (nativeRow()) return;
       if (event.touches.length !== 1 || event.target.closest(interactive) || String(window.getSelection() || '')) return;
       const touch = event.touches[0];
       gesture = { x: touch.clientX, y: touch.clientY };
@@ -85,6 +91,13 @@
       if (Math.abs(x) >= 60 && Math.abs(x) > Math.abs(y) * 1.6) show(index + (x < 0 ? 1 : -1));
     }, { passive: true });
     viewer.addEventListener('touchcancel', () => { gesture = null; }, { passive: true });
+    row?.addEventListener('scroll', () => {
+      if (!nativeRow()) return;
+      const left = row.getBoundingClientRect().left;
+      const selected = slides.reduce((best, slide, position) => Math.abs(slide.getBoundingClientRect().left - left) < Math.abs(slides[best].getBoundingClientRect().left - left) ? position : best, 0);
+      if (selected !== index) show(selected, false);
+    }, { passive: true });
+    phone.addEventListener('change', () => { gesture = null; show(index); });
     window.addEventListener('hashchange', revealHash);
     window.addEventListener('popstate', revealHash);
     document.addEventListener('site:fragment', revealHash);

@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { runInNewContext } from 'node:vm';
+import { withoutMobilePerformance } from './helpers/mobile-audit-markup.mjs';
 import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 import '../scripts/check-project-cells-static.mjs';
 const source = await readFile(new URL('../project-showcase.js', import.meta.url), 'utf8');
@@ -184,7 +185,7 @@ assert(!/createElement\('video'\)|\.mp4|\.webm/.test(source), 'Drinks use frame 
 assert.match(source, /IntersectionObserver/);
 for (const page of ['index.html', 'children.html']) {
   const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
-  assert.match(html, /project-showcase\.js[^"']*["'] type="module"/);
+  assert.match(html, /project-showcase-loader\.js[^"']*["'] type="module"/);
   assert.match(html, /project-showcase\.css/);
   const csp = html.match(/http-equiv="Content-Security-Policy" content="([^"]+)"/)[1];
   assert.equal(csp.split(';').map(directive => directive.trim()).find(directive => directive.startsWith('frame-src ')), "frame-src 'self' https://joshtoucanlearn.github.io", `${page}: allow only this additional frame origin`);
@@ -200,7 +201,7 @@ const before = execFileSync('git', ['show', `${process.env.PROJECT_COPY_BASE || 
 const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
 // The team section and site-wide asset tokens carry owner-approved edits from other lanes (29 Oct: team copy, Sara's order,
 // framework/menu/favicon tokens), so these guards compare the showcase-owned markup only.
-const withoutOwnerContent = html => html
+const withoutOwnerContent = html => withoutMobilePerformance(html)
   // Owner, 31 Oct: menus carry data-nosnippet, and the homepage title and description were rewritten after Google quoted the menu.
   .replace(/<nav data-nosnippet/g, '<nav')
   .replace(/<title>[^<]*<\/title>/, '<title>TITLE</title>')
@@ -234,9 +235,9 @@ const withoutShowcaseTokens = html => withoutOwnerContent(homeNavigationMarkup(h
   // 29 Oct flicker fix: the static fallback is recaptured from the live piano view.
   .replace(/(<img class="showcase-fallback" src=")[^"]+(" alt="[^"]*") width="\d+" height="\d+"/g, '$1FALLBACK$2 width="W" height="H"')
   .replace("frame-src 'self' https://joshtoucanlearn.github.io;", "frame-src 'self';");
-assert.equal(withoutShowcaseTokens(after), withoutShowcaseTokens(before), 'Homepage HTML changes only the caption, showcase tokens, DARTY frame origin and clean home links');
+assert.equal(withoutShowcaseTokens(after).replace(/<div class="hero-copy">[\s\S]*?<div class="hero-world">/, '<div class="hero-world">'), withoutShowcaseTokens(before).replace(/<div class="hero-copy">[\s\S]*?<div class="hero-world">/, '<div class="hero-world">'), 'Homepage HTML changes only the caption, showcase tokens, DARTY frame origin and clean home links');
 const heroCopy = html => html.split('<div class="hero-copy">')[1].split('<div class="hero-world">')[0];
-assert.equal(homeNavigationMarkup(heroCopy(after)), homeNavigationMarkup(heroCopy(before)).replace(/Henley-on-Thames|Henley/g, 'Oxfordshire'), 'Homepage copy, buttons and benefits stay untouched');
+assert.equal(heroCopy(after), await readFile(new URL('fixtures/mobile-home-opening.html', import.meta.url), 'utf8'), 'Owner 1 Nov mobile audit: exact approved opening copy, proof, CTA and guarantee');
 const belowHero = html => html.slice(html.indexOf('<section class="homepage-section team-section"'));
 assert.equal(withoutOwnerContent(homeNavigationMarkup(belowHero(after))), withoutOwnerContent(homeNavigationMarkup(belowHero(before))), 'Homepage content below the hero (outside the owner-managed team section) is preserved through the URL migration');
 
@@ -266,9 +267,9 @@ for (const lang of ['en', 'vi', 'es', 'fr', 'it']) {
 }
 assert.match(source, /name\.textContent = entries\[index\]\.name;/, 'The window bar uses the unchanged name field');
 for (const asset of ['css', 'js']) {
-  const token = html => html.match(new RegExp(`project-showcase\\.${asset}\\?v=([^"']+)`))?.[1];
+  const token = html => html.match(new RegExp(`project-showcase${asset === 'js' ? '-loader' : ''}\\.${asset}\\?v=([^"']+)`))?.[1];
   assert(token(children), `${asset}: the Children page retains its existing asset reference`);
-  assert.match(token(after), asset === 'js' ? /^20261101-darty-mission-1$/ : /^20261030-captions-\d+$/, `${asset}: the homepage uses the current release token`);
+  assert.match(token(after), asset === 'js' ? /^20261101-mobile-1$/ : /^20261101-mobile-1$/, `${asset}: the homepage uses the current release token`);
   if (asset === 'js') assert.equal(token(children), token(after), 'Both English pages load the current showcase script');
   assert.notEqual(token(after), token(before), `${asset}: bump the changed asset’s cache token`);
 }

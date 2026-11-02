@@ -72,6 +72,7 @@ try {
     }
     await open(page, 'index.html?project=darty&sky=night&reviewart=a,b#reviews');
     assert.equal(new URL(page.url()).search, '?project=darty&sky=night&reviewart=a,b');
+    await page.locator('[data-showcase]').scrollIntoViewIfNeeded(); // The #reviews arrival intentionally leaves enhancement unloaded.
     await page.waitForFunction(() => document.querySelector('[data-showcase]')?.dataset.project === 'darty');
     await page.locator('[data-project-next]').click(); await clean(page, './');
     await page.locator('.logo').click(); await clean(page);

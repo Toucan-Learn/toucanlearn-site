@@ -25,6 +25,7 @@ window.toucanText = {
  "or use": "ou utiliser",
  "Please keep this field within {limit} characters.": "Limitez ce champ à {limit} caractères.",
  "Please keep your message within {limit} characters (1000 including the selected subject).": "Limitez votre message à {limit} caractères (1000 en comptant la matière choisie).",
+ "Enter a valid email address or phone number.": "Saisissez une adresse e-mail ou un numéro de téléphone valide.",
  "Switch to light mode": "Passer au mode clair",
  "Switch to dark mode": "Passer au mode sombre",
  "Our team": "Notre équipe",

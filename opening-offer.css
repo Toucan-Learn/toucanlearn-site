@@ -1,0 +1,23 @@
+/* Mobile audit, 1 Nov: existing type and buttons, with the offer before the tabs. */
+.opening-offer { margin: 8px 0 0; }
+.opening-offer .offer-line,
+body[data-page-frame] .framework-intro .opening-offer .offer-line { display: block; margin: 0 0 6px; }
+.opening-proof, .opening-guarantee, .opening-review { margin: 8px 0; font-size: .9rem; line-height: 1.45; }
+.opening-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+.opening-actions .button { min-height: 44px; }
+.opening-reviews { font-size: .85rem; line-height: 1.4; }
+.opening-offer .opening-actions { margin-top: 8px; }
+.living-hero .opening-proof { margin: 0 0 16px; color: inherit; }
+.living-hero .opening-guarantee { max-width: 520px; color: inherit; }
+.living-hero .hero-actions .opening-reviews { color: inherit; }
+.living-hero .hero-description { margin-bottom: 16px; }
+/* Keep the two established buttons on their row; the review link sits beside
+   the primary action on the following row without resizing either button. */
+.living-hero .hero-actions .opening-reviews { order: 1; flex-basis: 100%; }
+@media (max-width: 767px) {
+  .opening-offer .opening-guarantee { margin-bottom: 12px; }
+  .living-hero .hero-actions { gap: 12px; }
+}
+
+/* The original pixel artwork remains visible before the optional sky renderer. */
+.cta .cta-sky .reviews-enquiry-sky, .team-page > .reviews-enquiry-sky { background: #0b131e url("/assets/loading-pixel-sky.png") center / cover; }

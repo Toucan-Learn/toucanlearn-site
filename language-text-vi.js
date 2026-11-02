@@ -25,6 +25,7 @@ window.toucanText = {
  "or use": "hoặc dùng",
  "Please keep this field within {limit} characters.": "Vui lòng giới hạn ô này trong {limit} ký tự.",
  "Please keep your message within {limit} characters (1000 including the selected subject).": "Vui lòng giới hạn nội dung trong {limit} ký tự (1000 ký tự, tính cả môn học đã chọn).",
+ "Enter a valid email address or phone number.": "Vui lòng nhập địa chỉ email hoặc số điện thoại hợp lệ.",
  "Switch to light mode": "Chuyển sang chế độ sáng",
  "Switch to dark mode": "Chuyển sang chế độ tối",
  "Our team": "Đội ngũ giáo viên",

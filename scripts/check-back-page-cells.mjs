@@ -14,7 +14,7 @@ const copyBefore = '770f23d'; // Approved merged copy before the owner's 29 Oct 
 const files = ['approach.html', 'children.html', 'adults.html', 'subjects.html'];
 const original = (file, revision = before) => execFileSync('git', ['show', `${revision}:${file}`], { cwd: site, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
 // Owner, 31 Oct: the language switch (English, Tiếng Việt, Español, Français, Italiano) is navigation, not page copy.
-const words = html => html.replace(/<details class="[^"]*\blanguage-switch\b[^"]*"[^>]*>[\s\S]*?<\/details>/g, '').replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+const words = html => html.replace(/<p class="opening-review">[\s\S]*?<\/p>/g, '').replace(/<div class="opening-offer">[\s\S]*?<\/div><p class="opening-guarantee">[\s\S]*?<\/p><\/div>/g, '').replace(/<details class="[^"]*\blanguage-switch\b[^"]*"[^>]*>[\s\S]*?<\/details>/g, '').replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, '').replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
 // Owner, 31 Oct: Microsoft Clarity (after cookie consent) adds its sources to the CSP and two consent tags; compare without them.
 const withoutClarity = page => page.replace(" https://www.clarity.ms https://scripts.clarity.ms", "").replace(" https://*.clarity.ms https://c.bing.com", "").replace(" https://*.clarity.ms", "")
   .replace(/\n\s*<script src="consent\.js[^"]*"><\/script>/, "").replace(/\n\s*<link rel="stylesheet" href="consent\.css[^"]*" \/>/, "");
@@ -36,7 +36,7 @@ function approvedCopy(file) {
     .replace('Writing clear, precise instructions, and writing because there’s a real reason to.', 'Turning writing from the last thing he wanted to do into how he builds his own game.')
     .replace('A playable football game shaped by his written requests, from player movement to goalkeeper reactions. We build the code; he directs it.', 'A playable 3D football game built from his written requests: he directs, we code. Player movement, passing and goalkeeper reactions each began as a request he wrote.');
   // Owner, 31 Oct: the SEND intro names the specialist and the wider team, not Joshua's titles.
-  if (file === 'subjects.html') copy = copy.replace('Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.', 'Start with what the learner enjoys with our SEN specialist &amp; wider team.')
+  if (file === 'subjects.html') copy = copy.replace('Your first session and diagnostic report are free. ', '').replace('Start with what the learner enjoys, with Joshua, our founder, psychology graduate and SEN specialist.', 'Start with what the learner enjoys with our SEN specialist &amp; wider team.')
     // Owner, 1 Nov: Team Teach qualifications apply to the SEN leads.
     .replace('Our SEN team is Team Teach qualified in positive behaviour support.', 'Our SEN leads are Team Teach qualified in positive behaviour support.')
     // Owner, 31 Oct: English and Maths drop their teacher lines for a practical one, like Science's.
@@ -138,7 +138,7 @@ if (!process.argv.includes('--source-only')) await browserChecks();
 async function browserChecks() {
   assert.ok(process.env.BASE_URL, 'Claude must serve this worktree and set BASE_URL.');
   const base = process.env.BASE_URL.replace(/\/$/, '');
-  const output = path.resolve(site, '../outputs/final-pass-20261028/codex-cells');
+  const output = path.resolve(site, process.env.CELLS_SCREENSHOTS || '../outputs/final-pass-20261028/codex-cells');
   const require = createRequire(import.meta.url);
   const puppeteer = require(process.env.PUPPETEER_MODULE || '/Users/joshuagordonjones/Documents/ChatGPT/Toucan Learn/website/node_modules/puppeteer-core');
   const views = [{ width: 1440, height: 750 }, { width: 1280, height: 720 }, { width: 1440, height: 900 }, { width: 390, height: 844, isMobile: true, hasTouch: true }, { width: 320, height: 740, isMobile: true, hasTouch: true }];
@@ -208,7 +208,10 @@ async function browserChecks() {
           if (file === 'children.html' && panelId === 'getting-started') check(metrics.headerPictures === 0, `${state}: Getting started header contains a picture`);
           if (metrics.steps.length) check(metrics.steps.length === 4, `${state}: expected all four steps`);
           for (const [index, step] of metrics.steps.entries()) {
-            check(step.imageAreaRatio >= .35, `${state} step ${index + 1}: picture ${(step.imageAreaRatio * 100).toFixed(1)}% < 35%`);
+            if (view.width <= 767) {
+              check(step.compactArt && step.image.width <= 72 && step.image.height <= 45, `${state} step ${index + 1}: expected compact phone illustration`);
+              check(step.paragraph.width >= step.card.width - 26 && step.bodySize >= 16, `${state} step ${index + 1}: phone explanation must be full-width and readable`);
+            } else check(step.imageAreaRatio >= .35, `${state} step ${index + 1}: picture ${(step.imageAreaRatio * 100).toFixed(1)}% < 35%`);
             // Owner, 29 Oct: the copy sits centred against its art, not hugging the bottom.
             if (step.sideBySide) check(step.centreOffset <= .08, `${state} step ${index + 1}: copy is ${(step.centreOffset * 100).toFixed(1)}% off centre`);
             check(!step.overlap, `${state} step ${index + 1}: picture overlaps copy`);
@@ -319,8 +322,10 @@ function measure(panelId) {
     const textTop = heading ? rect(heading).top : Math.min(...lines.map(line => line.top));
     const imageWidth = Math.max(0, Math.min(image.right, box.right) - Math.max(image.left, box.left));
     const imageHeight = Math.max(0, Math.min(image.bottom, box.bottom) - Math.max(image.top, box.top));
-    const overlap = Math.min(image.right, text.right) - Math.max(image.left, text.left) > 1 && Math.min(image.bottom, text.bottom) - Math.max(image.top, text.top) > 1;
-    return { card: box, image, imageAreaRatio: imageWidth * imageHeight / (box.width * box.height), centreOffset: Math.abs((textTop + textBottom) / 2 - (box.top + box.bottom) / 2) / box.height, sideBySide: image.right <= text.left + 1, overlap };
+    const compactArt = getComputedStyle(card.querySelector('.picture-cell-copy')).display === 'contents';
+    const headingRange = document.createRange(); headingRange.selectNodeContents(heading);
+    const overlap = compactArt ? [...headingRange.getClientRects(), ...lines].some(line => Math.min(image.right, line.right) - Math.max(image.left, line.left) > 1 && Math.min(image.bottom, line.bottom) - Math.max(image.top, line.top) > 1) : Math.min(image.right, text.right) - Math.max(image.left, text.left) > 1 && Math.min(image.bottom, text.bottom) - Math.max(image.top, text.top) > 1;
+    return { card: box, image, compactArt, paragraph: rect(paragraph), bodySize: parseFloat(getComputedStyle(paragraph).fontSize), imageAreaRatio: imageWidth * imageHeight / (box.width * box.height), centreOffset: Math.abs((textTop + textBottom) / 2 - (box.top + box.bottom) / 2) / box.height, sideBySide: image.right <= text.left + 1, overlap };
   });
   const themeAttribute = document.documentElement.getAttribute('data-theme');
   return {

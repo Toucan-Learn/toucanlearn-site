@@ -10,7 +10,7 @@ var EnquiryRules = (function () {
   function clean(value) {
     return value.replace(/[\u0000-\u001f\u007f-\u009f]/g, "").trim();
   }
-  function validate(input, now) {
+  function validate(input, now, shortForm) {
     var data = {}, errors = {};
     Object.keys(input).forEach(function (key) {
       if (!Object.prototype.hasOwnProperty.call(limits, key)) {
@@ -26,10 +26,10 @@ var EnquiryRules = (function () {
       if ((!optional || data[key]) && values.indexOf(data[key]) === -1) errors[key] = message;
     }
     required("Contact name", "Enter your name.");
-    choice("Learner", ["child", "adult"], "Choose who the tutoring is for.");
-    if (data.Learner === "child") required("Age or school year", "Enter an age or school year.");
+    choice("Learner", ["child", "adult"], "Choose who the tutoring is for.", shortForm);
+    if (data.Learner === "child" && !shortForm) required("Age or school year", "Enter an age or school year.");
     choice("Subject", ["English", "Maths", "Science", "Languages", "Psychology", "Art & design", "Exam preparation", "SEN support", "Other"], "Choose a subject from the list, or leave it blank.", true);
-    required("Support requested", "Briefly tell us what you would like help with.");
+    if (!shortForm) required("Support requested", "Briefly tell us what you would like help with.");
     choice("Preferred format", ["online", "in-person", "not-sure"], "Choose online, in person or not sure.", true);
     if (data["Preferred format"] === "in-person") required("Town or postcode area", "Enter a town or postcode area.");
     choice("Reply method", ["email", "call", "text", "whatsapp"], "Choose how you would like us to reply.");
@@ -45,7 +45,33 @@ var EnquiryRules = (function () {
     }
     return { ok: Object.keys(errors).length === 0, data: data, errors: errors };
   }
-  return { validate: validate, clean: clean, limits: limits };
+  // The short form uses the existing backend's email/phone and reply fields.
+  function validateShort(input, now) {
+    var data = Object.assign({}, input);
+    var contact = data["Email or phone"];
+    var contactError = "Enter a valid email address or phone number.";
+    delete data["Email or phone"];
+    if (typeof contact !== "string" || contact.length > 254) {
+      return { ok: false, data: data, errors: { "Email or phone": contactError } };
+    }
+    contact = clean(contact);
+    var email = contact.indexOf("@") !== -1;
+    data["Reply method"] = email ? "email" : "call";
+    delete data.email;
+    delete data.phone;
+    data[email ? "email" : "phone"] = contact;
+    if ((data["Support requested"] || "").length > 200) {
+      return { ok: false, data: data, errors: { "Support requested": "Please keep this field within 200 characters." } };
+    }
+    var result = validate(data, now, true);
+    if (result.errors.email || result.errors.phone) {
+      result.errors["Email or phone"] = contactError;
+      delete result.errors.email;
+      delete result.errors.phone;
+    }
+    return result;
+  }
+  return { validate: validate, validateShort: validateShort, clean: clean, limits: limits };
 })();
 // END ENQUIRY RULES
 
@@ -56,6 +82,7 @@ var EnquiryRules = (function () {
   }
   const form = document.getElementById("enquiry-form");
   if (!form) return;
+  const shortForm = form.dataset.enquiryMode === "short";
   const messages = window.toucanText;
   const translate = message => {
     if (!messages) return message;
@@ -82,7 +109,9 @@ var EnquiryRules = (function () {
   // HTML starts disabled so no-JavaScript visitors use the alternatives below.
   formFields.disabled = false;
 
-  const controls = {
+  const controls = shortForm ? {
+    "Contact name": "contact-name", "Email or phone": "reply-contact", "Support requested": "support-needed"
+  } : {
     "Contact name": "contact-name", "Learner": "learner-child", "Age or school year": "age-year",
     "Subject": "subject", "Support requested": "support-needed", "Desired lesson rate": "desired-lesson-rate", "Preferred format": "format-online",
     "Town or postcode area": "location", "Reply method": "reply-email", "email": "email", "phone": "phone"
@@ -92,6 +121,7 @@ var EnquiryRules = (function () {
     return checked ? checked.value : "";
   }
   function prefillSubject() {
+    if (shortForm) return;
     // campaigns.js captures data-service links before navigation cleans the URL.
     const subject = {
       maths: "Maths", languages: "Languages", "english-work": "English",
@@ -104,7 +134,7 @@ var EnquiryRules = (function () {
     }
   }
   let subjectChanged = false;
-  document.getElementById("subject").addEventListener("change", () => { subjectChanged = true; });
+  if (!shortForm) document.getElementById("subject").addEventListener("change", () => { subjectChanged = true; });
   prefillSubject();
   document.addEventListener("DOMContentLoaded", prefillSubject, { once: true });
   function errorControl(id) {
@@ -121,6 +151,7 @@ var EnquiryRules = (function () {
     formMessage.replaceChildren();
   }
   function syncConditional() {
+    if (shortForm) return;
     const reply = selected("Reply method");
     const active = {
       "age-year": selected("Learner") === "child",
@@ -149,7 +180,7 @@ var EnquiryRules = (function () {
     phone.textContent = "07309 639095";
     const whatsapp = document.createElement("a");
     whatsapp.href = "https://wa.me/447307045816";
-    whatsapp.textContent = "WhatsApp 07307 045816";
+    whatsapp.textContent = "WhatsApp +44 7307 045816";
     formMessage.replaceChildren(message + " " + translate("You can email") + " ", email, translate(", call") + " ", phone, " " + translate("or use") + " ", whatsapp, ".");
     formMessage.classList.add("is-visible");
   }
@@ -168,8 +199,10 @@ var EnquiryRules = (function () {
     clearErrors();
     syncConditional();
     const body = new URLSearchParams(new FormData(form));
-    const sent = withSubjectInMessage(body);
-    const result = EnquiryRules.validate(Object.fromEntries(body), Date.now());
+    const result = shortForm
+      ? EnquiryRules.validateShort(Object.fromEntries(body), Date.now())
+      : EnquiryRules.validate(Object.fromEntries(body), Date.now());
+    const sent = withSubjectInMessage(shortForm ? new URLSearchParams(result.data) : body);
     const supportLimit = EnquiryRules.limits["Support requested"];
     if ((sent.get("Support requested") || "").length > supportLimit) {
       const prefixLength = (sent.get("Support requested") || "").length - (body.get("Support requested") || "").length;

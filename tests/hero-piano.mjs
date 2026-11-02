@@ -38,6 +38,8 @@ async function openPiano(page, id, colour, viewport, reduced = false) {
     { name: 'prefers-reduced-motion', value: reduced ? 'reduce' : 'no-preference' },
   ]);
   await page.goto(`${base}/${pianoPage}?project=piano&song=${id}&sky=pixel${pianoPage === 'children.html' ? '#learner-projects' : ''}`, { waitUntil: 'networkidle0' });
+  await page.$eval('[data-showcase]', root => root.scrollIntoView({ block: 'center' }));
+  await page.waitForSelector('[data-showcase-ready]');
   await page.waitForFunction(() => document.querySelector('#hero-keyboard')?.dataset.song);
   await page.evaluate(async path => {
     window.pianoUnderTest = await import(path);

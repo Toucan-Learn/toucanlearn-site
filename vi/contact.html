@@ -18,7 +18,7 @@
   <link rel="alternate" hreflang="fr" href="https://toucanlearn.co.uk/fr/contact" />
   <link rel="alternate" hreflang="it" href="https://toucanlearn.co.uk/it/contact" />
   <link rel="alternate" hreflang="x-default" href="https://toucanlearn.co.uk/contact" />
-  <script src="/language-text-vi.js?v=20261101-darty-mission-1"></script>
+  <script src="/language-text-vi.js?v=20261101-mobile-1"></script>
   <meta property="og:title" content="Liên hệ: Bristol, London, Oxfordshire &amp; trực tuyến | Toucan Learn" />
   <meta property="og:description" content="Hỏi về buổi học đầu tiên miễn phí, trực tuyến trên toàn Vương quốc Anh hoặc tại Bristol, London và Oxfordshire, tùy theo lịch của giáo viên." />
   <meta property="og:type" content="website" />
@@ -29,12 +29,18 @@
   <link rel="icon" href="/assets/toucan-favicon.png?v=20261029-outline-2" type="image/png" />
   <script src="/theme.js?v=20261031-clones-1"></script>
   <script src="/campaigns.js?v=20261031-clones-1"></script>
-  <link rel="stylesheet" href="/style.css?v=20261031-skip-1" />
-  <link rel="stylesheet" href="/campaigns.css?v=20261030-trust-footer-1" />
+  <link rel="stylesheet" href="/assets/css/opening-contact.css?v=20261101-mobile-review-1" />
+  <script src="/deferred-styles.js?v=20261101-mobile-1" defer></script>
+  <link rel="stylesheet" data-deferred-style media="print" href="/style.css?v=20261031-skip-1" />
+  <noscript><link rel="stylesheet" href="/style.css?v=20261031-skip-1" /></noscript>
+  <link rel="stylesheet" data-deferred-style media="print" href="/campaigns.css?v=20261030-trust-footer-1" />
+  <noscript><link rel="stylesheet" href="/campaigns.css?v=20261030-trust-footer-1" /></noscript>
   <link rel="stylesheet" href="/contact.css?v=20261030-subject-dropdown-3" />
   <script src="/menu.js?v=20261031-clones-1" defer></script>
-  <link rel="stylesheet" href="/framework.css?v=20261101-flags-5" />
+  <link rel="stylesheet" data-deferred-style media="print" href="/framework.css?v=20261101-mobile-review-1" />
+  <noscript><link rel="stylesheet" href="/framework.css?v=20261101-mobile-review-1" /></noscript>
   <link rel="stylesheet" href="/consent.css?v=20261031-clarity-1" />
+  <link rel="stylesheet" href="/opening-offer.css?v=20261101-mobile-1" />
   <link rel="stylesheet" href="/language-switch.css?v=20261101-flags-4" />
   <script src="/language-switch.js?v=20261101-flags-4" defer></script>
 </head>
@@ -137,6 +143,7 @@
 
         <p class="lead">Cho chúng tôi biết ai sẽ học và bạn cần hỗ trợ gì, chúng tôi sẽ phản hồi theo cách phù hợp với bạn.</p>
         <p class="contact-offer"><strong>Buổi học đầu tiên và báo cáo đánh giá ban đầu đều miễn phí.</strong></p>
+        <p class="opening-proof">Báo cáo bằng văn bản hằng tuần. Người sáng lập của chúng tôi giám sát mọi buổi học.</p>
       </div>
     </section>
 
@@ -145,7 +152,7 @@
         <h2 id="email-heading">Gửi cho chúng tôi một yêu cầu ngắn.</h2>
         <!-- Apps Script web app "Toucan Learn enquiry form" (Joshua's Google account), deployed 18 Oct 2026. The only endpoint configuration is data-form-endpoint. -->
         <div class="contact-layout">
-        <form class="enquiry-form" id="enquiry-form" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST">
+        <form class="enquiry-form" id="enquiry-form" data-enquiry-mode="short" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST">
           <p class="form-message" id="form-message" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>
           <fieldset class="enquiry-fields" id="enquiry-fields" disabled>
           <legend class="visually-hidden">Thông tin yêu cầu tư vấn</legend>
@@ -158,105 +165,25 @@
             <label for="company-website">Để trống ô này</label>
             <input id="company-website" name="website" type="text" maxlength="200" tabindex="-1" autocomplete="off" />
           </div>
-          <div class="fields-two">
-          <div class="field">
-            <label for="contact-name">Tên của bạn</label>
-            <input id="contact-name" name="Contact name" type="text" maxlength="120" autocomplete="name" aria-describedby="contact-name-error" required />
-            <span class="field-error" id="contact-name-error"></span>
-          </div>
-          <div class="field-stack">
-          <fieldset class="form-choice" aria-describedby="learner-child-error">
-            <legend>Ai là người học?</legend>
-            <div class="radio-options">
-              <label for="learner-child"><input id="learner-child" name="Learner" type="radio" value="child" aria-describedby="learner-child-error" required /> Trẻ em hoặc thanh thiếu niên</label>
-              <label for="learner-adult"><input id="learner-adult" name="Learner" type="radio" value="adult" aria-describedby="learner-child-error" required /> Tôi (người lớn)</label>
-            </div>
-            <span class="field-error" id="learner-child-error"></span>
-          </fieldset>
-          </div>
-          </div>
-          <div class="fields-two enquiry-details">
-          <div class="field field--support">
-            <label for="support-needed">Bạn cần hỗ trợ gì?</label>
-            <textarea id="support-needed" name="Support requested" rows="9" maxlength="1000" aria-describedby="support-needed-privacy support-needed-error" required></textarea>
-            <small id="support-needed-privacy">Vui lòng không ghi chẩn đoán hay hồ sơ y tế; chúng ta sẽ cùng trao đổi về nhu cầu sau.</small> <span class="field-error" id="support-needed-error"></span>
-          </div>
-          <div class="field-stack">
-          <div class="field conditional-field" id="age-year-field" hidden inert>
-            <label for="age-year">Tuổi hoặc lớp</label>
-            <input id="age-year" name="Age or school year" type="text" maxlength="40" aria-describedby="age-year-error" disabled />
-            <span class="field-error" id="age-year-error"></span>
-          </div>
-          <div class="field">
-            <label id="subject-label" for="subject">Môn học (không bắt buộc)</label>
-            <div class="subject-dropdown" data-subject-dropdown>
-            <select id="subject" name="Subject" aria-describedby="subject-error">
-              <option value="">Chọn môn học</option>
-              <option value="English">Tiếng Anh</option>
-              <option value="Maths">Toán</option>
-              <option value="Science">Khoa học</option>
-              <option value="Languages">Ngoại ngữ</option>
-              <option value="Psychology">Tâm lý học</option>
-              <option value="Art &amp; design">Mỹ thuật &amp; thiết kế</option>
-              <option value="Exam preparation">Ôn thi</option>
-              <option value="SEN support">Hỗ trợ nhu cầu giáo dục đặc biệt</option>
-              <option value="Other">Khác</option>
-            </select>
-              <div data-subject-control hidden>
-                <button class="subject-button" id="subject-button" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="subject-listbox" aria-labelledby="subject-label subject-value" aria-describedby="subject-error"><span id="subject-value">Chọn môn học</span></button>
-                <ul class="subject-listbox" id="subject-listbox" role="listbox" aria-labelledby="subject-label" tabindex="-1" hidden></ul>
+            <div class="fields-two">
+              <div class="field">
+                <label for="contact-name">Tên của bạn</label>
+                <input id="contact-name" name="Contact name" type="text" maxlength="120" autocomplete="name" aria-describedby="contact-name-error" required />
+                <span class="field-error" id="contact-name-error"></span>
+              </div>
+              <div class="field">
+                <label for="reply-contact">Email hoặc số điện thoại</label>
+                <input id="reply-contact" name="Email or phone" type="text" maxlength="254" autocomplete="email" aria-describedby="reply-contact-error" required />
+                <span class="field-error" id="reply-contact-error"></span>
               </div>
             </div>
-            <span class="field-error" id="subject-error"></span>
-          </div>
-          <div class="field">
-            <label for="desired-lesson-rate">Mức học phí mong muốn của bạn là bao nhiêu?</label>
-            <input id="desired-lesson-rate" name="Desired lesson rate" type="text" inputmode="text" maxlength="60" aria-describedby="desired-lesson-rate-hint desired-lesson-rate-error" />
-            <small id="desired-lesson-rate-hint">Không bắt buộc. Một con số ước lượng cho mỗi buổi là được.</small> <span class="field-error" id="desired-lesson-rate-error"></span>
-          </div>
-          <div class="field-stack">
-          <fieldset class="form-choice" aria-describedby="format-online-error">
-            <legend>Học trực tuyến hay trực tiếp? <small>(không bắt buộc)</small></legend>
-            <div class="radio-options">
-              <label for="format-online"><input id="format-online" name="Preferred format" type="radio" value="online" aria-describedby="format-online-error" /> Trực tuyến</label>
-              <label for="format-in-person"><input id="format-in-person" name="Preferred format" type="radio" value="in-person" aria-describedby="format-online-error" /> Trực tiếp</label>
-              <label for="format-not-sure"><input id="format-not-sure" name="Preferred format" type="radio" value="not-sure" aria-describedby="format-online-error" /> Chưa chắc</label>
+            <div class="field">
+              <label for="support-needed">Bạn muốn được hỗ trợ điều gì? <small>(không bắt buộc)</small></label>
+              <input id="support-needed" name="Support requested" type="text" maxlength="200" aria-describedby="support-needed-privacy support-needed-error" />
+              <small id="support-needed-privacy">Vui lòng không ghi chẩn đoán hay hồ sơ y tế; chúng ta sẽ cùng trao đổi về nhu cầu sau.</small> <span class="field-error" id="support-needed-error"></span>
             </div>
-            <span class="field-error" id="format-online-error"></span>
-          </fieldset>
-          <div class="field conditional-field" id="location-field" hidden inert>
-            <label for="location">Thị trấn hoặc khu vực mã bưu chính</label>
-            <input id="location" name="Town or postcode area" type="text" maxlength="80" autocomplete="address-level2" aria-describedby="location-error" disabled />
-            <span class="field-error" id="location-error"></span>
-          </div>
-          </div>
-          </div>
-          </div>
-          <div class="fields-two">
-          <fieldset class="form-choice" aria-describedby="reply-email-error">
-            <legend>Bạn muốn chúng tôi phản hồi bằng cách nào?</legend>
-            <div class="radio-options">
-              <label for="reply-email"><input id="reply-email" name="Reply method" type="radio" value="email" aria-describedby="reply-email-error" required /> Email</label>
-              <label for="reply-call"><input id="reply-call" name="Reply method" type="radio" value="call" aria-describedby="reply-email-error" required /> Gọi điện</label>
-              <label for="reply-text"><input id="reply-text" name="Reply method" type="radio" value="text" aria-describedby="reply-email-error" required /> Tin nhắn</label>
-              <label for="reply-whatsapp"><input id="reply-whatsapp" name="Reply method" type="radio" value="whatsapp" aria-describedby="reply-email-error" required /> WhatsApp</label>
-            </div>
-            <span class="field-error" id="reply-email-error"></span>
-          </fieldset>
-          <div class="reply-contact-slot">
-          <div class="field conditional-field" id="email-field" hidden inert>
-            <label for="email">Địa chỉ email</label>
-            <input id="email" name="email" type="email" maxlength="254" autocomplete="email" aria-describedby="email-error" disabled />
-            <span class="field-error" id="email-error"></span>
-          </div>
-          <div class="field conditional-field" id="phone-field" hidden inert>
-            <label for="phone">Số điện thoại</label>
-            <input id="phone" name="phone" type="tel" maxlength="40" autocomplete="tel" inputmode="tel" aria-describedby="phone-hint phone-error" disabled />
-            <small id="phone-hint">Dùng 7–15 chữ số; với số quốc tế, thêm dấu + và mã quốc gia.</small> <span class="field-error" id="phone-error"></span>
-          </div>
-          </div>
-          </div>
-          <button class="button form-submit form-submit--trial" id="submit-button" type="submit">Gửi yêu cầu <span aria-hidden="true">→</span></button>
+          <div class="opening-actions"><button class="button form-submit form-submit--trial" id="submit-button" type="submit">Gửi yêu cầu <span aria-hidden="true">→</span></button><a class="opening-reviews" href="/vi/#reviews">Google ★★★★★ · Đề xuất trên Facebook</a></div>
+          <p class="opening-guarantee">Nếu buổi học trả phí đầu tiên chưa phù hợp, bạn không phải trả tiền, hoặc chúng tôi đổi giáo viên cho bạn mà không tính phí.</p><p class="opening-review"><q>Trải nghiệm học với gia sư rất tốt.</q> <a href="https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8">Phụ huynh · Đánh giá trên Google</a></p>
           <p class="form-use-note">Chúng tôi chỉ dùng thông tin này để phản hồi bạn. Đọc <a href="/privacy">thông báo quyền riêng tư</a> của chúng tôi.</p>
           </fieldset>
         </form>
@@ -285,7 +212,7 @@
             <dd>Nhu cầu giáo dục đặc biệt phức tạp, ôn thi quan trọng, cùng thêm giờ chuẩn bị bài và tài liệu riêng dành cho bạn.</dd>
           </div>
         </dl>
-        <p class="pricing-footer">Chúng tôi thống nhất học phí trước khi bạn đặt lịch. Không phụ phí hay gói đăng ký. Báo cáo chi tiết hằng tuần ở mọi mức học phí.</p>
+        <p class="pricing-footer">Chúng tôi thống nhất học phí trước khi bạn đặt lịch. Không phụ phí hay gói đăng ký. Báo cáo chi tiết hằng tuần ở mọi mức học phí. Nếu buổi học trả phí đầu tiên chưa phù hợp, bạn không phải trả tiền, hoặc chúng tôi đổi giáo viên cho bạn mà không tính phí.</p>
       </section>
       <div class="contact-next">
         <h3 id="next-heading">Các bước tiếp theo</h3>
@@ -296,7 +223,7 @@
         </ol>
         <p class="contact-next-talk">Bạn muốn trao đổi qua điện thoại?</p>
         <div class="contact-next-actions">
-          <a class="button" href="tel:+447309639095">Gọi 07309 639095</a> <a class="button secondary" href="https://wa.me/447307045816" target="_blank" rel="noopener">WhatsApp 07307 045816<span class="visually-hidden"> (mở WhatsApp trong thẻ mới)</span></a>
+          <a class="button" href="tel:+447309639095">Gọi 07309 639095</a> <a class="button secondary" href="https://wa.me/447307045816" target="_blank" rel="noopener">WhatsApp +44 7307 045816<span class="visually-hidden"> (mở WhatsApp trong thẻ mới)</span></a>
         </div>
       </div>
     </div>
@@ -309,7 +236,7 @@
       </div>
 
       <nav data-nosnippet class="footer-links" aria-label="Chính sách và điều hướng">
-        <a href="/privacy">Quyền riêng tư</a> <a href="/terms">Điều khoản</a> <a href="/safeguarding">Bảo vệ người học</a> <a href="/complaints">Khiếu nại</a> <a href="/vi/">Trang chủ</a> <a href="/vi/contact">Liên hệ</a> <a href="tel:+447309639095">07309 639095</a>
+        <a href="/privacy">Quyền riêng tư</a> <a href="/vi/terms">Điều khoản</a> <a href="/safeguarding">Bảo vệ người học</a> <a href="/complaints">Khiếu nại</a> <a href="/vi/">Trang chủ</a> <a href="/vi/contact">Liên hệ</a> <a href="tel:+447309639095">07309 639095</a>
       </nav>
     </div>
   </footer>
@@ -317,7 +244,6 @@
   <script src="/site.js"></script>
   <script src="/consent.js?v=20261031-clones-1"></script>
   <script src="/launch-offer.js?v=20261031-clones-1"></script>
-  <script src="/subject-select.js?v=20261030-subject-dropdown-3"></script>
-  <script src="/contact.js?v=20261031-clones-1"></script>
+  <script src="/contact.js?v=20261101-mobile-1"></script>
 </body>
 </html>

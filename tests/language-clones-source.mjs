@@ -14,7 +14,7 @@ const skeleton = html => [...html.replace(/<script src="\/language-text-\w+\.js[
 const text = html => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 const projects = html => [...html.matchAll(/<article class="framework-project" data-project-slide data-project="(?!intro)[\s\S]*?<\/article>/g)].map(match => text(match[0]));
 const dartyMission = 'Turning writing from the last thing he wanted to do into how he builds his own game.';
-const showcaseVersion = '20261101-darty-mission-1';
+const showcaseVersion = '20261101-mobile-1';
 let checks = 0;
 for (const page of pages) {
   const english = read(`${page}.html`);
@@ -34,7 +34,7 @@ for (const page of pages) {
     assert.deepEqual(projects(copy), projects(english).map(project => project.replace(dartyMission, words[dartyMission])), `${file}: only the DARTY mission is translated in learner projects`);
     if (page === 'children') assert(copy.includes(`<p>${words[dartyMission]}</p>`), `${file}: DARTY goal uses the translated mission`);
     if (page === 'index' || page === 'children') {
-      assert(copy.includes(`/project-showcase.js?v=${showcaseVersion}`), `${file}: current showcase script`);
+      assert(copy.includes(`/project-showcase-loader.js?v=${showcaseVersion}`), `${file}: current showcase script`);
       assert(copy.includes(`/language-text-${lang}.js?v=${showcaseVersion}`), `${file}: current script translations`);
     }
     assert.equal(translations.script[dartyMission], words[dartyMission], `${lang}: homepage and Children share the same translated mission`);

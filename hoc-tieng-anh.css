@@ -49,7 +49,14 @@
   .vietnam-card { grid-template-columns: minmax(0, 1fr); }
   .vietnam-card img { height: auto; }
 }
-/* Owner, 30 Oct: each teacher's hourly price on their card. */
-.vietnam-teacher .vietnam-teacher-price { margin-top: 6px; color: var(--heading); font-weight: 800; }
 /* Owner, 30 Oct: SEN support at the same price, led by Josh. */
 .vietnam-price .vietnam-sen { margin-top: 8px; font-weight: 700; }
+
+/* Owner phone review, 1 Nov: the name heads the whole card, then photo/copy. */
+@media (max-width: 767px) {
+  .vietnam-teacher { gap: 8px 12px; padding: 12px; }
+  .vietnam-teacher > div { display: contents; }
+  .vietnam-teacher h3 { grid-column: 1 / -1; grid-row: 1; margin: 0; }
+  .vietnam-teacher > .framework-portrait-frame { grid-column: 1; grid-row: 2; }
+  .vietnam-teacher-copy { grid-column: 2; grid-row: 2; min-width: 0; }
+}

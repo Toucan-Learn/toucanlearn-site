@@ -11,7 +11,7 @@ const [home, contact, css, script] = await Promise.all(['index.html', 'contact.h
 const block = home.match(/<!-- app-home:start -->([\s\S]*?)<!-- app-home:end -->/)[1];
 
 // Isolation: removing the block, its sheet/scripts and the shared form hosts gives back the previous homepage exactly.
-const previous = execFileSync('git', ['show', 'a1c5c6d:index.html'], { cwd: root, encoding: 'utf8' });
+const previous = execFileSync('git', ['show', '7c0e6a3:index.html'], { cwd: root, encoding: 'utf8' });
 assert.equal(withoutAppHome(home), previous, 'Only the isolated phone additions changed in index.html');
 assert.match(block, /^\s*<!--[^\n]*-->\s*<div class="app-home home-phone-only" data-app-home>/, 'Desktop hides the whole block (opening-offer.css: .home-phone-only)');
 assert.match(home, /<link rel="stylesheet" media="\(max-width: 767px\)" href="app-home\.css\?v=20261104-app-1" \/>/);

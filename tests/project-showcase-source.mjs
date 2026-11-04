@@ -330,6 +330,8 @@ for (const file of ['hero.css', 'hero-sky.js', 'hero-piano.js', 'hero-keyboard.j
   const approved = execFileSync('git', ['show', `${process.env.PIANO_HERO_BASE || 'b3979e3'}:${file}`], { cwd: site, encoding: 'utf8' });
   // Nested language homes need root-relative media; asset identity and renderer logic stay pinned.
   const untoken = text => text.replace(/(["'`])\/assets\//g, '$1assets/')
+    // 4 Nov: owner moved the desktop opening up (16px under the header).
+    .replace('  .living-hero .hero-layout { padding-block: 16px 44px; } /* owner, 4 Nov: opening sits higher so more of it shows on landing */', '  .living-hero .hero-layout { padding-block: 44px; }')
     // 2 Nov: the phone homepage hero is display: contents, so the auto-close measures its project column.
     .replace("    // The phone homepage lays the hero out as contents (no box); use its project column.\n    const box = hero.getClientRects().length ? hero : toggle.closest('.hero-world') || hero;\n    if (box.getBoundingClientRect()", '    if (hero.getBoundingClientRect()')
     .replace(/(hero-(?:keyboard|piano|sky|sky-shaders)\.js\?v=)[^'"]+/g, '$1TOKEN');

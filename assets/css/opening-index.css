@@ -1249,7 +1249,7 @@ header:not(.toucan-opening-header) .nav-links{
 }
 @media (min-width: 761px){.living-hero .hero-benefits{ padding-top: 40px; }
 }
-@media (min-width: 900px){.living-hero .hero-layout{ padding-block: 44px; }
+@media (min-width: 900px){.living-hero .hero-layout{ padding-block: 16px 44px; }
 }
 
 .framework-intro > .container, .container.framework-shell, .framework-shell ~ .cta > .container, .framework-cta > .container{ width: min(calc(100% - 80px), 1280px); }

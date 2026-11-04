@@ -1,0 +1,314 @@
+/* Phone homepage, app layout (owner-approved mock v2, 4 Nov; reference: index-app-mock.html).
+   Linked with media="(max-width: 767px)", so none of this applies on tablets or desktops.
+   Every class is prefixed ah- so the shared sheets never collide with it. */
+.homepage {
+  --ah-panel: #f3ece2;
+  --ah-card: #fffaf3;
+  --ah-cream: #e9e2d8;
+  --ah-ink: #10242d;
+  --ah-muted: #4b5f66;
+  --ah-accent: #c45f21;
+  --ah-teal: #0b3f51;
+  --ah-green: #6f987b;
+  --ah-orange: #e47a2e;
+  --ah-orange-press: #c45f21;
+  --ah-orange-text: #b94e25;
+  --ah-on-orange: #1a0d04;
+  --ah-line: rgba(11, 63, 81, .14);
+  --ah-sky-tint: rgba(8, 47, 61, .12);
+  --ah-story: #12333f;
+  --ah-story-edge: transparent;
+  --ah-shadow: 0 2px 0 rgba(11, 63, 81, .10), 0 12px 32px rgba(11, 63, 81, .10);
+  --ah-lift: 0 18px 40px rgba(4, 20, 26, .28);
+  --ah-r-lg: 28px;
+  --ah-r-md: 20px;
+  --ah-edge: 20px;
+  --ah-bar-h: 72px;
+  --ah-sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .homepage {
+    --ah-panel: #0e2a33; --ah-card: #16343d; --ah-cream: #1b3237; --ah-ink: #ece6db; --ah-muted: #b7c3c2;
+    --ah-accent: #e8843f; --ah-orange: #e8843f; --ah-orange-press: #d9733a; --ah-orange-text: #f4b78f;
+    --ah-line: rgba(236, 230, 219, .14); --ah-sky-tint: rgba(4, 16, 20, .45);
+    --ah-story: #12333f; --ah-story-edge: rgba(236, 230, 219, .22);
+    --ah-shadow: 0 2px 0 rgba(0, 0, 0, .3), 0 12px 32px rgba(0, 0, 0, .35);
+  }
+}
+:root[data-theme="dark"] .homepage {
+  --ah-panel: #0e2a33; --ah-card: #16343d; --ah-cream: #1b3237; --ah-ink: #ece6db; --ah-muted: #b7c3c2;
+  --ah-accent: #e8843f; --ah-orange: #e8843f; --ah-orange-press: #d9733a; --ah-orange-text: #f4b78f;
+  --ah-line: rgba(236, 230, 219, .14); --ah-sky-tint: rgba(4, 16, 20, .45);
+  --ah-story: #12333f; --ah-story-edge: rgba(236, 230, 219, .22);
+  --ah-shadow: 0 2px 0 rgba(0, 0, 0, .3), 0 12px 32px rgba(0, 0, 0, .35);
+}
+
+/* ---------- Page frame: the app replaces the long-form sections on phones ---------- */
+html.homepage-root { background: #08252e; }
+html body.homepage { background: transparent; padding-bottom: calc(var(--ah-bar-h) + env(safe-area-inset-bottom)); }
+html body.homepage #main > section { display: none !important; }
+body.homepage-sheet-open { overflow: hidden; }
+.app-home { display: block; color: var(--ah-ink); font: 18px/1.5 var(--ah-sans); -webkit-font-smoothing: antialiased; }
+/* The shared phone sheet sizes every paragraph in #main with !important; app text sets --ah-fs instead. */
+html body.homepage #main .app-home :is(p, li) { font-size: var(--ah-fs, inherit) !important; line-height: inherit; }
+.app-home :is(h1, h2, h3) { margin: 0; font-family: var(--ah-sans); font-weight: 780; letter-spacing: -.04em; color: inherit; }
+.app-home p { margin: 0; }
+.app-home img { display: block; max-width: 100%; height: auto; }
+.app-home section { padding: 0; scroll-margin-top: 76px; }
+.app-home [hidden] { display: none !important; }
+
+/* One continuous pixel sky behind the whole phone page. */
+.ah-sky {
+  position: fixed; left: 0; right: 0; top: 0; height: 125lvh; z-index: -1; pointer-events: none;
+  background: url("assets/teal-pixel-sky.webp") 38% 50% / cover no-repeat #0b3f51; image-rendering: pixelated; will-change: transform;
+}
+.ah-sky::before { content: ""; position: absolute; inset: 0; background: var(--ah-sky-tint); }
+/* Scroll-linked mood wash: app-home.js eases --ah-mood between section tones. */
+.ah-sky::after { content: ""; position: absolute; inset: 0; background: var(--ah-mood, transparent); }
+
+.ah-card { background: var(--ah-panel); color: var(--ah-ink); border-radius: var(--ah-r-lg); box-shadow: var(--ah-lift); }
+
+/* ---------- Hero ---------- */
+.app-home .ah-hero {
+  position: relative; isolation: isolate; overflow: hidden;
+  min-height: min(calc(100svh - 64px), 720px);
+  padding: 16px 12px 0;
+  display: flex; flex-direction: column; justify-content: flex-end;
+}
+.ah-hero-toucan {
+  position: absolute; z-index: -1; width: 60%; max-width: 280px; right: -4%; top: 8px;
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .35));
+  animation: ah-bob 6s ease-in-out infinite;
+}
+@keyframes ah-bob { 50% { transform: translateY(-6px) rotate(-1deg); } }
+.ah-hero-body { display: grid; gap: 16px; padding: 24px 20px; }
+.ah-chip { justify-self: start; --ah-fs: 14px; font-weight: 700; line-height: 1 !important; padding: 10px 14px; border-radius: 999px; letter-spacing: .02em; background: var(--ah-card); border: 1px solid var(--ah-line); }
+.app-home .ah-hero h1 { font-size: 42px; line-height: 1.02; }
+.app-home .ah-hero h1 em { font-style: normal; color: var(--ah-accent); }
+.ah-sub { --ah-fs: 18px; color: var(--ah-muted); max-width: 30ch; }
+
+/* ---------- Buttons ---------- */
+.app-home .ah-cta {
+  appearance: none; border: 0; cursor: pointer; width: 100%; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center; text-align: center; text-decoration: none;
+  min-height: 60px; padding: 0 16px; border-radius: 18px;
+  background: var(--ah-orange); color: var(--ah-on-orange);
+  font: 800 19px/1.1 var(--ah-sans); letter-spacing: .01em;
+  box-shadow: 0 5px 0 var(--ah-orange-press), 0 10px 24px rgba(228, 122, 46, .28);
+  transition: transform .12s ease, box-shadow .12s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+.app-home .ah-cta:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ah-orange-press), 0 4px 10px rgba(228, 122, 46, .2); }
+.app-home .ah-cta:focus-visible, .app-home .ah-route:focus-visible, .ah-avatars button:focus-visible, .ah-track:focus-visible { outline: 3px solid var(--ah-teal); outline-offset: 3px; }
+.app-home .ah-cta--hero { margin-top: 8px; min-height: 64px; font-size: 20px; }
+.ah-guarantee { display: flex; gap: 10px; align-items: flex-start; --ah-fs: 15px; line-height: 1.4 !important; color: var(--ah-muted); }
+.ah-guarantee::before { content: "✓"; flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; background: var(--ah-green); color: #fff; font-size: 13px; font-weight: 900; margin-top: 1px; }
+.ah-ghost { appearance: none; border: 0; background: none; min-height: 44px; padding: 0 4px; font: 700 16px/1 var(--ah-sans); color: var(--ah-orange-text); cursor: pointer; }
+
+/* ---------- Proof ---------- */
+.app-home .ah-proof { padding: 12px; display: grid; gap: 16px; }
+.ah-review { display: grid; gap: 4px; padding: 16px 20px; }
+.ah-stars { color: #e3a21a; letter-spacing: 2px; font-size: 16px; }
+.ah-review-line { --ah-fs: 14px; color: var(--ah-muted); }
+.ah-review-line q { display: block; margin-bottom: 4px; font: 700 22px/1.25 var(--ah-sans); color: var(--ah-ink); quotes: "“" "”"; }
+.ah-review-line a { color: inherit; }
+.ah-perks { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.ah-perks li {
+  display: grid; justify-items: center; align-content: start; gap: 6px; text-align: center;
+  padding: 12px 6px 14px; border-radius: var(--ah-r-md); background: var(--ah-panel); box-shadow: 0 12px 28px rgba(4, 20, 26, .25);
+  --ah-fs: 14px; line-height: 1.2 !important; font-weight: 700;
+}
+.ah-perks img { width: 56px; height: 56px; object-fit: cover; border-radius: 16px; }
+
+/* ---------- Blocks ---------- */
+.app-home .ah-block { margin: 12px; padding: 32px 0 24px; overflow: hidden; }
+.ah-head { padding: 0 var(--ah-edge) 16px; display: grid; gap: 6px; }
+.ah-eyebrow { --ah-fs: 13px; font-weight: 800; line-height: 1 !important; letter-spacing: .12em; text-transform: uppercase; color: var(--ah-orange-text); }
+.app-home .ah-block h2 { font-size: 30px; line-height: 1.08; }
+
+/* ---------- Project story cards ---------- */
+.ah-track {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 84%;
+  gap: 12px; padding: 0 var(--ah-edge) 8px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding-inline: var(--ah-edge);
+  scrollbar-width: none; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+}
+.ah-track::-webkit-scrollbar { display: none; }
+.ah-story {
+  scroll-snap-align: start; scroll-snap-stop: always;
+  background: var(--ah-story); color: #f6f0e6; border-radius: var(--ah-r-lg); padding: 10px 10px 20px;
+  border: 1px solid var(--ah-story-edge);
+  display: grid; gap: 8px; align-content: start;
+  transition: transform .35s cubic-bezier(.2, .8, .2, 1), opacity .35s;
+  transform: scale(.94); opacity: .7;
+}
+.ah-story.is-active { transform: none; opacity: 1; }
+.ah-story-media { aspect-ratio: 1 / 1.05; border-radius: 20px; overflow: hidden; background: #0d2a33; margin-bottom: 6px; }
+.ah-story-media img { width: 100%; height: 100%; object-fit: cover; }
+.ah-story-media--paper img { object-position: top; }
+.ah-story-media--teal { background: #2a807a; }
+.ah-tag { justify-self: start; margin: 0 8px; padding: 6px 10px; border-radius: 999px; background: rgba(246, 240, 230, .12); font: 700 13px/1 var(--ah-sans); color: #f4c09b; }
+.app-home .ah-story h3 { margin: 0 8px; font-size: 24px; line-height: 1.1; }
+.ah-story p { margin: 0 8px; --ah-fs: 17px; line-height: 1.4 !important; color: rgba(246, 240, 230, .85); }
+.ah-dots { display: flex; justify-content: center; gap: 8px; padding-top: 16px; }
+.ah-dots i { width: 8px; height: 8px; border-radius: 999px; background: var(--ah-line); transition: width .3s, background .3s; }
+.ah-dots i.on { width: 24px; background: var(--ah-orange); }
+
+/* ---------- EXAMPLE weekly report stack ---------- */
+.ah-deck { position: relative; height: 262px; margin: 0 var(--ah-edge); touch-action: pan-y; }
+.ah-rcard {
+  position: absolute; inset: 0; padding: 20px 22px 24px;
+  background: var(--ah-card); border-radius: var(--ah-r-lg); box-shadow: var(--ah-shadow); border: 1px solid var(--ah-line);
+  display: grid; align-content: start; gap: 14px;
+  transition: transform .4s cubic-bezier(.2, .8, .2, 1), opacity .4s;
+  user-select: none; -webkit-user-select: none;
+}
+.ah-rhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.ah-badge { font: 900 12px/1 var(--ah-sans); letter-spacing: .14em; padding: 7px 10px; border-radius: 8px; background: var(--ah-orange); color: var(--ah-on-orange); }
+.ah-rmeta { font-size: 14px; color: var(--ah-muted); }
+.app-home .ah-rcard h3 { font-size: 26px; line-height: 1.12; display: flex; align-items: center; gap: 12px; }
+.ah-ricon { flex: none; width: 40px; height: 40px; border-radius: 14px; display: grid; place-items: center; font: 900 18px/1 var(--ah-sans); background: var(--ah-teal); color: #f6f0e6; letter-spacing: 0; }
+.ah-rcard--2 .ah-ricon { background: var(--ah-orange); color: var(--ah-on-orange); }
+.ah-rcard--3 .ah-ricon { background: var(--ah-green); }
+.ah-rcard > p:last-child { --ah-fs: 20px; line-height: 1.45 !important; }
+.ah-rcard[data-pos="1"] { transform: translateY(14px) scale(.95); }
+.ah-rcard[data-pos="2"] { transform: translateY(28px) scale(.9); }
+.ah-rcard[data-pos="1"], .ah-rcard[data-pos="2"] { pointer-events: none; }
+.ah-rcard[data-pos="1"] > *, .ah-rcard[data-pos="2"] > * { opacity: 0; }
+.ah-rcard.is-flying { transition: transform .35s ease-in, opacity .35s; opacity: 0; }
+.ah-deck-foot { display: flex; justify-content: space-between; align-items: center; padding: 32px var(--ah-edge) 0; }
+.ah-deck-foot .ah-dots { padding: 0; }
+
+/* ---------- Team avatars ---------- */
+.ah-avatars {
+  list-style: none; margin: 0; padding: 4px var(--ah-edge) 16px;
+  display: grid; grid-auto-flow: column; grid-auto-columns: 84px; gap: 12px;
+  overflow-x: auto; scrollbar-width: none; scroll-snap-type: x proximity;
+}
+.ah-avatars::-webkit-scrollbar { display: none; }
+.ah-av { scroll-snap-align: start; }
+.ah-avatars button {
+  appearance: none; border: 0; background: none; padding: 0; cursor: pointer; color: inherit;
+  display: grid; justify-items: center; gap: 8px; width: 84px; -webkit-tap-highlight-color: transparent;
+}
+.ah-ring {
+  display: block; width: 80px; height: 80px; border-radius: 50%; padding: 3px; box-sizing: border-box;
+  background: conic-gradient(from 200deg, var(--ah-orange), #f4c09b, var(--ah-green), var(--ah-teal), var(--ah-orange));
+  transition: transform .2s cubic-bezier(.3, 1.6, .5, 1);
+}
+.ah-avatars button:active .ah-ring { transform: scale(.92); }
+.ah-ring > span { display: block; width: 100%; height: 100%; box-sizing: border-box; border-radius: 50%; overflow: hidden; border: 3px solid var(--ah-panel); background: var(--ah-cream); }
+.app-home .ah-ring img { width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--ah-pos, 50% 30%); transform: scale(var(--ah-zoom, 1)); transform-origin: var(--ah-pos, 50% 30%); }
+.ah-avatars b { font: 700 14px/1.15 var(--ah-sans); text-align: center; }
+/* Face framing per photo, from the approved mock. */
+.ah-av--joshua, .ah-ts-photo.ah-av--joshua { --ah-pos: 41% 50%; --ah-zoom: 3.4; }
+.ah-av--aaron, .ah-ts-photo.ah-av--aaron { --ah-pos: 50% 42%; --ah-zoom: 1.15; }
+.ah-av--connor, .ah-ts-photo.ah-av--connor { --ah-pos: 40% 34%; --ah-zoom: 1.7; }
+.ah-av--sara, .ah-ts-photo.ah-av--sara { --ah-pos: 50% 38%; --ah-zoom: 1.15; }
+.ah-av--joan, .ah-ts-photo.ah-av--joan { --ah-pos: 52% 35%; --ah-zoom: 2.2; }
+.ah-av--sam, .ah-ts-photo.ah-av--sam { --ah-pos: 52% 32%; --ah-zoom: 1.6; }
+.ah-av--owen, .ah-ts-photo.ah-av--owen { --ah-pos: 47% 15%; --ah-zoom: 2.6; }
+.ah-av--amin, .ah-ts-photo.ah-av--amin { --ah-pos: 60% 42%; --ah-zoom: 1.6; }
+.ah-more { padding: 0 var(--ah-edge); --ah-fs: 16px; }
+.ah-more a { color: var(--ah-orange-text); font-weight: 700; display: inline-flex; gap: 6px; min-height: 44px; align-items: center; }
+
+/* ---------- Routes ---------- */
+.ah-routes { display: grid; gap: 12px; padding: 0 var(--ah-edge); }
+.app-home .ah-route {
+  display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 14px;
+  min-height: 96px; padding: 12px 18px 12px 12px; border-radius: var(--ah-r-md);
+  text-decoration: none; color: var(--ah-ink); background: var(--ah-card); box-shadow: var(--ah-shadow);
+  font: 700 19px/1.2 var(--ah-sans); transition: transform .15s;
+}
+.app-home .ah-route:active { transform: scale(.98); }
+.ah-route img { width: 72px; height: 72px; border-radius: 16px; object-fit: cover; background: var(--ah-cream); }
+.ah-route b { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--ah-orange); color: var(--ah-on-orange); }
+.ah-route--adult b { background: var(--ah-teal); color: #f6f0e6; }
+.ah-price { padding: 16px var(--ah-edge) 0; --ah-fs: 16px; color: var(--ah-muted); }
+
+/* ---------- Final ---------- */
+.app-home .ah-final { margin: 12px 12px 24px; padding: 32px var(--ah-edge); display: grid; gap: 16px; text-align: center; }
+.app-home .ah-final h2 { font-size: 30px; line-height: 1.1; }
+.ah-wa { --ah-fs: 18px; }
+.ah-wa a { color: var(--ah-orange-text); font-weight: 700; min-height: 44px; display: inline-grid; place-items: center; }
+.ah-slogan { margin-top: 16px !important; --ah-fs: 16px; font-weight: 700; color: var(--ah-muted); }
+
+/* ---------- Sticky action bar ---------- */
+.ah-bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  display: flex; gap: 10px; align-items: center;
+  padding: 8px 12px calc(8px + env(safe-area-inset-bottom));
+  background: color-mix(in srgb, var(--ah-panel) 90%, transparent);
+  -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+  box-shadow: 0 -1px 0 var(--ah-line), 0 -10px 30px rgba(11, 63, 81, .08);
+  transform: translateY(110%); visibility: hidden;
+  transition: transform .35s cubic-bezier(.2, .9, .25, 1.15), visibility 0s .35s;
+}
+.ah-bar.is-on { transform: none; visibility: visible; transition: transform .35s cubic-bezier(.2, .9, .25, 1.15), visibility 0s; }
+.app-home .ah-cta--bar { min-height: 54px; font-size: 18px; box-shadow: 0 4px 0 var(--ah-orange-press); }
+.ah-wa-btn { flex: none; width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; background: #25d366; color: #fff; box-shadow: 0 4px 0 #1a9e4b; }
+.ah-wa-btn svg { width: 28px; height: 28px; fill: currentColor; }
+
+/* ---------- Bottom sheets ---------- */
+.ah-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(4, 20, 26, .5); opacity: 0; transition: opacity .3s; }
+.ah-scrim.is-on { opacity: 1; }
+.app-home .ah-sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 60; box-sizing: border-box;
+  background: var(--ah-panel); color: var(--ah-ink);
+  border-radius: var(--ah-r-lg) var(--ah-r-lg) 0 0;
+  padding: 10px var(--ah-edge) calc(24px + env(safe-area-inset-bottom));
+  display: grid; gap: 16px; align-content: start;
+  box-shadow: 0 -20px 60px rgba(0, 0, 0, .25);
+  transform: translateY(105%); transition: transform .38s cubic-bezier(.2, .9, .25, 1);
+}
+.app-home .ah-sheet:focus { outline: none; }
+.app-home .ah-sheet.is-on { transform: translateY(var(--ah-drag, 0px)); }
+.app-home .ah-sheet.is-dragging { transition: none; }
+.app-home .ah-sheet--tall { top: 40px; overflow-y: auto; overscroll-behavior: contain; }
+.ah-grabber { justify-self: center; width: 44px; height: 5px; border-radius: 99px; background: var(--ah-line); margin-bottom: 6px; }
+.ah-close { position: absolute; right: 14px; top: 14px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--ah-cream); color: var(--ah-ink); font-size: 18px; cursor: pointer; }
+.ah-ts-top { display: flex; gap: 16px; align-items: center; padding-right: 48px; }
+.app-home .ah-ts-photo { flex: none; width: 92px; height: 92px; }
+.app-home #ah-ts-name { font-size: 24px; line-height: 1.15; letter-spacing: -.03em; }
+.ah-ts-role { --ah-fs: 15px; color: var(--ah-muted); margin-top: 4px !important; line-height: 1.35 !important; }
+.ah-ts-line { --ah-fs: 21px; line-height: 1.4 !important; padding: 16px 20px; background: var(--ah-card); border-radius: var(--ah-r-md); }
+
+.ah-bs-art { width: 96px; height: 96px; border-radius: 24px; object-fit: cover; }
+.app-home #ah-bs-title { font-size: 30px; line-height: 1.1; }
+.ah-form { display: grid; gap: 16px; margin: 0; }
+.ah-fields { display: grid; gap: 16px; margin: 0; padding: 0; border: 0; min-width: 0; }
+.ah-honeypot { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.ah-field { display: grid; gap: 6px; font: 700 16px/1.3 var(--ah-sans); }
+.ah-field label small { font-size: inherit; font-weight: 400; color: var(--ah-muted); }
+.ah-field > small { font-size: 14px; font-weight: 400; line-height: 1.4; color: var(--ah-muted); }
+.ah-field input {
+  font: 18px/1.3 var(--ah-sans); color: var(--ah-ink); min-height: 56px; padding: 0 16px; box-sizing: border-box; width: 100%;
+  border-radius: 14px; border: 2px solid var(--ah-line); background: var(--ah-card); outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+.ah-field input:focus { border-color: var(--ah-teal); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ah-teal) 18%, transparent); }
+.ah-field input[aria-invalid="true"] { border-color: #c0392b; }
+.ah-field .field-error { font-size: 15px; font-weight: 600; color: #c0392b; }
+.ah-field .field-error:empty { display: none; }
+.ah-form-message { --ah-fs: 15px; line-height: 1.45 !important; }
+.ah-form-message:empty { display: none; }
+.ah-form-message.is-visible { padding: 12px 14px; border-radius: 14px; background: var(--ah-card); border: 2px solid #c0392b; }
+.ah-form-message a { color: var(--ah-orange-text); }
+.ah-use-note { --ah-fs: 14px; color: var(--ah-muted); }
+.ah-use-note a { color: inherit; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .ah-field input:focus { border-color: var(--ah-orange); }
+  :root:not([data-theme="light"]) :is(.ah-field .field-error, .ah-field input[aria-invalid="true"]) { color: #ff9b8f; border-color: #ff9b8f; }
+}
+:root[data-theme="dark"] .ah-field input:focus { border-color: var(--ah-orange); }
+
+/* ---------- Header and footer around the app ---------- */
+/* The footer becomes the last floating card; its slogan already closes the final card in three lines. */
+html body.homepage footer.site-footer { margin: 0 12px 12px; padding: 20px 8px; border: 0; border-radius: var(--ah-r-lg); background: var(--ah-panel); box-shadow: var(--ah-lift); }
+html body.homepage footer.site-footer .footer-slogan { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ah-hero-toucan { animation: none; }
+  .app-home *, .app-home *::before, .app-home *::after { transition-duration: .01ms !important; }
+  .ah-story { transform: none; }
+}

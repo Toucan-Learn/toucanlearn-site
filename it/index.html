@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' https://www.clarity.ms https://scripts.clarity.ms; style-src 'self'; img-src 'self' data: https://*.clarity.ms https://c.bing.com; font-src 'self' data:; connect-src 'self' https://*.clarity.ms; form-action 'none'; frame-src 'self' https://joshtoucanlearn.github.io; worker-src 'none'" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self' https://www.clarity.ms https://scripts.clarity.ms; style-src 'self'; img-src 'self' data: https://*.clarity.ms https://c.bing.com; font-src 'self' data:; connect-src 'self' https://*.clarity.ms https://script.google.com https://script.googleusercontent.com; form-action 'none'; frame-src 'self' https://joshtoucanlearn.github.io; worker-src 'none'" />
   <title>Toucan Learn | Lezioni individuali per bambini e adulti</title>
   <meta name="description" content="Supporto all’apprendimento per bambini e adulti: lezioni individuali, pratiche basate sulla psicologia, resoconti settimanali e prima lezione gratuita. Online o a Bristol, Londra e Oxfordshire." />
   <link rel="canonical" href="https://toucanlearn.co.uk/it/" />
@@ -43,6 +43,7 @@
   <script src="/team-carousel.js?v=20261101-mobile-review-1" defer></script>
   <link rel="stylesheet" href="/consent.css?v=20261031-clarity-1" />
   <link rel="stylesheet" href="/opening-offer.css?v=20261104-mobile-pages-1" />
+  <link rel="stylesheet" media="(max-width: 767px)" href="/app-home.css?v=20261104-app-1" />
   <link rel="stylesheet" href="/language-switch.css?v=20261101-flags-4" />
   <script src="/language-switch.js?v=20261101-flags-4" defer></script>
 </head>
@@ -423,6 +424,190 @@
       </div>
     </section>
 
+    <!-- app-home:start -->
+    <!-- Phone homepage (max-width 767px): owner-approved app layout, 4 Nov. Hidden on desktop; images are lazy or blanked there. -->
+    <div class="app-home home-phone-only" data-app-home>
+      <div class="ah-sky" data-ah-sky aria-hidden="true"></div>
+      <section class="ah-hero" data-mood="8,47,61,0" aria-labelledby="ah-hero-title">
+        <picture><source media="(min-width: 768px)" srcset="data:image/gif;base64, /R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" /><img class="ah-hero-toucan" src="/assets/app-home/toucan-480.webp" alt="" width="480" height="480" decoding="async" /></picture>
+        <div class="ah-card ah-hero-body">
+          <p class="ah-chip">Bambini · Adulti · BES</p>
+          <h1 id="ah-hero-title">Un apprendimento su misura per <em>te.</em></h1>
+          <p class="ah-sub">Lezioni individuali, online o a Bristol, Londra e Oxfordshire.</p>
+          <a class="ah-cta ah-cta--hero" href="/it/contact#enquiry-form" data-book data-ah-hero-cta>Prenota una lezione gratuita</a>
+          <p class="ah-guarantee">Se la prima lezione a pagamento non fa per te, non la paghi, oppure cambiamo tutor senza costi.</p>
+        </div>
+      </section>
+
+      <section class="ah-proof" id="ah-reviews" data-mood="40,110,100,.14" aria-label="Cosa dicono i genitori">
+        <div class="ah-card ah-review">
+          <span class="ah-stars" role="img" aria-label="Valutazione: 5 su 5">★★★★★</span>
+          <p class="ah-review-line"><q>Un’ottima esperienza con le lezioni.</q> <a href="https://search.google.com/local/reviews?placeid=ChIJgdVNb0aRcUgR7KtBCEt6KO8">Genitore · Recensione Google</a></p>
+        </div>
+        <ul class="ah-perks" role="list">
+          <li><img src="/assets/app-home/step-01.webp" alt="" width="308" height="192" loading="lazy" decoding="async" />Prima lezione gratuita</li>
+          <li><img src="/assets/app-home/step-04.webp" alt="" width="308" height="192" loading="lazy" decoding="async" />Resoconti settimanali</li>
+          <li><img src="/assets/app-home/step-02.webp" alt="" width="308" height="192" loading="lazy" decoding="async" />Guidato dal fondatore</li>
+        </ul>
+      </section>
+
+      <section class="ah-card ah-block" id="ah-projects" data-mood="228,122,46,.16" aria-labelledby="ah-projects-title">
+        <div class="ah-head">
+          <p class="ah-eyebrow">Progetti degli studenti</p>
+          <h2 id="ah-projects-title">Nati da ciò che amano.</h2>
+        </div>
+        <div class="ah-track" data-ah-track tabindex="0" role="region" aria-label="Progetti degli studenti; scorri per vederne altri">
+          <article class="ah-story" data-ah-slide data-i18n-skip>
+            <div class="ah-story-media"><img src="/assets/app-home/darty-card.webp" alt="DARTY football game: a player walks onto a floodlit pitch" width="640" height="672" loading="lazy" decoding="async" /></div>
+            <span class="ah-tag">SEN support</span>
+            <h3>DARTY</h3>
+            <p>A 3D football game built from his written requests.</p>
+          </article>
+          <article class="ah-story" data-ah-slide data-ah-spin="/assets/projects/drinks/skids/" data-i18n-skip>
+            <div class="ah-story-media ah-story-media--teal"><img class="ah-spin-frame" src="/assets/projects/drinks/skids/poster.webp" alt="Skids drink design, 3D render" width="1200" height="900" loading="lazy" decoding="async" /></div>
+            <span class="ah-tag">SEN &amp; English</span>
+            <h3>Drink design</h3>
+            <p>Sketches and slogans, turned into 3D drinks brands.</p>
+          </article>
+          <article class="ah-story" data-ah-slide data-i18n-skip>
+            <div class="ah-story-media ah-story-media--paper"><img src="/assets/app-home/football-card.webp" alt="A football newspaper front page" width="640" height="672" loading="lazy" decoding="async" /></div>
+            <span class="ah-tag">English · Journalism</span>
+            <h3>Football newspaper</h3>
+            <p>His own sports website, full of his match reports.</p>
+          </article>
+          <article class="ah-story" data-ah-slide data-i18n-skip>
+            <div class="ah-story-media"><img src="/assets/app-home/piano-card.webp" alt="Toucan piano with a pixel sky" width="640" height="672" loading="lazy" decoding="async" /></div>
+            <span class="ah-tag">SEN · Music brain breaks</span>
+            <h3>Toucan piano</h3>
+            <p>Songs they request, and a fresh head for the next task.</p>
+          </article>
+        </div>
+        <div class="ah-dots" data-ah-dots aria-hidden="true"></div>
+      </section>
+
+      <section class="ah-card ah-block" id="ah-report" data-mood="111,152,123,.20" aria-labelledby="ah-report-title">
+        <div class="ah-head">
+          <p class="ah-eyebrow">Ogni settimana</p>
+          <h2 id="ah-report-title">Guarda un resoconto settimanale.</h2>
+        </div>
+        <div class="ah-deck" data-ah-deck>
+          <article class="ah-rcard ah-rcard--1" data-ah-card>
+            <p class="ah-rhead"><span class="ah-badge">ESEMPIO</span> <span class="ah-rmeta">Studente di esempio · Settimana 3</span></p>
+            <h3><span class="ah-ricon" aria-hidden="true">1</span>Questa settimana abbiamo visto</h3>
+            <p>Le frazioni di una quantità, usando come esempio una squadra di calcio.</p>
+          </article>
+          <article class="ah-rcard ah-rcard--2" data-ah-card>
+            <p class="ah-rhead"><span class="ah-badge">ESEMPIO</span> <span class="ah-rmeta">Studente di esempio · Settimana 3</span></p>
+            <h3><span class="ah-ricon" aria-hidden="true">2</span>Mi ha colpito</h3>
+            <p>Come ha spiegato il suo metodo ad alta voce prima di scriverlo.</p>
+          </article>
+          <article class="ah-rcard ah-rcard--3" data-ah-card>
+            <p class="ah-rhead"><span class="ah-badge">ESEMPIO</span> <span class="ah-rmeta">Studente di esempio · Settimana 3</span></p>
+            <h3><span class="ah-ricon" aria-hidden="true">3</span>La prossima volta</h3>
+            <p>Le percentuali, poi un breve quiz che lo studente scriverà da sé.</p>
+          </article>
+        </div>
+        <div class="ah-deck-foot">
+          <div class="ah-dots" data-ah-deck-dots aria-hidden="true"></div>
+          <button class="ah-ghost" type="button" data-ah-deck-next>Scheda successiva <span aria-hidden="true">→</span></button>
+        </div>
+      </section>
+
+      <section class="ah-card ah-block" id="ah-team" data-mood="196,95,33,.12" aria-labelledby="ah-team-title">
+        <div class="ah-head">
+          <p class="ah-eyebrow">Il tuo team</p>
+          <h2 id="ah-team-title">Un team dietro ogni studente.</h2>
+        </div>
+        <ul class="ah-avatars" role="list" data-ah-team>
+          <li class="ah-av ah-av--joshua"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/joshua-escalator-600.webp?v=20261031-light-1" alt="" width="1200" height="1600" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Joshua</b></button><p hidden data-ah-name data-i18n-skip>Joshua Gordon Jones</p><p hidden data-ah-role>Fondatore · Laureato in psicologia, specialista qualificato in BES e istruzione</p><p hidden data-ah-line>“Siamo qui perché ogni studente abbia un team alle spalle.”</p></li>
+          <li class="ah-av ah-av--aaron"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/aaron-video-call-600.webp?v=20261031-light-1" alt="" width="1179" height="2556" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Aaron</b></button><p hidden data-ah-name data-i18n-skip>Aaron Gelsthorpe</p><p hidden data-ah-role>Insegnante di inglese, matematica, scienze e arte · Responsabile di arte e design</p><p hidden data-ah-line>“Appassionato di aiutare gli studenti in inglese, matematica e arte!”</p></li>
+          <li class="ah-av ah-av--connor"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/connor-snake-600.webp?v=20261031-light-1" alt="" width="739" height="1600" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Connor</b></button><p hidden data-ah-name data-i18n-skip>Connor Wright</p><p hidden data-ah-role>Insegnante per la primaria · Assistente didattico e specialista 1-1</p><p hidden data-ah-line>“Mi piace davvero avere un impatto positivo e favorire la crescita dei miei studenti.”</p></li>
+          <li class="ah-av ah-av--sara"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/sara-portrait-600.webp?v=20261031-mobile-1" alt="" width="600" height="800" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Sara</b></button><p hidden data-ah-name data-i18n-skip>Sara Sharra</p><p hidden data-ah-role>Insegnante di italiano · Interior Design alla UWE</p><p hidden data-ah-line lang="it">“Non vedo l’ora di conoscerti!”</p></li>
+          <li class="ah-av ah-av--joan"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/chemi-suit-600.webp?v=20261031-light-1" alt="" width="738" height="1600" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Joan</b></button><p hidden data-ah-name data-i18n-skip>Joan Miquel Serra</p><p hidden data-ah-role>Insegnante di spagnolo e BES · Laureato in psicologia e specialista BES</p><p hidden data-ah-line>“Adoro aiutare i miei studenti a scoprire il loro potenziale!”</p></li>
+          <li class="ah-av ah-av--sam"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/nhu-portrait.jpg?v=20261030-nhu-1" alt="" width="405" height="600" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Sam</b></button><p hidden data-ah-name data-i18n-skip>Hồ Thị Yến Như (Sam)</p><p hidden data-ah-role>Insegnante di matematica, inglese e vietnamita · Studentessa di finanza</p><p hidden data-ah-line>“Adoro spezzare i problemi grandi in piccoli passi finché tutto torna.”</p></li>
+          <li class="ah-av ah-av--owen"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/owen-goalkeeper.jpg?v=20261028-photos-1" alt="" width="300" height="450" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Owen</b></button><p hidden data-ah-name data-i18n-skip>Owen Young</p><p hidden data-ah-role>Insegnante di francese · Scienze motorie all’Università di Loughborough</p><p hidden data-ah-line lang="fr">“Si tu veux apprendre l’anglais, je peux t’aider.”</p></li>
+          <li class="ah-av ah-av--amin"><button type="button" aria-haspopup="dialog"><span class="ah-ring"><span><img src="/assets/team/amin-portrait.jpg?v=20261028-amin-5" alt="" width="414" height="620" loading="lazy" decoding="async" /></span></span><b data-i18n-skip>Amin</b></button><p hidden data-ah-name data-i18n-skip>Amin Gharbi</p><p hidden data-ah-role>Insegnante di arabo e inglese · Imprenditore</p><p hidden data-ah-line>“Insieme fissiamo obiettivi chiari, in uno spazio accogliente e coinvolgente.”</p></li>
+        </ul>
+        <p class="ah-more"><a href="/it/team">Scopri di più sul team <span aria-hidden="true">→</span></a></p>
+      </section>
+
+      <section class="ah-card ah-block" id="ah-routes" data-mood="11,63,81,.30" aria-labelledby="ah-routes-title">
+        <div class="ah-head"><h2 id="ah-routes-title">Per chi è?</h2></div>
+        <div class="ah-routes">
+          <a class="ah-route" href="/it/children"><img src="/assets/app-home/subject-send.webp" alt="" width="346" height="216" loading="lazy" decoding="async" /><span>Un bambino o un ragazzo</span><b aria-hidden="true">→</b></a>
+          <a class="ah-route ah-route--adult" href="/it/adults"><img src="/assets/app-home/subject-languages.webp" alt="" width="346" height="216" loading="lazy" decoding="async" /><span>Adulti, IELTS e lingue</span><b aria-hidden="true">→</b></a>
+        </div>
+        <p class="ah-price">Lezioni a pagamento: da £25/£40/£65 l’ora, concordato prima di iniziare.</p>
+      </section>
+
+      <section class="ah-card ah-final" data-mood="120,60,90,.18" aria-labelledby="ah-final-title">
+        <h2 id="ah-final-title">La prima lezione e il resoconto della valutazione iniziale sono gratuiti.</h2>
+        <a class="ah-cta" href="/it/contact#enquiry-form" data-book data-ah-final-cta>Prenota una lezione gratuita</a>
+        <p class="ah-wa"><a href="https://wa.me/447307045816">Preferisci WhatsApp? Facci una domanda.</a></p>
+        <p class="ah-slogan" data-i18n-skip>Who can learn?<br />You can learn.<br />@toucan_learn</p>
+      </section>
+
+      <div class="ah-bar" data-ah-bar aria-hidden="true">
+        <a class="ah-cta ah-cta--bar" href="/it/contact#enquiry-form" data-book tabindex="-1">Prenota una lezione gratuita</a>
+        <a class="ah-wa-btn" href="https://wa.me/447307045816" aria-label="Scrivici su WhatsApp" tabindex="-1"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 1 1 12 19.9Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.6-.4Z"/></svg></a>
+      </div>
+
+      <div class="ah-scrim" data-ah-scrim hidden></div>
+
+      <section class="ah-sheet" id="ah-team-sheet" data-ah-team-sheet tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="ah-ts-name" hidden>
+        <div class="ah-grabber" aria-hidden="true"></div>
+        <button class="ah-close" type="button" data-ah-close aria-label="Chiudi">✕</button>
+        <div class="ah-ts-top">
+          <span class="ah-ring ah-ts-photo"><span><img data-ah-ts-img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="" width="92" height="92" /></span></span>
+          <div><h2 id="ah-ts-name" data-ah-ts-name></h2><p class="ah-ts-role" data-ah-ts-role></p></div>
+        </div>
+        <p class="ah-ts-line" data-ah-ts-line></p>
+        <a class="ah-cta" href="/it/contact#enquiry-form" data-book>Prenota una lezione gratuita</a>
+      </section>
+
+      <section class="ah-sheet ah-sheet--tall" id="ah-book-sheet" data-ah-book-sheet tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="ah-bs-title" hidden>
+        <div class="ah-grabber" aria-hidden="true"></div>
+        <button class="ah-close" type="button" data-ah-close aria-label="Chiudi">✕</button>
+        <img class="ah-bs-art" src="/assets/app-home/step-01.webp" alt="" width="308" height="192" loading="lazy" decoding="async" />
+        <h2 id="ah-bs-title">Prenota una lezione gratuita</h2>
+        <p class="ah-sub">Prima lezione e resoconto della valutazione iniziale gratuiti.</p>
+        <!-- Same Apps Script endpoint, field names and contact.js handler as the contact page's short form. -->
+        <form class="ah-form" id="enquiry-form" data-enquiry-mode="short" data-form-endpoint="https://script.google.com/macros/s/AKfycbyqWslTjfXnR-LNPHu5k8K5MxTx4O3VQdjAF-_UD_nHTOjZa4bXcuo9ukpyqe97zW3z/exec" method="POST">
+          <p class="ah-form-message" id="form-message" role="alert" aria-live="assertive" aria-atomic="true" tabindex="-1"></p>
+          <fieldset class="ah-fields" id="enquiry-fields" disabled>
+            <legend class="visually-hidden">Dettagli della richiesta di lezioni</legend>
+            <input type="hidden" name="loaded_at" id="loaded-at" value="" />
+            <input type="hidden" name="Campaign source" id="campaign-source" value="Direct or unknown" />
+            <input type="hidden" name="Traffic source" id="traffic-source" value="" />
+            <input type="hidden" name="Traffic medium" id="traffic-medium" value="" />
+            <input type="hidden" name="Campaign name" id="campaign-name" value="" />
+            <div class="ah-honeypot" aria-hidden="true">
+              <label for="company-website">Lascia vuoto questo campo</label>
+              <input id="company-website" name="website" type="text" maxlength="200" tabindex="-1" autocomplete="off" />
+            </div>
+            <div class="ah-field">
+              <label for="contact-name">Il tuo nome</label>
+              <input id="contact-name" name="Contact name" type="text" maxlength="120" autocomplete="name" aria-describedby="contact-name-error" required />
+              <span class="field-error" id="contact-name-error"></span>
+            </div>
+            <div class="ah-field">
+              <label for="reply-contact">Email o telefono</label>
+              <input id="reply-contact" name="Email or phone" type="text" maxlength="254" autocomplete="email" inputmode="email" aria-describedby="reply-contact-error" required />
+              <span class="field-error" id="reply-contact-error"></span>
+            </div>
+            <div class="ah-field">
+              <label for="support-needed">Per cosa vorresti aiuto? <small>(facoltativo)</small></label>
+              <input id="support-needed" name="Support requested" type="text" maxlength="200" aria-describedby="support-needed-privacy support-needed-error" />
+              <small id="support-needed-privacy">Non includere diagnosi o documenti medici; parleremo insieme delle esigenze.</small> <span class="field-error" id="support-needed-error"></span>
+            </div>
+            <button class="ah-cta" id="submit-button" type="submit">Prenota la mia lezione gratuita</button>
+            <p class="ah-guarantee">Se la prima lezione a pagamento non fa per te, non la paghi, oppure cambiamo tutor senza costi.</p>
+            <p class="ah-use-note">Useremo questi dati solo per risponderti. Leggi la nostra <a href="/privacy">informativa sulla privacy</a>.</p>
+          </fieldset>
+        </form>
+      </section>
+    </div>
+    <!-- app-home:end -->
   </main>
 
   <footer class="site-footer">
@@ -438,5 +623,7 @@
   <script src="/consent.js?v=20261031-clones-1"></script>
   <script src="/launch-offer.js?v=20261031-clones-1"></script>
   <script src="/campaigns.js?v=20261031-clones-1"></script>
+  <script src="/contact.js?v=20261101-mobile-1"></script>
+  <script src="/app-home.js?v=20261104-app-1"></script>
 </body>
 </html>

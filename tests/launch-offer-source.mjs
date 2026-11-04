@@ -97,6 +97,11 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   const text = await readFile(new URL(file, root), 'utf8');
   if (!text.includes('<header')) continue;
   // Isolated owner mock has no historical Git baseline; its own source suite checks the copy/CSP.
+  // 4 Nov: index-app-mock.html is the owner-approved reference for the phone homepage (unlinked, noindex).
+  if (file === 'index-app-mock.html') {
+    assert.match(text, /<meta name="robots" content="noindex,nofollow"/);
+    continue;
+  }
   if (file === 'index-mobile-mock.html') {
     assert.match(text, /<meta name="robots" content="noindex, nofollow, noarchive"/);
     continue;

@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import { execFileSync } from 'node:child_process';
 import { openingCSS, openingPages } from '../scripts/build-opening-css.mjs';
+import { withoutAppHome } from './helpers/app-home-markup.mjs';
 const root = new URL('../', import.meta.url);
 const read = name => fs.readFileSync(new URL(name, root), 'utf8');
 const sheets = html => [...html.matchAll(/<link rel="stylesheet"(?: data-deferred-style media="print")? href="([^"?]+)[^"]*"/g)].map(match => match[1]);
@@ -12,7 +13,8 @@ for (const page of openingPages) {
   const original = execFileSync('git', ['show', `a6c095a:${page}.html`], { cwd: root, encoding: 'utf8' });
   const complete = sheets(html.replace(/<noscript>[\s\S]*?<\/noscript>/g, '')).filter(file => !file.startsWith('assets/css/opening-') && file !== 'opening-offer.css');
   assert.deepEqual(complete, sheets(original), `${page}: full cascade order is preserved`);
-  assert.equal(html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0], original.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0]);
+  // Owner, 4 Nov: the phone homepage's booking sheet posts to the contact form's endpoint (helpers/app-home-markup.mjs).
+  assert.equal((page === 'index' ? withoutAppHome(html) : html).match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0], original.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0]);
   assert.doesNotMatch(html, /\s(?:style|on\w+)\s*=/i, `${page}: CSP has no inline handlers or styles`);
   const css = openingCSS(html, read);
   assert.equal(read(`assets/css/opening-${page}.css`).split('\n').slice(1).join('\n'), css, `${page}: generated opening CSS is current`);

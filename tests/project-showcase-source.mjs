@@ -5,6 +5,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { runInNewContext } from 'node:vm';
+import { withoutAppHome } from './helpers/app-home-markup.mjs';
 import { withoutMobilePerformance } from './helpers/mobile-audit-markup.mjs';
 import { homeNavigationMarkup } from './helpers/navigation-markup.mjs';
 import '../scripts/check-project-cells-static.mjs';
@@ -198,7 +199,8 @@ await assert.rejects(access(new URL('../projects/piano/piano.js', import.meta.ur
 
 const site = fileURLToPath(new URL('../', import.meta.url));
 const before = execFileSync('git', ['show', `${process.env.PROJECT_COPY_BASE || process.env.SHOWCASE_BASE || 'd40ecf2'}:index.html`], { cwd: site, encoding: 'utf8' });
-const after = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+// Owner, 4 Nov: the phone-only app layout is checked by tests/app-home-source.mjs.
+const after = withoutAppHome(await readFile(new URL('../index.html', import.meta.url), 'utf8'));
 // The team section and site-wide asset tokens carry owner-approved edits from other lanes (29 Oct: team copy, Sara's order,
 // framework/menu/favicon tokens), so these guards compare the showcase-owned markup only.
 const withoutOwnerContent = html => withoutMobilePerformance(html)

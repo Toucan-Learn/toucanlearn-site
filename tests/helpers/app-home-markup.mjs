@@ -1,0 +1,11 @@
+// Owner, 4 Nov: the phone homepage became the approved app layout (index-app-mock.html v2).
+// Every addition is phone-only and isolated, so older homepage baselines compare without it:
+// the marked block, its phone-only stylesheet and scripts, and the form endpoint hosts it
+// shares with the contact page's enquiry form.
+export function withoutAppHome(html) {
+  return html
+    .replace(/\n {4}<!-- app-home:start -->[\s\S]*?<!-- app-home:end -->\n/, '\n')
+    .replace(/  <link rel="stylesheet" media="\(max-width: 767px\)" href="\/?app-home\.css[^"]*" \/>\n/, '')
+    .replace(/  <script src="\/?contact\.js[^"]*"><\/script>\n  <script src="\/?app-home\.js[^"]*"><\/script>\n/, '')
+    .replace("connect-src 'self' https://*.clarity.ms https://script.google.com https://script.googleusercontent.com;", "connect-src 'self' https://*.clarity.ms;");
+}

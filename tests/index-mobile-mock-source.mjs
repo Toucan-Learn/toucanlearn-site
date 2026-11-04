@@ -2,9 +2,12 @@
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
+import { withoutAppHome } from './helpers/app-home-markup.mjs';
 const root = new URL('../', import.meta.url);
 const read = file => readFile(new URL(file, root), 'utf8');
-const [html, home, css, script] = await Promise.all(['index-mobile-mock.html', 'index.html', 'index-mobile-mock.css', 'index-mobile-mock.js'].map(read));
+const [html, liveHome, css, script] = await Promise.all(['index-mobile-mock.html', 'index.html', 'index-mobile-mock.css', 'index-mobile-mock.js'].map(read));
+// 4 Nov: the phone-only app layout is checked by tests/app-home-source.mjs; this mock predates it.
+const home = withoutAppHome(liveHome);
 assert.match(html, /<meta name="robots" content="noindex, nofollow, noarchive"/);
 assert.equal(html.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0], home.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0]);
 let copy = html.replace(/  <meta name="robots"[^>]*>\n/, '')

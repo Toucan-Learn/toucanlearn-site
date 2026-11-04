@@ -524,6 +524,140 @@
  "<a href=\"https://wa.me/447307045816\">Prefer WhatsApp? Ask us a question.</a>": [
   "index"
  ],
+ "Children · Adults · SEN": [
+  "index"
+ ],
+ "One-to-one, online or in Bristol, London and Oxfordshire.": [
+  "index"
+ ],
+ "<a class=\"ah-cta ah-cta--hero\" href=\"contact#enquiry-form\" data-book data-ah-hero-cta>Book a free session</a>": [
+  "index"
+ ],
+ "Free first session": [
+  "index"
+ ],
+ "Weekly reports": [
+  "index",
+  "approach"
+ ],
+ "Founder-led": [
+  "index"
+ ],
+ "Student projects": [
+  "index"
+ ],
+ "Built from what they love.": [
+  "index"
+ ],
+ "Every week": [
+  "index"
+ ],
+ "See a weekly report.": [
+  "index"
+ ],
+ "<span class=\"ah-badge\">EXAMPLE</span> <span class=\"ah-rmeta\">Example learner · Week 3</span>": [
+  "index"
+ ],
+ "<span class=\"ah-ricon\" aria-hidden=\"true\">1</span>This week we covered": [
+  "index"
+ ],
+ "Fractions of amounts, using a football squad as the example.": [
+  "index"
+ ],
+ "<span class=\"ah-ricon\" aria-hidden=\"true\">2</span>I was impressed by": [
+  "index"
+ ],
+ "How they explained their method out loud before writing it.": [
+  "index"
+ ],
+ "<span class=\"ah-ricon\" aria-hidden=\"true\">3</span>Next time": [
+  "index"
+ ],
+ "Percentages, then a short quiz they get to write themselves.": [
+  "index"
+ ],
+ "Next card <span aria-hidden=\"true\">→</span>": [
+  "index"
+ ],
+ "A team behind every learner.": [
+  "index"
+ ],
+ "“We’re here so every student can have a team behind them.”": [
+  "index"
+ ],
+ "“Passionate about supporting students with their English, Maths and Art skills!”": [
+  "index"
+ ],
+ "“I really enjoy making positive impacts and facilitating growth for my students.”": [
+  "index"
+ ],
+ "“I love helping my students discover their potential!”": [
+  "index"
+ ],
+ "“I love breaking big problems into small steps until everything clicks.”": [
+  "index"
+ ],
+ "“We set clear goals together in a supportive, engaging space.”": [
+  "index"
+ ],
+ "<a href=\"team\">More about the team <span aria-hidden=\"true\">→</span></a>": [
+  "index"
+ ],
+ "Who is it for?": [
+  "index"
+ ],
+ "<span>A child or young person</span><b aria-hidden=\"true\">→</b>": [
+  "index"
+ ],
+ "<span>Adults, IELTS &amp; languages</span><b aria-hidden=\"true\">→</b>": [
+  "index"
+ ],
+ "<a class=\"ah-cta\" href=\"contact#enquiry-form\" data-book data-ah-final-cta>Book a free session</a>": [
+  "index"
+ ],
+ "<a class=\"ah-cta ah-cta--bar\" href=\"contact#enquiry-form\" data-book tabindex=\"-1\">Book a free session</a>": [
+  "index"
+ ],
+ "<a class=\"ah-cta\" href=\"contact#enquiry-form\" data-book>Book a free session</a>": [
+  "index"
+ ],
+ "Book a free session": [
+  "index"
+ ],
+ "Free first session and diagnostic report.": [
+  "index"
+ ],
+ "Tutoring enquiry details": [
+  "index",
+  "contact"
+ ],
+ "Leave this field empty": [
+  "index",
+  "contact"
+ ],
+ "Your name": [
+  "index",
+  "contact"
+ ],
+ "Email or phone": [
+  "index",
+  "contact"
+ ],
+ "What would you like help with? <small>(optional)</small>": [
+  "index",
+  "contact"
+ ],
+ "<small id=\"support-needed-privacy\">Please don't include diagnoses or medical records; we'll talk through needs together.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": [
+  "index",
+  "contact"
+ ],
+ "Book my free session": [
+  "index"
+ ],
+ "We'll only use these details to reply to you. Read our <a href=\"privacy\">privacy notice</a>.": [
+  "index",
+  "contact"
+ ],
  "Who can learn? You can learn. <a href=\"https://www.instagram.com/toucan_learn/\" target=\"_blank\" rel=\"noopener\">@toucan_learn</a>": [
   "index",
   "children",
@@ -657,6 +791,18 @@
   "subjects",
   "approach",
   "team"
+ ],
+ "What parents say": [
+  "index"
+ ],
+ "Student projects, swipe for more": [
+  "index"
+ ],
+ "Message us on WhatsApp": [
+  "index"
+ ],
+ "Close": [
+  "index"
  ],
  "Policies and contact": [
   "index",
@@ -1652,9 +1798,6 @@
  "<a class=\"button\" href=\"contact\">Try a free first lesson</a>": [
   "approach"
  ],
- "Weekly reports": [
-  "approach"
- ],
  "Your tutor writes you a report every week, in their own words, and our founder reads every one.": [
   "approach"
  ],
@@ -1808,31 +1951,10 @@
  "Send us a short enquiry.": [
   "contact"
  ],
- "Tutoring enquiry details": [
-  "contact"
- ],
- "Leave this field empty": [
-  "contact"
- ],
- "Your name": [
-  "contact"
- ],
- "Email or phone": [
-  "contact"
- ],
- "What would you like help with? <small>(optional)</small>": [
-  "contact"
- ],
- "<small id=\"support-needed-privacy\">Please don't include diagnoses or medical records; we'll talk through needs together.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": [
-  "contact"
- ],
  "Send my enquiry <span aria-hidden=\"true\">→</span>": [
   "contact"
  ],
  "<a class=\"opening-reviews\" href=\"./#reviews\">Google ★★★★★ · Facebook recommendations</a>": [
-  "contact"
- ],
- "We'll only use these details to reply to you. Read our <a href=\"privacy\">privacy notice</a>.": [
   "contact"
  ],
  "Please <a href=\"mailto:hello@toucanlearn.co.uk\">email hello@toucanlearn.co.uk</a> or <a href=\"tel:+447309639095\">call 07309 639095</a> to enquire without JavaScript.": [

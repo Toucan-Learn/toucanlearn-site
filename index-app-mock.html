@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#0b3f51" />
+  <title>Toucan Learn · app mock</title>
+  <link rel="icon" href="assets/toucan-favicon.png" />
+  <link rel="stylesheet" href="app-mock.css?v=2" />
+</head>
+<body>
+  <div class="sky" id="sky" aria-hidden="true"></div>
+  <!-- PROTOTYPE ONLY: unlinked, noindex. Nothing here is live. -->
+  <header class="appbar" id="appbar">
+    <a class="appbar-brand" href="#top" aria-label="Toucan Learn home">
+      <img src="assets/toucan-logo-flat-256.webp" alt="" width="36" height="36" />
+      <span>Toucan Learn</span>
+    </a>
+    <a class="icon-btn" href="https://wa.me/447307045816" aria-label="Message us on WhatsApp">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 1 1 12 19.9Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.6-.4Z"/></svg>
+    </a>
+  </header>
+
+  <main id="top">
+    <!-- 1. HERO -->
+    <section class="hero" data-mood="8,47,61,0" aria-labelledby="hero-title">
+      <img class="hero-toucan" src="assets/toucan-logo-flat-800.webp" alt="" width="800" height="800" />
+      <div class="hero-body">
+        <p class="chip chip--glass">Children · Adults · SEN</p>
+        <h1 id="hero-title">Learning built around <em>you.</em></h1>
+        <p class="hero-sub">One-to-one, online or in Bristol, London and Oxfordshire.</p>
+        <button class="cta cta--hero" type="button" data-book id="hero-cta">Book a free session</button>
+        <p class="guarantee"><span class="shield" aria-hidden="true">✓</span>If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.</p>
+      </div>
+    </section>
+
+    <!-- 2. PROOF STRIP -->
+    <section class="proof" data-mood="40,110,100,.14" aria-label="What parents say">
+      <div class="review-pill">
+        <span class="stars" aria-label="5 stars">★★★★★</span>
+        <q>Great tutor experience.</q>
+        <span class="review-src">Parent · Google review</span>
+      </div>
+      <ul class="perk-row" role="list">
+        <li><img src="assets/art/step-01.webp" alt="" width="56" height="56" />Free first session</li>
+        <li><img src="assets/art/step-04.webp" alt="" width="56" height="56" />Weekly reports</li>
+        <li><img src="assets/art/step-02.webp" alt="" width="56" height="56" />Founder-led</li>
+      </ul>
+    </section>
+
+    <!-- 3. PROJECTS: swipe story cards -->
+    <section class="block" data-mood="228,122,46,.16" id="projects" aria-labelledby="projects-title">
+      <div class="block-head">
+        <p class="eyebrow">Student projects</p>
+        <h2 id="projects-title">Built from what they love.</h2>
+      </div>
+      <div class="carousel" data-carousel>
+        <div class="snap-track" data-track tabindex="0" aria-label="Student projects, swipe for more">
+          <article class="story" data-slide>
+            <div class="story-media story-media--paper">
+              <img src="assets/projects/football-home-phone.webp" alt="A football newspaper front page" width="1044" height="1020" />
+            </div>
+            <span class="tag">English · Journalism</span>
+            <h3>Football newspaper</h3>
+            <p>His own sports website, full of his match reports.</p>
+          </article>
+          <article class="story" data-slide>
+            <div class="story-media">
+              <img src="assets/projects/darty-still-07.webp" alt="DARTY football game: a player walks onto a floodlit pitch" width="1600" height="900" />
+            </div>
+            <span class="tag">SEN support</span>
+            <h3>DARTY</h3>
+            <p>A 3D football game built from his written requests.</p>
+          </article>
+          <article class="story" data-slide data-spin="assets/projects/drinks/skids/">
+            <div class="story-media story-media--teal">
+              <img class="spin-frame" src="assets/projects/drinks/skids/poster.webp" alt="Skids drink design, 3D render" width="1200" height="900" />
+            </div>
+            <span class="tag">SEN &amp; English</span>
+            <h3>Drink design</h3>
+            <p>Sketches and slogans, turned into 3D drinks brands.</p>
+          </article>
+          <article class="story" data-slide>
+            <div class="story-media">
+              <img src="assets/projects/toucan-piano-home-phone-pixel.webp" alt="Toucan piano with a pixel sky" width="1044" height="1020" />
+            </div>
+            <span class="tag">SEN · Music brain breaks</span>
+            <h3>Toucan piano</h3>
+            <p>Songs they request, and a fresh head for the next task.</p>
+          </article>
+        </div>
+        <div class="dots" data-dots aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <!-- 4. EXAMPLE REPORT: swipe card stack -->
+    <section class="block" id="report" data-mood="111,152,123,.20" aria-labelledby="report-title">
+      <div class="block-head">
+        <p class="eyebrow">Every week</p>
+        <h2 id="report-title">See a weekly report.</h2>
+      </div>
+      <div class="deck" data-deck aria-roledescription="card stack">
+        <article class="rcard rcard--1" data-card>
+          <header><span class="badge">EXAMPLE</span><span class="rmeta">Example learner · Week 3</span></header>
+          <h3><span class="ricon" aria-hidden="true">1</span>This week we covered</h3>
+          <p>Fractions of amounts, using a football squad as the example.</p>
+        </article>
+        <article class="rcard rcard--2" data-card>
+          <header><span class="badge">EXAMPLE</span><span class="rmeta">Example learner · Week 3</span></header>
+          <h3><span class="ricon" aria-hidden="true">2</span>I was impressed by</h3>
+          <p>How they explained their method out loud before writing it.</p>
+        </article>
+        <article class="rcard rcard--3" data-card>
+          <header><span class="badge">EXAMPLE</span><span class="rmeta">Example learner · Week 3</span></header>
+          <h3><span class="ricon" aria-hidden="true">3</span>Next time</h3>
+          <p>Percentages, then a short quiz they get to write themselves.</p>
+        </article>
+      </div>
+      <div class="deck-foot">
+        <div class="dots dots--light" data-deck-dots aria-hidden="true"></div>
+        <button class="ghost-btn" type="button" data-deck-next>Next card →</button>
+      </div>
+    </section>
+
+    <!-- 5. TEAM: story avatars + bottom sheet -->
+    <section class="block" data-mood="196,95,33,.12" id="team" aria-labelledby="team-title">
+      <div class="block-head">
+        <p class="eyebrow">Your team</p>
+        <h2 id="team-title">A team behind every learner.</h2>
+      </div>
+      <ul class="avatars" role="list" data-team></ul>
+    </section>
+
+    <!-- 6. ROUTES -->
+    <section class="block" aria-labelledby="routes-title" data-mood="11,63,81,.30">
+      <div class="block-head"><h2 id="routes-title">Who is it for?</h2></div>
+      <div class="routes">
+        <a class="route route--child" href="children">
+          <img src="assets/art/subject-send.webp" alt="" width="120" height="120" loading="lazy" />
+          <span>A child or young person</span><b aria-hidden="true">→</b>
+        </a>
+        <a class="route route--adult" href="adults">
+          <img src="assets/art/subject-languages.webp" alt="" width="120" height="120" loading="lazy" />
+          <span>Adults, IELTS &amp; languages</span><b aria-hidden="true">→</b>
+        </a>
+      </div>
+      <p class="price">Paid lessons £25 / £40 / £65 an hour, agreed before you start.</p>
+    </section>
+
+    <!-- 7. FINAL CTA -->
+    <section class="final" data-mood="120,60,90,.18" id="final" aria-labelledby="final-title">
+      <h2 id="final-title">Your first session and report are free.</h2>
+      <button class="cta" type="button" data-book id="final-cta">Book a free session</button>
+      <a class="wa-link" href="https://wa.me/447307045816">Prefer WhatsApp? Ask us a question.</a>
+      <p class="slogan">Who can learn?<br />You can learn.<br />@toucan_learn</p>
+    </section>
+  </main>
+
+  <!-- Sticky action bar -->
+  <div class="actionbar" id="actionbar" aria-hidden="true">
+    <button class="cta cta--bar" type="button" data-book tabindex="-1">Book a free session</button>
+    <a class="wa-btn" href="https://wa.me/447307045816" aria-label="WhatsApp" tabindex="-1">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.2a9.7 9.7 0 0 0-8.3 14.8L2.4 21.6l4.7-1.2A9.7 9.7 0 1 0 12 2.2Zm0 17.7a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.8-2.7-.2-.3A8 8 0 1 1 12 19.9Zm4.4-6c-.2-.1-1.4-.7-1.7-.8-.2-.1-.4-.1-.5.1l-.8.9c-.1.2-.3.2-.5.1a6.5 6.5 0 0 1-3.2-2.8c-.2-.4.2-.4.7-1.2.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c1.6.7 2.2.7 3 .6.5-.1 1.4-.6 1.6-1.1.2-.6.2-1 .1-1.1l-.6-.4Z"/></svg>
+    </a>
+  </div>
+
+  <!-- Bottom sheets -->
+  <div class="scrim" id="scrim" hidden></div>
+
+  <section class="sheet" id="team-sheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="ts-name" hidden>
+    <div class="grabber" aria-hidden="true"></div>
+    <div class="ts-top">
+      <span class="ts-photo ring"><span><img id="ts-img" src="" alt="" /></span></span>
+      <div>
+        <h3 id="ts-name"></h3>
+        <p class="ts-role" id="ts-role"></p>
+      </div>
+    </div>
+    <p class="ts-line" id="ts-line"></p>
+    <button class="cta" type="button" data-book>Book a free session</button>
+  </section>
+
+  <section class="sheet sheet--tall" id="book-sheet" tabindex="-1" role="dialog" aria-modal="true" aria-labelledby="bs-title" hidden>
+    <div class="grabber" aria-hidden="true"></div>
+    <button class="sheet-close" type="button" data-close aria-label="Close">✕</button>
+    <div class="bs-form" id="bs-form-wrap">
+      <img class="bs-art" src="assets/art/step-01.webp" alt="" width="96" height="96" />
+      <h2 id="bs-title">Book a free session</h2>
+      <p class="bs-sub">Free first session and diagnostic report.</p>
+      <form id="book-form" novalidate>
+        <label class="field">
+          <span>Your name</span>
+          <input name="name" autocomplete="name" required />
+          <em class="err" hidden>Please add your name.</em>
+        </label>
+        <label class="field">
+          <span>Email or phone</span>
+          <input name="contact" autocomplete="email" inputmode="email" required />
+          <em class="err" hidden>Add an email or phone number so we can reply.</em>
+        </label>
+        <label class="field">
+          <span>What would you like help with? <i>(optional)</i></span>
+          <input name="goal" placeholder="e.g. GCSE maths, confidence, IELTS" />
+        </label>
+        <button class="cta" type="submit">Book my free session</button>
+        <p class="guarantee guarantee--sheet"><span class="shield" aria-hidden="true">✓</span>If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost.</p>
+      </form>
+    </div>
+    <div class="bs-done" id="bs-done" hidden>
+      <img class="bs-art" src="assets/art/step-04.webp" alt="" width="120" height="120" />
+      <h2>Request sent.</h2>
+      <p class="bs-sub">We'll reply by your chosen method to arrange your free session.</p>
+      <button class="cta cta--quiet" type="button" data-close>Done</button>
+    </div>
+  </section>
+
+  <script src="app-mock.js?v=2" defer></script>
+</body>
+</html>

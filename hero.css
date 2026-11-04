@@ -434,5 +434,5 @@ body.is-calm :is(.living-hero, .piano-world) *, body.is-calm :is(.living-hero, .
   .living-hero .hero-benefits { padding-top: 40px; }
 }
 @media (min-width: 900px) {
-  .living-hero .hero-layout { padding-block: 84px 44px; } /* owner, 4 Nov: landing sat too close to the header */
+  .living-hero .hero-layout { padding-block: 16px 44px; } /* owner, 4 Nov: opening sits higher so more of it shows on landing */
 }

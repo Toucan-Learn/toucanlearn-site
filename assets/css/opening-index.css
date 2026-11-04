@@ -1519,7 +1519,7 @@ html body.homepage #main .living-hero .hero-world-eyebrow{ margin-block: 8px 0; 
 html body.homepage #main #team .framework-team-viewer{ min-width: 0; padding: 12px; }
 html body.homepage #main #team .framework-profiles{
     display: grid; grid-template-columns: none; grid-auto-flow: column;
-    grid-auto-columns: calc(100% - 24px); gap: 12px; align-items: start;
+    grid-auto-columns: 100%; gap: 24px; align-items: start; 
     overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory;
     overscroll-behavior-x: contain; scrollbar-width: thin; touch-action: pan-x pan-y;
   }

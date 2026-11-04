@@ -15,7 +15,8 @@ for (const name of ['offer', 'subjects', 'bar']) copy = copy.replace(new RegExp(
 // 2 Nov: the real homepage gained phone-only calm blocks after this mock was cut; compare without them.
 const homeBeforeCalm = home.replace(/^[ \t]*<p class="phone-[a-z]+ home-phone-only">.*<\/p>\n/gm, '')
   .replace(/^ {4}<section class="[^"]*phone-review home-phone-only"[\s\S]*?<\/section>\n\n/m, '')
-  .replace('opening-offer.css?v=20261102-mobile-calm-1', 'opening-offer.css?v=20261101-mobile-1');
+  .replace('opening-offer.css?v=20261104-mobile-pages-1', 'opening-offer.css?v=20261101-mobile-1')
+  .replace('opening-index.css?v=20261104-team-1', 'opening-index.css?v=20261101-mobile-review-1');
 assert.equal(copy, homeBeforeCalm, 'Removing the isolated hidden additions exactly reconstructs the current index.html (before the phone-only calm blocks)');
 assert.doesNotMatch(home, /index-mobile-mock/);
 assert.doesNotMatch(await read('sitemap.xml'), /index-mobile-mock/);

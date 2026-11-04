@@ -102,3 +102,58 @@ body[data-page-frame] .framework-intro .opening-offer .offer-line { display: blo
   html body.homepage:not([data-mobile-mock]) #main #reviews .phone-whatsapp { margin: 16px 0 0; text-align: center; }
   html body.homepage:not([data-mobile-mock]) #main #reviews .phone-whatsapp a { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: 4px; }
 }
+
+/* Calm phone pages (4 Nov): the homepage phone standard (spec §4) on Children, Adults,
+   Subjects, Approach, Team, Contact and Học tiếng Anh. Phone widths only; desktop untouched.
+   Opening = title, offer, proof, one full-width button, guarantee; then one action per section. */
+@media (max-width: 767px) {
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main)), .vietnam-page) { --page-gutter: 20px; --section-space: 48px; }
+
+  /* Reading size: body 18px/1.5, H1 32–36px, H2 26px; captions stay ≥14px, controls 16px. */
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main)), .vietnam-page) #main :is(p, li, dd, dt) { font-size: 1.125rem !important; line-height: 1.5; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main)), .vietnam-page) #main :is(h1, .team-page-intro h1) { margin: 0 0 20px; font-size: clamp(2rem, 9vw, 2.25rem); line-height: 1.08; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main)), .vietnam-page) #main :is(.framework-panels .section-head h2, .cta .cta-box h2, .contact-main h2) { font-size: 1.625rem; line-height: 1.2; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main)), .vietnam-page) #main :is(.opening-guarantee, .opening-review, .form-use-note) { font-size: .9375rem !important; line-height: 1.45; }
+
+  /* 1. Opening: one full-width booking button with the guarantee straight under it. */
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page) #main > :is(.framework-intro, .team-page-intro) { padding-top: 32px; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page) #main .opening-offer { margin: 0; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page) #main .opening-offer .offer-line { margin: 0; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main))) #main .opening-proof { margin: 0 0 24px; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main))) #main .opening-actions { margin: 0; gap: 0; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main))) #main .opening-reviews { display: none; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, .vietnam-page) #main :is(.opening-offer .opening-actions, .vietnam-hero) .button { width: 100%; min-height: 64px; padding-inline: 20px; font-size: clamp(1rem, 5.4vw, 1.25rem); }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main))) #main .opening-guarantee { margin: 12px 0 0; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main))) #main .opening-review { margin: 8px 0 0; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page) #main .framework-intro .opening-offer ~ :is(p, .lead) { margin: 24px 0 0; }
+
+  /* Team: the opening sat as dark text on the night sky; give it the page's own cell. */
+  html body.team-page #main .team-page-intro .opening-offer { --ink: #142f3a; padding: 20px; border-radius: var(--radius-lg); background: #f3eee4; color: #142f3a; text-shadow: none; }
+  html body.team-page #main .team-page-intro .opening-offer :is(p, p a, strong) { color: inherit; text-shadow: none; }
+  html body.team-page #main .team-page-intro .team-page-layout { margin-top: 48px; }
+
+  /* 2. Sections 48px apart; every section's own button full width and ≥52px. */
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page) #main .container.framework-shell { padding-block: 48px 0; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page) #main .cta { padding-block: 48px; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main)), .vietnam-page) #main :is(.framework-panels, .cta, .contact-main) .button { width: 100%; min-height: 52px; }
+  html body:is(.children-page, .adults-page, .subjects-page, .approach-page, .team-page, :has(> main.contact-main:not(.vietnam-main)), .vietnam-page) #main :is(.learning-links, .contact-next-actions) > a:not(.button) { display: inline-flex; align-items: center; min-height: 44px; }
+
+  /* Contact and Học tiếng Anh: one column, sections 48px apart, submit full width. */
+  html body:is(:has(> main.contact-main:not(.vietnam-main)), .vietnam-page) #main.contact-main { row-gap: 48px; }
+  /* Contact: the form is the first action, so its button must clear y650 at 390×844.
+     Same words; the eyebrow and form title repeat the H1, so phones drop them visually. */
+  html body:has(> main.contact-main:not(.vietnam-main)) #main.contact-main { padding-top: 24px; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .contact-primary { gap: 24px; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .contact-hero .eyebrow { display: none; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .contact-hero h1 { margin-bottom: 16px; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .contact-hero :is(.lead, .contact-offer) { margin: 0 0 8px; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .contact-hero .opening-proof { margin: 0; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main #email-heading { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .enquiry-form .fields-two { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .enquiry-fields { gap: 12px; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .enquiry-form .field:not(:focus-within) > #support-needed-privacy { display: none; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .enquiry-form .field > small { font-size: .9375rem; line-height: 1.45; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .contact-next-actions .button,
+  html body.vietnam-page #main .enquiry-form .button.form-submit { width: 100%; min-height: 52px; }
+  html body:has(> main.contact-main:not(.vietnam-main)) #main .enquiry-form .button.form-submit { width: 100%; min-height: 56px; font-size: 1.125rem; }
+}

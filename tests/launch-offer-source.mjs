@@ -114,7 +114,8 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
     assert.match(text, /script-src 'self' https:\/\/www\.clarity\.ms https:\/\/scripts\.clarity\.ms; style-src 'self'/);
     assert.equal(text.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0], original.match(/<meta http-equiv="Content-Security-Policy"[^>]*>/)[0]);
     // 2 Nov owner brief: the phone homepage repeats the existing contact-page prices in one line.
-    if (!['contact.html', 'index.html'].includes(file)) assert.doesNotMatch(text, /£\s*\d/);
+    // 11 Nov: the SEN ad landing page shows the same price bands as the contact page.
+    if (!['contact.html', 'index.html', 'sen-tutoring.html'].includes(file)) assert.doesNotMatch(text, /£\s*\d/);
   });
 }
 check('CSS scoped to dialog; no inline code, external hosts or page mutations', () => {

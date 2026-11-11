@@ -1,0 +1,114 @@
+/* Local SEN ad mock-up. Shared navigation, type and colour tokens stay in use. */
+.sen-page { --sen-header-height: 95px; }
+.sen-page .nav-links > .trial-button,
+.sen-page .nav > .phone-book { display: none; }
+.sen-width { width: min(calc(100% - 40px), 1040px); margin-inline: auto; }
+.sen-page section { padding: 0; }
+.sen-page .sen-hero {
+  display: grid;
+  align-items: center;
+  min-height: calc(100vh - var(--sen-header-height));
+  min-height: calc(100svh - var(--sen-header-height));
+  padding-block: 32px 48px;
+}
+.sen-hero-copy { display: grid; justify-items: start; gap: 22px; }
+.sen-hero .eyebrow { margin: 0; }
+.sen-hero h1 {
+  max-width: 920px;
+  margin: 0;
+  font-size: clamp(2.25rem, 4.6vw, 4rem);
+  line-height: 1.08;
+  letter-spacing: -.035em;
+  text-wrap: balance;
+}
+.sen-subline { max-width: 660px; margin: 0; font-size: 1.15rem; line-height: 1.5; }
+.sen-proof {
+  display: grid;
+  grid-template-columns: 1.35fr .85fr 1fr 1fr;
+  gap: 14px 22px;
+  width: 100%;
+  margin: 0;
+  padding: 18px 0;
+  list-style: none;
+  border-block: 1px solid var(--line);
+  font-size: .9rem;
+  font-weight: 650;
+  line-height: 1.45;
+}
+.sen-proof li { align-self: center; }
+.sen-proof li:first-child { display: grid; gap: 4px; }
+.sen-stars { color: var(--orange-text); letter-spacing: .14em; }
+.sen-request { min-height: 52px; padding: 14px 22px; font-size: 1rem; text-align: center; }
+.sen-page .sen-request,
+.sen-page .sen-request:hover {
+  color: #10242d;
+  background: var(--orange);
+  border: 1px solid transparent;
+}
+.sen-details {
+  --enquiry-surface: var(--paper);
+  --enquiry-line: var(--line);
+  --enquiry-shadow: none;
+  --field-surface: var(--paper-soft);
+  --field-border: rgba(var(--ink-rgb), .5);
+  --field-focus: var(--heading);
+  --field-focus-rgb: var(--heading-rgb);
+  --submit-fill: var(--orange);
+  --submit-hover: #ed8b44;
+  --submit-ink: #10242d;
+  display: grid;
+  gap: 52px;
+  padding-block: 28px 56px;
+}
+.sen-details h2 { margin: 0 0 20px; font-size: clamp(1.65rem, 3vw, 2.15rem); line-height: 1.2; }
+.sen-details h3 { margin: 0 0 10px; font-size: 1.12rem; line-height: 1.3; }
+.sen-card { padding: 24px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); }
+.sen-page .sen-offer { padding: 28px; border-top: 4px solid var(--orange); }
+.sen-offer-summary { max-width: 740px; margin: 0 0 16px; font-size: 1.2rem; font-weight: 750; line-height: 1.45; }
+.sen-guarantee { margin: 0 0 22px; color: var(--heading); font-weight: 700; }
+.sen-offer .pricing-bands { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0 0 18px; }
+.sen-offer .price-band { padding-top: 14px; }
+.sen-offer .pricing-bands dd { font-size: .9rem; line-height: 1.5; }
+.sen-small { margin: 10px 0 0; font-size: .875rem; line-height: 1.5; }
+.sen-review-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.sen-reviews .review-quote { display: flex; flex-direction: column; min-width: 0; margin: 0; padding: 26px; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); }
+.sen-reviews .review-mark { height: 35px; color: var(--orange-text); font: 4rem/1 Georgia, serif; }
+.sen-reviews blockquote { min-height: 0; margin: 12px 0 24px; padding: 0; border: 0; border-radius: 0; background: none; }
+.sen-reviews blockquote p { margin: 0; color: var(--ink); font-size: 1rem; line-height: 1.6; }
+.sen-reviews figcaption { margin-top: auto; font-size: .85rem; line-height: 1.5; }
+.sen-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; counter-reset: sen-step; }
+.sen-steps li { counter-increment: sen-step; }
+.sen-steps li::before { content: "0" counter(sen-step); display: block; margin-bottom: 14px; color: var(--orange-text); font-weight: 800; }
+.sen-steps p, .sen-approach-grid p { margin: 0; font-size: .95rem; line-height: 1.55; }
+.sen-approach-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.sen-approach-grid .picture-cell { overflow: hidden; border: 1px solid var(--line); border-radius: var(--radius-lg); background: var(--paper); }
+.sen-approach-grid .picture-cell-media { display: grid; place-items: center; padding: 18px 12px 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; }
+.sen-approach-grid img { display: block; width: min(100%, clamp(150px, 14vw, 204px)); height: auto; border: 0; border-radius: 0; box-shadow: none; }
+.sen-approach-grid .picture-cell-copy { padding: 20px; }
+.sen-form-section { max-width: 760px; width: 100%; margin-inline: auto; scroll-margin-top: calc(var(--sen-header-height) + 24px); }
+.sen-page .sen-form-section .enquiry-form { padding: 24px; }
+.sen-page .enquiry-form .field input { min-height: 48px; }
+.sen-page .sen-talk { max-width: 760px; width: 100%; margin-inline: auto; }
+.sen-talk h2 { font-size: 1.25rem; }
+@media (max-width: 940px) {
+  .sen-page { --sen-header-height: 78px; }
+  .sen-proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .sen-page { --sen-header-height: 64px; }
+  .sen-page .sen-hero { padding-block: 28px 40px; }
+  .sen-hero-copy { gap: 20px; }
+  .sen-hero h1 { font-size: 2.25rem; line-height: 1.1; }
+  .sen-subline { font-size: 1.05rem; }
+  .sen-proof { gap: 12px 16px; padding-block: 16px; font-size: .85rem; }
+  .sen-proof li:first-child { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .sen-request { width: 100%; padding-inline: 14px; font-size: .95rem; }
+  .sen-details { gap: 36px; }
+  .sen-page .sen-offer, .sen-page .sen-form-section .enquiry-form { padding: 20px; }
+  .sen-offer .pricing-bands, .sen-review-grid, .sen-steps, .sen-approach-grid { grid-template-columns: minmax(0, 1fr); }
+  .sen-offer .pricing-bands { gap: 12px; }
+  .sen-approach-grid .picture-cell { display: grid; grid-template-columns: min(114px, 34%) minmax(0, 1fr); }
+  .sen-approach-grid .picture-cell-media { padding: 12px 6px; }
+  .sen-approach-grid img { width: 100%; }
+  .sen-approach-grid .picture-cell-copy { min-width: 0; padding: 16px 16px 16px 10px; }
+}

@@ -7,5 +7,7 @@ export function withoutAppHome(html) {
     .replace(/\n {4}<!-- app-home:start -->[\s\S]*?<!-- app-home:end -->\n/, '\n')
     .replace(/  <link rel="stylesheet" media="\(max-width: 767px\)" href="\/?app-home\.css[^"]*" \/>\n/, '')
     .replace(/  <script src="\/?contact\.js[^"]*"><\/script>\n  <script src="\/?app-home\.js[^"]*"><\/script>\n/, '')
+    // Owner, 11 Nov: the new Google review card (Connor's parent) joined the desktop carousel.
+    .replace(/\n {10}<figure class="review-quote">(?:(?!<\/figure>)[\s\S])*?Connor takes the time[\s\S]*?<\/figure>/, '')
     .replace("connect-src 'self' https://*.clarity.ms https://script.google.com https://script.googleusercontent.com;", "connect-src 'self' https://*.clarity.ms;");
 }

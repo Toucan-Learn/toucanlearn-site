@@ -62,7 +62,7 @@
       // their centres still occupy the regular 3D ring. Larger rings hide backs.
       const neighbour = Math.abs(delta) === 1;
       const visible = laptop.matches ? Math.abs(angle) <= 100 || neighbour : Math.abs(delta) <= 1;
-      const hinge = neighbour ? Math.max(-64, Math.min(64, angle)) - angle : 0;
+      const hinge = neighbour ? Math.max(-30, Math.min(30, angle)) - angle : 0;
       card.style.transform = laptop.matches
         ? `rotateY(${index * 360 / count}deg) translateZ(${radius}px) rotateY(${hinge}deg)`
         : `translateX(${delta * 108}%)`;

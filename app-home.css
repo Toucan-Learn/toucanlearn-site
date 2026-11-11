@@ -312,3 +312,14 @@ html body.homepage footer.site-footer .footer-slogan { display: none; }
   .app-home *, .app-home *::before, .app-home *::after { transition-duration: .01ms !important; }
   .ah-story { transform: none; }
 }
+
+/* Every review, swipeable (owner, 11 Nov: the phone showed four words of one review). */
+.ah-reviews {
+  display: grid; grid-auto-flow: column; grid-auto-columns: 88%; gap: 10px; align-items: start;
+  margin-inline: -12px; padding: 0 12px 4px; scroll-padding-inline: 12px;
+  overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.ah-reviews::-webkit-scrollbar { display: none; }
+.ah-reviews .ah-review { scroll-snap-align: start; align-content: start; }
+.ah-reviews .ah-review-line q { font: 500 17px/1.45 var(--ah-sans); }
+.ah-reviews:focus-visible { outline: 3px solid var(--ah-teal); outline-offset: 3px; }

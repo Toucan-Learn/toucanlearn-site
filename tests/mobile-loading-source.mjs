@@ -27,9 +27,11 @@ for (const page of openingPages) {
     for (const id of targets.split(/\s+/)) assert(ids.includes(id), `${page}: accessible reference ${id}`);
   }
   assert(html.includes('Weekly written reports. Our founder oversees every lesson.'), `${page}: early oversight and reports`);
-  assert(html.includes('Google ★★★★★ · Facebook recommendations'), `${page}: Google stars stay distinct from Facebook recommendations`);
+  // Owner, 11 Nov: the opening review lines broke the back-page layouts; the homepage keeps them.
+  if (page === 'index') assert(html.includes('Google ★★★★★ · Facebook recommendations'), `${page}: Google stars stay distinct from Facebook recommendations`);
+  else assert(!html.includes('class="opening-review'), `${page}: no opening review lines on back pages`);
   assert.match(html, /<p class="opening-guarantee">If your first paid lesson isn't right, you don't pay, or we switch tutor at no cost\.<\/p>/);
-  assert.match(html, /<p class="opening-review"><q>Great tutor experience\.<\/q> <a href="https:\/\/search\.google\.com\/local\/reviews\?placeid=/, `${page}: existing review excerpt with its source`);
+  if (page === 'index') assert.match(html, /<p class="opening-review"><q>Great tutor experience\.<\/q> <a href="https:\/\/search\.google\.com\/local\/reviews\?placeid=/, `${page}: existing review excerpt with its source`);
   if (!['index', 'contact'].includes(page)) {
     const headingEnd = html.indexOf('</h1>');
     const introEnd = html.indexOf(page === 'team' ? '<div class="team-page-layout">' : '<div class="container framework-shell"');

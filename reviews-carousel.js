@@ -158,6 +158,14 @@
     document.fonts.ready.then(render);
     document.fonts.addEventListener('loadingdone', render);
   }
-  if ('ResizeObserver' in window) new window.ResizeObserver(render).observe(carousel);
-  else window.addEventListener('resize', render);
+  // Owner, 11 Nov: on a slow load the cards were measured before the deferred stylesheets
+  // arrived (a few px wide, so ~5,600px tall) and never measured again. Re-measure once the
+  // styles and the page have loaded, and whenever the cards' width changes.
+  Promise.resolve(window.toucanStylesReady).then(render, render);
+  window.addEventListener('load', render, { once: true });
+  if ('ResizeObserver' in window) {
+    new window.ResizeObserver(render).observe(carousel);
+    let lastWidth = 0;
+    new window.ResizeObserver(() => { const w = cards[0].offsetWidth; if (w !== lastWidth) { lastWidth = w; render(); } }).observe(cards[0]);
+  } else window.addEventListener('resize', render);
 })();

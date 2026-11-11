@@ -9,5 +9,7 @@ export function withoutAppHome(html) {
     .replace(/  <script src="\/?contact\.js[^"]*"><\/script>\n  <script src="\/?app-home\.js[^"]*"><\/script>\n/, '')
     // Owner, 11 Nov: the new Google review card (Connor's parent) joined the desktop carousel.
     .replace(/\n {10}<figure class="review-quote">(?:(?!<\/figure>)[\s\S])*?Connor takes the time[\s\S]*?<\/figure>/, '')
+    // Owner, 11 Nov: both Vietnamese Google reviews (Như) joined it too.
+    .replace(/\n {10}<figure class="review-quote">(?:(?!<\/figure>)[\s\S])*?in Vietnam · Google review, translated[\s\S]*?<\/figure>/g, '')
     .replace("connect-src 'self' https://*.clarity.ms https://script.google.com https://script.googleusercontent.com;", "connect-src 'self' https://*.clarity.ms;");
 }

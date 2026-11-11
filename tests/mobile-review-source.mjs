@@ -6,7 +6,7 @@ const read = file => readFile(new URL('../' + file, import.meta.url), 'utf8');
 const css = await read('framework.css');
 assert.match(css, /html body #main \.framework-portrait-frame--joshua > \.framework-portrait\s*\{\s*max-width: none; width: 220%; height: auto; left: -42%; top: -82%;/);
 const home = await read('index.html');
-const reviewCount = (home.match(/class="review-quote"/g) || []).length;
+const reviewCount = (home.slice(home.indexOf('data-reviews-carousel')).match(/class="review-quote"/g) || []).length; // cards inside the carousel only
 const teamCount = (home.match(/data-profile-slide/g) || []).length;
 
 function scrollingFixture() {

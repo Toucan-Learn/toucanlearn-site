@@ -1,17 +1,16 @@
-// Apply only an explicit choice before styles paint; otherwise CSS follows the device.
+// Default to light before styles paint; only an explicit saved choice overrides it.
 (() => {
   const root = document.documentElement;
   const t = text => window.toucanText?.[text] ?? text;
+  root.dataset.theme = 'light';
   try {
     const saved = localStorage.getItem('toucan-theme');
     if (saved === 'dark' || saved === 'light') root.dataset.theme = saved;
-  } catch (_) { /* The device preference and toggle work without storage. */ }
+  } catch (_) { /* Keep the light default; the toggle still works without storage. */ }
 
   document.addEventListener('DOMContentLoaded', () => {
-    const device = window.matchMedia('(prefers-color-scheme: dark)');
     const toggles = document.querySelectorAll('[data-theme-toggle]');
-    const isDark = () => root.dataset.theme === 'dark' ||
-      (root.dataset.theme !== 'light' && device.matches);
+    const isDark = () => root.dataset.theme === 'dark';
     const update = () => {
       const dark = isDark();
       toggles.forEach(toggle => {
@@ -28,7 +27,6 @@
       try { localStorage.setItem('toucan-theme', theme); } catch (_) { /* Keep the choice for this page. */ }
       update();
     }));
-    device.addEventListener('change', update);
     update();
   }, { once: true });
 })();

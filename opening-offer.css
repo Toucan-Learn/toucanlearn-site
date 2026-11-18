@@ -157,3 +157,8 @@ body[data-page-frame] .framework-intro .opening-offer .offer-line { display: blo
   html body.vietnam-page #main .enquiry-form .button.form-submit { width: 100%; min-height: 52px; }
   html body:has(> main.contact-main:not(.vietnam-main)) #main .enquiry-form .button.form-submit { width: 100%; min-height: 56px; font-size: 1.125rem; }
 }
+
+/* Owner, 18 Nov: on laptops the framed back pages fit one screen again (as on 1 Nov).
+   The sidebar's own offer card already carries the offer and button, so the
+   phone-first offer block is hidden whenever the desktop page frame is active. */
+body[data-page-frame] .framework-intro .opening-offer { display: none; }

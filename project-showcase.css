@@ -298,3 +298,4 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 @media (min-width: 1000px) and (max-width: 1248px) { .living-hero .hero-project-caption { min-height: 122px; } }
 @media (min-width: 1249px) and (max-width: 1269px) { .living-hero .hero-project-caption { min-height: 104px; } }
 @media (min-width: 1270px) { .living-hero .hero-project-caption { min-height: 86px; } }
+#learner-projects .framework-project-media { scroll-margin-top: 80px; }

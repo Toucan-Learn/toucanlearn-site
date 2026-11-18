@@ -332,3 +332,6 @@ html body.homepage footer.site-footer .footer-slogan { display: none; }
 .ah-rating { --ah-fs: 15px; margin: 0 8px; color: #f6f0e6; display: flex; align-items: center; gap: 8px; }
 .ah-rating strong { font-weight: 800; }
 .ah-route--sen b { background: #7a4fa0; color: #f6f0e6; }
+/* Owner, 18 Nov: each project card leads to the real tool. */
+.app-home .ah-try { justify-self: start; margin: 4px 8px 0; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 999px; background: var(--ah-orange); color: var(--ah-on-orange); font: 700 16px/1 var(--ah-sans); text-decoration: none; }
+.app-home .ah-try:focus-visible { outline: 3px solid var(--ah-teal); outline-offset: 3px; }

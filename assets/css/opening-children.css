@@ -1468,3 +1468,4 @@ body[data-page-frame] #learner-projects [data-project="drinks"] .showcase-fallba
 [data-showcase]:focus-visible{ outline: 2px solid #efac8e; outline-offset: 3px; }
 @media (max-width: 759px){#learner-projects .framework-project-slides > [data-project-slide] > .framework-project-media{ order: -1; margin-top: 0; }
 }
+#learner-projects .framework-project-media{ scroll-margin-top: 80px; }

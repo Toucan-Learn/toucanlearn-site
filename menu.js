@@ -22,6 +22,8 @@
 // Keep fragment navigation in the page. Defer arrival cleanup until all deferred/module
 // viewers have read the deep link and the original browser jump has settled.
 (() => {
+  // Owner, 18 Nov: keep the arrival #fragment for viewers that load after the cleanup below.
+  window.toucanArrivalHash = location.hash;
   // Clean addresses: /index.html becomes /, and /subjects.html becomes /subjects (Pages serves both).
   const path = () => location.pathname.replace(/\/index\.html$/, '/').replace(/\.html$/, '');
   const clean = () => {

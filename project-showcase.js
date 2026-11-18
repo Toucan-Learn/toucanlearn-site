@@ -548,10 +548,31 @@ export function initShowcase(root) {
   }, { passive: true });
   root.addEventListener('touchcancel', () => { gesture = null; }, { passive: true });
   const revealHash = event => {
-    let target;
-    try { target = event?.detail?.target || document.getElementById(decodeURIComponent(location.hash.slice(1))); } catch (_) { return; }
-    const selected = slides.find(slide => slide === target || (target && slide.contains(target)));
-    if (selected) show(entries.findIndex(project => project.id === selected.dataset.project));
+    const fromHash = () => {
+      // menu.js may already have cleaned the address; fall back to the arrival link once.
+      const hash = location.hash || window.toucanArrivalHash || '';
+      try { return hash ? document.getElementById(decodeURIComponent(hash.slice(1))) : null; } catch (_) { return null; }
+    };
+    const find = node => slides.find(slide => slide === node || (node && slide.contains(node)));
+    let target = event?.detail?.target || fromHash();
+    let selected = find(target);
+    // A panel switch names the panel, not the slide; a #project-… link still decides which slide.
+    if (!selected) { target = fromHash(); selected = find(target); }
+    if (!selected) return;
+    show(entries.findIndex(project => project.id === selected.dataset.project));
+    // Owner, 18 Nov: phone homepage cards link straight to a project; land on the tool itself.
+    if (target === selected && (location.hash || window.toucanArrivalHash) === `#${selected.id}`) {
+      window.toucanArrivalHash = '';
+      setTimeout(() => {
+        (selected.querySelector('.framework-project-media') || selected).scrollIntoView({ block: 'start' });
+        // "Play the piano" should show the keys straight away.
+        const toggle = selected.dataset.project === 'piano' && document.getElementById('piano-toggle');
+        if (toggle && toggle.getAttribute('aria-expanded') !== 'true' && toggle.getAttribute('aria-pressed') !== 'true') {
+          toggle.click();
+          setTimeout(() => (selected.querySelector('.framework-project-media') || selected).scrollIntoView({ block: 'start' }), 600);
+        }
+      }, 350);
+    }
   };
   window.addEventListener('hashchange', revealHash);
   window.addEventListener('popstate', revealHash);

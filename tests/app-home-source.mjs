@@ -48,7 +48,8 @@ for (const host of ['https://script.google.com', 'https://script.googleuserconte
 
 // Copy rules.
 // Reviews are clients' own words (e.g. the IB student's real 31%), so quotes are left out of the copy checks.
-const text = block.replace(/<q>[\s\S]*?<\/q>/g, ' ').replace(/<[^>]+>/g, ' ');
+// Owner, 18 Nov: the 50% launch offer line is a real, approved offer, not an invented stat.
+const text = block.replace(/<p class="ah-offer">[\s\S]*?<\/p>/, ' ').replace(/<q>[\s\S]*?<\/q>/g, ' ').replace(/<[^>]+>/g, ' ');
 assert.doesNotMatch(text, /psychologist/i);
 assert.doesNotMatch(text, /Henley/);
 assert.match(text, /Bristol, London and Oxfordshire/);

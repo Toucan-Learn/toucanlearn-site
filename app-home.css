@@ -323,3 +323,12 @@ html body.homepage footer.site-footer .footer-slogan { display: none; }
 .ah-reviews .ah-review { scroll-snap-align: start; align-content: start; }
 .ah-reviews .ah-review-line q { font: 500 17px/1.45 var(--ah-sans); }
 .ah-reviews:focus-visible { outline: 3px solid var(--ah-teal); outline-offset: 3px; }
+
+/* Owner, 18 Nov: phone first screen shows the offer straight away; offer line, review count, SEN route. */
+.app-home .ah-hero { min-height: 0; padding-top: 132px; }
+.ah-hero-toucan { width: 36%; max-width: 150px; right: 4%; top: 4px; }
+.ah-offer { --ah-fs: 15px; margin: -4px 0 0; padding: 10px 14px; border-radius: 14px; background: rgba(228, 122, 46, .14); color: var(--ah-ink); text-align: center; }
+.ah-offer strong { color: var(--ah-orange-text); }
+.ah-rating { --ah-fs: 15px; margin: 0 8px; color: #f6f0e6; display: flex; align-items: center; gap: 8px; }
+.ah-rating strong { font-weight: 800; }
+.ah-route--sen b { background: #7a4fa0; color: #f6f0e6; }

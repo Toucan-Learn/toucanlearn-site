@@ -4,7 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { fixture } from './helpers/navigation-dom.mjs';
 const read = file => readFile(new URL('../' + file, import.meta.url), 'utf8');
 const css = await read('framework.css');
-assert.match(css, /html body #main \.framework-portrait-frame--joshua > \.framework-portrait\s*\{\s*max-width: none; width: 220%; height: auto; left: -42%; top: -82%;/);
+// Owner, 19 Nov: Josh's new close-up photo is a plain cover crop on phones.
+assert.match(css, /html body #main \.framework-portrait-frame--joshua > \.framework-portrait\s*\{\s*position: static; max-width: 100%; width: 100%; height: 100%; object-fit: cover;/);
 const home = await read('index.html');
 const reviewCount = (home.slice(home.indexOf('data-reviews-carousel')).match(/class="review-quote"/g) || []).length; // cards inside the carousel only
 const teamCount = (home.match(/data-profile-slide/g) || []).length;

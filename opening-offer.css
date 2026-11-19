@@ -162,3 +162,5 @@ body[data-page-frame] .framework-intro .opening-offer .offer-line { display: blo
    The sidebar's own offer card already carries the offer and button, so the
    phone-first offer block is hidden whenever the desktop page frame is active. */
 body[data-page-frame] .framework-intro .opening-offer { display: none; }
+/* Owner, 19 Nov: same on the Team page's laptop layout (dark text was unreadable on the sky). */
+@media (min-width: 768px) { body.team-page .opening-offer { display: none; } }

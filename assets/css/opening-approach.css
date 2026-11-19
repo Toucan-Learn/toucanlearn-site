@@ -1703,9 +1703,17 @@ html body.cell-art-page #main #our-lessons .lesson-example-head > img{ grid-colu
 html body.cell-art-page #main #our-lessons .lesson-example-head > div > p:last-child{ grid-column: 1 / -1; grid-row: 3; margin: 0; }
 }
 @media screen and (max-width: 767px){html body #main .framework-portrait-frame--joshua > .framework-portrait{
-    max-width: none; width: 220%; height: auto; left: -42%; top: -82%;
+    position: static; max-width: 100%; width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%;
   }
 html body:not([data-mobile-mock]){ min-height: 0; height: auto; padding-bottom: 0; }
 html body .site-footer{ min-height: 0; height: auto; padding-bottom: 16px; }
 html body .site-footer .footer-grid{ min-height: 0; align-content: start; }
+}
+@media screen and (max-width: 767px){html body #main :is(.framework-portrait-frame--aaron, .framework-portrait-frame--connor, .framework-portrait-frame--chemi) > .framework-portrait{
+    position: absolute; max-width: none; object-fit: fill; transform: none;
+  }
+html body #main .framework-portrait-frame--connor > .framework-portrait{ width: 148%; height: 214%; left: -7%; top: -44%; }
+html body #main .framework-portrait-frame--chemi > .framework-portrait{ width: 222%; height: 322%; left: -61%; top: -72%; }
+html body #main .framework-portrait-frame--aaron > .framework-portrait{ width: 108%; height: 157%; left: -4%; top: -43%; }
+html body #main .framework-portrait-frame img[src*="owen-goalkeeper"]{ object-fit: cover; object-position: 45% 12%; transform: scale(2); transform-origin: 45% 10%; }
 }

@@ -13,5 +13,7 @@ export function withoutAppHome(html) {
     .replace(/\n {10}<figure class="review-quote">(?:(?!<\/figure>)[\s\S])*?in Vietnam · Google review, translated[\s\S]*?<\/figure>/g, '')
     // Owner, 11 Nov: carousel re-measures after slow stylesheets (new cache token).
     .replace('reviews-carousel.js?v=20261111-measure-1', 'reviews-carousel.js?v=20261101-mobile-review-1')
+    // Owner, 19 Nov: Josh's new photo.
+    .replace(/joshua-curls-600\.webp\?v=20261119-photo-1/g, 'joshua-escalator-600.webp?v=20261031-light-1')
     .replace("connect-src 'self' https://*.clarity.ms https://script.google.com https://script.googleusercontent.com;", "connect-src 'self' https://*.clarity.ms;");
 }

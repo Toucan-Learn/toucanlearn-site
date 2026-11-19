@@ -201,7 +201,7 @@ html body.homepage #main .app-home :is(p, li) { font-size: var(--ah-fs, inherit)
 .app-home .ah-ring img { width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--ah-pos, 50% 30%); transform: scale(var(--ah-zoom, 1)); transform-origin: var(--ah-pos, 50% 30%); }
 .ah-avatars b { font: 700 14px/1.15 var(--ah-sans); text-align: center; }
 /* Face framing per photo, from the approved mock. */
-.ah-av--joshua, .ah-ts-photo.ah-av--joshua { --ah-pos: 41% 50%; --ah-zoom: 3.4; }
+.ah-av--joshua, .ah-ts-photo.ah-av--joshua { --ah-pos: 50% 45%; --ah-zoom: 1.25; }
 .ah-av--aaron, .ah-ts-photo.ah-av--aaron { --ah-pos: 50% 42%; --ah-zoom: 1.15; }
 .ah-av--connor, .ah-ts-photo.ah-av--connor { --ah-pos: 40% 34%; --ah-zoom: 1.7; }
 .ah-av--sara, .ah-ts-photo.ah-av--sara { --ah-pos: 50% 38%; --ah-zoom: 1.15; }

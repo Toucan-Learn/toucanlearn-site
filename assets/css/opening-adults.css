@@ -1331,7 +1331,7 @@ html body .site-footer .footer-grid{ min-height: 0; align-content: start; }
 @media screen and (max-width: 767px){html body #main :is(.framework-portrait-frame--aaron, .framework-portrait-frame--connor, .framework-portrait-frame--chemi) > .framework-portrait{
     position: absolute; max-width: none; object-fit: fill; transform: none;
   }
-html body #main .framework-portrait-frame--connor > .framework-portrait{ width: 148%; height: 214%; left: -7%; top: -44%; }
+html body #main .framework-portrait-frame--connor > .framework-portrait{ width: 140%; height: 203%; left: -4%; top: -39%; }
 html body #main .framework-portrait-frame--chemi > .framework-portrait{ width: 222%; height: 322%; left: -61%; top: -72%; }
 html body #main .framework-portrait-frame--aaron > .framework-portrait{ width: 108%; height: 157%; left: -4%; top: -43%; }
 html body #main .framework-portrait-frame img[src*="owen-goalkeeper"]{ object-fit: cover; object-position: 45% 12%; transform: scale(2); transform-origin: 45% 10%; }

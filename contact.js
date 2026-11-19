@@ -64,6 +64,8 @@ var EnquiryRules = (function () {
       return { ok: false, data: data, errors: { "Support requested": "Please keep this field within 200 characters." } };
     }
     var result = validate(data, now, true);
+    // Owner, 19 Nov: the help field is required, so we know who it's for and what they need.
+    if (!(data["Support requested"] || "").trim()) { result.ok = false; result.errors["Support requested"] = "Tell us a little about what you'd like help with."; }
     if (result.errors.email || result.errors.phone) {
       result.errors["Email or phone"] = contactError;
       delete result.errors.email;

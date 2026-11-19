@@ -641,7 +641,10 @@
     "<strong>Your first session and diagnostic report are free.</strong> Online, or in Bristol, London and Oxfordshire.": "<strong>La primera sesión y el informe de diagnóstico son gratis.</strong> En línea, o en Bristol, Londres y Oxfordshire.",
     "One-to-one tutoring built around <em>you.</em>": "Clases individuales pensadas para <em>ti.</em>",
     "Launch offer": "Oferta de lanzamiento",
-    "New families get 50% off their first 5 paid lessons, after the free first session. The offer is for the first 10 new families, one per family, and can't be combined with other discounts.": "Las familias nuevas tienen un 50% de descuento en sus 5 primeras clases de pago, después de la primera sesión gratuita. La oferta es para las 10 primeras familias nuevas, una por familia, y no se puede combinar con otros descuentos."
+    "New families get 50% off their first 5 paid lessons, after the free first session. The offer is for the first 10 new families, one per family, and can't be combined with other discounts.": "Las familias nuevas tienen un 50% de descuento en sus 5 primeras clases de pago, después de la primera sesión gratuita. La oferta es para las 10 primeras familias nuevas, una por familia, y no se puede combinar con otros descuentos.",
+    "The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.": "Cuanto más nos cuentes (edad, asignatura, necesidades especiales o diagnósticos), mejor podremos elegir al tutor adecuado.",
+    "Tell us a little about what you'd like help with.": "Cuéntanos un poco en qué te gustaría recibir ayuda.",
+    "<small id=\"support-needed-privacy\">The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": "<small id=\"support-needed-privacy\">Cuanto más nos cuentes (edad, asignatura, necesidades especiales o diagnósticos), mejor podremos elegir al tutor adecuado.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>"
   },
   "script": {
     "Please use only the enquiry fields provided.": "Usa solo los campos de consulta disponibles.",
@@ -697,6 +700,9 @@
     "A man with a coffee working on his laptop in a café": "Un hombre con un café trabaja con su portátil en una cafetería",
     "A woman writing in a notebook at a desk by a window": "Una mujer escribe en un cuaderno en un escritorio junto a la ventana",
     "Turning writing from the last thing he wanted to do into how he builds his own game.": "Convertir la escritura, lo último que le apetecía hacer, en su forma de crear su propio videojuego.",
-    "Enter a valid email address or phone number.": "Introduce un correo electrónico o un número de teléfono válido."
+    "Enter a valid email address or phone number.": "Introduce un correo electrónico o un número de teléfono válido.",
+    "The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.": "Cuanto más nos cuentes (edad, asignatura, necesidades especiales o diagnósticos), mejor podremos elegir al tutor adecuado.",
+    "Tell us a little about what you'd like help with.": "Cuéntanos un poco en qué te gustaría recibir ayuda.",
+    "What would you like help with?": "¿En qué te gustaría recibir ayuda?"
   }
 }

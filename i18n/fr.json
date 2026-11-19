@@ -473,7 +473,7 @@
     "Who is the tutoring for?": "À qui s’adressent les cours ?",
     "A child or young person": "Un enfant ou un adolescent",
     "Me (an adult)": "Moi (adulte)",
-    "What would you like help with?": "Quelle aide recherchez-vous ?",
+    "What would you like help with?": "Pour quoi souhaitez-vous de l’aide ?",
     "<small id=\"support-needed-privacy\">Please don't include diagnoses or medical records; we'll talk through needs together.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": "<small id=\"support-needed-privacy\">N’indiquez ni diagnostic ni dossier médical ; nous parlerons des besoins ensemble.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>",
     "Age or school year": "Âge ou classe",
     "Subject (optional)": "Matière (facultatif)",
@@ -641,7 +641,10 @@
     "<strong>Your first session and diagnostic report are free.</strong> Online, or in Bristol, London and Oxfordshire.": "<strong>La première séance et le bilan diagnostique sont gratuits.</strong> En ligne, ou à Bristol, Londres et dans l’Oxfordshire.",
     "One-to-one tutoring built around <em>you.</em>": "Des cours particuliers pensés pour <em>vous.</em>",
     "Launch offer": "Offre de lancement",
-    "New families get 50% off their first 5 paid lessons, after the free first session. The offer is for the first 10 new families, one per family, and can't be combined with other discounts.": "Les nouvelles familles bénéficient de 50 % de réduction sur leurs 5 premiers cours payants, après la première séance gratuite. L’offre est réservée aux 10 premières nouvelles familles, une par famille, et n’est pas cumulable avec d’autres réductions."
+    "New families get 50% off their first 5 paid lessons, after the free first session. The offer is for the first 10 new families, one per family, and can't be combined with other discounts.": "Les nouvelles familles bénéficient de 50 % de réduction sur leurs 5 premiers cours payants, après la première séance gratuite. L’offre est réservée aux 10 premières nouvelles familles, une par famille, et n’est pas cumulable avec d’autres réductions.",
+    "The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.": "Plus vous nous en dites (âge, matière, besoins particuliers ou diagnostics), mieux nous pourrons choisir le bon tuteur.",
+    "Tell us a little about what you'd like help with.": "Dites-nous en quelques mots ce dont vous avez besoin.",
+    "<small id=\"support-needed-privacy\">The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": "<small id=\"support-needed-privacy\">Plus vous nous en dites (âge, matière, besoins particuliers ou diagnostics), mieux nous pourrons choisir le bon tuteur.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>"
   },
   "script": {
     "Please use only the enquiry fields provided.": "Utilisez uniquement les champs du formulaire.",
@@ -697,6 +700,9 @@
     "A man with a coffee working on his laptop in a café": "Un homme, un café à la main, travaille sur son ordinateur portable dans un café",
     "A woman writing in a notebook at a desk by a window": "Une femme écrit dans un carnet à un bureau près d’une fenêtre",
     "Turning writing from the last thing he wanted to do into how he builds his own game.": "Faire de l’écriture, la dernière chose qu’il avait envie de faire, le moyen de créer son propre jeu.",
-    "Enter a valid email address or phone number.": "Saisissez une adresse e-mail ou un numéro de téléphone valide."
+    "Enter a valid email address or phone number.": "Saisissez une adresse e-mail ou un numéro de téléphone valide.",
+    "The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.": "Plus vous nous en dites (âge, matière, besoins particuliers ou diagnostics), mieux nous pourrons choisir le bon tuteur.",
+    "Tell us a little about what you'd like help with.": "Dites-nous en quelques mots ce dont vous avez besoin.",
+    "What would you like help with?": "Pour quoi souhaitez-vous de l’aide ?"
   }
 }

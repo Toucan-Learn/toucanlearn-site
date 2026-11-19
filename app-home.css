@@ -201,8 +201,8 @@ html body.homepage #main .app-home :is(p, li) { font-size: var(--ah-fs, inherit)
 .app-home .ah-ring img { width: 100%; height: 100%; max-width: none; object-fit: cover; object-position: var(--ah-pos, 50% 30%); transform: scale(var(--ah-zoom, 1)); transform-origin: var(--ah-pos, 50% 30%); }
 .ah-avatars b { font: 700 14px/1.15 var(--ah-sans); text-align: center; }
 /* Face framing per photo, from the approved mock. */
-.ah-av--joshua, .ah-ts-photo.ah-av--joshua { --ah-pos: 50% 45%; --ah-zoom: 1.25; }
-.ah-av--aaron, .ah-ts-photo.ah-av--aaron { --ah-pos: 50% 42%; --ah-zoom: 1.15; }
+.ah-av--joshua, .ah-ts-photo.ah-av--joshua { --ah-pos: 50% 40%; --ah-zoom: 1; }
+.ah-av--aaron, .ah-ts-photo.ah-av--aaron { --ah-pos: 50% 60%; --ah-zoom: 1.5; }
 .ah-av--connor, .ah-ts-photo.ah-av--connor { --ah-pos: 40% 34%; --ah-zoom: 1.7; }
 .ah-av--sara, .ah-ts-photo.ah-av--sara { --ah-pos: 50% 38%; --ah-zoom: 1.15; }
 .ah-av--joan, .ah-ts-photo.ah-av--joan { --ah-pos: 52% 35%; --ah-zoom: 2.2; }
@@ -335,3 +335,10 @@ html body.homepage footer.site-footer .footer-slogan { display: none; }
 /* Owner, 18 Nov: each project card leads to the real tool. */
 .app-home .ah-try { justify-self: start; margin: 4px 8px 0; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 999px; background: var(--ah-orange); color: var(--ah-on-orange); font: 700 16px/1 var(--ah-sans); text-decoration: none; }
 .app-home .ah-try:focus-visible { outline: 3px solid var(--ah-teal); outline-offset: 3px; }
+
+/* Owner, 19 Nov: review cards all the same size and properly framed. */
+.ah-reviews { align-items: stretch; }
+.ah-reviews .ah-review { display: flex; flex-direction: column; gap: 10px; height: 340px; padding: 20px; border: 1px solid var(--ah-line); box-sizing: border-box; }
+.ah-reviews .ah-review-line { display: flex; flex-direction: column; flex: 1; min-height: 0; margin: 0; }
+.ah-reviews .ah-review-line q { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 9; overflow: hidden; margin: 0; }
+.ah-reviews .ah-review-line a { margin-top: auto; padding-top: 10px; border-top: 1px solid var(--ah-line); font-weight: 700; text-decoration: none; }

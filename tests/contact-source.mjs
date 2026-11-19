@@ -86,7 +86,9 @@ assert.equal(contactMarkup(untokened(ageBack(withoutClarity(withoutNosnippet(wit
 const terms = await read('terms.html');
 assert.ok(terms.includes(`<section><h2>Our first-lesson guarantee</h2><p>${guarantee} Tell us within 48 hours of the lesson. This guarantee applies once per learner.</p></section>\n\n      <section><h2>Contact</h2>`));
 // Owner, 31 Oct: the "Website visits" section now describes Microsoft Clarity; everything else stays as approved.
-const visits = page => page.replace(/<section(?: id="website-visits")?>\s*<h2>Website visits and changes<\/h2>[\s\S]*?<\/section>/, '<!-- website visits: owner-managed -->');
+// Owner, 19 Nov: families are encouraged to share needs; the old 'no diagnoses' line went.
+const needsLine = page => page.replace("If you tell us about a learner's needs or diagnoses, we use that only to plan their support and match the right tutor, and keep it confidential.", 'Please do not send diagnoses or medical records through the form.');
+const visits = page => needsLine(page).replace(/<section(?: id="website-visits")?>\s*<h2>Website visits and changes<\/h2>[\s\S]*?<\/section>/, '<!-- website visits: owner-managed -->');
 const privacy = await read('privacy.html');
 assert.match(privacy, /Microsoft Clarity[\s\S]*data-clarity-toggle/, 'Privacy explains Clarity and offers the switch');
 assert.equal(navigationMarkup(untokened(visits(withoutClarity(withoutNosnippet(lightImages(privacy)))))), navigationMarkup(untokened(visits(execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' })))), 'Privacy matches the owner-approved 30 Oct notice');
@@ -434,10 +436,11 @@ const shortFields = [...currentHtml.matchAll(/<(input|textarea|select)\b([^>]+)>
   .map(([, , attrs]) => attrs.match(/name="([^"]+)"/)?.[1]).filter(Boolean);
 assert.deepEqual(shortFields, ['Contact name', 'Email or phone', 'Support requested']);
 assert.match(currentHtml, /id="support-needed"[^>]*type="text"[^>]*maxlength="200"/);
-assert.doesNotMatch(currentHtml.match(/<input id="support-needed"[^>]+>/)[0], /required/);
+// Owner, 19 Nov: the help field is now required (we need some info to match a tutor).
+assert.match(currentHtml.match(/<input id="support-needed"[^>]+>/)[0], /required/);
 assert.equal(currentHtml.match(/data-form-endpoint="([^"]+)"/)[1], html.match(/data-form-endpoint="([^"]+)"/)[1]);
 for (const contact of ['test@example.invalid', '+84 901 234 567', '07309 639095']) {
-  for (const goal of ['', 'Help with English.', 'x'.repeat(200)]) {
+  for (const goal of ['Help with English.', 'x'.repeat(200)]) { // an empty goal is now refused
     const input = { 'Contact name': 'Synthetic Test', 'Email or phone': contact, 'Support requested': goal, loaded_at: String(now - 5000), 'Campaign source': 'children' };
     const page = enquiry(input, 'ok', { markup: currentHtml }); await page.submit();
     assert.equal(page.requests.length, 1);
@@ -450,12 +453,12 @@ for (const contact of ['test@example.invalid', '+84 901 234 567', '07309 639095'
     assert.deepEqual(page.redirects, ['thank-you']);
   }
 }
-for (const [field, value, focus] of [['Contact name', '', 'contact-name'], ['Email or phone', '', 'reply-contact'], ['Email or phone', 'invalid', 'reply-contact'], ['Email or phone', 'a@b', 'reply-contact'], ['Email or phone', '+1234567890123456', 'reply-contact'], ['Support requested', 'x'.repeat(201), 'support-needed']]) {
-  const page = enquiry({ 'Contact name': 'Synthetic Test', 'Email or phone': 'test@example.invalid', 'Support requested': '', loaded_at: String(now - 5000), [field]: value }, 'ok', { markup: currentHtml });
+for (const [field, value, focus] of [['Contact name', '', 'contact-name'], ['Email or phone', '', 'reply-contact'], ['Email or phone', 'invalid', 'reply-contact'], ['Email or phone', 'a@b', 'reply-contact'], ['Email or phone', '+1234567890123456', 'reply-contact'], ['Support requested', 'x'.repeat(201), 'support-needed'], ['Support requested', '', 'support-needed']]) {
+  const page = enquiry({ 'Contact name': 'Synthetic Test', 'Email or phone': 'test@example.invalid', 'Support requested': 'Help with English.', loaded_at: String(now - 5000), [field]: value }, 'ok', { markup: currentHtml });
   await page.submit(); assert.equal(page.requests.length, 0); assert.equal(page.focused, focus);
 }
 for (const outcome of ['network', 'timeout', 'http-error', 'rejected']) {
-  const page = enquiry({ 'Contact name': 'Synthetic Test', 'Email or phone': 'test@example.invalid', 'Support requested': '', loaded_at: String(now - 5000) }, outcome, { markup: currentHtml });
+  const page = enquiry({ 'Contact name': 'Synthetic Test', 'Email or phone': 'test@example.invalid', 'Support requested': 'Help with English.', loaded_at: String(now - 5000) }, outcome, { markup: currentHtml });
   await page.submit(); assert.equal(page.requests.length, 1); assert.equal(page.redirects.length, 0);
   assert.equal(page.elements.get('submit-button').disabled, false);
   assert.equal(page.focused, 'form-message'); assert.equal(page.timers.size, 0);

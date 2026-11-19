@@ -473,7 +473,7 @@
     "Who is the tutoring for?": "Ai là người học?",
     "A child or young person": "Trẻ em hoặc thanh thiếu niên",
     "Me (an adult)": "Tôi (người lớn)",
-    "What would you like help with?": "Bạn cần hỗ trợ gì?",
+    "What would you like help with?": "Bạn muốn được hỗ trợ về điều gì?",
     "<small id=\"support-needed-privacy\">Please don't include diagnoses or medical records; we'll talk through needs together.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": "<small id=\"support-needed-privacy\">Vui lòng không ghi chẩn đoán hay hồ sơ y tế; chúng ta sẽ cùng trao đổi về nhu cầu sau.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>",
     "Age or school year": "Tuổi hoặc lớp",
     "Subject (optional)": "Môn học (không bắt buộc)",
@@ -641,7 +641,10 @@
     "<strong>Your first session and diagnostic report are free.</strong> Online, or in Bristol, London and Oxfordshire.": "<strong>Buổi học đầu tiên và báo cáo đánh giá đều miễn phí.</strong> Học trực tuyến, hoặc trực tiếp tại Bristol, London và Oxfordshire.",
     "One-to-one tutoring built around <em>you.</em>": "Dạy kèm một kèm một, xoay quanh <em>bạn.</em>",
     "Launch offer": "Ưu đãi ra mắt",
-    "New families get 50% off their first 5 paid lessons, after the free first session. The offer is for the first 10 new families, one per family, and can't be combined with other discounts.": "Gia đình mới được giảm 50% cho 5 buổi học trả phí đầu tiên, sau buổi học đầu miễn phí. Ưu đãi dành cho 10 gia đình mới đầu tiên, mỗi gia đình một lần, và không áp dụng cùng các ưu đãi khác."
+    "New families get 50% off their first 5 paid lessons, after the free first session. The offer is for the first 10 new families, one per family, and can't be combined with other discounts.": "Gia đình mới được giảm 50% cho 5 buổi học trả phí đầu tiên, sau buổi học đầu miễn phí. Ưu đãi dành cho 10 gia đình mới đầu tiên, mỗi gia đình một lần, và không áp dụng cùng các ưu đãi khác.",
+    "The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.": "Bạn chia sẻ càng nhiều (tuổi, môn học, nhu cầu đặc biệt hoặc chẩn đoán nếu có), chúng mình càng chọn được gia sư phù hợp.",
+    "Tell us a little about what you'd like help with.": "Hãy cho chúng mình biết bạn cần hỗ trợ gì nhé.",
+    "<small id=\"support-needed-privacy\">The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>": "<small id=\"support-needed-privacy\">Bạn chia sẻ càng nhiều (tuổi, môn học, nhu cầu đặc biệt hoặc chẩn đoán nếu có), chúng mình càng chọn được gia sư phù hợp.</small> <span class=\"field-error\" id=\"support-needed-error\"></span>"
   },
   "script": {
     "Please use only the enquiry fields provided.": "Vui lòng chỉ dùng các ô thông tin có sẵn.",
@@ -697,6 +700,9 @@
     "A man with a coffee working on his laptop in a café": "Một người đàn ông cùng tách cà phê làm việc trên máy tính xách tay trong quán cà phê",
     "A woman writing in a notebook at a desk by a window": "Một người phụ nữ đang viết vào sổ tay bên bàn cạnh cửa sổ",
     "Turning writing from the last thing he wanted to do into how he builds his own game.": "Biến việc viết từ điều bạn ấy ngại làm nhất thành cách bạn ấy xây dựng trò chơi của riêng mình.",
-    "Enter a valid email address or phone number.": "Vui lòng nhập địa chỉ email hoặc số điện thoại hợp lệ."
+    "Enter a valid email address or phone number.": "Vui lòng nhập địa chỉ email hoặc số điện thoại hợp lệ.",
+    "The more you tell us (age, subject, any SEN needs or diagnoses), the better we can match the right tutor.": "Bạn chia sẻ càng nhiều (tuổi, môn học, nhu cầu đặc biệt hoặc chẩn đoán nếu có), chúng mình càng chọn được gia sư phù hợp.",
+    "Tell us a little about what you'd like help with.": "Hãy cho chúng mình biết bạn cần hỗ trợ gì nhé.",
+    "What would you like help with?": "Bạn muốn được hỗ trợ về điều gì?"
   }
 }

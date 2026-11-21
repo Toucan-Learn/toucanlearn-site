@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { execFileSync } from 'node:child_process';
 import vm from 'node:vm';
+import { webcrypto } from 'node:crypto';
 import { createRequire } from 'node:module';
 import { contactMarkup } from './helpers/contact-markup.mjs';
 import { navigationMarkup } from './helpers/navigation-markup.mjs';
@@ -91,7 +92,17 @@ const needsLine = page => page.replace("If you tell us about a learner's needs o
 const visits = page => needsLine(page).replace(/<section(?: id="website-visits")?>\s*<h2>Website visits and changes<\/h2>[\s\S]*?<\/section>/, '<!-- website visits: owner-managed -->');
 const privacy = await read('privacy.html');
 assert.match(privacy, /Microsoft Clarity[\s\S]*data-clarity-toggle/, 'Privacy explains Clarity and offers the switch');
-assert.equal(navigationMarkup(untokened(visits(withoutClarity(withoutNosnippet(lightImages(privacy)))))), navigationMarkup(untokened(visits(execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' })))), 'Privacy matches the owner-approved 30 Oct notice');
+// 21 Nov: the owner requested a private enquiry backup and opt-in ad measurement.
+// Preserve the substantive rights/retention text while checking the new disclosures.
+const previousPrivacy = execFileSync('git', ['show', '4409323:privacy.html'], { cwd: root, encoding: 'utf8' });
+for (const heading of ['Who is responsible', 'Why we use it', 'How long we keep it', 'Security and information outside the UK', 'Your rights', 'Your right to object']) {
+  const section = page => page.match(new RegExp('<section>\\s*<h2>' + heading + '</h2>[\\s\\S]*?</section>'))?.[0];
+  assert.equal(section(privacy), section(previousPrivacy), heading + ' is preserved');
+}
+assert.match(privacy, /private enquiry register/);
+assert.match(privacy, /Google tracking stays off until you allow it/);
+assert.match(privacy, /data-measurement-settings/);
+assert.doesNotMatch(privacy, /form keeps no separate copy|We use no advertising trackers/);
 assert.doesNotMatch(html, /support-needed-hint|The subject or goal, and what's tricky at the moment/);
 assert.match(html, /<textarea id="support-needed"[^>]*aria-describedby="support-needed-privacy support-needed-error"[^>]*required/);
 assert.ok(html.includes('<small id="support-needed-privacy">' + help + '</small>'));
@@ -284,8 +295,9 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
     const [, key, value] = selector.match(/^\[([\w-]+)="([^"]+)"\]$/);
     return [...elements.values()].filter(element => element.attrs[key] === value);
   };
+  const accepted = [];
   const context = vm.createContext({
-    Date: { now: () => now }, URLSearchParams, AbortController,
+    Date: { now: () => now }, URLSearchParams, AbortController, crypto: webcrypto,
     Event: class { constructor(type, options) { this.type = type; Object.assign(this, options); } },
     FormData: class { constructor() {
       const body = new URLSearchParams(input);
@@ -297,7 +309,7 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
     } },
     document: { getElementById: id => elements.get(id), createElement: () => node(),
       addEventListener: (type, fn) => documentListeners.set(type, fn) },
-    window: { location: { search, assign: value => redirects.push(value) },
+    window: { toucanMeasurement: { fields: () => ({}), accepted: async id => accepted.push(id) }, location: { search, assign: value => redirects.push(value) },
       setTimeout: fn => { timers.set(1, fn); return 1; }, clearTimeout: id => timers.delete(id) },
     fetch: async (url, options) => {
       requests.push({ url, ...options });
@@ -310,7 +322,7 @@ function enquiry(input, outcome = 'ok', { search = '', campaignSource, enhanced 
     }
   });
   vm.runInContext(script, context);
-  return { elements, requests, redirects, timers, get focused() { return focused; },
+  return { elements, requests, redirects, timers, accepted, get focused() { return focused; },
     ready: () => documentListeners.get('DOMContentLoaded')(),
     chooseSubject: value => {
       const select = elements.get('subject'); select.value = value;
@@ -368,7 +380,8 @@ for (const subject of [undefined, '', ...subjects]) {
   const sent = page.requests[0];
   assert.equal(sent.body.has('Subject'), false, 'Subject stays inside Support requested for the existing backend');
   assert.equal(sent.body.get('Support requested'), (subject ? 'Subject: ' + subject + ' | ' : '') + valid['Support requested']);
-  assert.deepEqual([...sent.body.keys()], Object.keys(valid), 'Backend field names stay unchanged');
+  assert.deepEqual([...sent.body.keys()], [...Object.keys(valid), 'Enquiry ID'], 'The only new required backend field is the retry identifier');
+  assert.match(sent.body.get('Enquiry ID'), /^[a-f0-9-]{36}$/);
   assert.equal(sent.method, 'POST'); assert.equal(sent.headers['Content-Type'], 'application/x-www-form-urlencoded');
   assert.deepEqual(page.redirects, ['thank-you']);
 }
@@ -463,3 +476,8 @@ for (const outcome of ['network', 'timeout', 'http-error', 'rejected']) {
   assert.equal(page.elements.get('submit-button').disabled, false);
   assert.equal(page.focused, 'form-message'); assert.equal(page.timers.size, 0);
 }
+
+for (const outcome of ['network', 'timeout', 'http-error', 'rejected']) { const page = enquiry(valid, outcome); await page.submit(); assert.equal(page.accepted.length, 0, outcome + ' must not count a lead'); }
+{ const page = enquiry(valid, 'ok'); await page.submit(); assert.equal(page.accepted.length, 1); assert.equal(page.accepted[0], page.requests[0].body.get('Enquiry ID')); }
+{ const page = enquiry(valid, 'network'); await page.submit(); await page.submit(); assert.equal(page.requests[0].body.get('Enquiry ID'), page.requests[1].body.get('Enquiry ID'), 'Uncertain-send retry keeps the same id'); }
+console.log('PASS: only accepted submissions trigger measurement; failed/network/timed-out requests do not; retries keep a stable enquiry id.');

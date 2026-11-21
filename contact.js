@@ -94,6 +94,8 @@ var EnquiryRules = (function () {
     return message;
   };
   let submitted = false;
+  let enquiryId = null;
+  let lastPayload = null;
   const formFields = document.getElementById("enquiry-fields");
   const submitButton = document.getElementById("submit-button");
   const formMessage = document.getElementById("form-message");
@@ -229,6 +231,14 @@ var EnquiryRules = (function () {
       formMessage.focus();
       return;
     }
+    // Keep an id stable for retries of the same content; never persist personal data in the browser.
+    const payloadSignature = sent.toString();
+    if (!enquiryId || lastPayload !== payloadSignature) {
+      enquiryId = typeof crypto.randomUUID === 'function' ? crypto.randomUUID() : Array.from(crypto.getRandomValues(new Uint8Array(16)), byte => byte.toString(16).padStart(2, '0')).join('');
+      lastPayload = payloadSignature;
+    }
+    sent.set('Enquiry ID', enquiryId);
+    if (window.toucanMeasurement) Object.entries(window.toucanMeasurement.fields()).forEach(([key, value]) => sent.set(key, value));
     submitButton.disabled = true;
     submitButton.textContent = translate("Sending…");
     form.setAttribute("aria-busy", "true");
@@ -240,7 +250,11 @@ var EnquiryRules = (function () {
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: sent, signal: requestController.signal
       });
-      if (!response.ok || (await response.json()).ok !== true) throw new Error("Enquiry failed");
+      const receipt = await response.json();
+      if (!response.ok || receipt.ok !== true) throw new Error("Enquiry failed");
+      try { if (window.clarity) window.clarity('event', 'enquiry_accepted'); } catch (_) {}
+      // Tracking failure must never turn an accepted enquiry into a form error.
+      try { await window.toucanMeasurement?.accepted(receipt.id || enquiryId); } catch (_) {}
       if (form.dataset.successMessage) {
         submitted = true;
         formFields.disabled = true;
@@ -253,6 +267,7 @@ var EnquiryRules = (function () {
         window.location.assign("thank-you");
       }
     } catch (error) {
+      try { if (window.clarity) window.clarity('event', 'enquiry_failed'); } catch (_) {}
       showMessage(translate("Your enquiry may not have sent. Please contact us using one of these options."));
       formMessage.focus();
     } finally {

@@ -7,11 +7,18 @@
   const write = (key, value) => {
     try { sessionStorage.setItem(key, JSON.stringify(value)); } catch (_) { /* Navigation works without storage. */ }
   };
-  let attribution = read('toucan-attribution');
+  const measurementAllowed = () => {
+    try { const consent = JSON.parse(localStorage.getItem('toucan-ad-measurement')); return consent?.choice === 'granted' && Date.now() - consent.at < 180 * 86400000; } catch (_) { return false; }
+  };
+  let attribution = measurementAllowed() ? read('toucan-attribution') : {};
+  if (!measurementAllowed()) { try { sessionStorage.removeItem('toucan-attribution'); } catch (_) {} }
   if (keys.some(key => params.has(key))) {
     attribution = Object.fromEntries(keys.filter(key => params.get(key)).map(key => [key, params.get(key).slice(0, 120)]));
-    write('toucan-attribution', attribution);
+    if (measurementAllowed()) write('toucan-attribution', attribution);
   }
+  document.addEventListener('toucan:measurement-consent', event => {
+    if (event.detail === 'granted') write('toucan-attribution', attribution);
+  });
   const fieldMap = { utm_source: 'traffic-source', utm_medium: 'traffic-medium', utm_campaign: 'campaign-name' };
   // Keep this document's context after consuming the cross-page handoff, so a
   // restored form can be hydrated again without depending on the cleaned URL.

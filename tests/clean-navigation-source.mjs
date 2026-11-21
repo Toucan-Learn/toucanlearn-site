@@ -21,7 +21,7 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   const html = await readFile(new URL(file, root), 'utf8');
   assert.doesNotMatch(html, /href="index\.html(?:#|")/);
   assert.doesNotMatch(html, /href="contact\.html\?/);
-  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase(?:-loader)?|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'team-carousel.js' ? '20261101-mobile-review-1' : script.startsWith('project-showcase') ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : token, `${file}: ${script} cache token`);
+  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase(?:-loader)?|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'campaigns.js' ? '20261121-consent-1' : script === 'team-carousel.js' ? '20261101-mobile-review-1' : script.startsWith('project-showcase') ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : token, `${file}: ${script} cache token`);
   if (['contact.html', 'hoc-tieng-anh.html'].includes(file)) {
     assert(html.indexOf('src="campaigns.js') < html.indexOf('src="menu.js'), `${file}: capture campaigns before URL cleanup`);
     assert(html.indexOf('src="campaigns.js') < html.indexOf('</head>'), `${file}: campaign capture runs before the form is parsed`);
@@ -95,10 +95,12 @@ for (const wide of [true, false]) {
 {
   const storage = new Map();
   const origin = fixture('https://example.test/children.html?utm_source=test&utm_medium=site&utm_campaign=launch', storage);
+  origin.runCode(`var localStorage = { getItem: () => JSON.stringify({choice:'granted', at:Date.now()}) };`);
   const link = origin.node('a', { href: 'contact.html', 'data-service': 'children' }); origin.document.body.append(link);
   await origin.run('campaigns.js'); await origin.run('menu.js'); await origin.load();
   assert.equal(origin.location.search, ''); origin.click(link); assert.equal(link.getAttribute('href'), 'contact.html'); clean(origin);
   const contact = fixture('https://example.test/contact.html', storage);
+  contact.runCode(`var localStorage = { getItem: () => JSON.stringify({choice:'granted', at:Date.now()}) };`);
   for (const id of ['campaign-source', 'traffic-source', 'traffic-medium', 'campaign-name']) contact.document.body.append(contact.node('input', { id }));
   await contact.run('campaigns.js'); await contact.run('menu.js'); await contact.load();
   assert.equal(contact.document.getElementById('campaign-source').value, 'children');
@@ -112,9 +114,11 @@ for (const wide of [true, false]) {
   // Campaign capture runs before the form is parsed and before menu cleanup.
   const storage = new Map();
   const origin = fixture('https://example.test/children.html?utm_source=test&utm_medium=site&utm_campaign=launch', storage);
+  origin.runCode(`var localStorage = { getItem: () => JSON.stringify({choice:'granted', at:Date.now()}) };`);
   await origin.run('campaigns.js'); await origin.run('menu.js'); await origin.load();
   const link = origin.node('a', { href: 'contact.html', 'data-service': 'children' }); origin.document.body.append(link); origin.click(link);
   const contact = fixture('https://example.test/contact.html', storage);
+  contact.runCode(`var localStorage = { getItem: () => JSON.stringify({choice:'granted', at:Date.now()}) };`);
   await contact.run('campaigns.js'); await contact.run('menu.js');
   const expected = { 'campaign-source': 'children', 'traffic-source': 'test', 'traffic-medium': 'site', 'campaign-name': 'launch' };
   for (const id of Object.keys(expected)) { const field = contact.node('input', { id }); field.value = id === 'campaign-source' ? 'Direct or unknown' : ''; contact.document.body.append(field); }

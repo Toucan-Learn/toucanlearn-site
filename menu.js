@@ -31,7 +31,7 @@
     url.pathname = path();
     url.hash = '';
     // Attribution has already been captured; preserve the site's review/test overrides.
-    const overrides = ['project', 'sky', 'reviewart', 'song', 'kids', 'adults', 'step1', 'step2', 'step3'];
+    const overrides = ['project', 'sky', 'reviewart', 'song', 'kids', 'adults', 'step1', 'step2', 'step3', 'gtm_debug'];
     [...url.searchParams.keys()].forEach(key => { if (!overrides.includes(key)) url.searchParams.delete(key); });
     if (url.href !== location.href) history.replaceState(history.state, '', url.pathname + url.search);
   };

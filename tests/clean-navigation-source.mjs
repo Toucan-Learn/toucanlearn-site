@@ -21,7 +21,7 @@ for (const file of (await readdir(root)).filter(file => file.endsWith('.html')))
   const html = await readFile(new URL(file, root), 'utf8');
   assert.doesNotMatch(html, /href="index\.html(?:#|")/);
   assert.doesNotMatch(html, /href="contact\.html\?/);
-  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase(?:-loader)?|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'campaigns.js' ? '20261121-consent-1' : script === 'team-carousel.js' ? '20261101-mobile-review-1' : script.startsWith('project-showcase') ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : token, `${file}: ${script} cache token`);
+  for (const [, script, cache] of html.matchAll(/src="((?:menu|content-panels|team-carousel|team-deck|campaigns|launch-offer|project-showcase(?:-loader)?|project-viewer)\.js)(?:\?v=([^"]+))?"/g)) assert.equal(cache, script === 'menu.js' && html.includes('/measurement.js?') ? '20261122-debug-1' : script === 'campaigns.js' ? '20261121-consent-1' : script === 'team-carousel.js' ? '20261101-mobile-review-1' : script.startsWith('project-showcase') ? (file === 'index.html' ? showcaseToken : sectionShowcaseToken) : token, `${file}: ${script} cache token`);
   if (['contact.html', 'hoc-tieng-anh.html'].includes(file)) {
     assert(html.indexOf('src="campaigns.js') < html.indexOf('src="menu.js'), `${file}: capture campaigns before URL cleanup`);
     assert(html.indexOf('src="campaigns.js') < html.indexOf('</head>'), `${file}: campaign capture runs before the form is parsed`);
@@ -160,3 +160,5 @@ assert.match(bookingCSS, /\.nav > \.phone-book\s*\{ display: none; \}/);
 assert.match(bookingCSS, /@media \(max-width: 767px\)[\s\S]*?display: inline-flex;[\s\S]*?height: 44px;/);
 assert.doesNotMatch(bookingCSS, /\b(?:min-height|height):\s*(?:64|78)px/, 'Keep the existing phone header heights');
 console.log(`PASS: ${checks} navigation checks plus all home/enquiry links and changed JavaScript cache tokens. Rendering/browser history restoration still requires clean-navigation.mjs.`);
+
+{ const page = fixture('https://toucanlearn.co.uk/contact?gtm_debug=test-session&utm_source=test'); await page.run('menu.js'); await page.load(); assert.equal(new URLSearchParams(page.location.search).get('gtm_debug'),'test-session'); assert.equal(new URLSearchParams(page.location.search).get('utm_source'),null); }

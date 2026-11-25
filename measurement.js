@@ -110,5 +110,5 @@
     if (channel && window.clarity) window.clarity('event', 'contact_' + channel + '_click');
   });
   loadTag();
-  if (preference === null) showChoices();
+  // Owner, 25 Nov: no automatic pop-up. Google Ads cookies stay off unless chosen on the privacy page.
 })();

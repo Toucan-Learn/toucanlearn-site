@@ -113,3 +113,8 @@
   .sen-approach-grid img { width: 100%; }
   .sen-approach-grid .picture-cell-copy { min-width: 0; padding: 16px 16px 16px 10px; }
 }
+/* Owner, 27 Nov: parents tapped the price cards expecting them to work; each card now opens the form. */
+.sen-offer .price-band { cursor: pointer; transition: transform .15s ease, box-shadow .15s ease; }
+.sen-offer .price-band:hover, .sen-offer .price-band:focus-within { transform: translateY(-2px); box-shadow: inset 0 0 0 2px #ffffff55; }
+.sen-offer .band-pick { display: block; width: fit-content; margin-top: 10px; color: #fff8ea; font-weight: 800; font-size: .9rem; text-decoration: underline; text-underline-offset: 3px; }
+.sen-offer .band-pick:focus-visible { outline: 2px solid #fff8ea; outline-offset: 3px; border-radius: 4px; }

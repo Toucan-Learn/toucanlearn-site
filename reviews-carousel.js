@@ -9,7 +9,7 @@
   const ring = carousel.querySelector('.reviews-grid');
   const cards = Array.from(ring.querySelectorAll('.review-quote'));
   const count = cards.length;
-  if (count < 3 || count > 8) return;
+  if (count < 3 || count > 10) return;
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
   const laptop = window.matchMedia('(min-width: 900px)');
   const phone = window.matchMedia('(max-width: 767px)');
